@@ -33,23 +33,23 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org5561ff3">The git config</a>
+<li><a href="#org0590ed1">The git config</a>
 <ul>
-<li><a href="#orgd0a2f03">Background: Git URL rewriting</a></li>
-<li><a href="#org4b8a1bb">Background: Git config loading</a></li>
+<li><a href="#org8910986">Background: Git URL rewriting</a></li>
+<li><a href="#org6e04031">Background: Git config loading</a></li>
 </ul>
 </li>
 <li><a href="#the-ssh-config">The SSH Config</a></li>
-<li><a href="#orge6b0caf">SSH passphrases and ssh-agent</a></li>
+<li><a href="#org350ac07">SSH passphrases and ssh-agent</a></li>
 <li><a href="#signed-commits">Signed Commits</a></li>
-<li><a href="#orgad4d6e9">Emacs: Configuring Forge</a></li>
-<li><a href="#org0576f25">Resources</a></li>
+<li><a href="#org27abe86">Emacs: Configuring Forge</a></li>
+<li><a href="#orga43e9ab">Resources</a></li>
 </ul>
 </div>
 </nav>
 <p>
 <b><i>The Problem</i></b>: You have multiple GitHub accounts, and you want to git to
-automatically use a particular account depending on what directory a project is
+automatically use a particular account depending on the directory a project is
 in.
 </p>
 
@@ -70,9 +70,9 @@ This is all just git and ssh configuration; no editor-specific configuration
 should be required (since editors should be shelling out to git anyway).
 </p>
 
-<div id="outline-container-org5561ff3" class="outline-2">
-<h2 id="org5561ff3"><a href="#org5561ff3">The git config</a></h2>
-<div class="outline-text-2" id="text-org5561ff3">
+<div id="outline-container-org0590ed1" class="outline-2">
+<h2 id="org0590ed1"><a href="#org0590ed1">The git config</a></h2>
+<div class="outline-text-2" id="text-org0590ed1">
 <p>
 The git configuration must do two things:
 </p>
@@ -147,9 +147,9 @@ config, if you are interested.
 </p>
 </div>
 
-<div id="outline-container-orgd0a2f03" class="outline-3">
-<h3 id="orgd0a2f03"><a href="#orgd0a2f03">Background: Git URL rewriting</a></h3>
-<div class="outline-text-3" id="text-orgd0a2f03">
+<div id="outline-container-org8910986" class="outline-3">
+<h3 id="org8910986"><a href="#org8910986">Background: Git URL rewriting</a></h3>
+<div class="outline-text-3" id="text-org8910986">
 <p>
 To take a closer look at what this part of <i>home.gitconfig</i> means:
 </p>
@@ -214,9 +214,9 @@ and in your SSH config (as explained in the section <a href="#the-ssh-config">Th
 </div>
 </div>
 
-<div id="outline-container-org4b8a1bb" class="outline-3">
-<h3 id="org4b8a1bb"><a href="#org4b8a1bb">Background: Git config loading</a></h3>
-<div class="outline-text-3" id="text-org4b8a1bb">
+<div id="outline-container-org6e04031" class="outline-3">
+<h3 id="org6e04031"><a href="#org6e04031">Background: Git config loading</a></h3>
+<div class="outline-text-3" id="text-org6e04031">
 <p>
 Git loads <i>all</i> applicable config files, and greedily uses the first value it
 finds for each option.
@@ -275,7 +275,7 @@ accounts, I've tried). Assuming you've <a href="https://docs.github.com/en/githu
 looks something like:
 </p>
 
-<pre class="example" id="org03c370c">
+<pre class="example" id="org5a3e7fe">
 $ tree ~/.ssh/
 /Users/cfclrk/.ssh/
 ├── config
@@ -325,8 +325,8 @@ Host gist-work
 </div>
 </div>
 
-<div id="outline-container-orge6b0caf" class="outline-2">
-<h2 id="orge6b0caf"><a href="#orge6b0caf">SSH passphrases and ssh-agent</a></h2>
+<div id="outline-container-org350ac07" class="outline-2">
+<h2 id="org350ac07"><a href="#org350ac07">SSH passphrases and ssh-agent</a></h2>
 </div>
 
 <div id="outline-container-signed-commits" class="outline-2">
@@ -354,18 +354,18 @@ got a cool setup that does that, let me know!
 </div>
 </div>
 
-<div id="outline-container-orgad4d6e9" class="outline-2">
-<h2 id="orgad4d6e9"><a href="#orgad4d6e9">Emacs: Configuring Forge</a></h2>
-<div class="outline-text-2" id="text-orgad4d6e9">
+<div id="outline-container-org27abe86" class="outline-2">
+<h2 id="org27abe86"><a href="#org27abe86">Emacs: Configuring Forge</a></h2>
+<div class="outline-text-2" id="text-org27abe86">
 <p>
 Need to update <code>forge-alist</code>
 </p>
 </div>
 </div>
 
-<div id="outline-container-org0576f25" class="outline-2">
-<h2 id="org0576f25"><a href="#org0576f25">Resources</a></h2>
-<div class="outline-text-2" id="text-org0576f25">
+<div id="outline-container-orga43e9ab" class="outline-2">
+<h2 id="orga43e9ab"><a href="#orga43e9ab">Resources</a></h2>
+<div class="outline-text-2" id="text-orga43e9ab">
 <p>
 <a href="https://yayimorphology.org/ssh-identities-made-easy.html">https://yayimorphology.org/ssh-identities-made-easy.html</a>
 </p>

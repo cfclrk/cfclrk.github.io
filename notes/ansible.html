@@ -33,19 +33,20 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgb952487">Run facts against Vagrant VM</a></li>
+<li><a href="#orgdab7195">Use Vagrant</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-orgb952487" class="outline-2">
-<h2 id="orgb952487"><a href="#orgb952487">Run facts against Vagrant VM</a></h2>
-<div class="outline-text-2" id="text-orgb952487">
+<div id="outline-container-orgdab7195" class="outline-2">
+<h2 id="orgdab7195"><a href="#orgdab7195">Use Vagrant</a></h2>
+<div class="outline-text-2" id="text-orgdab7195">
 <div class="org-src-container">
 <pre class="src src-sh">ansible <span style="color: #98be65;">\</span>
     -i .vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory <span style="color: #98be65;">\</span>
     --private-key=.vagrant/machines/default/virtualbox/private_key <span style="color: #98be65;">\</span>
-    -u vagrant all -m setup
+    -u vagrant all <span style="color: #98be65;">\</span>
+    -m setup
 </pre>
 </div>
 </div>

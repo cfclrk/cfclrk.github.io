@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2021-03-06 Sat 07:43 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Windows Stuff</title>
@@ -34,35 +33,35 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org98360df">Environment Variables</a>
+<li><a href="#org4e8e47f">Environment Variables</a>
 <ul>
-<li><a href="#orga43ef7e">List all env vars</a></li>
-<li><a href="#orgd2e58bf">Function to update env variable</a></li>
-<li><a href="#orge08f3a4">setx</a></li>
+<li><a href="#orga98a38d">List all env vars</a></li>
+<li><a href="#orgc95d518">Function to update env variable</a></li>
+<li><a href="#org5255971">setx</a></li>
 </ul>
 </li>
-<li><a href="#orgd5a4ac0">Background Process</a>
+<li><a href="#org2a0356e">Background Process</a>
 <ul>
-<li><a href="#orgef31f61">Start-Process</a></li>
-<li><a href="#org2e4cc31">Start-Job</a></li>
-<li><a href="#org8e96734">Scheduled Task</a></li>
-<li><a href="#org81110cd">Subshell with -NoExit</a></li>
+<li><a href="#orgf957511">Start-Process</a></li>
+<li><a href="#orgde52d06">Start-Job</a></li>
+<li><a href="#orgdd5e77b">Scheduled Task</a></li>
+<li><a href="#org971d874">Subshell with -NoExit</a></li>
 </ul>
 </li>
-<li><a href="#orgddf6f55">Kill a Process</a></li>
-<li><a href="#orgdae59f6">Install Python</a></li>
-<li><a href="#org8e5ab70">Upgrade Powershell</a></li>
+<li><a href="#orgdff23da">Kill a Process</a></li>
+<li><a href="#org50cce51">Install Python</a></li>
+<li><a href="#orgd8c0125">Upgrade Powershell</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-org98360df" class="outline-2">
-<h2 id="org98360df"><a href="#org98360df">Environment Variables</a></h2>
-<div class="outline-text-2" id="text-org98360df">
+<div id="outline-container-org4e8e47f" class="outline-2">
+<h2 id="org4e8e47f"><a href="#org4e8e47f">Environment Variables</a></h2>
+<div class="outline-text-2" id="text-org4e8e47f">
 </div>
-<div id="outline-container-orga43ef7e" class="outline-3">
-<h3 id="orga43ef7e"><a href="#orga43ef7e">List all env vars</a></h3>
-<div class="outline-text-3" id="text-orga43ef7e">
+<div id="outline-container-orga98a38d" class="outline-3">
+<h3 id="orga98a38d"><a href="#orga98a38d">List all env vars</a></h3>
+<div class="outline-text-3" id="text-orga98a38d">
 <div class="org-src-container">
 <pre class="src src-powershell">gci env: | sort name
 </pre>
@@ -70,9 +69,9 @@
 </div>
 </div>
 
-<div id="outline-container-orgd2e58bf" class="outline-3">
-<h3 id="orgd2e58bf"><a href="#orgd2e58bf">Function to update env variable</a></h3>
-<div class="outline-text-3" id="text-orgd2e58bf">
+<div id="outline-container-orgc95d518" class="outline-3">
+<h3 id="orgc95d518"><a href="#orgc95d518">Function to update env variable</a></h3>
+<div class="outline-text-3" id="text-orgc95d518">
 <p>
 This is an attempt at a function to update environment variables permanently.
 It correctly sets a registry key, but it only takes effect after a reboot.
@@ -110,9 +109,9 @@ used.
 </div>
 </div>
 
-<div id="outline-container-orge08f3a4" class="outline-3">
-<h3 id="orge08f3a4"><a href="#orge08f3a4">setx</a></h3>
-<div class="outline-text-3" id="text-orge08f3a4">
+<div id="outline-container-org5255971" class="outline-3">
+<h3 id="org5255971"><a href="#org5255971">setx</a></h3>
+<div class="outline-text-3" id="text-org5255971">
 <p>
 <code>setx</code> can set an environment variable and persist it, but it will only be
 available to new processes.
@@ -135,13 +134,13 @@ Start-Service sshd
 </div>
 </div>
 
-<div id="outline-container-orgd5a4ac0" class="outline-2">
-<h2 id="orgd5a4ac0"><a href="#orgd5a4ac0">Background Process</a></h2>
-<div class="outline-text-2" id="text-orgd5a4ac0">
+<div id="outline-container-org2a0356e" class="outline-2">
+<h2 id="org2a0356e"><a href="#org2a0356e">Background Process</a></h2>
+<div class="outline-text-2" id="text-org2a0356e">
 </div>
-<div id="outline-container-orgef31f61" class="outline-3">
-<h3 id="orgef31f61"><a href="#orgef31f61">Start-Process</a></h3>
-<div class="outline-text-3" id="text-orgef31f61">
+<div id="outline-container-orgf957511" class="outline-3">
+<h3 id="orgf957511"><a href="#orgf957511">Start-Process</a></h3>
+<div class="outline-text-3" id="text-orgf957511">
 <div class="org-src-container">
 <pre class="src src-powershell"><span style="color: #c678dd;">Start-Process</span> `
   <span style="color: #a9a1e1;">-FilePath</span> go.exe `
@@ -153,26 +152,26 @@ Start-Service sshd
 </div>
 </div>
 
-<div id="outline-container-org2e4cc31" class="outline-3">
-<h3 id="org2e4cc31"><a href="#org2e4cc31">Start-Job</a></h3>
+<div id="outline-container-orgde52d06" class="outline-3">
+<h3 id="orgde52d06"><a href="#orgde52d06">Start-Job</a></h3>
 </div>
 
-<div id="outline-container-org8e96734" class="outline-3">
-<h3 id="org8e96734"><a href="#org8e96734">Scheduled Task</a></h3>
+<div id="outline-container-orgdd5e77b" class="outline-3">
+<h3 id="orgdd5e77b"><a href="#orgdd5e77b">Scheduled Task</a></h3>
 </div>
 
-<div id="outline-container-org81110cd" class="outline-3">
-<h3 id="org81110cd"><a href="#org81110cd">Subshell with -NoExit</a></h3>
+<div id="outline-container-org971d874" class="outline-3">
+<h3 id="org971d874"><a href="#org971d874">Subshell with -NoExit</a></h3>
 </div>
 </div>
 
-<div id="outline-container-orgddf6f55" class="outline-2">
-<h2 id="orgddf6f55"><a href="#orgddf6f55">Kill a Process</a></h2>
+<div id="outline-container-orgdff23da" class="outline-2">
+<h2 id="orgdff23da"><a href="#orgdff23da">Kill a Process</a></h2>
 </div>
 
-<div id="outline-container-orgdae59f6" class="outline-2">
-<h2 id="orgdae59f6"><a href="#orgdae59f6">Install Python</a></h2>
-<div class="outline-text-2" id="text-orgdae59f6">
+<div id="outline-container-org50cce51" class="outline-2">
+<h2 id="org50cce51"><a href="#org50cce51">Install Python</a></h2>
+<div class="outline-text-2" id="text-org50cce51">
 <div class="org-src-container">
 <pre class="src src-powershell"><span style="color: #dcaeea;">$url</span> = https://www.python.org/ftp/python/3.6.3/<span style="color: #c678dd;">python-3</span>.6.3-amd64.exe
 <span style="color: #c678dd;">Invoke-WebRequest</span> <span style="color: #a9a1e1;">-Uri</span> <span style="color: #dcaeea;">$url</span> <span style="color: #a9a1e1;">-OutFile</span> pythoninstaller.exe
@@ -188,9 +187,9 @@ Start-Service sshd
 </div>
 </div>
 
-<div id="outline-container-org8e5ab70" class="outline-2">
-<h2 id="org8e5ab70"><a href="#org8e5ab70">Upgrade Powershell</a></h2>
-<div class="outline-text-2" id="text-org8e5ab70">
+<div id="outline-container-orgd8c0125" class="outline-2">
+<h2 id="orgd8c0125"><a href="#orgd8c0125">Upgrade Powershell</a></h2>
+<div class="outline-text-2" id="text-orgd8c0125">
 <div class="org-src-container">
 <pre class="src src-powershell"><span style="color: #dcaeea;">$scriptUri</span> = https://raw.githubusercontent.com/jborean93/<span style="color: #c678dd;">ansible-windows</span>/master/<span style="color: #ff6c6b; background-color: #1B2229; font-weight: bold;">scripts/</span><span style="color: #ff6c6b; background-color: #1B2229; font-weight: bold;">Upgrade-PowerShell</span><span style="color: #ff6c6b; background-color: #1B2229; font-weight: bold;">.ps1</span>
 <span style="color: #c678dd;">Invoke-WebRequest</span> <span style="color: #a9a1e1;">-Uri</span> <span style="color: #dcaeea;">$scriptUri</span>

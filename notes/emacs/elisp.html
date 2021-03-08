@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2021-03-06 Sat 07:43 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Elisp</title>
@@ -34,20 +33,20 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org7e36bed">Association Lists</a></li>
-<li><a href="#orgb3f35fd">Pretty Printing Objects</a>
+<li><a href="#org2a586bd">Association Lists</a></li>
+<li><a href="#orgaa0a7e2">Pretty Printing Objects</a>
 <ul>
-<li><a href="#orgf345f4e">cl-prettyprint</a></li>
-<li><a href="#orgf9693cb">pp</a></li>
+<li><a href="#org3b6c8b0">cl-prettyprint</a></li>
+<li><a href="#org6a1a8cf">pp</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-org7e36bed" class="outline-2">
-<h2 id="org7e36bed"><a href="#org7e36bed">Association Lists</a></h2>
-<div class="outline-text-2" id="text-org7e36bed">
+<div id="outline-container-org2a586bd" class="outline-2">
+<h2 id="org2a586bd"><a href="#org2a586bd">Association Lists</a></h2>
+<div class="outline-text-2" id="text-org2a586bd">
 <pre class="example">
 (("foo" . "bar") ("baz" . "qux"))
 </pre>
@@ -63,7 +62,7 @@ Doesn't work
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="orgf8c84a4">'<span style="color: #51afef;">(</span><span style="color: #c678dd;">(</span><span style="color: #98be65;">"cats"</span> . <span style="color: #98be65;">"hats"</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">"dogs"</span> . <span style="color: #98be65;">"hogs"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp" id="org60222e8">'<span style="color: #51afef;">(</span><span style="color: #c678dd;">(</span><span style="color: #98be65;">"cats"</span> . <span style="color: #98be65;">"hats"</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">"dogs"</span> . <span style="color: #98be65;">"hogs"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
 
@@ -74,13 +73,13 @@ Doesn't work
 </div>
 </div>
 
-<div id="outline-container-orgb3f35fd" class="outline-2">
-<h2 id="orgb3f35fd"><a href="#orgb3f35fd">Pretty Printing Objects</a></h2>
-<div class="outline-text-2" id="text-orgb3f35fd">
+<div id="outline-container-orgaa0a7e2" class="outline-2">
+<h2 id="orgaa0a7e2"><a href="#orgaa0a7e2">Pretty Printing Objects</a></h2>
+<div class="outline-text-2" id="text-orgaa0a7e2">
 </div>
-<div id="outline-container-orgf345f4e" class="outline-3">
-<h3 id="orgf345f4e"><a href="#orgf345f4e">cl-prettyprint</a></h3>
-<div class="outline-text-3" id="text-orgf345f4e">
+<div id="outline-container-org3b6c8b0" class="outline-3">
+<h3 id="org3b6c8b0"><a href="#org3b6c8b0">cl-prettyprint</a></h3>
+<div class="outline-text-3" id="text-org3b6c8b0">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>my-string-alist '<span style="color: #da8548;">(</span><span style="color: #a9a1e1;">(</span><span style="color: #98be65;">"foo"</span> . <span style="color: #98be65;">"bar"</span><span style="color: #a9a1e1;">)</span>
                          <span style="color: #a9a1e1;">(</span><span style="color: #98be65;">"baz"</span> . <span style="color: #98be65;">"qux"</span><span style="color: #a9a1e1;">)</span><span style="color: #da8548;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
@@ -90,8 +89,8 @@ Doesn't work
 </div>
 </div>
 
-<div id="outline-container-orgf9693cb" class="outline-3">
-<h3 id="orgf9693cb"><a href="#orgf9693cb">pp</a></h3>
+<div id="outline-container-org6a1a8cf" class="outline-3">
+<h3 id="org6a1a8cf"><a href="#org6a1a8cf">pp</a></h3>
 </div>
 </div>
 </div>

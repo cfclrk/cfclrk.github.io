@@ -33,36 +33,36 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgdca8d1e">Discover Public Certificates</a></li>
-<li><a href="#org8c11d6e">Create an SSH Key</a>
+<li><a href="#orge31f694">Discover Public Certificates</a></li>
+<li><a href="#org55a89c1">Create an SSH Key</a>
 <ul>
-<li><a href="#orge43782d">No Passphrase</a></li>
+<li><a href="#org7c0fd65">No Passphrase</a></li>
 </ul>
 </li>
-<li><a href="#org42c6a5a">Creating Certificates</a>
+<li><a href="#orgca85071">Creating Certificates</a>
 <ul>
-<li><a href="#orgf1cafa8">Create keypair</a></li>
-<li><a href="#org3ee3107">Create root CA</a></li>
-<li><a href="#org5bd87b8">Create certificate signed by CA</a></li>
+<li><a href="#org83febe8">Create keypair</a></li>
+<li><a href="#org8862a90">Create root CA</a></li>
+<li><a href="#org13c7820">Create certificate signed by CA</a></li>
 </ul>
 </li>
-<li><a href="#org7122aec">cfssl</a></li>
-<li><a href="#org6397070">Create a fingerprint</a></li>
-<li><a href="#orge7680d1">Check if a private key matches a public key</a></li>
-<li><a href="#orge08cd12">Checking/viewing certs</a>
+<li><a href="#orgca97bf4">cfssl</a></li>
+<li><a href="#org7049e4d">Create a fingerprint</a></li>
+<li><a href="#org6d5e246">Check if a private key matches a public key</a></li>
+<li><a href="#orgab3fee9">Checking/viewing certs</a>
 <ul>
-<li><a href="#org4efce09">cert (public key)</a></li>
-<li><a href="#orgcc87287">CSR</a></li>
-<li><a href="#orgdf714d0">Cert against CA</a></li>
+<li><a href="#orgfb706eb">cert (public key)</a></li>
+<li><a href="#org251da9c">CSR</a></li>
+<li><a href="#org15cfeba">Cert against CA</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-orgdca8d1e" class="outline-2">
-<h2 id="orgdca8d1e"><a href="#orgdca8d1e">Discover Public Certificates</a></h2>
-<div class="outline-text-2" id="text-orgdca8d1e">
+<div id="outline-container-orge31f694" class="outline-2">
+<h2 id="orge31f694"><a href="#orge31f694">Discover Public Certificates</a></h2>
+<div class="outline-text-2" id="text-orge31f694">
 <p>
 Use <a href="https://cert.sh">cert.sh</a>. For example, to see all certs issued for <code>cats.com</code>:
 <a href="https://crt.sh/?q=%25.cats.com">https://crt.sh/?q=%25.cats.com</a>
@@ -80,13 +80,13 @@ page.
 </div>
 </div>
 
-<div id="outline-container-org8c11d6e" class="outline-2">
-<h2 id="org8c11d6e"><a href="#org8c11d6e">Create an SSH Key</a></h2>
-<div class="outline-text-2" id="text-org8c11d6e">
+<div id="outline-container-org55a89c1" class="outline-2">
+<h2 id="org55a89c1"><a href="#org55a89c1">Create an SSH Key</a></h2>
+<div class="outline-text-2" id="text-org55a89c1">
 </div>
-<div id="outline-container-orge43782d" class="outline-3">
-<h3 id="orge43782d"><a href="#orge43782d">No Passphrase</a></h3>
-<div class="outline-text-3" id="text-orge43782d">
+<div id="outline-container-org7c0fd65" class="outline-3">
+<h3 id="org7c0fd65"><a href="#org7c0fd65">No Passphrase</a></h3>
+<div class="outline-text-3" id="text-org7c0fd65">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #dcaeea;">keyname</span>=<span style="color: #98be65;">"github-home"</span>
 <span style="color: #dcaeea;">email</span>=<span style="color: #98be65;">"cfclrk@gmail.com"</span>
@@ -107,20 +107,20 @@ ssh-keygen -t rsa -b 4096 -f ./$<span style="color: #dcaeea;">keyname</span> -N 
 </div>
 </div>
 
-<div id="outline-container-org42c6a5a" class="outline-2">
-<h2 id="org42c6a5a"><a href="#org42c6a5a">Creating Certificates</a></h2>
-<div class="outline-text-2" id="text-org42c6a5a">
+<div id="outline-container-orgca85071" class="outline-2">
+<h2 id="orgca85071"><a href="#orgca85071">Creating Certificates</a></h2>
+<div class="outline-text-2" id="text-orgca85071">
 </div>
-<div id="outline-container-orgf1cafa8" class="outline-3">
-<h3 id="orgf1cafa8"><a href="#orgf1cafa8">Create keypair</a></h3>
-<div class="outline-text-3" id="text-orgf1cafa8">
+<div id="outline-container-org83febe8" class="outline-3">
+<h3 id="org83febe8"><a href="#org83febe8">Create keypair</a></h3>
+<div class="outline-text-3" id="text-org83febe8">
 <p>
 The <code>openssl genrsa</code> command creates a private key that includes a public
 key.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="orgf212d1c">openssl genrsa 1024
+<pre class="src src-sh" id="orge93731a">openssl genrsa 1024
 </pre>
 </div>
 
@@ -135,9 +135,9 @@ Extract the public key from the private key:
 </div>
 </div>
 
-<div id="outline-container-org3ee3107" class="outline-3">
-<h3 id="org3ee3107"><a href="#org3ee3107">Create root CA</a></h3>
-<div class="outline-text-3" id="text-org3ee3107">
+<div id="outline-container-org8862a90" class="outline-3">
+<h3 id="org8862a90"><a href="#org8862a90">Create root CA</a></h3>
+<div class="outline-text-3" id="text-org8862a90">
 <p>
 Every root CA certificate is a self-signed certificate. Intermediate CA
 certificates are not self-signed; they are signed by their parent CA.
@@ -161,9 +161,9 @@ openssl req -x509 -new -nodes <span style="color: #98be65;">\</span>
 </div>
 </div>
 
-<div id="outline-container-org5bd87b8" class="outline-3">
-<h3 id="org5bd87b8"><a href="#org5bd87b8">Create certificate signed by CA</a></h3>
-<div class="outline-text-3" id="text-org5bd87b8">
+<div id="outline-container-org13c7820" class="outline-3">
+<h3 id="org13c7820"><a href="#org13c7820">Create certificate signed by CA</a></h3>
+<div class="outline-text-3" id="text-org13c7820">
 <p>
 Create a new keypair. This creates two file: <code>client.key</code> (which actually has
 both the public and private key in it).
@@ -209,9 +209,9 @@ practice I'm not sure of any examples where that actually happens.
 </div>
 </div>
 
-<div id="outline-container-org7122aec" class="outline-2">
-<h2 id="org7122aec"><a href="#org7122aec">cfssl</a></h2>
-<div class="outline-text-2" id="text-org7122aec">
+<div id="outline-container-orgca97bf4" class="outline-2">
+<h2 id="orgca97bf4"><a href="#orgca97bf4">cfssl</a></h2>
+<div class="outline-text-2" id="text-orgca97bf4">
 <div class="org-src-container">
 <pre class="src src-sh">cfssl selfsign www.example.net acm-test.json <span style="color: #98be65;">\</span>
     | cfssljson -bare acm-test
@@ -220,9 +220,9 @@ practice I'm not sure of any examples where that actually happens.
 </div>
 </div>
 
-<div id="outline-container-org6397070" class="outline-2">
-<h2 id="org6397070"><a href="#org6397070">Create a fingerprint</a></h2>
-<div class="outline-text-2" id="text-org6397070">
+<div id="outline-container-org7049e4d" class="outline-2">
+<h2 id="org7049e4d"><a href="#org7049e4d">Create a fingerprint</a></h2>
+<div class="outline-text-2" id="text-org7049e4d">
 <div class="org-src-container">
 <pre class="src src-sh">openssl x509 -noout -fingerprint -sha256 -inform pem -in &lt;file path&gt;
 </pre>
@@ -230,9 +230,9 @@ practice I'm not sure of any examples where that actually happens.
 </div>
 </div>
 
-<div id="outline-container-orge7680d1" class="outline-2">
-<h2 id="orge7680d1"><a href="#orge7680d1">Check if a private key matches a public key</a></h2>
-<div class="outline-text-2" id="text-orge7680d1">
+<div id="outline-container-org6d5e246" class="outline-2">
+<h2 id="org6d5e246"><a href="#org6d5e246">Check if a private key matches a public key</a></h2>
+<div class="outline-text-2" id="text-org6d5e246">
 <p>
 On the private key:
 </p>
@@ -258,13 +258,13 @@ check is to pipe them both to <code>openssl md5</code>.
 </div>
 </div>
 
-<div id="outline-container-orge08cd12" class="outline-2">
-<h2 id="orge08cd12"><a href="#orge08cd12">Checking/viewing certs</a></h2>
-<div class="outline-text-2" id="text-orge08cd12">
+<div id="outline-container-orgab3fee9" class="outline-2">
+<h2 id="orgab3fee9"><a href="#orgab3fee9">Checking/viewing certs</a></h2>
+<div class="outline-text-2" id="text-orgab3fee9">
 </div>
-<div id="outline-container-org4efce09" class="outline-3">
-<h3 id="org4efce09"><a href="#org4efce09">cert (public key)</a></h3>
-<div class="outline-text-3" id="text-org4efce09">
+<div id="outline-container-orgfb706eb" class="outline-3">
+<h3 id="orgfb706eb"><a href="#orgfb706eb">cert (public key)</a></h3>
+<div class="outline-text-3" id="text-orgfb706eb">
 <pre class="example">
 /Users/chris.clark/Projects/codenotes/aws/cert.pem
 </pre>
@@ -276,15 +276,15 @@ check is to pipe them both to <code>openssl md5</code>.
 
 
 <div class="org-src-container">
-<pre class="src src-sh" id="orgb0fd702">openssl x509 -in $<span style="color: #dcaeea;">cert</span> -text -noout
+<pre class="src src-sh" id="orgfbc70bd">openssl x509 -in $<span style="color: #dcaeea;">cert</span> -text -noout
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgcc87287" class="outline-3">
-<h3 id="orgcc87287"><a href="#orgcc87287">CSR</a></h3>
-<div class="outline-text-3" id="text-orgcc87287">
+<div id="outline-container-org251da9c" class="outline-3">
+<h3 id="org251da9c"><a href="#org251da9c">CSR</a></h3>
+<div class="outline-text-3" id="text-org251da9c">
 <div class="org-src-container">
 <pre class="src src-sh">openssl req -text -noout -verify -in $<span style="color: #dcaeea;">FILE</span>.csr
 </pre>
@@ -292,9 +292,9 @@ check is to pipe them both to <code>openssl md5</code>.
 </div>
 </div>
 
-<div id="outline-container-orgdf714d0" class="outline-3">
-<h3 id="orgdf714d0"><a href="#orgdf714d0">Cert against CA</a></h3>
-<div class="outline-text-3" id="text-orgdf714d0">
+<div id="outline-container-org15cfeba" class="outline-3">
+<h3 id="org15cfeba"><a href="#org15cfeba">Cert against CA</a></h3>
+<div class="outline-text-3" id="text-org15cfeba">
 <div class="org-src-container">
 <pre class="src src-sh">openssl verify -CAfile ca.crt kafka.crt
 </pre>

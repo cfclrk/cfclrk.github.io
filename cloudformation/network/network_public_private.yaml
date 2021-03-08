@@ -132,7 +132,6 @@ Resources:
       VpcId: !Ref VPC
       AvailabilityZone: !Select [0, !GetAZs  ""]
       CidrBlock: !Ref PrivateSubnet1CIDR
-      MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
           Value: !Sub "${DeploymentName} Private (AZ1)"
@@ -149,7 +148,6 @@ Resources:
       VpcId: !Ref VPC
       AvailabilityZone: !Select [1, !GetAZs  ""]
       CidrBlock: !Ref PrivateSubnet2CIDR
-      MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
           Value: !Sub "${DeploymentName} Private (AZ1)"

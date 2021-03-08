@@ -76,7 +76,7 @@ with its default options.
 </p>
 
 
-<figure id="orgd3633d7">
+<figure id="org04cb840">
 <img src="../../static/img/Network-Public-Private.png" alt="Network-Public-Private.png">
 
 </figure>
@@ -291,10 +291,26 @@ is part of.
 <h3 id="orga9248b4"><a href="#orga9248b4">Private Subnets</a></h3>
 <div class="outline-text-3" id="text-orga9248b4">
 <p>
-The <b>only</b> difference between a "public" Subnet and "private" Subnet is that
-public Subntes have a route to an Internet Gateway. There is no quality of a
-Subnet <i>itself</i> that makes it public or private; it's only a matter of what
-routes are in the Route Table that the Subnet is associated with.
+There are two differences between "public" and "private" Subnets:
+</p>
+
+<ol class="org-ol">
+<li>Public Subnets must specify <code>MapPublicIpOnLaunch: true</code>, which tells AWS
+to assign public IP addresses to instances.</li>
+<li>Public Subnets have a <b>route to an Internet Gateway</b>.</li>
+</ol>
+
+<p>
+The second item isn't actually a quality of the Subnet itself; rather it's a
+matter of what routes are in the Route Table that the Subnet is associated
+with.
+</p>
+
+<p>
+Private Subnets <i>can</i> specify <code>MapPublicIpOnLaunch: true</code> in order to assign
+internet-valid IP addresses to instances. That could be useful if, say, you
+want to be able to make a Subnet to temporarily public (by adding a route to
+the Internet Gateway).
 </p>
 
 <div class="org-src-container">
@@ -304,7 +320,6 @@ routes are in the Route Table that the Subnet is associated with.
       <span style="color: #dcaeea;">VpcId</span>: <span style="color: #ECBE7B;">!Ref</span> VPC
       <span style="color: #dcaeea;">AvailabilityZone</span>: <span style="color: #ECBE7B;">!Select</span> [0, <span style="color: #ECBE7B;">!GetAZs</span>  <span style="color: #98be65;">""</span>]
       <span style="color: #dcaeea;">CidrBlock</span>: <span style="color: #ECBE7B;">!Ref</span> PrivateSubnet1CIDR
-      <span style="color: #dcaeea;">MapPublicIpOnLaunch</span>: <span style="color: #a9a1e1;">false</span>
       <span style="color: #dcaeea;">Tags</span>:
         - <span style="color: #dcaeea;">Key</span>: Name
           <span style="color: #dcaeea;">Value</span>: <span style="color: #ECBE7B;">!Sub</span> <span style="color: #98be65;">"${DeploymentName} Private (AZ1)"</span>
@@ -324,7 +339,6 @@ routes are in the Route Table that the Subnet is associated with.
       <span style="color: #dcaeea;">VpcId</span>: <span style="color: #ECBE7B;">!Ref</span> VPC
       <span style="color: #dcaeea;">AvailabilityZone</span>: <span style="color: #ECBE7B;">!Select</span> [1, <span style="color: #ECBE7B;">!GetAZs</span>  <span style="color: #98be65;">""</span>]
       <span style="color: #dcaeea;">CidrBlock</span>: <span style="color: #ECBE7B;">!Ref</span> PrivateSubnet2CIDR
-      <span style="color: #dcaeea;">MapPublicIpOnLaunch</span>: <span style="color: #a9a1e1;">false</span>
       <span style="color: #dcaeea;">Tags</span>:
         - <span style="color: #dcaeea;">Key</span>: Name
           <span style="color: #dcaeea;">Value</span>: <span style="color: #ECBE7B;">!Sub</span> <span style="color: #98be65;">"${DeploymentName} Private (AZ1)"</span>
