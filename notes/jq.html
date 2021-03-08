@@ -33,22 +33,27 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org4eacfbf">Variable as argument</a></li>
-<li><a href="#org6cc7bf3">Multiline query</a></li>
-<li><a href="#orgcea11dc">Select where name contains</a></li>
+<li><a href="#orgee2481e">Variables</a></li>
+<li><a href="#org6732dd3">Multiline</a></li>
+<li><a href="#org5c4f9f7">Select</a>
+<ul>
+<li><a href="#org1ab4316">Name contains</a></li>
+<li><a href="#org6e23327">Name starts with</a></li>
+</ul>
+</li>
 <li><a href="#orgcde5ef1">Select AWS resources with Tag</a>
 <ul>
 <li><a href="#orgab64b50">Use aws &#x2013;filter</a></li>
 </ul>
 </li>
-<li><a href="#org7f941e6">Key contains period</a></li>
+<li><a href="#org9dcaaa4">Period in Key</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-org4eacfbf" class="outline-2">
-<h2 id="org4eacfbf"><a href="#org4eacfbf">Variable as argument</a></h2>
-<div class="outline-text-2" id="text-org4eacfbf">
+<div id="outline-container-orgee2481e" class="outline-2">
+<h2 id="orgee2481e"><a href="#orgee2481e">Variables</a></h2>
+<div class="outline-text-2" id="text-orgee2481e">
 <div class="org-src-container">
 <pre class="src src-sh">cat myfile.json <span style="color: #98be65;">\</span>
     | jq --arg foo bar <span style="color: #98be65;">'.[] | select(.name == $foo)'</span>
@@ -57,9 +62,9 @@
 </div>
 </div>
 
-<div id="outline-container-org6cc7bf3" class="outline-2">
-<h2 id="org6cc7bf3"><a href="#org6cc7bf3">Multiline query</a></h2>
-<div class="outline-text-2" id="text-org6cc7bf3">
+<div id="outline-container-org6732dd3" class="outline-2">
+<h2 id="org6732dd3"><a href="#org6732dd3">Multiline</a></h2>
+<div class="outline-text-2" id="text-org6732dd3">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">releases</span> <span style="color: #98be65;">\</span>
     | jq <span style="color: #98be65;">'.[] | select(.name == "v1.16.3").assets[]</span>
@@ -69,21 +74,31 @@
 </div>
 </div>
 
-<div id="outline-container-orgcea11dc" class="outline-2">
-<h2 id="orgcea11dc"><a href="#orgcea11dc">Select where name contains</a></h2>
-<div class="outline-text-2" id="text-orgcea11dc">
+<div id="outline-container-org5c4f9f7" class="outline-2">
+<h2 id="org5c4f9f7"><a href="#org5c4f9f7">Select</a></h2>
+<div class="outline-text-2" id="text-org5c4f9f7">
+</div>
+<div id="outline-container-org1ab4316" class="outline-3">
+<h3 id="org1ab4316"><a href="#org1ab4316">Name contains</a></h3>
+<div class="outline-text-3" id="text-org1ab4316">
 <div class="org-src-container">
-<pre class="src src-sh">aws route53 list-resource-record-sets --hosted-zone-id ZIP7RXUYMBTT9 &gt; record_se<span style="color: #ff6c6b; background-color: #1B2229; font-weight: bold;">ts</span>
+<pre class="src src-sh">aws route53 list-resource-record-sets --hosted-zone-id $<span style="color: #dcaeea;">id</span> &gt; record_sets
 cat record_sets | jq <span style="color: #98be65;">'.ResourceRecordSets[]</span>
-<span style="color: #98be65;">    | select(.Name | contains("tcdaily-uswest1"))</span>
+<span style="color: #98be65;">    | select(.Name | contains("a string"))</span>
 <span style="color: #98be65;">    | .Name'</span>
 </pre>
 </div>
+</div>
+</div>
 
+<div id="outline-container-org6e23327" class="outline-3">
+<h3 id="org6e23327"><a href="#org6e23327">Name starts with</a></h3>
+<div class="outline-text-3" id="text-org6e23327">
 <div class="org-src-container">
 <pre class="src src-sh">aws --region us-east-1 lambda list-functions <span style="color: #98be65;">\</span>
-    | jq <span style="color: #98be65;">'.Functions[] | select(.FunctionName | startswith("streaming-ingest"))'</span>
+    | jq <span style="color: #98be65;">'.Functions[] | select(.FunctionName | startswith("streaming"))'</span>
 </pre>
+</div>
 </div>
 </div>
 </div>
@@ -95,20 +110,24 @@ cat record_sets | jq <span style="color: #98be65;">'.ResourceRecordSets[]</span>
 <div id="outline-container-orgab64b50" class="outline-3">
 <h3 id="orgab64b50"><a href="#orgab64b50">Use aws &#x2013;filter</a></h3>
 <div class="outline-text-3" id="text-orgab64b50">
+<p>
+Best way to do this is use AWS server-side filtering.
+</p>
+
 <div class="org-src-container">
-<pre class="src src-sh">aws ec2 describe-addresses --filters <span style="color: #98be65;">"Name=tag:Name,Values=K8S_EIP_POOL"</span>
+<pre class="src src-sh">aws ec2 describe-addresses --filters <span style="color: #98be65;">"Name=tag:Name,Values=cfclrk"</span>
 </pre>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org7f941e6" class="outline-2">
-<h2 id="org7f941e6"><a href="#org7f941e6">Key contains period</a></h2>
-<div class="outline-text-2" id="text-org7f941e6">
+<div id="outline-container-org9dcaaa4" class="outline-2">
+<h2 id="org9dcaaa4"><a href="#org9dcaaa4">Period in Key</a></h2>
+<div class="outline-text-2" id="text-org9dcaaa4">
 <div class="org-src-container">
-<pre class="src src-sh">kubectl get secret default-token-mxxl9 -o json <span style="color: #98be65;">\</span>
-    | jq -r <span style="color: #98be65;">'.data["cloudconnect.crt"]'</span> <span style="color: #98be65;">\</span>
+<pre class="src src-sh">kubectl get secret $<span style="color: #dcaeea;">secret</span> -o json <span style="color: #98be65;">\</span>
+    | jq -r <span style="color: #98be65;">'.data["ca.crt"]'</span> <span style="color: #98be65;">\</span>
     | base64 --decode
 </pre>
 </div>
