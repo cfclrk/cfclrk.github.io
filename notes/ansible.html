@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ansible</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content">
+<header>
+<h1 class="title">Ansible</h1>
+</header><nav id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgb952487">Run facts against Vagrant VM</a></li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-orgb952487" class="outline-2">
+<h2 id="orgb952487"><a href="#orgb952487">Run facts against Vagrant VM</a></h2>
+<div class="outline-text-2" id="text-orgb952487">
+<div class="org-src-container">
+<pre class="src src-sh">ansible <span style="color: #98be65;">\</span>
+    -i .vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory <span style="color: #98be65;">\</span>
+    --private-key=.vagrant/machines/default/virtualbox/private_key <span style="color: #98be65;">\</span>
+    -u vagrant all -m setup
+</pre>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

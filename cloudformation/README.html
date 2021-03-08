@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2021-03-05 Fri 21:23 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>&lrm;</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content">
+<nav id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org204cd33">Create Stack</a>
+<ul>
+<li><a href="#org7852f90">package</a></li>
+<li><a href="#org292313a">create</a></li>
+</ul>
+</li>
+<li><a href="#org90b2b32">Update Stack</a>
+<ul>
+<li><a href="#org880b716">Using a change set</a></li>
+<li><a href="#org8c48cdc">Update in place</a></li>
+</ul>
+</li>
+<li><a href="#org1b6a830">Delete Stack</a></li>
+<li><a href="#org0bad3c2">Get stack logs</a></li>
+<li><a href="#org0baaaee">TODO</a></li>
+<li><a href="#orgc2cf24e">From network<sub>public</sub><sub>private</sub></a></li>
+</ul>
+</div>
+</nav>
+<pre class="example">
+yaml/iam/iam_roles.yaml
+</pre>
+
+
+
+<pre class="example">
+cfc
+</pre>
+
+
+
+<pre class="example">
+iam
+</pre>
+
+
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp" id="org576e6b1"><span style="color: #51afef;">(</span>f-filename templateFile<span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+
+<div id="outline-container-org204cd33" class="outline-2">
+<h2 id="org204cd33"><a href="#org204cd33">Create Stack</a></h2>
+<div class="outline-text-2" id="text-org204cd33">
+</div>
+<div id="outline-container-org7852f90" class="outline-3">
+<h3 id="org7852f90"><a href="#org7852f90">package</a></h3>
+<div class="outline-text-3" id="text-org7852f90">
+<p>
+If the template requires packaging. For a list of properties that can be filled
+in by packaging, see the <a href="https://docs.aws.amazon.com/cli/latest/reference/cloudformation/package.html">package</a> command.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">aws cloudformation package <span style="color: #98be65;">\</span>
+    --template-file template.yaml <span style="color: #98be65;">\</span>
+    --output-template-file serverless-output.yaml <span style="color: #98be65;">\</span>
+    --s3-bucket &lt;&lt;&lt;YOUR BUCKET NAME&gt;&gt;&gt;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org292313a" class="outline-3">
+<h3 id="org292313a"><a href="#org292313a">create</a></h3>
+<div class="outline-text-3" id="text-org292313a">
+<div class="org-src-container">
+<pre class="src src-sh">aws cloudformation create-stack <span style="color: #98be65;">\</span>
+    --stack-name $<span style="color: #dcaeea;">deploymentName</span>-$<span style="color: #dcaeea;">name</span> <span style="color: #98be65;">\</span>
+    --template-body file://$<span style="color: #dcaeea;">templateFile</span> <span style="color: #98be65;">\</span>
+    --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_IAM CAPABILITY_NAMED_IAM <span style="color: #98be65;">\</span>
+    --parameters <span style="color: #dcaeea;">ParameterKey</span>=DeploymentName,<span style="color: #dcaeea;">ParameterValue</span>=$<span style="color: #dcaeea;">deploymentName</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org90b2b32" class="outline-2">
+<h2 id="org90b2b32"><a href="#org90b2b32">Update Stack</a></h2>
+<div class="outline-text-2" id="text-org90b2b32">
+</div>
+<div id="outline-container-org880b716" class="outline-3">
+<h3 id="org880b716"><a href="#org880b716">Using a change set</a></h3>
+<div class="outline-text-3" id="text-org880b716">
+<p>
+Create a change set:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">aws cloudformation create-change-set <span style="color: #98be65;">\</span>
+    --stack-name $<span style="color: #dcaeea;">stackName</span> <span style="color: #98be65;">\</span>
+    --template-body file://$<span style="color: #dcaeea;">templateFile</span> <span style="color: #98be65;">\</span>
+    --change-set-name my-changes
+</pre>
+</div>
+
+<p>
+Describe a change set:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">aws cloudformation describe-change-set <span style="color: #98be65;">\</span>
+    --change-set-name my-changes <span style="color: #98be65;">\</span>
+    --stack-name $<span style="color: #dcaeea;">stackName</span>
+</pre>
+</div>
+
+<p>
+Apply a change set:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">aws cloudformation execute-change-set <span style="color: #98be65;">\</span>
+    --change-set-name my-changes <span style="color: #98be65;">\</span>
+    --stack-name $<span style="color: #dcaeea;">stackName</span>
+</pre>
+</div>
+
+<p>
+Delete a change set. Does the change set get deleted automatically when it is
+applied?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">aws cloudformation delete-change-set <span style="color: #98be65;">\</span>
+    --change-set-name my-changes <span style="color: #98be65;">\</span>
+    --stack-name $<span style="color: #dcaeea;">stackName</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8c48cdc" class="outline-3">
+<h3 id="org8c48cdc"><a href="#org8c48cdc">Update in place</a></h3>
+<div class="outline-text-3" id="text-org8c48cdc">
+<div class="org-src-container">
+<pre class="src src-sh">aws cloudformation update-stack <span style="color: #98be65;">\</span>
+    --stack-name $<span style="color: #dcaeea;">deploymentName</span>-$<span style="color: #dcaeea;">name</span> <span style="color: #98be65;">\</span>
+    --template-body file://$<span style="color: #dcaeea;">templateFile</span> <span style="color: #98be65;">\</span>
+    --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_IAM CAPABILITY_NAMED_IAM <span style="color: #98be65;">\</span>
+    --parameters <span style="color: #dcaeea;">ParameterKey</span>=DeploymentName,<span style="color: #dcaeea;">ParameterValue</span>=$<span style="color: #dcaeea;">deploymentName</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1b6a830" class="outline-2">
+<h2 id="org1b6a830"><a href="#org1b6a830">Delete Stack</a></h2>
+<div class="outline-text-2" id="text-org1b6a830">
+<div class="org-src-container">
+<pre class="src src-sh">aws cloudformation delete-stack --stack-name $<span style="color: #dcaeea;">name</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0bad3c2" class="outline-2">
+<h2 id="org0bad3c2"><a href="#org0bad3c2">Get stack logs</a></h2>
+<div class="outline-text-2" id="text-org0bad3c2">
+<div class="org-src-container">
+<pre class="src src-sh">aws cloudformation describe-stack-events --stack-name $<span style="color: #dcaeea;">name</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0baaaee" class="outline-2">
+<h2 id="org0baaaee"><a href="#org0baaaee">TODO</a></h2>
+<div class="outline-text-2" id="text-org0baaaee">
+<p>
+Use nested stacks, as is the <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#nested">best practice</a>.
+</p>
+
+<p>
+Force regeneration of all files in <code>make.el</code>. This way I can do a <code>make clean</code>
+and then a <code>make</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc2cf24e" class="outline-2">
+<h2 id="orgc2cf24e"><a href="#orgc2cf24e">From network<sub>public</sub><sub>private</sub></a></h2>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2021-03-06 Sat 07:43 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Fish</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content">
+<header>
+<h1 class="title">Fish</h1>
+</header><nav id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgb31edb7">Validate function argument</a></li>
+<li><a href="#orgc9d1245">Verify variable is defined</a></li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-orgb31edb7" class="outline-2">
+<h2 id="orgb31edb7"><a href="#orgb31edb7">Validate function argument</a></h2>
+<div class="outline-text-2" id="text-orgb31edb7">
+<div class="org-src-container">
+<pre class="src src-fish"><span style="color: #51afef;">test</span> <span style="color: #c678dd;">-z</span> <span style="color: #98be65;">"$argv[1]"</span>; <span style="color: #51afef;">and</span> <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Error: arg1 must be a string"</span>; <span style="color: #51afef;">and</span> <span style="color: #51afef;">return</span> <span style="color: #a9a1e1;">1</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc9d1245" class="outline-2">
+<h2 id="orgc9d1245"><a href="#orgc9d1245">Verify variable is defined</a></h2>
+<div class="outline-text-2" id="text-orgc9d1245">
+<div class="org-src-container">
+<pre class="src src-fish"><span style="color: #51afef;">test</span> <span style="color: #c678dd;">-z</span> <span style="color: #98be65;">"$FOO"</span>; <span style="color: #51afef;">and</span> <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"FOO is empty"</span>; <span style="color: #51afef;">and</span> <span style="color: #51afef;">return</span>
+<span style="color: #51afef;">test</span> <span style="color: #c678dd;">-z</span> <span style="color: #98be65;">"$BAR"</span>; <span style="color: #51afef;">and</span> <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"BAR is empty"</span>; <span style="color: #51afef;">and</span> <span style="color: #51afef;">return</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

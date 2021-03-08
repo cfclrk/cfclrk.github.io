@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Multiple GitHub Accounts</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content">
+<header>
+<h1 class="title">Multiple GitHub Accounts</h1>
+</header><nav id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org80cd075">The git config</a></li>
+<li><a href="#orga33f076">The SSH config</a></li>
+<li><a href="#org356c3ff">Gists</a></li>
+<li><a href="#org7a170e4">Emacs Forge</a></li>
+<li><a href="#org1596bdc">SSH passphrases and ssh-agent</a></li>
+<li><a href="#org2eb4327">Signed commits</a></li>
+<li><a href="#org9c64ad8">Resources</a></li>
+</ul>
+</div>
+</nav>
+<p>
+Say you have two GitHub accounts: <b>work</b> and <b>home</b>. Naturally, you'd like to
+use your <i>home</i> account for personal projects and your <i>work</i> account for work.
+There must be some way to designate which account to use in which situation!
+This article explains how I set things up so that:
+</p>
+
+<ul class="org-ul">
+<li>Projects in <code>~/work/...</code> use the <b>work</b> GitHub account</li>
+<li>Projects located anywhere else use the <b>home</b> GitHub account</li>
+</ul>
+
+<p>
+This is all just git and ssh configuration; no editor-specific configuration
+should be required (since editors should be shelling out to git anyway).
+</p>
+
+<div id="outline-container-org80cd075" class="outline-2">
+<h2 id="org80cd075"><a href="#org80cd075">The git config</a></h2>
+<div class="outline-text-2" id="text-org80cd075">
+<p>
+First: tell git to use different configuration depending on the directory a
+project is in. Git supports this with the <a href="https://git-scm.com/docs/git-config#_conditional_includes">includeIf</a> directive.
+</p>
+
+<p>
+File: <code>~/.config/git/config</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-gitconfig">[<span style="color: #ECBE7B;">user</span>]
+    <span style="color: #dcaeea;">name</span> = Chris Clark
+[<span style="color: #ECBE7B;">includeIf</span> <span style="color: #c678dd;">"gitdir:~/work/"</span>]
+    <span style="color: #dcaeea;">path</span> = work.gitconfig
+[<span style="color: #ECBE7B;">includeIf</span> <span style="color: #c678dd;">"gitdir:/"</span>]
+    <span style="color: #dcaeea;">path</span> = home.gitconfig
+</pre>
+</div>
+
+<p>
+File: <code>~/.config/git/config-work</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-gitconfig">[<span style="color: #ECBE7B;">user</span>]
+    <span style="color: #dcaeea;">email</span> = cfclrk@work.com
+[<span style="color: #ECBE7B;">github</span>]
+    <span style="color: #dcaeea;">user</span> = cfclrk-work
+[<span style="color: #ECBE7B;">url</span> <span style="color: #c678dd;">"git@github-work"</span>]
+    <span style="color: #dcaeea;">insteadOf</span> = git@github.com
+[<span style="color: #ECBE7B;">url</span> <span style="color: #c678dd;">"git@gist-work"</span>]
+    <span style="color: #dcaeea;">insteadOf</span> = git@gist.github.com
+</pre>
+</div>
+
+<p>
+File: <code>~/.config/git/config-home</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-gitconfig">[<span style="color: #ECBE7B;">user</span>]
+    <span style="color: #dcaeea;">email</span> = cfclrk@gmail.com
+[<span style="color: #ECBE7B;">github</span>]
+    <span style="color: #dcaeea;">user</span> = cfclrk
+[<span style="color: #ECBE7B;">url</span> <span style="color: #c678dd;">"git@github-home"</span>]
+    <span style="color: #dcaeea;">insteadOf</span> = git@github.com
+[<span style="color: #ECBE7B;">url</span> <span style="color: #c678dd;">"git@gist-home"</span>]
+    <span style="color: #dcaeea;">insteadOf</span> = git@gist.github.com
+</pre>
+</div>
+
+<p>
+Git loads <i>all</i> applicable config files, and greedily uses the first value it
+finds for any particular git option.
+</p>
+
+<p>
+For example: say you are in a git repository located at <code>~/work/projectA/</code>. Git
+loads the <code>~/.config/git/config</code> file and expands all of the <code>[includeIf]</code>
+statements.
+</p>
+
+<ul class="org-ul">
+<li>Does <code>[includeIf "gitdir:~/work/"]</code> apply?
+<ul class="org-ul">
+<li>Yes, load <code>work.gitconfig</code></li>
+</ul></li>
+<li>Does <code>[includeIf "gitdir:/"]</code> apply?
+<ul class="org-ul">
+<li>Yes, load <code>home.gitconfig</code></li>
+</ul></li>
+</ul>
+
+<p>
+Notice that <b>both</b> the <code>work.gitconfig</code> and <code>home.gitconfig</code> are loaded, but
+obviously <code>user.email</code> can only be set to one value. In this case, it will be
+set to <code>cfclrk@work.com</code> since that was the <i>first</i> value loaded for the
+<code>user.email</code> option.
+</p>
+
+<p>
+So, when you specify extra files using the <code>includeIf</code> directive, you must
+specify the files in order from <i>most specific</i> to <i>least specific</i>.
+</p>
+
+<p>
+A fun little aside: That email address that you specify as the value of
+<code>user.email</code> is the only piece of information GitHub uses when determining who
+authored a commit(!) You can set that email address to
+<code>torvalds@linux-foundation.org</code> and GitHub will happily put Linus Torvalds'
+picture next to your git commits. And to be sure, <a href="https://news.ycombinator.com/item?id=10005577">that happens</a>.
+</p>
+
+<p>
+Ok, we've told git to use a different <code>user.email</code> for different projects, but
+we haven't told git how to use different SSH keys for different projects. For
+that, we need to do some SSH configuration.
+</p>
+
+<p>
+[xdg]: <a href="https://specifications.freedesktop.org/basedir-spec/latest/index.html">https://specifications.freedesktop.org/basedir-spec/latest/index.html</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga33f076" class="outline-2">
+<h2 id="orga33f076"><a href="#orga33f076">The SSH config</a></h2>
+<div class="outline-text-2" id="text-orga33f076">
+<p>
+Assuming you use the <code>git</code> protocol (which uses SSH under the covers) and not
+<code>https</code> like some kind of animal, you have two SSH keys for GitHub &#x2013; one for
+each GitHub account (GitHub will not allow you to use the same SSH key for both
+accounts, I've tried). Assuming you've <a href="https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh">created</a> those, your <code>~/.ssh</code> directory
+looks something like:
+</p>
+
+<pre class="example" id="orgd3ce6bc">
+$ tree ~/.ssh/
+/Users/cfclrk/.ssh/
+├── config
+├── github-home
+├── github-home.pub
+├── github-work
+└── github-work.pub
+</pre>
+
+<p>
+The <code>~/.ssh/config</code> allows you to specify which SSH key should be used for
+particular DNS domains. Unfortunately, both of your GitHub accounts use the
+same domain; without further magic, the best we could do is say:
+</p>
+
+<ul class="org-ul">
+<li>Use <code>~/.ssh/github-home</code> when connecting to github.com</li>
+<li>Use <code>~/.ssh/github-work</code> when connecting to github.com</li>
+</ul>
+
+<p>
+This is where git URL rewriting comes in.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org356c3ff" class="outline-2">
+<h2 id="org356c3ff"><a href="#org356c3ff">Gists</a></h2>
+</div>
+
+<div id="outline-container-org7a170e4" class="outline-2">
+<h2 id="org7a170e4"><a href="#org7a170e4">Emacs Forge</a></h2>
+<div class="outline-text-2" id="text-org7a170e4">
+<p>
+Need to update <code>forge-alist</code>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1596bdc" class="outline-2">
+<h2 id="org1596bdc"><a href="#org1596bdc">SSH passphrases and ssh-agent</a></h2>
+</div>
+
+<div id="outline-container-org2eb4327" class="outline-2">
+<h2 id="org2eb4327"><a href="#org2eb4327">Signed commits</a></h2>
+<div class="outline-text-2" id="text-org2eb4327">
+<p>
+In the section on git configuration, I mentioned how trivial it is to make git
+commits associated with someone else's GitHub account. To somewhat address this,
+GitHub now allows you to upload a PGP key to your GitHub account, and GitHub
+displays a "Verified" badge on commits that are signed with a PGP key that
+matches the email address associated with the commit.
+</p>
+
+<p>
+Setting up PGP key signing with one GitHub account isn't too bad, but I didn't
+see an obvious way sign commits with different keys depending on what the git
+configuration of a project is.
+</p>
+
+<p>
+It would be super next-level if you find a simple way to automatically sign
+commits with the right PGP key when using multiple GitHub accounts. If you've
+got a cool setup that does that, let me know!
+</p>
+</div>
+</div>
+
+<div id="outline-container-org9c64ad8" class="outline-2">
+<h2 id="org9c64ad8"><a href="#org9c64ad8">Resources</a></h2>
+<div class="outline-text-2" id="text-org9c64ad8">
+<p>
+<a href="https://yayimorphology.org/ssh-identities-made-easy.html">https://yayimorphology.org/ssh-identities-made-easy.html</a>
+</p>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bash</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content">
+<header>
+<h1 class="title">Bash</h1>
+</header><nav id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org2d2c002">Style</a></li>
+<li><a href="#org2953d6c">Function Parameters</a>
+<ul>
+<li><a href="#orgcf90846">test</a></li>
+<li><a href="#org01675c0">new-test</a></li>
+<li><a href="#org4c97294">if-else</a></li>
+</ul>
+</li>
+<li><a href="#org78bf926">Script Arguments</a></li>
+<li><a href="#orge676788">Script Options</a>
+<ul>
+<li><a href="#orgce4ec59">getopts</a></li>
+</ul>
+</li>
+<li><a href="#org11c8ee5">Heredocs</a>
+<ul>
+<li><a href="#orgd88a026">Interpolation</a>
+<ul>
+<li><a href="#org167e172">with interpolation</a></li>
+<li><a href="#orgf5172aa">without interpolation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgd8ef517">Verify environment variables</a></li>
+<li><a href="#org7f7054e">Parameter Expansion</a>
+<ul>
+<li><a href="#org4d5adab">Resources</a></li>
+<li><a href="#org284d9a8">Example</a></li>
+</ul>
+</li>
+<li><a href="#org2bcdd9e">Range</a></li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-org2d2c002" class="outline-2">
+<h2 id="org2d2c002"><a href="#org2d2c002">Style</a></h2>
+<div class="outline-text-2" id="text-org2d2c002">
+<p>
+See the <a href="https://github.com/azet/community_bash_style_guide">Bash style guide</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org2953d6c" class="outline-2">
+<h2 id="org2953d6c"><a href="#org2953d6c">Function Parameters</a></h2>
+<div class="outline-text-2" id="text-org2953d6c">
+<p>
+For more info, see <a href="http://mywiki.wooledge.org/BashFAQ/031">FAQ</a>: "What is the difference between test, [ and [[ ?"
+</p>
+
+<p>
+If there is an error, the function should return a non-zero code. Only functions
+can return; if outside of a function, use "exit 1". See:
+<a href="https://stackoverflow.com/questions/4419952/difference-between-return-and-exit-in-bash-functions">https://stackoverflow.com/questions/4419952/difference-between-return-and-exit-in-bash-functions</a>
+</p>
+</div>
+
+<div id="outline-container-orgcf90846" class="outline-3">
+<h3 id="orgcf90846"><a href="#orgcf90846">test</a></h3>
+<div class="outline-text-3" id="text-orgcf90846">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #c678dd;">foo</span>() {
+    <span style="color: #dcaeea;">a</span>=${<span style="color: #dcaeea;">1</span>-}
+    <span style="color: #c678dd;">test</span> -n <span style="color: #98be65;">"$a"</span> || {
+        <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Error: a is required"</span>
+        <span style="color: #51afef;">return</span> 1
+    }
+}
+</pre>
+</div>
+
+<p>
+Note that <code>[</code> <code>]</code> is an alias for <code>test</code>, so the same thing can be written
+as:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #c678dd;">foo</span>() {
+    [ -n <span style="color: #98be65;">"$1"</span> ] || {
+        <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Error: param 1 is zero-length"</span>
+        <span style="color: #51afef;">return</span> 1
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org01675c0" class="outline-3">
+<h3 id="org01675c0"><a href="#org01675c0">new-test</a></h3>
+<div class="outline-text-3" id="text-org01675c0">
+<p>
+The double-bracket <code>[[</code> syntax is called "new-test" and can also be used.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #c678dd;">foo</span>() {
+    [[ -n <span style="color: #98be65;">"$1"</span> ]] || {
+        <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Error: param 1 is zero-length"</span>
+        <span style="color: #51afef;">return</span> 1
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4c97294" class="outline-3">
+<h3 id="org4c97294"><a href="#org4c97294">if-else</a></h3>
+<div class="outline-text-3" id="text-org4c97294">
+<p>
+Can do same thing as for script arguments, but
+</p>
+
+<ul class="org-ul">
+<li>Use a <code>return</code> instead of an <code>exit</code></li>
+<li>Make the variable local</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #c678dd;">func</span>() {
+    <span style="color: #51afef;">if</span> [ -z ${<span style="color: #dcaeea;">1</span>+x} ]; <span style="color: #51afef;">then</span>
+        <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"arg 1 (a) is required"</span>
+        <span style="color: #51afef;">return</span> 1
+    <span style="color: #51afef;">else</span>
+        local <span style="color: #dcaeea;">a</span>=$<span style="color: #dcaeea;">1</span>
+    <span style="color: #51afef;">fi</span>
+    <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"a is '$a'"</span>
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org78bf926" class="outline-2">
+<h2 id="org78bf926"><a href="#org78bf926">Script Arguments</a></h2>
+<div class="outline-text-2" id="text-org78bf926">
+<p>
+Same patterns as function parameters can be used.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #51afef;">if</span> [ -z ${<span style="color: #dcaeea;">1</span>+x} ]; <span style="color: #51afef;">then</span>
+    <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"arg 1 (foo) is required"</span>
+    <span style="color: #51afef;">exit</span> 1
+<span style="color: #51afef;">fi</span>
+<span style="color: #dcaeea;">foo</span>=$<span style="color: #dcaeea;">1</span>
+<span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"foo is: '$foo'"</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge676788" class="outline-2">
+<h2 id="orge676788"><a href="#orge676788">Script Options</a></h2>
+<div class="outline-text-2" id="text-orge676788">
+</div>
+<div id="outline-container-orgce4ec59" class="outline-3">
+<h3 id="orgce4ec59"><a href="#orgce4ec59">getopts</a></h3>
+<div class="outline-text-3" id="text-orgce4ec59">
+<p>
+See home/bin/ssm script for a good example.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #c678dd;">showHelp</span>() {
+    cat &lt;&lt;END
+<span style="color: #98be65;">Usage: $(basename "$0") [-p profile]</span>
+<span style="color: #98be65;">END</span>
+}
+
+<span style="color: #51afef;">while </span><span style="color: #c678dd;">getopts</span> :hp: arg; <span style="color: #51afef;">do</span>
+    <span style="color: #51afef;">case</span> ${<span style="color: #dcaeea;">arg</span>} <span style="color: #51afef;">in</span>
+        h)
+            showHelp
+            <span style="color: #51afef;">exit</span> 0
+            ;;
+        p)
+            <span style="color: #dcaeea;">profile</span>=<span style="color: #98be65;">"$OPTARG"</span>
+            ;;
+        <span style="color: #98be65;">\?</span>)
+            <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Invalid option: -$OPTARG"</span> &gt;&amp;2
+            <span style="color: #51afef;">exit</span> 1
+            ;;
+        :)
+            <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Option -$OPTARG requires an argument"</span> &gt;&amp;2
+            <span style="color: #51afef;">exit</span> 1
+            ;;
+    <span style="color: #51afef;">esac</span>
+<span style="color: #51afef;">done</span>
+<span style="color: #c678dd;">shift</span> $((OPTIND -1))
+
+<span style="color: #5B6268;"># </span><span style="color: #5B6268;">Define default option values</span>
+<span style="color: #dcaeea;">profile</span>=${<span style="color: #dcaeea;">profile</span>:=<span style="color: #98be65;">"chrisc"</span>}
+
+<span style="color: #dcaeea;">aws</span>=<span style="color: #98be65;">"aws --profile $profile --region us-east-1"</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org11c8ee5" class="outline-2">
+<h2 id="org11c8ee5"><a href="#org11c8ee5">Heredocs</a></h2>
+<div class="outline-text-2" id="text-org11c8ee5">
+</div>
+<div id="outline-container-orgd88a026" class="outline-3">
+<h3 id="orgd88a026"><a href="#orgd88a026">Interpolation</a></h3>
+<div class="outline-text-3" id="text-orgd88a026">
+<p>
+A heredoc can interpolate variable names to values, or the whole heredoc can
+be taken completely literally without any interpolation. The difference is
+whether the limit string has single quotes around it.
+</p>
+</div>
+
+<div id="outline-container-org167e172" class="outline-4">
+<h4 id="org167e172"><a href="#org167e172">with interpolation</a></h4>
+<div class="outline-text-4" id="text-org167e172">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #dcaeea;">foo</span>=<span style="color: #98be65;">"bar"</span>
+<span style="color: #dcaeea;">a</span>=$(cat &lt;&lt;EOF
+<span style="color: #98be65;">hello</span>
+<span style="color: #98be65;">$foo</span>
+<span style="color: #98be65;">EOF</span>
+ )
+<span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"$a"</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf5172aa" class="outline-4">
+<h4 id="orgf5172aa"><a href="#orgf5172aa">without interpolation</a></h4>
+<div class="outline-text-4" id="text-orgf5172aa">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #dcaeea;">foo</span>=<span style="color: #98be65;">"bar"</span>
+<span style="color: #dcaeea;">a</span>=$(cat &lt;&lt;<span style="color: #98be65;">'EOF'</span>
+<span style="color: #98be65;">hello</span>
+<span style="color: #98be65;">$foo</span>
+<span style="color: #98be65;">EOF</span>
+ )
+<span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"$a"</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd8ef517" class="outline-2">
+<h2 id="orgd8ef517"><a href="#orgd8ef517">Verify environment variables</a></h2>
+<div class="outline-text-2" id="text-orgd8ef517">
+<p>
+Verify some environment variables exist.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">: <span style="color: #98be65;">"${ARTIFACTORY_USER:?ARTIFACTORY_USER is not set}"</span>
+: <span style="color: #98be65;">"${ARTIFACTORY_PASSWORD:?ARTIFACTORY_PASSWORD is not set}"</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7f7054e" class="outline-2">
+<h2 id="org7f7054e"><a href="#org7f7054e">Parameter Expansion</a></h2>
+<div class="outline-text-2" id="text-org7f7054e">
+</div>
+<div id="outline-container-org4d5adab" class="outline-3">
+<h3 id="org4d5adab"><a href="#org4d5adab">Resources</a></h3>
+<div class="outline-text-3" id="text-org4d5adab">
+<ul class="org-ul">
+<li>GNU <a href="https://www.gnu.org/software/bash/manual/bashref.html#Shell-Parameter-Expansion">Bash docs</a></li>
+<li><a href="https://www.opengroup.org/">The Open Group</a> has some excellent <a href="https://pubs.opengroup.org/onlinepubs/9699919799">POSIX documentation</a> with a section on
+<a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02">parameter expansion</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org284d9a8" class="outline-3">
+<h3 id="org284d9a8"><a href="#org284d9a8">Example</a></h3>
+<div class="outline-text-3" id="text-org284d9a8">
+<p>
+Example frome here: <a href="https://stackoverflow.com/a/13864829/340613">https://stackoverflow.com/a/13864829/340613</a>
+</p>
+
+<p>
+Docs for the <code>+</code> parameter expansion:
+</p>
+
+<p>
+<code>${parameter:+[word]}</code>
+</p>
+
+<p>
+If parameter is unset or null, null shall be substituted; otherwise, the
+expansion of word (or an empty string if word is omitted) shall be
+substituted.
+</p>
+
+<p>
+<code>-z</code> checks if the argument is null or empty.
+</p>
+
+<p>
+In this case, var is the empty string, which is not "unset or null".
+Therefore the <code>+</code> parameter expansion expands this to <code>x</code> (which passes the
+<code>-z</code> check).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #dcaeea;">var</span>=<span style="color: #98be65;">""</span>
+<span style="color: #51afef;">if</span> [ -z ${<span style="color: #dcaeea;">var</span>+x} ]; <span style="color: #51afef;">then</span>
+    <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"var is unset"</span>
+<span style="color: #51afef;">else</span>
+    <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"var is set to '$var'"</span>
+<span style="color: #51afef;">fi</span>
+</pre>
+</div>
+
+<p>
+In this case, <code>var</code> has not been declared, so it is "unset or null". The <code>+</code>
+parameter expansion expands it to <code>null</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #51afef;">if</span> [ -z ${<span style="color: #dcaeea;">var</span>+x} ]; <span style="color: #51afef;">then</span>
+    <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"var is unset"</span>
+<span style="color: #51afef;">else</span>
+    <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"var is set to '$var'"</span>
+<span style="color: #51afef;">fi</span>
+</pre>
+</div>
+
+<p>
+In this case we leave the <code>word</code> spot empty in the parameter expansion, so if
+<code>var</code> is empty, it is subsituted by an empty string. Now the <code>-z</code> test sees an
+empty argument, and this prints out <code>var is unset</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #dcaeea;">var</span>=<span style="color: #98be65;">""</span>
+<span style="color: #51afef;">if</span> [ -z ${<span style="color: #dcaeea;">var</span>+} ]; <span style="color: #51afef;">then</span>
+    <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"var is unset"</span>
+<span style="color: #51afef;">else</span>
+    <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"var is set to '$var'"</span>
+<span style="color: #51afef;">fi</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2bcdd9e" class="outline-2">
+<h2 id="org2bcdd9e"><a href="#org2bcdd9e">Range</a></h2>
+<div class="outline-text-2" id="text-org2bcdd9e">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #51afef;">for</span> i<span style="color: #51afef;"> in</span> {1..5}; <span style="color: #51afef;">do</span>
+    <span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">i</span>
+<span style="color: #51afef;">done</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

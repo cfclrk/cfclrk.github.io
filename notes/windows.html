@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2021-03-06 Sat 07:43 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Windows Stuff</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content">
+<header>
+<h1 class="title">Windows Stuff</h1>
+</header><nav id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org98360df">Environment Variables</a>
+<ul>
+<li><a href="#orga43ef7e">List all env vars</a></li>
+<li><a href="#orgd2e58bf">Function to update env variable</a></li>
+<li><a href="#orge08f3a4">setx</a></li>
+</ul>
+</li>
+<li><a href="#orgd5a4ac0">Background Process</a>
+<ul>
+<li><a href="#orgef31f61">Start-Process</a></li>
+<li><a href="#org2e4cc31">Start-Job</a></li>
+<li><a href="#org8e96734">Scheduled Task</a></li>
+<li><a href="#org81110cd">Subshell with -NoExit</a></li>
+</ul>
+</li>
+<li><a href="#orgddf6f55">Kill a Process</a></li>
+<li><a href="#orgdae59f6">Install Python</a></li>
+<li><a href="#org8e5ab70">Upgrade Powershell</a></li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-org98360df" class="outline-2">
+<h2 id="org98360df"><a href="#org98360df">Environment Variables</a></h2>
+<div class="outline-text-2" id="text-org98360df">
+</div>
+<div id="outline-container-orga43ef7e" class="outline-3">
+<h3 id="orga43ef7e"><a href="#orga43ef7e">List all env vars</a></h3>
+<div class="outline-text-3" id="text-orga43ef7e">
+<div class="org-src-container">
+<pre class="src src-powershell">gci env: | sort name
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd2e58bf" class="outline-3">
+<h3 id="orgd2e58bf"><a href="#orgd2e58bf">Function to update env variable</a></h3>
+<div class="outline-text-3" id="text-orgd2e58bf">
+<p>
+This is an attempt at a function to update environment variables permanently.
+It correctly sets a registry key, but it only takes effect after a reboot.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-powershell"><span style="color: #51afef;">Function</span> <span style="color: #ECBE7B; text-decoration: underline;">global</span><span style="color: #c678dd;">:Add-Path</span>()
+{
+    <span style="color: #51afef;">Param</span> (
+        <span style="color: #ECBE7B;">[String]</span><span style="color: #dcaeea;">$NewDir</span>
+    )
+
+    <span style="color: #dcaeea;">$RegKey</span> = <span style="color: #98be65;">'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Ses</span><span style="color: #ff6c6b; background-color: #1B2229; font-weight: bold;">sion Manager\Environment'</span>
+    <span style="color: #dcaeea;">$OldPath</span>=(<span style="color: #c678dd;">Get-ItemProperty</span> <span style="color: #a9a1e1;">-Path</span> <span style="color: #98be65;">"$RegKey"</span> <span style="color: #a9a1e1;">-Name</span> PATH).Path
+    <span style="color: #dcaeea;">$NewPath</span> = <span style="color: #dcaeea;">$OldPath</span> + <span style="color: #98be65;">';'</span> + <span style="color: #dcaeea;">$NewDir</span>
+    <span style="color: #c678dd;">Set-ItemProperty</span> <span style="color: #a9a1e1;">-Path</span> <span style="color: #98be65;">"$RegKey"</span> <span style="color: #a9a1e1;">-Name</span> PATH &#8211;Value <span style="color: #dcaeea;">$NewPath</span>
+    <span style="color: #51afef;">Return</span> <span style="color: #dcaeea;">$NewPath</span>
+}
+</pre>
+</div>
+
+<p>
+It's potentially possible to use <code>SendMessage</code> to update the environment for
+currently-running processes. It would look something like:
+</p>
+
+<p>
+SendMessage (HWND<sub>BROADCAST</sub>, WM<sub>SETTINGCHANGE</sub>, 0, (LPARAM)"Environment")
+</p>
+
+<p>
+There is another registry key <code>HKEY_CURRENT_USER\Environment</code> that can also be
+used.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge08f3a4" class="outline-3">
+<h3 id="orge08f3a4"><a href="#orge08f3a4">setx</a></h3>
+<div class="outline-text-3" id="text-orge08f3a4">
+<p>
+<code>setx</code> can set an environment variable and persist it, but it will only be
+available to new processes.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">setx /m FOO bar
+</pre>
+</div>
+
+<p>
+If you need the env var in the sshd environment, restart sshd:
+</p>
+
+<p>
+Stop-Service sshd
+Start-Service sshd
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd5a4ac0" class="outline-2">
+<h2 id="orgd5a4ac0"><a href="#orgd5a4ac0">Background Process</a></h2>
+<div class="outline-text-2" id="text-orgd5a4ac0">
+</div>
+<div id="outline-container-orgef31f61" class="outline-3">
+<h3 id="orgef31f61"><a href="#orgef31f61">Start-Process</a></h3>
+<div class="outline-text-3" id="text-orgef31f61">
+<div class="org-src-container">
+<pre class="src src-powershell"><span style="color: #c678dd;">Start-Process</span> `
+  <span style="color: #a9a1e1;">-FilePath</span> go.exe `
+  <span style="color: #a9a1e1;">-NoNewWindow</span> `
+  <span style="color: #a9a1e1;">-ArgumentList</span> (<span style="color: #98be65;">'run'</span>, <span style="color: #98be65;">'cli/tools/server/cmd/server.go'</span>) `
+  <span style="color: #a9a1e1;">-PassThru</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2e4cc31" class="outline-3">
+<h3 id="org2e4cc31"><a href="#org2e4cc31">Start-Job</a></h3>
+</div>
+
+<div id="outline-container-org8e96734" class="outline-3">
+<h3 id="org8e96734"><a href="#org8e96734">Scheduled Task</a></h3>
+</div>
+
+<div id="outline-container-org81110cd" class="outline-3">
+<h3 id="org81110cd"><a href="#org81110cd">Subshell with -NoExit</a></h3>
+</div>
+</div>
+
+<div id="outline-container-orgddf6f55" class="outline-2">
+<h2 id="orgddf6f55"><a href="#orgddf6f55">Kill a Process</a></h2>
+</div>
+
+<div id="outline-container-orgdae59f6" class="outline-2">
+<h2 id="orgdae59f6"><a href="#orgdae59f6">Install Python</a></h2>
+<div class="outline-text-2" id="text-orgdae59f6">
+<div class="org-src-container">
+<pre class="src src-powershell"><span style="color: #dcaeea;">$url</span> = https://www.python.org/ftp/python/3.6.3/<span style="color: #c678dd;">python-3</span>.6.3-amd64.exe
+<span style="color: #c678dd;">Invoke-WebRequest</span> <span style="color: #a9a1e1;">-Uri</span> <span style="color: #dcaeea;">$url</span> <span style="color: #a9a1e1;">-OutFile</span> pythoninstaller.exe
+
+./pythoninstaller.exe /quiet `
+  InstallAllUsers=1 `
+  PrependPath=1 `
+  Include_test=0 `
+  Include_doc=0 `
+  Include_tcltk=0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8e5ab70" class="outline-2">
+<h2 id="org8e5ab70"><a href="#org8e5ab70">Upgrade Powershell</a></h2>
+<div class="outline-text-2" id="text-org8e5ab70">
+<div class="org-src-container">
+<pre class="src src-powershell"><span style="color: #dcaeea;">$scriptUri</span> = https://raw.githubusercontent.com/jborean93/<span style="color: #c678dd;">ansible-windows</span>/master/<span style="color: #ff6c6b; background-color: #1B2229; font-weight: bold;">scripts/</span><span style="color: #ff6c6b; background-color: #1B2229; font-weight: bold;">Upgrade-PowerShell</span><span style="color: #ff6c6b; background-color: #1B2229; font-weight: bold;">.ps1</span>
+<span style="color: #c678dd;">Invoke-WebRequest</span> <span style="color: #a9a1e1;">-Uri</span> <span style="color: #dcaeea;">$scriptUri</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
