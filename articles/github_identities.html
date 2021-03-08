@@ -33,21 +33,31 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org80cd075">The git config</a></li>
-<li><a href="#orga33f076">The SSH config</a></li>
-<li><a href="#org356c3ff">Gists</a></li>
-<li><a href="#org7a170e4">Emacs Forge</a></li>
-<li><a href="#org1596bdc">SSH passphrases and ssh-agent</a></li>
-<li><a href="#org2eb4327">Signed commits</a></li>
-<li><a href="#org9c64ad8">Resources</a></li>
+<li><a href="#org5561ff3">The git config</a>
+<ul>
+<li><a href="#orgd0a2f03">Background: Git URL rewriting</a></li>
+<li><a href="#org4b8a1bb">Background: Git config loading</a></li>
+</ul>
+</li>
+<li><a href="#the-ssh-config">The SSH Config</a></li>
+<li><a href="#orge6b0caf">SSH passphrases and ssh-agent</a></li>
+<li><a href="#signed-commits">Signed Commits</a></li>
+<li><a href="#orgad4d6e9">Emacs: Configuring Forge</a></li>
+<li><a href="#org0576f25">Resources</a></li>
 </ul>
 </div>
 </nav>
 <p>
-Say you have two GitHub accounts: <b>work</b> and <b>home</b>. Naturally, you'd like to
-use your <i>home</i> account for personal projects and your <i>work</i> account for work.
-There must be some way to designate which account to use in which situation!
-This article explains how I set things up so that:
+<b><i>The Problem</i></b>: You have multiple GitHub accounts, and you want to git to
+automatically use a particular account depending on what directory a project is
+in.
+</p>
+
+<p>
+In this article I'll use two GitHub accounts as an example: <b>work</b> and <b>home</b>
+(but the idea supports any number of accounts). You'd like to use your <i>home</i>
+account for personal projects and your <i>work</i> account for work. Here we set
+things up so that:
 </p>
 
 <ul class="org-ul">
@@ -60,12 +70,23 @@ This is all just git and ssh configuration; no editor-specific configuration
 should be required (since editors should be shelling out to git anyway).
 </p>
 
-<div id="outline-container-org80cd075" class="outline-2">
-<h2 id="org80cd075"><a href="#org80cd075">The git config</a></h2>
-<div class="outline-text-2" id="text-org80cd075">
+<div id="outline-container-org5561ff3" class="outline-2">
+<h2 id="org5561ff3"><a href="#org5561ff3">The git config</a></h2>
+<div class="outline-text-2" id="text-org5561ff3">
 <p>
-First: tell git to use different configuration depending on the directory a
-project is in. Git supports this with the <a href="https://git-scm.com/docs/git-config#_conditional_includes">includeIf</a> directive.
+The git configuration must do two things:
+</p>
+
+<ol class="org-ol">
+<li>Tell git to use a different configuration depending on the directory a
+project is in. Git supports this with the <a href="https://git-scm.com/docs/git-config#_conditional_includes">includeIf</a> directive.</li>
+<li>Perform git URL-rewriting with <a href="https://git-scm.com/docs/git-config#Documentation/git-config.txt-urlltbasegtinsteadOf">insteadOf</a>, which allows SSH to make a
+distinction between the two accounts.</li>
+</ol>
+
+<p>
+First, tell git to use a particular configuration depending on the directory a
+project is in.
 </p>
 
 <p>
@@ -83,7 +104,13 @@ File: <code>~/.config/git/config</code>
 </div>
 
 <p>
-File: <code>~/.config/git/config-work</code>
+Then, we create a new git config file for each GitHub account. In each file,
+specify your email address, GitHub username, and a url-rewriting <a href="https://git-scm.com/docs/git-config#Documentation/git-config.txt-urlltbasegtinsteadOf">insteadOf</a>
+line which modifies the base URL that git and SSH see.
+</p>
+
+<p>
+File: <code>~/.config/git/work.gitconfig</code>
 </p>
 
 <div class="org-src-container">
@@ -115,62 +142,131 @@ File: <code>~/.config/git/config-home</code>
 </div>
 
 <p>
-Git loads <i>all</i> applicable config files, and greedily uses the first value it
-finds for any particular git option.
+That's it for the git config! The rest of this section elaborates on this
+config, if you are interested.
+</p>
+</div>
+
+<div id="outline-container-orgd0a2f03" class="outline-3">
+<h3 id="orgd0a2f03"><a href="#orgd0a2f03">Background: Git URL rewriting</a></h3>
+<div class="outline-text-3" id="text-orgd0a2f03">
+<p>
+To take a closer look at what this part of <i>home.gitconfig</i> means:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-gitconfig">[<span style="color: #ECBE7B;">url</span> <span style="color: #c678dd;">"git@github-home"</span>]
+    <span style="color: #dcaeea;">insteadOf</span> = git@github.com
+</pre>
+</div>
+
+<p>
+Here I've said: "Mr. Git, any time you see a URL that starts with
+<code>git@github.com</code>, please just pretend like the URL actually starts with
+<code>git@github-home</code>".
 </p>
 
 <p>
-For example: say you are in a git repository located at <code>~/work/projectA/</code>. Git
-loads the <code>~/.config/git/config</code> file and expands all of the <code>[includeIf]</code>
+For example, let's see what git thinks about the repository where I'm writing
+<a href="https://github.com/cfclrk/articles">this article</a>. If I just <code>cat</code> the git config file in my local <i>articles</i>
+repo, I see the real remote URL:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">cat .git/config | grep <span style="color: #98be65;">"\[remote"</span> -A 2
+</pre>
+</div>
+
+<pre class="example">
+[remote "origin"]
+	url = git@github.com:cfclrk/articles.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+</pre>
+
+
+<p>
+But when I use the <code>git remote</code> command line to view that value, I see this:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">git remote -v
+</pre>
+</div>
+
+<pre class="example">
+origin	git@github-home:cfclrk/articles.git (fetch)
+origin	git@github-home:cfclrk/articles.git (push)
+</pre>
+
+
+<p>
+We can see that <code>git remote</code> shows the rewritten URL. Git performs the
+url-rewriting at a really low level, so all git commands see the rewritten
+form.
+</p>
+
+<p>
+The value I chose &#x2013; in this case "github-home" &#x2013; could have been anything
+(well, anything without spaces, etc). It doesn't matter so much <i>what</i> the
+value is, it just matters that you use the <i>same</i> value in your git config
+and in your SSH config (as explained in the section <a href="#the-ssh-config">The SSH Config</a>).
+</p>
+</div>
+</div>
+
+<div id="outline-container-org4b8a1bb" class="outline-3">
+<h3 id="org4b8a1bb"><a href="#org4b8a1bb">Background: Git config loading</a></h3>
+<div class="outline-text-3" id="text-org4b8a1bb">
+<p>
+Git loads <i>all</i> applicable config files, and greedily uses the first value it
+finds for each option.
+</p>
+
+<p>
+For example: say you have the git config specified above, and you are
+currently in a git repository located at <code>~/work/projectA/</code>. Git first loads
+the <code>~/.config/git/config</code> file and expands all of the <code>[includeIf]</code>
 statements.
 </p>
 
 <ul class="org-ul">
 <li>Does <code>[includeIf "gitdir:~/work/"]</code> apply?
 <ul class="org-ul">
-<li>Yes, load <code>work.gitconfig</code></li>
+<li>Yes, so load <code>work.gitconfig</code></li>
 </ul></li>
 <li>Does <code>[includeIf "gitdir:/"]</code> apply?
 <ul class="org-ul">
-<li>Yes, load <code>home.gitconfig</code></li>
+<li>Yes, so load <code>home.gitconfig</code></li>
 </ul></li>
 </ul>
 
 <p>
 Notice that <b>both</b> the <code>work.gitconfig</code> and <code>home.gitconfig</code> are loaded, but
-obviously <code>user.email</code> can only be set to one value. In this case, it will be
-set to <code>cfclrk@work.com</code> since that was the <i>first</i> value loaded for the
-<code>user.email</code> option.
+obviously <code>user.email</code> can only be set to one value. In this case, the email
+address will be set to <code>cfclrk@work.com</code> since that was the <i>first</i> value
+loaded for the <code>user.email</code> option.
 </p>
 
 <p>
-So, when you specify extra files using the <code>includeIf</code> directive, you must
-specify the files in order from <i>most specific</i> to <i>least specific</i>.
+When you load multiple extra git config files using the <code>includeIf</code> directive,
+you must specify the files in order from <i>most specific</i> to <i>least specific</i>.
 </p>
 
 <p>
 A fun little aside: That email address that you specify as the value of
 <code>user.email</code> is the only piece of information GitHub uses when determining who
-authored a commit(!) You can set that email address to
-<code>torvalds@linux-foundation.org</code> and GitHub will happily put Linus Torvalds'
-picture next to your git commits. And to be sure, <a href="https://news.ycombinator.com/item?id=10005577">that happens</a>.
-</p>
-
-<p>
-Ok, we've told git to use a different <code>user.email</code> for different projects, but
-we haven't told git how to use different SSH keys for different projects. For
-that, we need to do some SSH configuration.
-</p>
-
-<p>
-[xdg]: <a href="https://specifications.freedesktop.org/basedir-spec/latest/index.html">https://specifications.freedesktop.org/basedir-spec/latest/index.html</a>
+authored a commit(!) You can set that email address to anything! Set it to
+<code>torvalds@linux-foundation.org</code>, and GitHub will happily put Linus Torvalds'
+picture next to your git commits. And to be sure, <a href="https://news.ycombinator.com/item?id=10005577">that happens</a>. In the section
+on <a href="#signed-commits">Signed Commits</a> I show how to mitigate this problem a little bit.
 </p>
 </div>
 </div>
+</div>
 
-<div id="outline-container-orga33f076" class="outline-2">
-<h2 id="orga33f076"><a href="#orga33f076">The SSH config</a></h2>
-<div class="outline-text-2" id="text-orga33f076">
+<div id="outline-container-the-ssh-config" class="outline-2">
+<h2 id="the-ssh-config"><a href="#the-ssh-config">The SSH Config</a></h2>
+<div class="outline-text-2" id="text-the-ssh-config">
 <p>
 Assuming you use the <code>git</code> protocol (which uses SSH under the covers) and not
 <code>https</code> like some kind of animal, you have two SSH keys for GitHub &#x2013; one for
@@ -179,7 +275,7 @@ accounts, I've tried). Assuming you've <a href="https://docs.github.com/en/githu
 looks something like:
 </p>
 
-<pre class="example" id="orgd3ce6bc">
+<pre class="example" id="org03c370c">
 $ tree ~/.ssh/
 /Users/cfclrk/.ssh/
 ├── config
@@ -191,47 +287,57 @@ $ tree ~/.ssh/
 
 <p>
 The <code>~/.ssh/config</code> allows you to specify which SSH key should be used for
-particular DNS domains. Unfortunately, both of your GitHub accounts use the
-same domain; without further magic, the best we could do is say:
+particular DNS domains. And <i>this</i> is where the URL-rewriting stuff comes in
+to play! We can tell SSH to use one key for <code>github-home</code>, and another key for
+<code>github-work</code>.
 </p>
-
-<ul class="org-ul">
-<li>Use <code>~/.ssh/github-home</code> when connecting to github.com</li>
-<li>Use <code>~/.ssh/github-work</code> when connecting to github.com</li>
-</ul>
 
 <p>
-This is where git URL rewriting comes in.
+File: <code>~/.ssh/config</code>
 </p>
+
+<div class="org-src-container">
+<pre class="src src-conf">Host github-home
+    HostName       github.com
+    User           git
+    IdentityFile   ~/.ssh/github-home
+    IdentitiesOnly yes
+
+Host github-work
+    HostName       github.com
+    User           git
+    IdentityFile   ~/.ssh/github-work
+    IdentitiesOnly yes
+
+Host gist-home
+    HostName       gist.github.com
+    User           git
+    IdentityFile   ~/.ssh/github-home
+    IdentitiesOnly yes
+
+Host gist-work
+    HostName       gist.github.com
+    User           git
+    IdentityFile   ~/.ssh/github-work
+    IdentitiesOnly yes
+</pre>
+</div>
 </div>
 </div>
 
-<div id="outline-container-org356c3ff" class="outline-2">
-<h2 id="org356c3ff"><a href="#org356c3ff">Gists</a></h2>
+<div id="outline-container-orge6b0caf" class="outline-2">
+<h2 id="orge6b0caf"><a href="#orge6b0caf">SSH passphrases and ssh-agent</a></h2>
 </div>
 
-<div id="outline-container-org7a170e4" class="outline-2">
-<h2 id="org7a170e4"><a href="#org7a170e4">Emacs Forge</a></h2>
-<div class="outline-text-2" id="text-org7a170e4">
-<p>
-Need to update <code>forge-alist</code>
-</p>
-</div>
-</div>
-
-<div id="outline-container-org1596bdc" class="outline-2">
-<h2 id="org1596bdc"><a href="#org1596bdc">SSH passphrases and ssh-agent</a></h2>
-</div>
-
-<div id="outline-container-org2eb4327" class="outline-2">
-<h2 id="org2eb4327"><a href="#org2eb4327">Signed commits</a></h2>
-<div class="outline-text-2" id="text-org2eb4327">
+<div id="outline-container-signed-commits" class="outline-2">
+<h2 id="signed-commits"><a href="#signed-commits">Signed Commits</a></h2>
+<div class="outline-text-2" id="text-signed-commits">
 <p>
 In the section on git configuration, I mentioned how trivial it is to make git
-commits associated with someone else's GitHub account. To somewhat address this,
-GitHub now allows you to upload a PGP key to your GitHub account, and GitHub
-displays a "Verified" badge on commits that are signed with a PGP key that
-matches the email address associated with the commit.
+commits associated with someone else's GitHub account. To somewhat address
+this, GitHub now allows you to upload a PGP key to your GitHub account, and
+GitHub displays a "Verified" badge on commits that are signed with a PGP key
+that matches the email address associated with the commit.
 </p>
 
 <p>
@@ -248,9 +354,18 @@ got a cool setup that does that, let me know!
 </div>
 </div>
 
-<div id="outline-container-org9c64ad8" class="outline-2">
-<h2 id="org9c64ad8"><a href="#org9c64ad8">Resources</a></h2>
-<div class="outline-text-2" id="text-org9c64ad8">
+<div id="outline-container-orgad4d6e9" class="outline-2">
+<h2 id="orgad4d6e9"><a href="#orgad4d6e9">Emacs: Configuring Forge</a></h2>
+<div class="outline-text-2" id="text-orgad4d6e9">
+<p>
+Need to update <code>forge-alist</code>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org0576f25" class="outline-2">
+<h2 id="org0576f25"><a href="#org0576f25">Resources</a></h2>
+<div class="outline-text-2" id="text-org0576f25">
 <p>
 <a href="https://yayimorphology.org/ssh-identities-made-easy.html">https://yayimorphology.org/ssh-identities-made-easy.html</a>
 </p>

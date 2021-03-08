@@ -33,28 +33,28 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgb9b25de">1. The Problem</a></li>
-<li><a href="#org0a0e496">2. Quick and Dirty Solution: <code>python3</code></a></li>
-<li><a href="#org043f99c">3. The Real Solution: <code>pyenv</code></a>
+<li><a href="#orgce64773">1. The Problem</a></li>
+<li><a href="#org0a31dcb">2. Quick and Dirty Solution: <code>python3</code></a></li>
+<li><a href="#org15f8c6a">3. The Real Solution: <code>pyenv</code></a>
 <ul>
-<li><a href="#orgeb38c34">Install pyenv</a></li>
-<li><a href="#orgc56a8d2">Try out <code>pyenv</code></a></li>
-<li><a href="#orgc6be1e6">Two <code>pyenv</code> Workflows</a>
+<li><a href="#org4955d43">Install pyenv</a></li>
+<li><a href="#orgbeb1a56">Try out <code>pyenv</code></a></li>
+<li><a href="#org620bdfd">Two <code>pyenv</code> Workflows</a>
 <ul>
-<li><a href="#org1e3048a">Option 1: The Easy Way. Just use <code>pyenv global</code>.</a></li>
-<li><a href="#orga48308e">Option 2: The Pythonista. Use <code>pyenv virtualenv</code>.</a></li>
+<li><a href="#orgf2a0d14">Option 1: The Easy Way. Just use <code>pyenv global</code>.</a></li>
+<li><a href="#org0584bda">Option 2: The Pythonista. Use <code>pyenv virtualenv</code>.</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org2390158">New notes</a></li>
+<li><a href="#org4ad8078">New notes</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-orgb9b25de" class="outline-2">
-<h2 id="orgb9b25de"><a href="#orgb9b25de">1. The Problem</a></h2>
-<div class="outline-text-2" id="text-orgb9b25de">
+<div id="outline-container-orgce64773" class="outline-2">
+<h2 id="orgce64773"><a href="#orgce64773">1. The Problem</a></h2>
+<div class="outline-text-2" id="text-orgce64773">
 <p>
 Your computer (probably) comes with a version of Python preinstalled, but you
 want to have several versions of Python installed and easily switch between
@@ -80,9 +80,9 @@ First, a quick-and-dirty solution to provide some context.
 </div>
 </div>
 
-<div id="outline-container-org0a0e496" class="outline-2">
-<h2 id="org0a0e496"><a href="#org0a0e496">2. Quick and Dirty Solution: <code>python3</code></a></h2>
-<div class="outline-text-2" id="text-org0a0e496">
+<div id="outline-container-org0a31dcb" class="outline-2">
+<h2 id="org0a31dcb"><a href="#org0a31dcb">2. Quick and Dirty Solution: <code>python3</code></a></h2>
+<div class="outline-text-2" id="text-org0a31dcb">
 <p>
 (Don't do this, except for maybe on a CI server or to build a container).
 </p>
@@ -96,7 +96,7 @@ gets installed as a <span class="underline">new, differently-named</span> progra
 after installing you'll notice:
 </p>
 
-<pre class="example" id="org78f6fa6">
+<pre class="example" id="org58874e6">
 $ python --version
 Python 2.7.10
 $ python3 --version
@@ -107,7 +107,7 @@ Python 3.5.0
 Also notice that you got a new version of pip, called <code>pip3</code>:
 </p>
 
-<pre class="example" id="org33b0765">
+<pre class="example" id="org7a0cf84">
 $ pip --version
 pip 7.1.2 from /Library/Python/2.7/site-packages (python 2.7)
 $ pip3 --version
@@ -128,9 +128,9 @@ remember to run it with the <code>python3</code> command on the command line.
 </div>
 </div>
 
-<div id="outline-container-org043f99c" class="outline-2">
-<h2 id="org043f99c"><a href="#org043f99c">3. The Real Solution: <code>pyenv</code></a></h2>
-<div class="outline-text-2" id="text-org043f99c">
+<div id="outline-container-org15f8c6a" class="outline-2">
+<h2 id="org15f8c6a"><a href="#org15f8c6a">3. The Real Solution: <code>pyenv</code></a></h2>
+<div class="outline-text-2" id="text-org15f8c6a">
 <p>
 Do this.
 </p>
@@ -141,9 +141,9 @@ way to easily switch between them.
 </p>
 </div>
 
-<div id="outline-container-orgeb38c34" class="outline-3">
-<h3 id="orgeb38c34"><a href="#orgeb38c34">Install pyenv</a></h3>
-<div class="outline-text-3" id="text-orgeb38c34">
+<div id="outline-container-org4955d43" class="outline-3">
+<h3 id="org4955d43"><a href="#org4955d43">Install pyenv</a></h3>
+<div class="outline-text-3" id="text-org4955d43">
 <div class="org-src-container">
 <pre class="src src-sh">brew update
 brew install pyenv
@@ -168,14 +168,14 @@ changes to take effect.
 </div>
 </div>
 
-<div id="outline-container-orgc56a8d2" class="outline-3">
-<h3 id="orgc56a8d2"><a href="#orgc56a8d2">Try out <code>pyenv</code></a></h3>
-<div class="outline-text-3" id="text-orgc56a8d2">
+<div id="outline-container-orgbeb1a56" class="outline-3">
+<h3 id="orgbeb1a56"><a href="#orgbeb1a56">Try out <code>pyenv</code></a></h3>
+<div class="outline-text-3" id="text-orgbeb1a56">
 <p>
 Now you've got <code>pyenv</code>; run these commands to get a feel for it:
 </p>
 
-<pre class="example" id="orge12c25b">
+<pre class="example" id="org037b0fa">
 $ pyenv install --list   # look at all the Python versions you can download!
 $ pyenv install 2.7.11   # download python 2.7.11
 $ pyenv install 3.5.0    # download python 3.5.0
@@ -192,9 +192,9 @@ popular workflows.
 </div>
 </div>
 
-<div id="outline-container-orgc6be1e6" class="outline-3">
-<h3 id="orgc6be1e6"><a href="#orgc6be1e6">Two <code>pyenv</code> Workflows</a></h3>
-<div class="outline-text-3" id="text-orgc6be1e6">
+<div id="outline-container-org620bdfd" class="outline-3">
+<h3 id="org620bdfd"><a href="#org620bdfd">Two <code>pyenv</code> Workflows</a></h3>
+<div class="outline-text-3" id="text-org620bdfd">
 <p>
 There are two approaches to using <code>pyenv</code>. Option 1 is easier and totally
 reasonable. Option 2 uses python virtual environments, which is a bit more
@@ -202,9 +202,9 @@ involved but provides more isolation for each project you work on.
 </p>
 </div>
 
-<div id="outline-container-org1e3048a" class="outline-4">
-<h4 id="org1e3048a"><a href="#org1e3048a">Option 1: The Easy Way. Just use <code>pyenv global</code>.</a></h4>
-<div class="outline-text-4" id="text-org1e3048a">
+<div id="outline-container-orgf2a0d14" class="outline-4">
+<h4 id="orgf2a0d14"><a href="#orgf2a0d14">Option 1: The Easy Way. Just use <code>pyenv global</code>.</a></h4>
+<div class="outline-text-4" id="text-orgf2a0d14">
 <p>
 Let's start using python 3. Assuming you've already downloaded python 3.5.0
 by doing <code>pyenv install 3.5.0</code>, you can start using it by:
@@ -248,9 +248,9 @@ next-level stuff.
 </div>
 </div>
 
-<div id="outline-container-orga48308e" class="outline-4">
-<h4 id="orga48308e"><a href="#orga48308e">Option 2: The Pythonista. Use <code>pyenv virtualenv</code>.</a></h4>
-<div class="outline-text-4" id="text-orga48308e">
+<div id="outline-container-org0584bda" class="outline-4">
+<h4 id="org0584bda"><a href="#org0584bda">Option 2: The Pythonista. Use <code>pyenv virtualenv</code>.</a></h4>
+<div class="outline-text-4" id="text-org0584bda">
 <p>
 The Pythonista makes a habit of using a separate Python virtual environment
 for every project. This helps to ensure that you specify your dependencies
@@ -283,9 +283,9 @@ that file). Each virtual environment only starts off with 2 packages, <code>pip<
 </div>
 </div>
 
-<div id="outline-container-org2390158" class="outline-2">
-<h2 id="org2390158"><a href="#org2390158">New notes</a></h2>
-<div class="outline-text-2" id="text-org2390158">
+<div id="outline-container-org4ad8078" class="outline-2">
+<h2 id="org4ad8078"><a href="#org4ad8078">New notes</a></h2>
+<div class="outline-text-2" id="text-org4ad8078">
 <p>
 Use pyenv to download python versions
 </p>
