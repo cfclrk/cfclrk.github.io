@@ -35,22 +35,20 @@
 <ul>
 <li><a href="#org0590ed1">The git config</a>
 <ul>
-<li><a href="#org8910986">Background: Git URL rewriting</a></li>
-<li><a href="#org6e04031">Background: Git config loading</a></li>
+<li><a href="#url-rewriting">More About Git URL Rewriting</a></li>
+<li><a href="#config-loading">More About Git Config Loading</a></li>
 </ul>
 </li>
 <li><a href="#the-ssh-config">The SSH Config</a></li>
-<li><a href="#org350ac07">SSH passphrases and ssh-agent</a></li>
 <li><a href="#signed-commits">Signed Commits</a></li>
-<li><a href="#org27abe86">Emacs: Configuring Forge</a></li>
 <li><a href="#orga43e9ab">Resources</a></li>
 </ul>
 </div>
 </nav>
 <p>
 <b><i>The Problem</i></b>: You have multiple GitHub accounts, and you want to git to
-automatically use a particular account depending on the directory a project is
-in.
+automatically use a particular account depending on the local directory a
+project is in.
 </p>
 
 <p>
@@ -78,10 +76,10 @@ The git configuration must do two things:
 </p>
 
 <ol class="org-ol">
-<li>Tell git to use a different configuration depending on the directory a
+<li>Tell git to use different configurations depending on the directory a
 project is in. Git supports this with the <a href="https://git-scm.com/docs/git-config#_conditional_includes">includeIf</a> directive.</li>
-<li>Perform git URL-rewriting with <a href="https://git-scm.com/docs/git-config#Documentation/git-config.txt-urlltbasegtinsteadOf">insteadOf</a>, which allows SSH to make a
-distinction between the two accounts.</li>
+<li>Perform git URL-rewriting with <a href="https://git-scm.com/docs/git-config#Documentation/git-config.txt-urlltbasegtinsteadOf">insteadOf</a>, which allows SSH to properly
+associate keys with GitHub accounts.</li>
 </ol>
 
 <p>
@@ -126,7 +124,7 @@ File: <code>~/.config/git/work.gitconfig</code>
 </div>
 
 <p>
-File: <code>~/.config/git/config-home</code>
+File: <code>~/.config/git/home.gitconfig</code>
 </p>
 
 <div class="org-src-container">
@@ -142,16 +140,16 @@ File: <code>~/.config/git/config-home</code>
 </div>
 
 <p>
-That's it for the git config! The rest of this section elaborates on this
-config, if you are interested.
+That's it for the git config! The rest of this section elaborates on the
+above, if you are interested.
 </p>
 </div>
 
-<div id="outline-container-org8910986" class="outline-3">
-<h3 id="org8910986"><a href="#org8910986">Background: Git URL rewriting</a></h3>
-<div class="outline-text-3" id="text-org8910986">
+<div id="outline-container-url-rewriting" class="outline-3">
+<h3 id="url-rewriting"><a href="#url-rewriting">More About Git URL Rewriting</a></h3>
+<div class="outline-text-3" id="text-url-rewriting">
 <p>
-To take a closer look at what this part of <i>home.gitconfig</i> means:
+To take a closer look at what this part of <code>home.gitconfig</code> means:
 </p>
 
 <div class="org-src-container">
@@ -214,9 +212,9 @@ and in your SSH config (as explained in the section <a href="#the-ssh-config">Th
 </div>
 </div>
 
-<div id="outline-container-org6e04031" class="outline-3">
-<h3 id="org6e04031"><a href="#org6e04031">Background: Git config loading</a></h3>
-<div class="outline-text-3" id="text-org6e04031">
+<div id="outline-container-config-loading" class="outline-3">
+<h3 id="config-loading"><a href="#config-loading">More About Git Config Loading</a></h3>
+<div class="outline-text-3" id="text-config-loading">
 <p>
 Git loads <i>all</i> applicable config files, and greedily uses the first value it
 finds for each option.
@@ -253,12 +251,13 @@ you must specify the files in order from <i>most specific</i> to <i>least specif
 </p>
 
 <p>
-A fun little aside: That email address that you specify as the value of
-<code>user.email</code> is the only piece of information GitHub uses when determining who
-authored a commit(!) You can set that email address to anything! Set it to
+<i>Aside</i>: That email address that you specify as the value of <code>user.email</code> is
+the only piece of information git (and therefore GitHub) has when determining
+who "authored" a commit. You can set that email address to anything! Set it to
 <code>torvalds@linux-foundation.org</code>, and GitHub will happily put Linus Torvalds'
-picture next to your git commits. And to be sure, <a href="https://news.ycombinator.com/item?id=10005577">that happens</a>. In the section
-on <a href="#signed-commits">Signed Commits</a> I show how to mitigate this problem a little bit.
+picture next to your git commits. And to be sure, <a href="https://news.ycombinator.com/item?id=10005577">that happens</a>. You can
+somewhat mitigate this problem of attribution by using <a href="https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work">signed commits</a>, as
+detailed in the section <a href="#signed-commits">Signed Commits</a>.
 </p>
 </div>
 </div>
@@ -275,7 +274,7 @@ accounts, I've tried). Assuming you've <a href="https://docs.github.com/en/githu
 looks something like:
 </p>
 
-<pre class="example" id="org5a3e7fe">
+<pre class="example" id="org32f4f8c">
 $ tree ~/.ssh/
 /Users/cfclrk/.ssh/
 ├── config
@@ -325,40 +324,28 @@ Host gist-work
 </div>
 </div>
 
-<div id="outline-container-org350ac07" class="outline-2">
-<h2 id="org350ac07"><a href="#org350ac07">SSH passphrases and ssh-agent</a></h2>
-</div>
-
 <div id="outline-container-signed-commits" class="outline-2">
 <h2 id="signed-commits"><a href="#signed-commits">Signed Commits</a></h2>
 <div class="outline-text-2" id="text-signed-commits">
 <p>
-In the section on git configuration, I mentioned how trivial it is to make git
-commits associated with someone else's GitHub account. To somewhat address
-this, GitHub now allows you to upload a PGP key to your GitHub account, and
+In <a href="#config-loading">More About Git Config Loading</a>, I mentioned how to make git commits appear to be
+associated with someone else's GitHub account. To (somewhat) mitigate that
+situation, GitHub allows you to upload a PGP key to your GitHub account, and
 GitHub displays a "Verified" badge on commits that are signed with a PGP key
 that matches the email address associated with the commit.
 </p>
 
 <p>
-Setting up PGP key signing with one GitHub account isn't too bad, but I didn't
-see an obvious way sign commits with different keys depending on what the git
-configuration of a project is.
+You can configure git to automatically <a href="https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work">sign commits with a PGP key</a>.
 </p>
 
 <p>
-It would be super next-level if you find a simple way to automatically sign
-commits with the right PGP key when using multiple GitHub accounts. If you've
-got a cool setup that does that, let me know!
+TODO: I haven't actually set this up with one (let alone two!) accounts.
 </p>
-</div>
-</div>
 
-<div id="outline-container-org27abe86" class="outline-2">
-<h2 id="org27abe86"><a href="#org27abe86">Emacs: Configuring Forge</a></h2>
-<div class="outline-text-2" id="text-org27abe86">
 <p>
-Need to update <code>forge-alist</code>
+If you have a setup to automatically sign commits when using multiple GitHub
+accounts (with different email addresses) let me know!
 </p>
 </div>
 </div>

@@ -87,6 +87,11 @@ Characters evaluate to integers:
 </pre>
 </div>
 
+<pre class="example">
+224
+</pre>
+
+
 <p>
 We can see that <code>?à</code> and <code>224</code> are equal in (almost?) every way:
 </p>
@@ -96,15 +101,29 @@ We can see that <code>?à</code> and <code>224</code> are equal in (almost?) eve
 </pre>
 </div>
 
+<pre class="example">
+t
+</pre>
+
+
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>eq ?&#224; 224<span style="color: #51afef;">)</span>
 </pre>
 </div>
 
+<pre class="example">
+t
+</pre>
+
+
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>char-equal ?&#224; 224<span style="color: #51afef;">)</span>
 </pre>
 </div>
+
+<pre class="example">
+t
+</pre>
 </div>
 </div>
 
@@ -116,10 +135,19 @@ We can see that <code>?à</code> and <code>224</code> are equal in (almost?) eve
 </pre>
 </div>
 
+<pre class="example">
+224
+</pre>
+
+
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>char-to-string 224<span style="color: #51afef;">)</span>
 </pre>
 </div>
+
+<pre class="example">
+"à"
+</pre>
 </div>
 </div>
 
@@ -148,10 +176,20 @@ whether an integer is a character or not is determined only by how it is used
 </pre>
 </div>
 
+<pre class="example">
+226
+</pre>
+
+
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>make-string 5 ?&#224;<span style="color: #51afef;">)</span> <span style="color: #5B6268;">; </span><span style="color: #5B6268;">Helpful</span>
 </pre>
 </div>
+
+<pre class="example">
+"ààààà"
+</pre>
+
 
 <p>
 Which, by the way, could also be written as:
@@ -161,6 +199,11 @@ Which, by the way, could also be written as:
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>make-string 5 224<span style="color: #51afef;">)</span> <span style="color: #5B6268;">; </span><span style="color: #5B6268;">Not helpful</span>
 </pre>
 </div>
+
+<pre class="example">
+ààààà
+</pre>
+
 
 <p>
 In Emacs, all characters are integers, but not all integers are characters. A
@@ -188,10 +231,20 @@ evaluates to a decimal number which represents the character's code point.
 </pre>
 </div>
 
+<pre class="example">
+224
+</pre>
+
+
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">?\340
 </pre>
 </div>
+
+<pre class="example">
+224
+</pre>
+
 
 <p>
 TODO: wtf is this?
@@ -206,6 +259,10 @@ given position in a&#x2026; what?
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>make-char 'unicode 0 0 224 0<span style="color: #51afef;">)</span>
 </pre>
 </div>
+
+<pre class="example">
+224
+</pre>
 </div>
 </div>
 </div>
@@ -232,10 +289,20 @@ Evaluating a character with a Unicode escape sequence returns an integer:
 </pre>
 </div>
 
+<pre class="example">
+224
+</pre>
+
+
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">?\U0001F638
 </pre>
 </div>
+
+<pre class="example">
+128568
+</pre>
+
 
 <p>
 Evaluating a string with a Unicode escape sequence returns a string:
@@ -245,6 +312,10 @@ Evaluating a string with a Unicode escape sequence returns a string:
 <pre class="src src-emacs-lisp"><span style="color: #98be65;">"\U0001F638"</span>
 </pre>
 </div>
+
+<pre class="example">
+😸
+</pre>
 </div>
 </div>
 
@@ -260,6 +331,11 @@ point <code>CHAR</code>:
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>char-to-string 224<span style="color: #51afef;">)</span>
 </pre>
 </div>
+
+<pre class="example">
+"à"
+</pre>
+
 
 <p>
 The argument to <code>char-to-string</code> must be a character, so it can either be given
@@ -280,6 +356,11 @@ For example, as an integer using hex notation:
 </pre>
 </div>
 
+<pre class="example">
+à
+</pre>
+
+
 <p>
 Or, as a character using hex notation:
 </p>
@@ -288,6 +369,10 @@ Or, as a character using hex notation:
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>char-to-string ?\xe0<span style="color: #51afef;">)</span>
 </pre>
 </div>
+
+<pre class="example">
+à
+</pre>
 </div>
 </div>
 
@@ -303,6 +388,10 @@ by its name:
 <pre class="src src-emacs-lisp"><span style="color: #98be65;">"?\N{LATIN SMALL LETTER A WITH GRAVE}"</span>
 </pre>
 </div>
+
+<pre class="example">
+"?à"
+</pre>
 </div>
 </div>
 
@@ -315,7 +404,7 @@ into new integers, according to some encoding scheme (like UTF-8). This is
 necessary in order to tell where one number ends and the next begins:
 </p>
 
-<pre class="example" id="org5db30cf">
+<pre class="example" id="org623396b">
 1224
 </pre>
 
@@ -335,6 +424,11 @@ string is automatically decoded in order to be displayed.
 </pre>
 </div>
 
+<pre class="example">
+"nai\314\210ve"
+</pre>
+
+
 <p>
 <code>encode-coding-string</code> returns a string where any characters outside of &lt;what
 range?&gt; are escaped (WHY?)
@@ -345,10 +439,19 @@ range?&gt; are escaped (WHY?)
 </pre>
 </div>
 
+<pre class="example">
+s
+</pre>
+
+
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>encode-coding-string <span style="color: #98be65;">"\U0001F638"</span> 'utf-8<span style="color: #51afef;">)</span>
 </pre>
 </div>
+
+<pre class="example">
+"\360\237\230\270"
+</pre>
 </div>
 
 <div id="outline-container-orgdfa3453" class="outline-3">
@@ -374,10 +477,19 @@ Decoding a string returns the multibyte equivalent of the string.
 </pre>
 </div>
 
+<pre class="example">
+naïve
+</pre>
+
+
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>decode-coding-string <span style="color: #98be65;">"\360\237\230\270"</span> 'utf-8<span style="color: #51afef;">)</span>
 </pre>
 </div>
+
+<pre class="example">
+😸
+</pre>
 </div>
 </div>
 
@@ -408,6 +520,10 @@ Decode integer a string
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>char-from-name <span style="color: #98be65;">"LATIN SMALL LETTER A WITH GRAVE"</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
+
+<pre class="example">
+224
+</pre>
 </div>
 </div>
 
@@ -423,6 +539,11 @@ Unicode number as decimal:
 </pre>
 </div>
 
+<pre class="example">
+😸
+</pre>
+
+
 <p>
 As hex
 </p>
@@ -432,6 +553,11 @@ As hex
 </pre>
 </div>
 
+<pre class="example">
+128568
+</pre>
+
+
 <p>
 As octal
 </p>
@@ -440,6 +566,10 @@ As octal
 <pre class="src src-emacs-lisp">?\340
 </pre>
 </div>
+
+<pre class="example">
+224
+</pre>
 </div>
 </div>
 </div>
@@ -451,6 +581,10 @@ As octal
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>ucs-normalize-NFD-string <span style="color: #98be65;">"nai\u0308ve"</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
+
+<pre class="example">
+"naïve"
+</pre>
 </div>
 </div>
 

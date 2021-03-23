@@ -54,6 +54,11 @@
 </ul>
 </div>
 </nav>
+<p>
+I don't have a Windows machine so I don't test these notes, ever. Some of what I
+wrote here doesn't look like it makes much sens. But I guess if I wrote it down,
+it must have been useful at the time!
+</p>
 
 <div id="outline-container-org4e8e47f" class="outline-2">
 <h2 id="org4e8e47f"><a href="#org4e8e47f">Environment Variables</a></h2>
@@ -98,9 +103,10 @@ It's potentially possible to use <code>SendMessage</code> to update the environm
 currently-running processes. It would look something like:
 </p>
 
-<p>
-SendMessage (HWND<sub>BROADCAST</sub>, WM<sub>SETTINGCHANGE</sub>, 0, (LPARAM)"Environment")
-</p>
+<div class="org-src-container">
+<pre class="src src-powershell">SendMessage (HWND_BROADCAST, WM_SETTINGCHANGE, 0, (LPARAM)<span style="color: #98be65;">"Environment"</span>)
+</pre>
+</div>
 
 <p>
 There is another registry key <code>HKEY_CURRENT_USER\Environment</code> that can also be
@@ -126,10 +132,11 @@ available to new processes.
 If you need the env var in the sshd environment, restart sshd:
 </p>
 
-<p>
-Stop-Service sshd
-Start-Service sshd
-</p>
+<div class="org-src-container">
+<pre class="src src-powershell"><span style="color: #c678dd;">Stop-Service</span> sshd
+<span style="color: #c678dd;">Start-Service</span> sshd
+</pre>
+</div>
 </div>
 </div>
 </div>

@@ -33,15 +33,15 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org41bb7bd">Validate function argument</a></li>
-<li><a href="#orgb97c558">Verify variable is defined</a></li>
+<li><a href="#org1451eaa">Validate a function argument</a></li>
+<li><a href="#org051604b">Verify a variable is defined</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-org41bb7bd" class="outline-2">
-<h2 id="org41bb7bd"><a href="#org41bb7bd">Validate function argument</a></h2>
-<div class="outline-text-2" id="text-org41bb7bd">
+<div id="outline-container-org1451eaa" class="outline-2">
+<h2 id="org1451eaa"><a href="#org1451eaa">Validate a function argument</a></h2>
+<div class="outline-text-2" id="text-org1451eaa">
 <div class="org-src-container">
 <pre class="src src-fish"><span style="color: #51afef;">test</span> <span style="color: #c678dd;">-z</span> <span style="color: #98be65;">"$argv[1]"</span>; <span style="color: #51afef;">and</span> <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Error: arg1 must be a string"</span>; <span style="color: #51afef;">and</span> <span style="color: #51afef;">return</span> <span style="color: #a9a1e1;">1</span>
 </pre>
@@ -49,9 +49,9 @@
 </div>
 </div>
 
-<div id="outline-container-orgb97c558" class="outline-2">
-<h2 id="orgb97c558"><a href="#orgb97c558">Verify variable is defined</a></h2>
-<div class="outline-text-2" id="text-orgb97c558">
+<div id="outline-container-org051604b" class="outline-2">
+<h2 id="org051604b"><a href="#org051604b">Verify a variable is defined</a></h2>
+<div class="outline-text-2" id="text-org051604b">
 <div class="org-src-container">
 <pre class="src src-fish"><span style="color: #51afef;">test</span> <span style="color: #c678dd;">-z</span> <span style="color: #98be65;">"$FOO"</span>; <span style="color: #51afef;">and</span> <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"FOO is empty"</span>; <span style="color: #51afef;">and</span> <span style="color: #51afef;">return</span>
 <span style="color: #51afef;">test</span> <span style="color: #c678dd;">-z</span> <span style="color: #98be65;">"$BAR"</span>; <span style="color: #51afef;">and</span> <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"BAR is empty"</span>; <span style="color: #51afef;">and</span> <span style="color: #51afef;">return</span>

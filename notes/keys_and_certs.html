@@ -49,7 +49,7 @@
 <li><a href="#orgca97bf4">cfssl</a></li>
 <li><a href="#org7049e4d">Create a fingerprint</a></li>
 <li><a href="#org6d5e246">Check if a private key matches a public key</a></li>
-<li><a href="#orgab3fee9">Checking/viewing certs</a>
+<li><a href="#orgd8c7f59">Checking and Viewing Certs</a>
 <ul>
 <li><a href="#org7d2948c">Certificate (public key)</a></li>
 <li><a href="#org251da9c">CSR</a></li>
@@ -258,9 +258,9 @@ check is to pipe them both to <code>openssl md5</code>.
 </div>
 </div>
 
-<div id="outline-container-orgab3fee9" class="outline-2">
-<h2 id="orgab3fee9"><a href="#orgab3fee9">Checking/viewing certs</a></h2>
-<div class="outline-text-2" id="text-orgab3fee9">
+<div id="outline-container-orgd8c7f59" class="outline-2">
+<h2 id="orgd8c7f59"><a href="#orgd8c7f59">Checking and Viewing Certs</a></h2>
+<div class="outline-text-2" id="text-orgd8c7f59">
 </div>
 <div id="outline-container-org7d2948c" class="outline-3">
 <h3 id="org7d2948c"><a href="#org7d2948c">Certificate (public key)</a></h3>
@@ -270,8 +270,21 @@ check is to pipe them both to <code>openssl md5</code>.
 </pre>
 
 
+<p>
+Show cert info for a local certificate file.
+</p>
+
 <div class="org-src-container">
 <pre class="src src-sh" id="orgfbc70bd">openssl x509 -in $<span style="color: #dcaeea;">cert</span> -text -noout
+</pre>
+</div>
+
+<p>
+Show cert info for a website.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">openssl s_client -connect google.com:443 -showcerts
 </pre>
 </div>
 </div>

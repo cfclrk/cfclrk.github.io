@@ -56,7 +56,13 @@
 <div class="outline-text-2" id="text-orgee2481e">
 <div class="org-src-container">
 <pre class="src src-sh">cat myfile.json <span style="color: #98be65;">\</span>
-    | jq --arg foo bar <span style="color: #98be65;">'.[] | select(.name == $foo)'</span>
+    | jq --arg foo $<span style="color: #dcaeea;">var</span> <span style="color: #98be65;">'.[] | select(.name == $foo)'</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh">cat myfile.json <span style="color: #98be65;">\</span>
+    | jq --arg foo $<span style="color: #dcaeea;">var</span> <span style="color: #98be65;">'.[] | select(.name | startswith($foo))'</span>
 </pre>
 </div>
 </div>
@@ -135,7 +141,7 @@ Best way to do this is use AWS server-side filtering.
 <div class="org-src-container">
 <pre class="src src-sh">kubectl get secret -o json <span style="color: #98be65;">\</span>
     | jq <span style="color: #98be65;">'.items[]</span>
-<span style="color: #98be65;">          | select(.metadata.annotations["kubernetes.io/service-account.name"] =</span><span style="color: #ff6c6b; background-color: #1B2229; font-weight: bold;">= "default")'</span>
+<span style="color: #98be65;">          | select(.metadata.annotations["kubernetes.io/service-account.name"] == "default")'</span>
 </pre>
 </div>
 </div>

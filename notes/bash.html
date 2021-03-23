@@ -265,6 +265,11 @@ whether the limit string has single quotes around it.
 <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"$a"</span>
 </pre>
 </div>
+
+<pre class="example">
+hello
+bar
+</pre>
 </div>
 </div>
 
@@ -281,6 +286,11 @@ whether the limit string has single quotes around it.
 <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"$a"</span>
 </pre>
 </div>
+
+<pre class="example">
+hello
+$foo
+</pre>
 </div>
 </div>
 </div>
@@ -310,7 +320,7 @@ Verify some environment variables exist.
 <div class="outline-text-3" id="text-org56e98a3">
 <ul class="org-ul">
 <li>GNU <a href="https://www.gnu.org/software/bash/manual/bashref.html#Shell-Parameter-Expansion">Bash docs</a></li>
-<li><a href="https://www.opengroup.org/">The Open Group</a> has some excellent <a href="https://pubs.opengroup.org/onlinepubs/9699919799">POSIX documentation</a> with a section on
+<li><i>The Open Group</i> has some excellent <a href="https://pubs.opengroup.org/onlinepubs/9699919799">POSIX documentation</a> with a section on
 <a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02">parameter expansion</a></li>
 </ul>
 </div>
@@ -324,21 +334,23 @@ Example frome here: <a href="https://stackoverflow.com/a/13864829/340613">https:
 </p>
 
 <p>
-Docs for the <code>+</code> parameter expansion:
+<a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02">Docs</a> for the <code>+</code> parameter expansion:
 </p>
 
 <p>
 <code>${parameter:+[word]}</code>
 </p>
 
+<blockquote>
 <p>
-If parameter is unset or null, null shall be substituted; otherwise, the
-expansion of word (or an empty string if word is omitted) shall be
+If <i>parameter</i> is unset or null, null shall be substituted; otherwise, the
+expansion of <i>word</i> (or an empty string if <i>word</i> is omitted) shall be
 substituted.
 </p>
+</blockquote>
 
 <p>
-<code>-z</code> checks if the argument is null or empty.
+<code>-z</code> is a <a href="https://tldp.org/LDP/abs/html/comparison-ops.html">comparison operator</a> that tests if the argument is null or empty.
 </p>
 
 <p>
@@ -357,6 +369,11 @@ Therefore the <code>+</code> parameter expansion expands this to <code>x</code> 
 </pre>
 </div>
 
+<pre class="example">
+var is set to ''
+</pre>
+
+
 <p>
 In this case, <code>var</code> has not been declared, so it is "unset or null". The <code>+</code>
 parameter expansion expands it to <code>null</code>.
@@ -370,6 +387,11 @@ parameter expansion expands it to <code>null</code>.
 <span style="color: #51afef;">fi</span>
 </pre>
 </div>
+
+<pre class="example">
+var is unset
+</pre>
+
 
 <p>
 In this case we leave the <code>word</code> spot empty in the parameter expansion, so if

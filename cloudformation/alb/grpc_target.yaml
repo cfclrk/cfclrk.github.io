@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: A public ALB with a Lambda Function target.
+Description: A public ALB with a gRPC target group.
 Transform: AWS::Serverless-2016-10-31
 
 Parameters:
@@ -85,7 +85,6 @@ Resources:
 
   VpcEndpointLambda:
     Type: AWS::EC2::VPCEndpoint
-    PrivateDnsEnabled: true
     Properties:
       PolicyDocument:
         Version: 2012-10-17
@@ -97,7 +96,7 @@ Resources:
             Resource:
               - !GetAtt HelloWorldFunction.Arn
       ServiceName: !Sub "com.amazonaws.${AWS::Region}.lambda"
-      Subnets:
+      SubnetIds:
         - Fn::ImportValue: !Sub "${DeploymentName}-PrivateSubnet1"
         - Fn::ImportValue: !Sub "${DeploymentName}-PrivateSubnet2"
       VpcEndpointType: Interface

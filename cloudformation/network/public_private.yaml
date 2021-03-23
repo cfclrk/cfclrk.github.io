@@ -68,7 +68,7 @@ Resources:
         - Key: Name
           Value: !Sub "${DeploymentName} Public"
 
-  PublicRoute:
+  DefaultPublicRoute:
     Type: AWS::EC2::Route
     DependsOn: InternetGatewayAttachment
     Properties:
@@ -84,6 +84,13 @@ Resources:
         - Key: Name
           Value: !Sub "${DeploymentName} Private (AZ1)"
 
+  DefaultPrivateRoute1:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable1
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NatGateway1
+
   PrivateRouteTable2:
     Type: AWS::EC2::RouteTable
     Properties:
@@ -91,6 +98,13 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub "${DeploymentName} Private (AZ1)"
+
+  DefaultPrivateRoute2:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable2
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NatGateway2
 
   PublicSubnet1:
     Type: AWS::EC2::Subnet
@@ -132,7 +146,6 @@ Resources:
       VpcId: !Ref VPC
       AvailabilityZone: !Select [0, !GetAZs  ""]
       CidrBlock: !Ref PrivateSubnet1CIDR
-      MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
           Value: !Sub "${DeploymentName} Private (AZ1)"
@@ -149,10 +162,9 @@ Resources:
       VpcId: !Ref VPC
       AvailabilityZone: !Select [1, !GetAZs  ""]
       CidrBlock: !Ref PrivateSubnet2CIDR
-      MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
-          Value: !Sub "${DeploymentName} Private (AZ1)"
+          Value: !Sub "${DeploymentName} Private (AZ2)"
 
   PrivateSubnet2RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation

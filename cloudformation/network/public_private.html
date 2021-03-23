@@ -33,31 +33,49 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org135886c">Overview</a></li>
-<li><a href="#org0880ac6">Parameters</a>
+<li><a href="#org3f42b45">Overview</a></li>
+<li><a href="#orgea1be90">Parameters</a>
 <ul>
-<li><a href="#org47c71bf">DeploymentName</a></li>
+<li><a href="#org75c370a">DeploymentName</a></li>
 </ul>
 </li>
-<li><a href="#org1ed2939">Resources</a>
+<li><a href="#org4daff8e">Resources</a>
 <ul>
-<li><a href="#org957c5bc">VPC</a></li>
-<li><a href="#orgbd8fb6f">Internet Gateway</a></li>
-<li><a href="#org9f525e0">Public Route Table</a></li>
-<li><a href="#org7557486">Private Route Tables</a></li>
-<li><a href="#orgbda7bbd">Public Subnets</a></li>
-<li><a href="#orga9248b4">Private Subnets</a></li>
-<li><a href="#org609677d">NAT Gateways</a></li>
+<li><a href="#org570364a">VPC</a></li>
+<li><a href="#orgc1e0fa1">Internet Gateway</a></li>
+<li><a href="#org884516a">Public Route Table</a></li>
+<li><a href="#orgb47c5e7">Private Route Tables</a></li>
+<li><a href="#org4854ddc">Public Subnets</a></li>
+<li><a href="#org0883d6d">Private Subnets</a></li>
+<li><a href="#org6c36c97">NAT Gateways</a></li>
 </ul>
 </li>
-<li><a href="#org84d1e10">Outputs</a></li>
+<li><a href="#org80f606d">Outputs</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-org135886c" class="outline-2">
-<h2 id="org135886c"><a href="#org135886c">Overview</a></h2>
-<div class="outline-text-2" id="text-org135886c">
+<div id="outline-container-org3f42b45" class="outline-2">
+<h2 id="org3f42b45"><a href="#org3f42b45">Overview</a></h2>
+<div class="outline-text-2" id="text-org3f42b45">
+<p>
+This document creates a "standard" AWS network. AWS documents this architecture
+<a href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Scenario2.html">here</a>, and AWS provides a CloudFormation example <a href="https://docs.aws.amazon.com/codebuild/latest/userguide/cloudformation-vpc-template.html">here</a>.
+</p>
+
+<p>
+This is the go-to VPC structure and is usually considered a starting place for
+any AWS network design. For example, when using the AWS CDK, this is the
+infrastrucure that is created when you use the <a href="https://docs.aws.amazon.com/cdk/api/latest/docs/@aws-cdk_aws-ec2.Vpc.html">VPC construct</a> with its default
+options.
+</p>
+
+
+<figure id="org4b598a4">
+<img src="../../static/img/Network-Public-Private.png" alt="Network-Public-Private.png">
+
+</figure>
+
 <div class="org-src-container">
 <pre class="src src-yaml"><span style="color: #dcaeea;">AWSTemplateFormatVersion</span>: 2010-09-09
 <span style="color: #dcaeea;">Description</span>: &gt;
@@ -66,35 +84,21 @@
 <span style="color: #98be65;">  Subnets.</span>
 </pre>
 </div>
-
-<p>
-This document creates a "standard" AWS network. AWS documents this
-architecture <a href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Scenario2.html">here</a>. This is the go-to VPC structure, and is usually considered
-the starting place for any AWS network design. For example, when using the AWS
-CDK, this is the infrastrucure that is created when you use the <a href="https://docs.aws.amazon.com/cdk/api/latest/docs/@aws-cdk_aws-ec2.Vpc.html">VPC construct</a>
-with its default options.
-</p>
-
-
-<figure id="org04cb840">
-<img src="../../static/img/Network-Public-Private.png" alt="Network-Public-Private.png">
-
-</figure>
 </div>
 </div>
 
-<div id="outline-container-org0880ac6" class="outline-2">
-<h2 id="org0880ac6"><a href="#org0880ac6">Parameters</a></h2>
-<div class="outline-text-2" id="text-org0880ac6">
+<div id="outline-container-orgea1be90" class="outline-2">
+<h2 id="orgea1be90"><a href="#orgea1be90">Parameters</a></h2>
+<div class="outline-text-2" id="text-orgea1be90">
 <div class="org-src-container">
 <pre class="src src-yaml"><span style="color: #dcaeea;">Parameters</span>:
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org47c71bf" class="outline-3">
-<h3 id="org47c71bf"><a href="#org47c71bf">DeploymentName</a></h3>
-<div class="outline-text-3" id="text-org47c71bf">
+<div id="outline-container-org75c370a" class="outline-3">
+<h3 id="org75c370a"><a href="#org75c370a">DeploymentName</a></h3>
+<div class="outline-text-3" id="text-org75c370a">
 <p>
 A <b>deployment</b> is a complete deployed application, potentially comprised of many
 CloudFormation stacks. This is sometimes called an "environment", but that is an
@@ -140,18 +144,18 @@ is part of.
 </div>
 </div>
 
-<div id="outline-container-org1ed2939" class="outline-2">
-<h2 id="org1ed2939"><a href="#org1ed2939">Resources</a></h2>
-<div class="outline-text-2" id="text-org1ed2939">
+<div id="outline-container-org4daff8e" class="outline-2">
+<h2 id="org4daff8e"><a href="#org4daff8e">Resources</a></h2>
+<div class="outline-text-2" id="text-org4daff8e">
 <div class="org-src-container">
 <pre class="src src-yaml"><span style="color: #dcaeea;">Resources</span>:
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org957c5bc" class="outline-3">
-<h3 id="org957c5bc"><a href="#org957c5bc">VPC</a></h3>
-<div class="outline-text-3" id="text-org957c5bc">
+<div id="outline-container-org570364a" class="outline-3">
+<h3 id="org570364a"><a href="#org570364a">VPC</a></h3>
+<div class="outline-text-3" id="text-org570364a">
 <div class="org-src-container">
 <pre class="src src-yaml">  <span style="color: #dcaeea;">VPC</span>:
     <span style="color: #dcaeea;">Type</span>: AWS::EC2::VPC
@@ -167,9 +171,9 @@ is part of.
 </div>
 </div>
 
-<div id="outline-container-orgbd8fb6f" class="outline-3">
-<h3 id="orgbd8fb6f"><a href="#orgbd8fb6f">Internet Gateway</a></h3>
-<div class="outline-text-3" id="text-orgbd8fb6f">
+<div id="outline-container-orgc1e0fa1" class="outline-3">
+<h3 id="orgc1e0fa1"><a href="#orgc1e0fa1">Internet Gateway</a></h3>
+<div class="outline-text-3" id="text-orgc1e0fa1">
 <div class="org-src-container">
 <pre class="src src-yaml">  <span style="color: #dcaeea;">InternetGateway</span>:
     <span style="color: #dcaeea;">Type</span>: AWS::EC2::InternetGateway
@@ -188,9 +192,9 @@ is part of.
 </div>
 </div>
 
-<div id="outline-container-org9f525e0" class="outline-3">
-<h3 id="org9f525e0"><a href="#org9f525e0">Public Route Table</a></h3>
-<div class="outline-text-3" id="text-org9f525e0">
+<div id="outline-container-org884516a" class="outline-3">
+<h3 id="org884516a"><a href="#org884516a">Public Route Table</a></h3>
+<div class="outline-text-3" id="text-org884516a">
 <div class="org-src-container">
 <pre class="src src-yaml">  <span style="color: #dcaeea;">PublicRouteTable</span>:
     <span style="color: #dcaeea;">Type</span>: AWS::EC2::RouteTable
@@ -203,7 +207,7 @@ is part of.
 </div>
 
 <div class="org-src-container">
-<pre class="src src-yaml">  <span style="color: #dcaeea;">PublicRoute</span>:
+<pre class="src src-yaml">  <span style="color: #dcaeea;">DefaultPublicRoute</span>:
     <span style="color: #dcaeea;">Type</span>: AWS::EC2::Route
     <span style="color: #dcaeea;">DependsOn</span>: InternetGatewayAttachment
     <span style="color: #dcaeea;">Properties</span>:
@@ -215,9 +219,9 @@ is part of.
 </div>
 </div>
 
-<div id="outline-container-org7557486" class="outline-3">
-<h3 id="org7557486"><a href="#org7557486">Private Route Tables</a></h3>
-<div class="outline-text-3" id="text-org7557486">
+<div id="outline-container-orgb47c5e7" class="outline-3">
+<h3 id="orgb47c5e7"><a href="#orgb47c5e7">Private Route Tables</a></h3>
+<div class="outline-text-3" id="text-orgb47c5e7">
 <div class="org-src-container">
 <pre class="src src-yaml">  <span style="color: #dcaeea;">PrivateRouteTable1</span>:
     <span style="color: #dcaeea;">Type</span>: AWS::EC2::RouteTable
@@ -226,6 +230,16 @@ is part of.
       <span style="color: #dcaeea;">Tags</span>:
         - <span style="color: #dcaeea;">Key</span>: Name
           <span style="color: #dcaeea;">Value</span>: <span style="color: #ECBE7B;">!Sub</span> <span style="color: #98be65;">"${DeploymentName} Private (AZ1)"</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-yaml">  <span style="color: #dcaeea;">DefaultPrivateRoute1</span>:
+    <span style="color: #dcaeea;">Type</span>: AWS::EC2::Route
+    <span style="color: #dcaeea;">Properties</span>:
+      <span style="color: #dcaeea;">RouteTableId</span>: <span style="color: #ECBE7B;">!Ref</span> PrivateRouteTable1
+      <span style="color: #dcaeea;">DestinationCidrBlock</span>: 0.0.0.0/0
+      <span style="color: #dcaeea;">NatGatewayId</span>: <span style="color: #ECBE7B;">!Ref</span> NatGateway1
 </pre>
 </div>
 
@@ -239,12 +253,22 @@ is part of.
           <span style="color: #dcaeea;">Value</span>: <span style="color: #ECBE7B;">!Sub</span> <span style="color: #98be65;">"${DeploymentName} Private (AZ1)"</span>
 </pre>
 </div>
+
+<div class="org-src-container">
+<pre class="src src-yaml">  <span style="color: #dcaeea;">DefaultPrivateRoute2</span>:
+    <span style="color: #dcaeea;">Type</span>: AWS::EC2::Route
+    <span style="color: #dcaeea;">Properties</span>:
+      <span style="color: #dcaeea;">RouteTableId</span>: <span style="color: #ECBE7B;">!Ref</span> PrivateRouteTable2
+      <span style="color: #dcaeea;">DestinationCidrBlock</span>: 0.0.0.0/0
+      <span style="color: #dcaeea;">NatGatewayId</span>: <span style="color: #ECBE7B;">!Ref</span> NatGateway2
+</pre>
+</div>
 </div>
 </div>
 
-<div id="outline-container-orgbda7bbd" class="outline-3">
-<h3 id="orgbda7bbd"><a href="#orgbda7bbd">Public Subnets</a></h3>
-<div class="outline-text-3" id="text-orgbda7bbd">
+<div id="outline-container-org4854ddc" class="outline-3">
+<h3 id="org4854ddc"><a href="#org4854ddc">Public Subnets</a></h3>
+<div class="outline-text-3" id="text-org4854ddc">
 <div class="org-src-container">
 <pre class="src src-yaml">  <span style="color: #dcaeea;">PublicSubnet1</span>:
     <span style="color: #dcaeea;">Type</span>: AWS::EC2::Subnet
@@ -287,30 +311,37 @@ is part of.
 </div>
 </div>
 
-<div id="outline-container-orga9248b4" class="outline-3">
-<h3 id="orga9248b4"><a href="#orga9248b4">Private Subnets</a></h3>
-<div class="outline-text-3" id="text-orga9248b4">
+<div id="outline-container-org0883d6d" class="outline-3">
+<h3 id="org0883d6d"><a href="#org0883d6d">Private Subnets</a></h3>
+<div class="outline-text-3" id="text-org0883d6d">
 <p>
-There are two differences between "public" and "private" Subnets:
+There are two differences between "public" and "private" subnets:
 </p>
 
 <ol class="org-ol">
-<li>Public Subnets must specify <code>MapPublicIpOnLaunch: true</code>, which tells AWS
-to assign public IP addresses to instances.</li>
-<li>Public Subnets have a <b>route to an Internet Gateway</b>.</li>
+<li>Public subnets have a <b>route to an Internet Gateway</b>.</li>
+<li>Public subnets usually specify <code>MapPublicIpOnLaunch: true</code>.</li>
 </ol>
 
 <p>
-The second item isn't actually a quality of the Subnet itself; rather it's a
-matter of what routes are in the Route Table that the Subnet is associated
-with.
+The first item (a <b>route to an Intenet Gateway</b>) isn't actually a quality of
+the subnet itself; rather, it's a matter of what routes are in the Route
+Table that the subnet is associated with.
 </p>
 
 <p>
-Private Subnets <i>can</i> specify <code>MapPublicIpOnLaunch: true</code> in order to assign
+The second item (<code>MapPublicIpOnLaunch: true</code>) tells AWS to assign public IP
+addresses to EC2 instances in the subnet, which is required if you plan to
+launch internet-reachable EC2 instances in the subnet. This is <i>usually</i> the
+case, but one can imagine a public subnet that exists only for use with
+non-EC2 services.
+</p>
+
+<p>
+Private subnets <i>can</i> specify <code>MapPublicIpOnLaunch: true</code> in order to assign
 internet-valid IP addresses to instances. That could be useful if, say, you
-want to be able to make a Subnet to temporarily public (by adding a route to
-the Internet Gateway).
+want to be able to make the subnet to temporarily public (by temporarily
+adding a route to the Internet Gateway).
 </p>
 
 <div class="org-src-container">
@@ -341,7 +372,7 @@ the Internet Gateway).
       <span style="color: #dcaeea;">CidrBlock</span>: <span style="color: #ECBE7B;">!Ref</span> PrivateSubnet2CIDR
       <span style="color: #dcaeea;">Tags</span>:
         - <span style="color: #dcaeea;">Key</span>: Name
-          <span style="color: #dcaeea;">Value</span>: <span style="color: #ECBE7B;">!Sub</span> <span style="color: #98be65;">"${DeploymentName} Private (AZ1)"</span>
+          <span style="color: #dcaeea;">Value</span>: <span style="color: #ECBE7B;">!Sub</span> <span style="color: #98be65;">"${DeploymentName} Private (AZ2)"</span>
 
   <span style="color: #dcaeea;">PrivateSubnet2RouteTableAssociation</span>:
     <span style="color: #dcaeea;">Type</span>: AWS::EC2::SubnetRouteTableAssociation
@@ -353,9 +384,9 @@ the Internet Gateway).
 </div>
 </div>
 
-<div id="outline-container-org609677d" class="outline-3">
-<h3 id="org609677d"><a href="#org609677d">NAT Gateways</a></h3>
-<div class="outline-text-3" id="text-org609677d">
+<div id="outline-container-org6c36c97" class="outline-3">
+<h3 id="org6c36c97"><a href="#org6c36c97">NAT Gateways</a></h3>
+<div class="outline-text-3" id="text-org6c36c97">
 <div class="org-src-container">
 <pre class="src src-yaml">  <span style="color: #dcaeea;">NatGateway1EIP</span>:
     <span style="color: #dcaeea;">Type</span>: AWS::EC2::EIP
@@ -389,9 +420,9 @@ the Internet Gateway).
 </div>
 </div>
 
-<div id="outline-container-org84d1e10" class="outline-2">
-<h2 id="org84d1e10"><a href="#org84d1e10">Outputs</a></h2>
-<div class="outline-text-2" id="text-org84d1e10">
+<div id="outline-container-org80f606d" class="outline-2">
+<h2 id="org80f606d"><a href="#org80f606d">Outputs</a></h2>
+<div class="outline-text-2" id="text-org80f606d">
 <div class="org-src-container">
 <pre class="src src-yaml"><span style="color: #dcaeea;">Outputs</span>:
   <span style="color: #dcaeea;">VpcId</span>:
