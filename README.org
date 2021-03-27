@@ -1,0 +1,7 @@
+* Local Viewing
+
+  Use a program like [[https://www.npmjs.com/package/serve][serve]] (for making relative links work correctly).
+
+  #+begin_src sh
+    serve .
+  #+end_src
