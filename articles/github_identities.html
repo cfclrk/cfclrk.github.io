@@ -41,6 +41,7 @@
 </li>
 <li><a href="#the-ssh-config">The SSH Config</a></li>
 <li><a href="#signed-commits">Signed Commits</a></li>
+<li><a href="#orgef631d7">Emacs</a></li>
 <li><a href="#orga43e9ab">Resources</a></li>
 </ul>
 </div>
@@ -78,8 +79,8 @@ The git configuration must do two things:
 <ol class="org-ol">
 <li>Tell git to use different configurations depending on the directory a
 project is in. Git supports this with the <a href="https://git-scm.com/docs/git-config#_conditional_includes">includeIf</a> directive.</li>
-<li>Perform git URL-rewriting with <a href="https://git-scm.com/docs/git-config#Documentation/git-config.txt-urlltbasegtinsteadOf">insteadOf</a>, which allows SSH to properly
-associate keys with GitHub accounts.</li>
+<li>Perform git URL-rewriting with <a href="https://git-scm.com/docs/git-config#Documentation/git-config.txt-urlltbasegtinsteadOf">insteadOf</a>, which will allow SSH to properly
+associate SSH keys with GitHub accounts.</li>
 </ol>
 
 <p>
@@ -92,19 +93,17 @@ File: <code>~/.config/git/config</code>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-gitconfig">[<span style="color: #ECBE7B;">user</span>]
-    <span style="color: #dcaeea;">name</span> = Chris Clark
+<pre class="src src-gitconfig">[<span style="color: #ECBE7B;">includeIf</span> <span style="color: #c678dd;">"gitdir:/"</span>]
+    <span style="color: #dcaeea;">path</span> = home.gitconfig
 [<span style="color: #ECBE7B;">includeIf</span> <span style="color: #c678dd;">"gitdir:~/work/"</span>]
     <span style="color: #dcaeea;">path</span> = work.gitconfig
-[<span style="color: #ECBE7B;">includeIf</span> <span style="color: #c678dd;">"gitdir:/"</span>]
-    <span style="color: #dcaeea;">path</span> = home.gitconfig
 </pre>
 </div>
 
 <p>
 Then, we create a new git config file for each GitHub account. In each file,
-specify your email address, GitHub username, and a url-rewriting <a href="https://git-scm.com/docs/git-config#Documentation/git-config.txt-urlltbasegtinsteadOf">insteadOf</a>
-line which modifies the base URL that git and SSH see.
+specify your email address and a url-rewriting <a href="https://git-scm.com/docs/git-config#Documentation/git-config.txt-urlltbasegtinsteadOf">insteadOf</a> line which modifies
+the base URL that git and SSH see.
 </p>
 
 <p>
@@ -114,8 +113,6 @@ File: <code>~/.config/git/work.gitconfig</code>
 <div class="org-src-container">
 <pre class="src src-gitconfig">[<span style="color: #ECBE7B;">user</span>]
     <span style="color: #dcaeea;">email</span> = cfclrk@work.com
-[<span style="color: #ECBE7B;">github</span>]
-    <span style="color: #dcaeea;">user</span> = cfclrk-work
 [<span style="color: #ECBE7B;">url</span> <span style="color: #c678dd;">"git@github-work"</span>]
     <span style="color: #dcaeea;">insteadOf</span> = git@github.com
 [<span style="color: #ECBE7B;">url</span> <span style="color: #c678dd;">"git@gist-work"</span>]
@@ -129,9 +126,7 @@ File: <code>~/.config/git/home.gitconfig</code>
 
 <div class="org-src-container">
 <pre class="src src-gitconfig">[<span style="color: #ECBE7B;">user</span>]
-    <span style="color: #dcaeea;">email</span> = cfclrk@gmail.com
-[<span style="color: #ECBE7B;">github</span>]
-    <span style="color: #dcaeea;">user</span> = cfclrk
+    <span style="color: #dcaeea;">email</span> = cfclrk@home.com
 [<span style="color: #ECBE7B;">url</span> <span style="color: #c678dd;">"git@github-home"</span>]
     <span style="color: #dcaeea;">insteadOf</span> = git@github.com
 [<span style="color: #ECBE7B;">url</span> <span style="color: #c678dd;">"git@gist-home"</span>]
@@ -149,7 +144,7 @@ above, if you are interested.
 <h3 id="url-rewriting"><a href="#url-rewriting">More About Git URL Rewriting</a></h3>
 <div class="outline-text-3" id="text-url-rewriting">
 <p>
-To take a closer look at what this part of <code>home.gitconfig</code> means:
+To take a closer look at what this part means:
 </p>
 
 <div class="org-src-container">
@@ -165,9 +160,9 @@ Here I've said: "Mr. Git, any time you see a URL that starts with
 </p>
 
 <p>
-For example, let's see what git thinks about the repository where I'm writing
-<a href="https://github.com/cfclrk/articles">this article</a>. If I just <code>cat</code> the git config file in my local <i>articles</i>
-repo, I see the real remote URL:
+For example, let's see what git thinks about the <a href="https://github.com/cfclrk/articles">git repository</a> where I'm
+writing this article. If I just <code>cat</code> the git config file in my local
+<code>articles</code> repository, I see the real remote URL:
 </p>
 
 <div class="org-src-container">
@@ -228,36 +223,38 @@ statements.
 </p>
 
 <ul class="org-ul">
-<li>Does <code>[includeIf "gitdir:~/work/"]</code> apply?
-<ul class="org-ul">
-<li>Yes, so load <code>work.gitconfig</code></li>
-</ul></li>
 <li>Does <code>[includeIf "gitdir:/"]</code> apply?
 <ul class="org-ul">
-<li>Yes, so load <code>home.gitconfig</code></li>
+<li><b>Yes!</b> Load <code>home.gitconfig</code></li>
+<li><code>user.email</code> is <code>cfclrk@home.com</code></li>
+</ul></li>
+<li>Does <code>[includeIf "gitdir:~/work/"]</code> apply?
+<ul class="org-ul">
+<li><b>Yes!</b> Load <code>work.gitconfig</code></li>
+<li><code>user.email</code> is <code>cfclrk@home.com</code></li>
 </ul></li>
 </ul>
 
 <p>
-Notice that <b>both</b> the <code>work.gitconfig</code> and <code>home.gitconfig</code> are loaded, but
-obviously <code>user.email</code> can only be set to one value. In this case, the email
-address will be set to <code>cfclrk@work.com</code> since that was the <i>first</i> value
-loaded for the <code>user.email</code> option.
+<b>Both</b> the <code>work.gitconfig</code> and <code>home.gitconfig</code> are loaded. The email address
+will be set to <code>cfclrk@work.com</code> since that was the <i>last</i> value loaded for
+the <code>user.email</code> option. The determining factor is the <i>order in which the
+configuration is defined</i>, and the <i>last value wins</i>.
 </p>
 
 <p>
-When you load multiple extra git config files using the <code>includeIf</code> directive,
-you must specify the files in order from <i>most specific</i> to <i>least specific</i>.
+So, when you define multiple <code>includeIf</code> directives, you must specify the
+directives in order from <i>most general</i> to <i>most specific</i>.
 </p>
 
 <p>
-<i>Aside</i>: That email address that you specify as the value of <code>user.email</code> is
-the only piece of information git (and therefore GitHub) has when determining
-who "authored" a commit. You can set that email address to anything! Set it to
+<i>Aside</i>: The value of <code>user.email</code> is the only piece of information GitHub
+uses when determining what profile picture to display next to a commit. You
+can set that email address to anything! Set it to
 <code>torvalds@linux-foundation.org</code>, and GitHub will happily put Linus Torvalds'
 picture next to your git commits. And to be sure, <a href="https://news.ycombinator.com/item?id=10005577">that happens</a>. You can
-somewhat mitigate this problem of attribution by using <a href="https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work">signed commits</a>, as
-detailed in the section <a href="#signed-commits">Signed Commits</a>.
+<i>partially</i> mitigate this problem of attribution by using <a href="https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work">signed commits</a>, as
+discussed in the section <a href="#signed-commits">Signed Commits</a>.
 </p>
 </div>
 </div>
@@ -274,7 +271,7 @@ accounts, I've tried). Assuming you've <a href="https://docs.github.com/en/githu
 looks something like:
 </p>
 
-<pre class="example" id="org32f4f8c">
+<pre class="example" id="orgea257ef">
 $ tree ~/.ssh/
 /Users/cfclrk/.ssh/
 ├── config
@@ -347,6 +344,20 @@ TODO: I haven't actually set this up with one (let alone two!) accounts.
 If you have a setup to automatically sign commits when using multiple GitHub
 accounts (with different email addresses) let me know!
 </p>
+</div>
+</div>
+
+<div id="outline-container-orgef631d7" class="outline-2">
+<h2 id="orgef631d7"><a href="#orgef631d7">Emacs</a></h2>
+<div class="outline-text-2" id="text-orgef631d7">
+<p>
+Some extra notes about Emacs.
+</p>
+
+<ul class="org-ul">
+<li>Use gitconfig mode in <code>home.gitconfig</code> and <code>work.gitconfig</code></li>
+<li>Configure Forge using <code>[github.user]</code></li>
+</ul>
 </div>
 </div>
 
