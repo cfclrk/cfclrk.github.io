@@ -26,22 +26,22 @@
   </ul>
 </nav>
 </div>
-<div id="content">
+<div id="content" class="content">
 <header>
 <h1 class="title">Fish</h1>
 </header><nav id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org1451eaa">Validate a function argument</a></li>
-<li><a href="#org051604b">Verify a variable is defined</a></li>
+<li><a href="#orgfc0c57a">Validate Function Argument</a></li>
+<li><a href="#orgcd95b3b">Verify Variable is Defined</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-org1451eaa" class="outline-2">
-<h2 id="org1451eaa"><a href="#org1451eaa">Validate a function argument</a></h2>
-<div class="outline-text-2" id="text-org1451eaa">
+<div id="outline-container-orgfc0c57a" class="outline-2">
+<h2 id="orgfc0c57a"><a href="#orgfc0c57a">Validate Function Argument</a></h2>
+<div class="outline-text-2" id="text-orgfc0c57a">
 <div class="org-src-container">
 <pre class="src src-fish"><span style="color: #51afef;">test</span> <span style="color: #c678dd;">-z</span> <span style="color: #98be65;">"$argv[1]"</span>; <span style="color: #51afef;">and</span> <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Error: arg1 must be a string"</span>; <span style="color: #51afef;">and</span> <span style="color: #51afef;">return</span> <span style="color: #a9a1e1;">1</span>
 </pre>
@@ -49,12 +49,11 @@
 </div>
 </div>
 
-<div id="outline-container-org051604b" class="outline-2">
-<h2 id="org051604b"><a href="#org051604b">Verify a variable is defined</a></h2>
-<div class="outline-text-2" id="text-org051604b">
+<div id="outline-container-orgcd95b3b" class="outline-2">
+<h2 id="orgcd95b3b"><a href="#orgcd95b3b">Verify Variable is Defined</a></h2>
+<div class="outline-text-2" id="text-orgcd95b3b">
 <div class="org-src-container">
 <pre class="src src-fish"><span style="color: #51afef;">test</span> <span style="color: #c678dd;">-z</span> <span style="color: #98be65;">"$FOO"</span>; <span style="color: #51afef;">and</span> <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"FOO is empty"</span>; <span style="color: #51afef;">and</span> <span style="color: #51afef;">return</span>
-<span style="color: #51afef;">test</span> <span style="color: #c678dd;">-z</span> <span style="color: #98be65;">"$BAR"</span>; <span style="color: #51afef;">and</span> <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"BAR is empty"</span>; <span style="color: #51afef;">and</span> <span style="color: #51afef;">return</span>
 </pre>
 </div>
 </div>

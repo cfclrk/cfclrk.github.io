@@ -26,7 +26,7 @@
   </ul>
 </nav>
 </div>
-<div id="content">
+<div id="content" class="content">
 <header>
 <h1 class="title">jq</h1>
 </header><nav id="table-of-contents">
@@ -47,9 +47,15 @@
 </ul>
 </li>
 <li><a href="#org9dcaaa4">Period in Key</a></li>
+<li><a href="#org1ad6614">Sorting</a></li>
+<li><a href="#org160909e">Update Value</a></li>
 </ul>
 </div>
 </nav>
+<div class="org-src-container">
+<pre class="src src-sh" id="orga6753d0">curl https://api.github.com/repos/kubernetes/kops/releases/latest
+</pre>
+</div>
 
 <div id="outline-container-orgee2481e" class="outline-2">
 <h2 id="orgee2481e"><a href="#orgee2481e">Variables</a></h2>
@@ -72,7 +78,7 @@
 <h2 id="org6732dd3"><a href="#org6732dd3">Multiline</a></h2>
 <div class="outline-text-2" id="text-org6732dd3">
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">releases</span> <span style="color: #98be65;">\</span>
+<pre class="src src-sh"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">KopsRelease</span> <span style="color: #98be65;">\</span>
     | jq <span style="color: #98be65;">'.[] | select(.name == "v1.16.3").assets[]</span>
 <span style="color: #98be65;">              | select(.name == "kops-darwin-amd64").id'</span>
 </pre>
@@ -145,6 +151,35 @@ Best way to do this is use AWS server-side filtering.
 </pre>
 </div>
 </div>
+</div>
+
+<div id="outline-container-org1ad6614" class="outline-2">
+<h2 id="org1ad6614"><a href="#org1ad6614">Sorting</a></h2>
+<div class="outline-text-2" id="text-org1ad6614">
+<div class="org-src-container">
+<pre class="src src-sh">aws s3api list-objects-v2 <span style="color: #98be65;">\</span>
+    --bucket $<span style="color: #dcaeea;">BUCKET</span> <span style="color: #98be65;">\</span>
+    --prefix <span style="color: #98be65;">"foo/bar"</span> <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.Contents | sort_by(.LastModified)'</span>
+</pre>
+</div>
+
+<p>
+If you see an error like <code>Cannot index string with string</code>, it's probably
+because you are not piping a proper list to it. For example:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">cat $<span style="color: #dcaeea;">data</span> | jq <span style="color: #98be65;">'.Stuff[] | sort_by(.Time)'</span>  <span style="color: #5B6268;"># </span><span style="color: #5B6268;">Bad</span>
+
+cat $<span style="color: #dcaeea;">data</span> | jq <span style="color: #98be65;">'.Stuff | sort_by(.Time)'</span>    <span style="color: #5B6268;"># </span><span style="color: #5B6268;">Good</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org160909e" class="outline-2">
+<h2 id="org160909e"><a href="#org160909e">Update Value</a></h2>
 </div>
 </div>
 </body>

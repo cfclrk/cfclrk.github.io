@@ -26,7 +26,7 @@
   </ul>
 </nav>
 </div>
-<div id="content">
+<div id="content" class="content">
 <header>
 <h1 class="title">Bash</h1>
 </header><nav id="table-of-contents">
@@ -261,7 +261,7 @@ whether the limit string has single quotes around it.
 <span style="color: #98be65;">hello</span>
 <span style="color: #98be65;">$foo</span>
 <span style="color: #98be65;">EOF</span>
- )
+)
 <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"$a"</span>
 </pre>
 </div>
@@ -282,7 +282,7 @@ bar
 <span style="color: #98be65;">hello</span>
 <span style="color: #98be65;">$foo</span>
 <span style="color: #98be65;">EOF</span>
- )
+)
 <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"$a"</span>
 </pre>
 </div>
@@ -319,7 +319,7 @@ Verify some environment variables exist.
 <h3 id="org56e98a3"><a href="#org56e98a3">Resources</a></h3>
 <div class="outline-text-3" id="text-org56e98a3">
 <ul class="org-ul">
-<li>GNU <a href="https://www.gnu.org/software/bash/manual/bashref.html#Shell-Parameter-Expansion">Bash docs</a></li>
+<li>GNU <a href="https://www.gnu.org/savannah-checkouts/gnu/bash/manual/">Bash docs</a> section on <a href="https://www.gnu.org/software/bash/manual/bashref.html#Shell-Parameter-Expansion">paremeter expansion</a></li>
 <li><i>The Open Group</i> has some excellent <a href="https://pubs.opengroup.org/onlinepubs/9699919799">POSIX documentation</a> with a section on
 <a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02">parameter expansion</a></li>
 </ul>
@@ -330,7 +330,7 @@ Verify some environment variables exist.
 <h3 id="org3c26f21"><a href="#org3c26f21">Example</a></h3>
 <div class="outline-text-3" id="text-org3c26f21">
 <p>
-Example frome here: <a href="https://stackoverflow.com/a/13864829/340613">https://stackoverflow.com/a/13864829/340613</a>
+Just digging into this example: <a href="https://stackoverflow.com/a/13864829/340613">https://stackoverflow.com/a/13864829/340613</a>
 </p>
 
 <p>
@@ -353,12 +353,6 @@ substituted.
 <code>-z</code> is a <a href="https://tldp.org/LDP/abs/html/comparison-ops.html">comparison operator</a> that tests if the argument is null or empty.
 </p>
 
-<p>
-In this case, var is the empty string, which is not "unset or null".
-Therefore the <code>+</code> parameter expansion expands this to <code>x</code> (which passes the
-<code>-z</code> check).
-</p>
-
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #dcaeea;">var</span>=<span style="color: #98be65;">""</span>
 <span style="color: #51afef;">if</span> [ -z ${<span style="color: #dcaeea;">var</span>+x} ]; <span style="color: #51afef;">then</span>
@@ -375,8 +369,9 @@ var is set to ''
 
 
 <p>
-In this case, <code>var</code> has not been declared, so it is "unset or null". The <code>+</code>
-parameter expansion expands it to <code>null</code>.
+In this case, var is the empty string, which is not "unset or null".
+Therefore the <code>+</code> parameter expansion expands this to <code>x</code> (which passes the
+<code>-z</code> check).
 </p>
 
 <div class="org-src-container">
@@ -394,9 +389,8 @@ var is unset
 
 
 <p>
-In this case we leave the <code>word</code> spot empty in the parameter expansion, so if
-<code>var</code> is empty, it is subsituted by an empty string. Now the <code>-z</code> test sees an
-empty argument, and this prints out <code>var is unset</code>.
+In this case, <code>var</code> has not been declared, so it is "unset or null". The <code>+</code>
+parameter expansion expands it to <code>null</code>.
 </p>
 
 <div class="org-src-container">
@@ -408,6 +402,17 @@ empty argument, and this prints out <code>var is unset</code>.
 <span style="color: #51afef;">fi</span>
 </pre>
 </div>
+
+<pre class="example">
+var is unset
+</pre>
+
+
+<p>
+In this case we leave the <code>word</code> spot empty in the parameter expansion, so if
+<code>var</code> is empty, it is subsituted by an empty string. Now the <code>-z</code> test sees an
+empty argument, and this prints out <code>var is unset</code>.
+</p>
 </div>
 </div>
 </div>

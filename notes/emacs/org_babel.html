@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2021-05-30 Sun 12:02 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Org Babel</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Org Babel</h1>
+</header><nav id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org59495c4">Execute Block on Remote Machine</a>
+<ul>
+<li><a href="#org648983c">Double-Hop (Use a Bastion)</a></li>
+</ul>
+</li>
+<li><a href="#org726745c">Copy File to Remote Machine</a></li>
+<li><a href="#org7462563">IP Address Variable</a></li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-org59495c4" class="outline-2">
+<h2 id="org59495c4"><a href="#org59495c4">Execute Block on Remote Machine</a></h2>
+<div class="outline-text-2" id="text-org59495c4">
+<pre class="example" id="orga5f7323">
+:dir /ssh:ec2-user@1.2.3.4:/
+</pre>
+</div>
+
+<div id="outline-container-org648983c" class="outline-3">
+<h3 id="org648983c"><a href="#org648983c">Double-Hop (Use a Bastion)</a></h3>
+<div class="outline-text-3" id="text-org648983c">
+<pre class="example" id="orgd6d1c02">
+:dir /ssh:ec2-user@1.2.3.4|ssh:ec2-user@10.192.1.2:/
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org726745c" class="outline-2">
+<h2 id="org726745c"><a href="#org726745c">Copy File to Remote Machine</a></h2>
+<div class="outline-text-2" id="text-org726745c">
+<p>
+This leverages my <code>host</code> function.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp"><span style="color: #51afef;">(</span>copy-file MyFile <span style="color: #c678dd;">(</span>host <span style="color: #98be65;">"ec2-user"</span> <span style="color: #98be65;">"/tmp/my_file.txt"</span> 'sudo<span style="color: #c678dd;">)</span> t<span style="color: #51afef;">)</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7462563" class="outline-2">
+<h2 id="org7462563"><a href="#org7462563">IP Address Variable</a></h2>
+<div class="outline-text-2" id="text-org7462563">
+<p>
+You don't want to hard-code IP addresses in your sourc blocks like some kind
+of animal!
+</p>
+</div>
+</div>
+</div>
+</body>
+</html>

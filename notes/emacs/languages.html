@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2021-05-30 Sun 12:02 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>&lrm;</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<nav id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orge201c4a">Python</a>
+<ul>
+<li><a href="#org1180616">Goals</a></li>
+<li><a href="#org7578215">PATH</a></li>
+<li><a href="#org6f91338">Questions</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+<div id="outline-container-orge201c4a" class="outline-2">
+<h2 id="orge201c4a"><a href="#orge201c4a">Python</a></h2>
+<div class="outline-text-2" id="text-orge201c4a">
+</div>
+<div id="outline-container-org1180616" class="outline-3">
+<h3 id="org1180616"><a href="#org1180616">Goals</a></h3>
+<div class="outline-text-3" id="text-org1180616">
+<ul class="org-ul">
+<li>Use LSP.</li>
+<li>Each project has its own virtual environment.</li>
+<li>Different projects use different versions of Python.</li>
+<li>Each python project can define its own formatting rules. So, some projects may
+use <code>black</code>, while others use <code>yapf</code>, and each project might define, say,
+different maximum line length.</li>
+<li>Each project can define its own linting rules (using say <code>pylint</code>).</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org7578215" class="outline-3">
+<h3 id="org7578215"><a href="#org7578215">PATH</a></h3>
+<div class="outline-text-3" id="text-org7578215">
+<p>
+<code>pyls</code>, <code>pyls-mypy</code>, etc must be on your <code>$PATH</code>. There are a few
+ways to accomplish this.
+</p>
+
+<ol class="org-ol">
+<li>Install <code>pyls</code> (etc) into every virtual environment. Perhaps, add it to
+the pyenv default packages list.</li>
+<li>Create a pyenv virtual env specifically for <code>pyls</code> etc. Then in each
+project, do <code>pyenv local $PROJECTVENV $PYLSVENV</code>. With <code>pyenv</code> you can set
+multiple active virtual environments, so always activate the environment
+with <code>pyls</code>.</li>
+<li><p>
+Install <code>pyls</code> etc. somewhere else on your <code>$PATH</code>, and <b>do not</b> install
+it into <b>any</b> pyenv virtual environment.
+</p>
+
+<p>
+I used (2) for a while. Now I'm going with (3). To install it in a
+globally-accessible place:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">/usr/local/opt/python3/libexec/bin/pip install pyls
+/usr/local/opt/python3/libexec/bin/pip install pyls-mypy
+/usr/local/opt/python3/libexec/bin/pip install pyls-isort
+/usr/local/opt/python3/libexec/bin/pip install pyls-black
+</pre>
+</div>
+
+<p>
+Note that if any of <code>pyls</code>, <code>pyls-mypy</code>, etc are installed in <b>any</b> pyenv
+virtual environment, things will start going wrong unless you really know
+what you're doing. That shouldn't be a problem: no python package should
+be requiring <code>pyls</code> or LSP plugins (even as development dependencies).
+Different developers use different things, and not everyone uses LSP, so
+requiring it would be silly.
+</p>
+
+<p>
+NOTE: I ALSO NEEDED TO INSTALL mypy and isort into the top-level pip. HOW
+CAN I MAKE LSP use the versions of mypy and isort in the virtual environment?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">/usr/local/opt/python3/libexec/bin/pip install isort
+/usr/local/opt/python3/libexec/bin/pip install mypy
+</pre>
+</div></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org6f91338" class="outline-3">
+<h3 id="org6f91338"><a href="#org6f91338">Questions</a></h3>
+<div class="outline-text-3" id="text-org6f91338">
+<p>
+Pyright or mypy?
+</p>
+
+<p>
+Is there a way to conditionally load either the black or yapf lsp plugins
+depending on project config?
+</p>
+
+<p>
+DNS tunneling, periodic beaconing, one other one
+</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
