@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Clojure</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Clojure</h1>
+</header><nav id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org7b79fed">Project Creation</a>
+<ul>
+<li><a href="#org88b9cd1">Using clj-new</a></li>
+<li><a href="#org433c503">Minimal command line</a></li>
+</ul>
+</li>
+<li><a href="#orgf3174e9">Testing</a>
+<ul>
+<li><a href="#org8423586">Run all tests in namespace</a></li>
+<li><a href="#org548606d">Run a single test</a></li>
+</ul>
+</li>
+<li><a href="#org709f46a">Symbols vs Keywords</a></li>
+<li><a href="#org2d32370">How to (+ 1 2)</a></li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-org7b79fed" class="outline-2">
+<h2 id="org7b79fed"><a href="#org7b79fed">Project Creation</a></h2>
+<div class="outline-text-2" id="text-org7b79fed">
+<p>
+Use clj-new. The following makes use of an alias defined in
+~/.clojure/deps.edn.
+</p>
+</div>
+
+<div id="outline-container-org88b9cd1" class="outline-3">
+<h3 id="org88b9cd1"><a href="#org88b9cd1">Using clj-new</a></h3>
+<div class="outline-text-3" id="text-org88b9cd1">
+<div class="org-src-container">
+<pre class="src src-sh">clj -A:new lib cfclrk/$<span style="color: #dcaeea;">projectName</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org433c503" class="outline-3">
+<h3 id="org433c503"><a href="#org433c503">Minimal command line</a></h3>
+<div class="outline-text-3" id="text-org433c503">
+<p>
+All you need is a project directory with a
+</p>
+
+<ol class="org-ol">
+<li>deps.edn</li>
+<li>src/foo.clj</li>
+</ol>
+
+<p>
+However it should be namespaced properly. Work on this.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">touch $<span style="color: #dcaeea;">d</span>/deps.edn $<span style="color: #dcaeea;">d</span>/src/core.clj
+<span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"{:deps {org.clojure/clojure {:mvn/version \"1.10.0\"}}}"</span> &gt; $<span style="color: #dcaeea;">d</span>/deps.edn
+<span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"(ns core) (defn -main [] (println \"hello world\"))"</span> &gt;&gt; src/core.clj
+clj -m core
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf3174e9" class="outline-2">
+<h2 id="orgf3174e9"><a href="#orgf3174e9">Testing</a></h2>
+<div class="outline-text-2" id="text-orgf3174e9">
+<p>
+Use test-runner, which handles test discovery and running tests.
+<a href="https://github.com/cognitect-labs/test-runner">https://github.com/cognitect-labs/test-runner</a>
+</p>
+</div>
+
+<div id="outline-container-org8423586" class="outline-3">
+<h3 id="org8423586"><a href="#org8423586">Run all tests in namespace</a></h3>
+<div class="outline-text-3" id="text-org8423586">
+<div class="org-src-container">
+<pre class="src src-sh">clj -A:test -n cfclrk.sicp-test
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org548606d" class="outline-3">
+<h3 id="org548606d"><a href="#org548606d">Run a single test</a></h3>
+<div class="outline-text-3" id="text-org548606d">
+<div class="org-src-container">
+<pre class="src src-sh">clj -A:test -v cfclrk.sicp-test/a-test
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org709f46a" class="outline-2">
+<h2 id="org709f46a"><a href="#org709f46a">Symbols vs Keywords</a></h2>
+<div class="outline-text-2" id="text-org709f46a">
+<p>
+What's the difference between a symbol and a keyword?
+</p>
+
+<p>
+Excerpt from "Clojure in Action, Second Edition" by Amit Rathore Francis
+Avila:
+</p>
+
+<blockquote>
+<p>
+Essetially what's happening when you quote a symbol is you’re treating the
+symbol as data and not code. In practice you’ll almost never quote symbols to
+use them as data because Clojure has a special type specifically for this use
+case: the keyword. A keyword is sort of like an autoquoted symbol: keywords
+never reference some other value and always evaluate to themselves. Keyword
+syntax is almost like symbol syntax, except keywords always begin with a
+colon.
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org2d32370" class="outline-2">
+<h2 id="org2d32370"><a href="#org2d32370">How to (+ 1 2)</a></h2>
+<div class="outline-text-2" id="text-org2d32370">
+<p>
+A few ways to add 1 and 2, in increasing complexity.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">(+ 1 2)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-clojure">(reduce + [1 2])
+</pre>
+</div>
+
+<pre class="example">
+3
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-clojure">(apply + [1 2])
+</pre>
+</div>
+
+<pre class="example">
+3
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-clojure">(reduce (<span style="color: #51afef;">fn</span> [acc i] (+ acc i)) [1 2])
+</pre>
+</div>
+
+<pre class="example">
+3
+</pre>
+</div>
+</div>
+</div>
+</body>
+</html>

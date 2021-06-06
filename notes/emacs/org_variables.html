@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Passing Variables to Source Blocks</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Passing Variables to Source Blocks</h1>
+</header><nav id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org534805a">Global header args</a></li>
+<li><a href="#orgeca7584">Elisp association list</a></li>
+<li><a href="#orgeb3f5cb">Org table</a></li>
+<li><a href="#orge96b80a">Drawer header args</a></li>
+<li><a href="#orgba87863">Drawer header args using table</a></li>
+</ul>
+</div>
+</nav>
+<p>
+In which I document ways to define variables in an org file, and use those
+variables in <code>SRC</code> blocks throughout the rest of the file.
+</p>
+
+<div id="outline-container-org534805a" class="outline-2">
+<h2 id="org534805a"><a href="#org534805a">Global header args</a></h2>
+<div class="outline-text-2" id="text-org534805a">
+<p>
+Define variables globally in an org file using <code>#+PROPERTY</code>. Notice that the
+values can be elisp expressions. values.
+</p>
+
+<p>
+<b>NOTE</b>: when changing a variable defined with <code>#+PROPERTY</code>, the buffer needs to
+be reloaded to take effect. Use <code>M-x revert-buffer</code> to reload the buffer.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">globalVar1</span>
+<span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">globalVar2</span>
+<span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">globalVar3</span>
+</pre>
+</div>
+
+<pre class="example">
+Global Var 1 Value
+5
+4
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgeca7584" class="outline-2">
+<h2 id="orgeca7584"><a href="#orgeca7584">Elisp association list</a></h2>
+<div class="outline-text-2" id="text-orgeca7584">
+<p>
+Define an elisp association list (alist) that maps variable names to values, and
+a lookup function for looking up a variable's value by name.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp" id="org817d70f">'<span style="color: #51afef;">(</span><span style="color: #c678dd;">(</span><span style="color: #98be65;">"alistVar1"</span> <span style="color: #98be65;">"Alist Var 1 Value"</span>, <span style="color: #98be65;">"Alist var 1 description"</span><span style="color: #c678dd;">)</span>
+  <span style="color: #c678dd;">(</span><span style="color: #98be65;">"alistVar2"</span> 7 <span style="color: #98be65;">"Alist var 2 description"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-elisp" id="org9ec8c05"><span style="color: #51afef;">(</span>nth 1 <span style="color: #c678dd;">(</span>assoc v data<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">v1</span>
+<span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">v2</span>
+</pre>
+</div>
+
+<pre class="example">
+Alist Var 1 Value
+7
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgeb3f5cb" class="outline-2">
+<h2 id="orgeb3f5cb"><a href="#orgeb3f5cb">Org table</a></h2>
+<div class="outline-text-2" id="text-orgeb3f5cb">
+<p>
+Define an org table that maps variable names to values, and a lookup function for looking up a variable's
+value by name. Under the covers, the table is just an elisp alist.
+</p>
+
+<table id="orgdbca1ff">
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Var Name</th>
+<th scope="col" class="org-left">Value</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">tableVar1</td>
+<td class="org-left">Table Var 1 Value</td>
+<td class="org-left">Table var 1 description</td>
+</tr>
+
+<tr>
+<td class="org-left">tableVar2</td>
+<td class="org-left">6</td>
+<td class="org-left">Table var 2 description</td>
+</tr>
+</tbody>
+</table>
+
+<div class="org-src-container">
+<pre class="src src-elisp" id="org50d480d"><span style="color: #51afef;">(</span>nth 1 <span style="color: #c678dd;">(</span>assoc v data<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">v1</span>
+<span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">v2</span>
+</pre>
+</div>
+
+<pre class="example">
+Table Var 1 Value
+6
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orge96b80a" class="outline-2">
+<h2 id="orge96b80a"><a href="#orge96b80a">Drawer header args</a></h2>
+<div class="outline-text-2" id="text-orge96b80a">
+<p>
+These variables apply to all source blogs within this section.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">drawerVar1</span>
+<span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">drawerVar2</span>
+</pre>
+</div>
+
+<pre class="example">
+Drawer Var 1
+8
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgba87863" class="outline-2">
+<h2 id="orgba87863"><a href="#orgba87863">Drawer header args using table</a></h2>
+<div class="outline-text-2" id="text-orgba87863">
+<p>
+Same as above, but look up variable values from a table (specifically, the table in section <code>Org table</code>).
+</p>
+
+<p>
+<b>NOTE</b> Calling functions in header-args can be problematic because of a bug with org mode, described <a href="https://emacs.stackexchange.com/questions/41208/org-mode-elisp-in-var-in-header-args-causing-max-specpdl-size-error">here</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">drawerTable1</span>
+<span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">drawerTable2</span>
+</pre>
+</div>
+
+<pre class="example">
+Table Var 1 Value
+6
+</pre>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Docker</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Docker</h1>
+</header><nav id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org6796926">Clean Up</a>
+<ul>
+<li><a href="#orgd9df82e">Remove Unused Images</a></li>
+<li><a href="#org44c4001">Remove All Images</a></li>
+</ul>
+</li>
+<li><a href="#org0e7987e">Start docker with SSH</a>
+<ul>
+<li><a href="#org2646990">Run Docker with .ssh</a></li>
+<li><a href="#org220764c">In container, start ssh-agent</a></li>
+<li><a href="#orgbff17a6">Add your keys</a></li>
+</ul>
+</li>
+<li><a href="#org65a8507">Run Simple Images</a>
+<ul>
+<li><a href="#orgcc8b97d">Python</a></li>
+<li><a href="#org31982b0">Golang</a></li>
+</ul>
+</li>
+<li><a href="#org9d2369f">Rate Limiting</a></li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-org6796926" class="outline-2">
+<h2 id="org6796926"><a href="#org6796926">Clean Up</a></h2>
+<div class="outline-text-2" id="text-org6796926">
+</div>
+<div id="outline-container-orgd9df82e" class="outline-3">
+<h3 id="orgd9df82e"><a href="#orgd9df82e">Remove Unused Images</a></h3>
+<div class="outline-text-3" id="text-orgd9df82e">
+<div class="org-src-container">
+<pre class="src src-sh">docker system prune
+</pre>
+</div>
+
+<p>
+This removes:
+</p>
+
+<ul class="org-ul">
+<li>all stopped containers</li>
+<li>all networks not used by at least one container</li>
+<li>all dangling images</li>
+<li>all dangling build cache</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org44c4001" class="outline-3">
+<h3 id="org44c4001"><a href="#org44c4001">Remove All Images</a></h3>
+<div class="outline-text-3" id="text-org44c4001">
+<div class="org-src-container">
+<pre class="src src-sh">docker image rm -f $(docker images -a -q)
+</pre>
+</div>
+
+<p>
+or
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">docker system prune --all
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0e7987e" class="outline-2">
+<h2 id="org0e7987e"><a href="#org0e7987e">Start docker with SSH</a></h2>
+<div class="outline-text-2" id="text-org0e7987e">
+<p>
+On linux it should be possible to actually use SSH agent forwarding. See:
+<a href="https://gist.github.com/d11wtq/8699521">https://gist.github.com/d11wtq/8699521</a>
+</p>
+
+<p>
+However, this doesn't work on MacOS. See:
+<a href="https://github.com/docker/for-mac/issues/410">https://github.com/docker/for-mac/issues/410</a>
+<a href="https://github.com/docker/for-mac/issues/483">https://github.com/docker/for-mac/issues/483</a>
+</p>
+
+<p>
+But, you can of course just share your .ssh folder and start ssh-agent in the
+container.
+</p>
+</div>
+
+<div id="outline-container-org2646990" class="outline-3">
+<h3 id="org2646990"><a href="#org2646990">Run Docker with .ssh</a></h3>
+<div class="outline-text-3" id="text-org2646990">
+<p>
+This uses a bind mount, which shares the files. Should probably use a volume
+to copy the files.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">docker run --rm -it <span style="color: #98be65;">\</span>
+       --name sshtest <span style="color: #98be65;">\</span>
+       --mount <span style="color: #dcaeea;">type</span>=bind,<span style="color: #dcaeea;">source</span>=/Users/chrisc/.ssh,<span style="color: #dcaeea;">target</span>=/root/.ssh <span style="color: #98be65;">\</span>
+       $<span style="color: #dcaeea;">ImageName</span> <span style="color: #98be65;">\</span>
+       /bin/bash
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org220764c" class="outline-3">
+<h3 id="org220764c"><a href="#org220764c">In container, start ssh-agent</a></h3>
+<div class="outline-text-3" id="text-org220764c">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #c678dd;">eval</span> $(ssh-agent -s)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbff17a6" class="outline-3">
+<h3 id="orgbff17a6"><a href="#orgbff17a6">Add your keys</a></h3>
+<div class="outline-text-3" id="text-orgbff17a6">
+<div class="org-src-container">
+<pre class="src src-sh">ssh-add ~/.ssh/id_rsa
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org65a8507" class="outline-2">
+<h2 id="org65a8507"><a href="#org65a8507">Run Simple Images</a></h2>
+<div class="outline-text-2" id="text-org65a8507">
+<p>
+Images I sometimes run for debugging etc.
+</p>
+</div>
+
+<div id="outline-container-orgcc8b97d" class="outline-3">
+<h3 id="orgcc8b97d"><a href="#orgcc8b97d">Python</a></h3>
+<div class="outline-text-3" id="text-orgcc8b97d">
+<p>
+Run and mount current dir.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">docker run -it --rm <span style="color: #98be65;">\</span>
+       --name ${<span style="color: #dcaeea;">PROJECT_NAME</span>} <span style="color: #98be65;">\</span>
+       --mount <span style="color: #dcaeea;">type</span>=bind,<span style="color: #dcaeea;">source</span>=(<span style="color: #c678dd;">pwd</span>),<span style="color: #dcaeea;">target</span>=/${<span style="color: #dcaeea;">PROJECT_NAME</span>} <span style="color: #98be65;">\</span>
+       python:3.6.5-slim-stretch /bin/bash
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org31982b0" class="outline-3">
+<h3 id="org31982b0"><a href="#org31982b0">Golang</a></h3>
+<div class="outline-text-3" id="text-org31982b0">
+<p>
+Run golang container for interactive use
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">docker run -it --rm golang:1.14
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9d2369f" class="outline-2">
+<h2 id="org9d2369f"><a href="#org9d2369f">Rate Limiting</a></h2>
+<div class="outline-text-2" id="text-org9d2369f">
+<div class="org-src-container">
+<pre class="src src-sh" id="orgea72e49">curl <span style="color: #98be65;">"https://auth.docker.io/token?service=registry.docker.io&amp;scope=repository:ratelimitpreview/test:pull"</span> <span style="color: #98be65;">\</span>
+    | jq -r .token
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh">curl --head <span style="color: #98be65;">\</span>
+     -H <span style="color: #98be65;">"Authorization: Bearer $TOKEN"</span> <span style="color: #98be65;">\</span>
+     https://registry-1.docker.io/v2/ratelimitpreview/test/manifests/latest
+</pre>
+</div>
+
+<pre class="example" id="orgb79632e">
+HTTP/1.1 200 OK
+Content-Length: 2782
+Content-Type: application/vnd.docker.distribution.manifest.v1+prettyjws
+Docker-Content-Digest: sha256:767a3815c34823b355bed31760d5fa3daca0aec2ce15b217c9cd83229e0e2020
+Docker-Distribution-Api-Version: registry/2.0
+Etag: "sha256:767a3815c34823b355bed31760d5fa3daca0aec2ce15b217c9cd83229e0e2020"
+Date: Mon, 07 Dec 2020 21:19:08 GMT
+Strict-Transport-Security: max-age=31536000
+RateLimit-Limit: 100;w=21600
+RateLimit-Remaining: 100;w=21600
+
+</pre>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -65,6 +65,13 @@
 </ul>
 </li>
 <li><a href="#org36e6ea8">Range</a></li>
+<li><a href="#org604713f">Arrays</a>
+<ul>
+<li><a href="#org7732e67">Basic</a></li>
+<li><a href="#org5a8ad2c">Length</a></li>
+<li><a href="#orgb105997">Pipe Array to <code>xargs</code></a></li>
+</ul>
+</li>
 </ul>
 </div>
 </nav>
@@ -424,6 +431,66 @@ empty argument, and this prints out <code>var is unset</code>.
 <pre class="src src-sh"><span style="color: #51afef;">for</span> i<span style="color: #51afef;"> in</span> {1..5}; <span style="color: #51afef;">do</span>
     <span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">i</span>
 <span style="color: #51afef;">done</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org604713f" class="outline-2">
+<h2 id="org604713f"><a href="#org604713f">Arrays</a></h2>
+<div class="outline-text-2" id="text-org604713f">
+</div>
+<div id="outline-container-org7732e67" class="outline-3">
+<h3 id="org7732e67"><a href="#org7732e67">Basic</a></h3>
+<div class="outline-text-3" id="text-org7732e67">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #dcaeea;">arr</span>=(<span style="color: #98be65;">"foo"</span> <span style="color: #98be65;">"bar"</span> <span style="color: #98be65;">"baz"</span>)
+<span style="color: #c678dd;">echo</span> ${<span style="color: #dcaeea;">arr</span>[*]}
+</pre>
+</div>
+
+<pre class="example">
+foo bar baz
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org5a8ad2c" class="outline-3">
+<h3 id="org5a8ad2c"><a href="#org5a8ad2c">Length</a></h3>
+<div class="outline-text-3" id="text-org5a8ad2c">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #dcaeea;">arr</span>=(<span style="color: #98be65;">"foo"</span> <span style="color: #98be65;">"bar"</span> <span style="color: #98be65;">"baz"</span>)
+<span style="color: #c678dd;">echo</span> ${#<span style="color: #dcaeea;">arr</span>[*]}
+</pre>
+</div>
+
+<pre class="example">
+3
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgb105997" class="outline-3">
+<h3 id="orgb105997"><a href="#orgb105997">Pipe Array to <code>xargs</code></a></h3>
+<div class="outline-text-3" id="text-orgb105997">
+<p>
+Start a subprocess per element in an array, where each subprocess runs <code>$script</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #dcaeea;">script</span>=$(cat &lt;&lt;<span style="color: #98be65;">"EOF"</span>
+<span style="color: #98be65;">echo {}</span>
+<span style="color: #98be65;">EOF</span>
+)
+<span style="color: #dcaeea;">arr</span>=(<span style="color: #98be65;">"foo"</span> <span style="color: #98be65;">"bar"</span> <span style="color: #98be65;">"baz"</span>)
+<span style="color: #c678dd;">echo</span> ${<span style="color: #dcaeea;">arr</span>[*]} | xargs -n 1 -P ${#<span style="color: #dcaeea;">arr</span>[*]} -I {} bash -c <span style="color: #98be65;">"$script"</span>
+</pre>
+</div>
+
+<pre class="example">
+foo
+bar
+baz
 </pre>
 </div>
 </div>

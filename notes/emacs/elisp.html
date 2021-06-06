@@ -26,7 +26,7 @@
   </ul>
 </nav>
 </div>
-<div id="content">
+<div id="content" class="content">
 <header>
 <h1 class="title">Elisp</h1>
 </header><nav id="table-of-contents">
@@ -47,19 +47,15 @@
 <div id="outline-container-org2a586bd" class="outline-2">
 <h2 id="org2a586bd"><a href="#org2a586bd">Association Lists</a></h2>
 <div class="outline-text-2" id="text-org2a586bd">
-<pre class="example">
-(("foo" . "bar") ("baz" . "qux"))
-</pre>
-
-
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>assoc <span style="color: #98be65;">"foo"</span> my-alist<span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>assoc <span style="color: #98be65;">"foo"</span> '<span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span><span style="color: #98be65;">"foo"</span> . <span style="color: #98be65;">"bar"</span><span style="color: #98be65;">)</span> <span style="color: #98be65;">(</span><span style="color: #98be65;">"baz"</span> . <span style="color: #98be65;">"qux"</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
 
-<p>
-Doesn't work
-</p>
+<pre class="example">
+(foo . bar)
+</pre>
+
 
 <div class="org-src-container">
 <pre class="src src-emacs-lisp" id="org60222e8">'<span style="color: #51afef;">(</span><span style="color: #c678dd;">(</span><span style="color: #98be65;">"cats"</span> . <span style="color: #98be65;">"hats"</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">"dogs"</span> . <span style="color: #98be65;">"hogs"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
@@ -72,9 +68,13 @@ Doesn't work
 
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>assoc <span style="color: #98be65;">"foo"</span> mylist<span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>assoc <span style="color: #98be65;">"cats"</span> mylist<span style="color: #51afef;">)</span>
 </pre>
 </div>
+
+<pre class="example">
+(cats . hats)
+</pre>
 </div>
 </div>
 
@@ -85,21 +85,76 @@ Doesn't work
 <div id="outline-container-org3b6c8b0" class="outline-3">
 <h3 id="org3b6c8b0"><a href="#org3b6c8b0">cl-prettyprint</a></h3>
 <div class="outline-text-3" id="text-org3b6c8b0">
+<p>
+<code>cl-prettyprint</code> formats nicely, but weirdly, it's not a function that
+returns a string. Instead it literally inserts text into the buffer at point.
+That can be ok in the scratch buffer, but otherwise useless IMO.
+</p>
+
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>my-string-alist '<span style="color: #da8548;">(</span><span style="color: #a9a1e1;">(</span><span style="color: #98be65;">"foo"</span> . <span style="color: #98be65;">"bar"</span><span style="color: #a9a1e1;">)</span>
-                         <span style="color: #a9a1e1;">(</span><span style="color: #98be65;">"baz"</span> . <span style="color: #98be65;">"qux"</span><span style="color: #a9a1e1;">)</span><span style="color: #da8548;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
-  <span style="color: #c678dd;">(</span>assoc <span style="color: #98be65;">"foo"</span> my-string-alist<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp">     <span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>my-string-alist '<span style="color: #a9a1e1;">(</span><span style="color: #4db5bd;">(</span><span style="color: #98be65;">"foo"</span> . <span style="color: #98be65;">"bar"</span><span style="color: #4db5bd;">)</span>
+                              <span style="color: #4db5bd;">(</span><span style="color: #98be65;">"baz"</span> . <span style="color: #98be65;">"qux"</span><span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
+       <span style="color: #c678dd;">(</span>cl-prettyprint my-string-alist<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<span style="color: #51afef;">(</span><span style="color: #c678dd;">(</span><span style="color: #98be65;">"foo"</span> . <span style="color: #98be65;">"bar"</span><span style="color: #c678dd;">)</span>
+ <span style="color: #c678dd;">(</span><span style="color: #98be65;">"baz"</span> . <span style="color: #98be65;">"qux"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+
+</pre>
+</div>
+
+<p>
+We can wrap <code>cl-prettyprint</code> in a function to yank the string. Taken from
+<a href="https://stackoverflow.com/a/3552347/340613">this SO answer</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">pprint</span> <span style="color: #c678dd;">(</span>form <span style="color: #ECBE7B;">&amp;optional</span> output-stream<span style="color: #c678dd;">)</span>
+  <span style="color: #c678dd;">(</span>princ <span style="color: #98be65;">(</span><span style="color: #51afef;">with-temp-buffer</span>
+           <span style="color: #a9a1e1;">(</span>cl-prettyprint form<span style="color: #a9a1e1;">)</span>
+           <span style="color: #a9a1e1;">(</span>buffer-string<span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
+         output-stream<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
 
 <pre class="example">
-(foo . bar)
+pprint
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>my-string-alist '<span style="color: #a9a1e1;">(</span><span style="color: #4db5bd;">(</span><span style="color: #98be65;">"foo"</span> . <span style="color: #98be65;">"bar"</span><span style="color: #4db5bd;">)</span>
+                         <span style="color: #4db5bd;">(</span><span style="color: #98be65;">"baz"</span> . <span style="color: #98be65;">"qux"</span><span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
+  <span style="color: #c678dd;">(</span>pprint my-string-alist<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+
+(("foo" . "bar")
+ ("baz" . "qux"))
 </pre>
 </div>
 </div>
 
 <div id="outline-container-org6a1a8cf" class="outline-3">
 <h3 id="org6a1a8cf"><a href="#org6a1a8cf">pp</a></h3>
+<div class="outline-text-3" id="text-org6a1a8cf">
+<p>
+<code>pp</code> is great. But I noticed sometimes it doesn't format as vertically as
+<code>cl-prettyprint</code> (example?).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>my-string-alist '<span style="color: #a9a1e1;">(</span><span style="color: #4db5bd;">(</span><span style="color: #98be65;">"foo"</span> . <span style="color: #98be65;">"bar"</span><span style="color: #4db5bd;">)</span>
+                         <span style="color: #4db5bd;">(</span><span style="color: #98be65;">"baz"</span> . <span style="color: #98be65;">"qux"</span><span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
+  <span style="color: #c678dd;">(</span>pp my-string-alist<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+(("foo" . "bar")
+ ("baz" . "qux"))
+</pre>
+</div>
 </div>
 </div>
 </div>

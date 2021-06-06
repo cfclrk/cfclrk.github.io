@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AWS Commands</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">AWS Commands</h1>
+</header><nav id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgecb4d37">Account</a></li>
+<li><a href="#org68e07f2">IP Address Ranges</a>
+<ul>
+<li><a href="#orga19ac76">Get Region of IP</a></li>
+</ul>
+</li>
+<li><a href="#orgc8421ec">All Regions</a>
+<ul>
+<li><a href="#orgd6db255">All Regions in Partition</a></li>
+<li><a href="#orgad7f0d6">All Regions in All Partitions</a></li>
+<li><a href="#org19bcb58">Run a Command in All Regions</a></li>
+</ul>
+</li>
+<li><a href="#orga3ad8a9">ACM</a>
+<ul>
+<li><a href="#orgb9b204e">List</a></li>
+<li><a href="#orgd540dd0">Describe</a></li>
+<li><a href="#orgac41550">Get Certificate</a></li>
+<li><a href="#orgb935171">Get Certificate PEM File</a></li>
+</ul>
+</li>
+<li><a href="#orgefa0a93">API Gateway V2</a>
+<ul>
+<li><a href="#org703e59c">List APIs</a></li>
+</ul>
+</li>
+<li><a href="#orgcca3574">CloudFormation</a>
+<ul>
+<li><a href="#org9b8dc57">Create Stack</a></li>
+<li><a href="#orgf3bf287">View Stack Log</a></li>
+<li><a href="#orgd962121">List Stacks</a></li>
+<li><a href="#org538a22c">Describe Stack Outputs</a></li>
+<li><a href="#org938e599">Exports</a></li>
+<li><a href="#org2af8b72">Spec Files</a></li>
+</ul>
+</li>
+<li><a href="#org36e14fe">CloudWatch</a>
+<ul>
+<li><a href="#org1ffc1e3">Delete All Alarms</a></li>
+<li><a href="#org58faf95">Create Alarm Targeting ASG policy</a></li>
+</ul>
+</li>
+<li><a href="#orga305ce9">DynamoDB</a>
+<ul>
+<li><a href="#org2ab650a">Create table with local secondary index</a></li>
+<li><a href="#org4bbbff4">List Tables</a></li>
+<li><a href="#org12b337b">Delete Tables Like a Maniac</a></li>
+</ul>
+</li>
+<li><a href="#org85113a1">EC2 AMIs</a>
+<ul>
+<li><a href="#orge6c2a6a">List AMIs</a></li>
+<li><a href="#orgaf05b36">Get Latest Image</a></li>
+<li><a href="#org4a22e82">Delete AMIs and EBS Snapshots</a></li>
+<li><a href="#orgdfb623f">List Accounts That Can Access AMI</a></li>
+</ul>
+</li>
+<li><a href="#org7d82d3e">EC2 Instances</a>
+<ul>
+<li><a href="#org76292c3">Describe running EC2 instances</a></li>
+<li><a href="#orgdecfa38">All Instance Tags</a></li>
+<li><a href="#org6cf632e">Instances with Tag</a></li>
+</ul>
+</li>
+<li><a href="#org786da18">EC2 VPCs</a>
+<ul>
+<li><a href="#org964ec27">VPCs</a></li>
+<li><a href="#org8a9946a">Subnets</a></li>
+<li><a href="#orga2bfce1">SecurityGroups</a></li>
+<li><a href="#org269499f">Private ALB IPs</a></li>
+</ul>
+</li>
+<li><a href="#org41c79d6">ECR</a>
+<ul>
+<li><a href="#org23dd3fc">Log in</a></li>
+</ul>
+</li>
+<li><a href="#org3953121">ECS</a></li>
+<li><a href="#org25772fa">EKS</a>
+<ul>
+<li><a href="#org09284e9">List Clusters</a></li>
+<li><a href="#org3830ba5">Get Kube Config</a></li>
+</ul>
+</li>
+<li><a href="#org7c988d5">Elasticache</a>
+<ul>
+<li><a href="#org49b4a9c">List CasheClusters</a></li>
+<li><a href="#orga432a69">List ReplicationGroups</a></li>
+</ul>
+</li>
+<li><a href="#org458ad12">ElasticBeanstalk</a>
+<ul>
+<li><a href="#org8572529">Config Options for Nampespace</a></li>
+</ul>
+</li>
+<li><a href="#org5335304">ElasticLoadBalancingV2</a>
+<ul>
+<li><a href="#org37f89dc">Describe ALBs</a></li>
+<li><a href="#orgff53c49">Get DNS Name</a></li>
+</ul>
+</li>
+<li><a href="#org723766c">GlobalAccelerator</a>
+<ul>
+<li><a href="#orgb089c6d">List Accelerators</a></li>
+<li><a href="#org3edaf2e">List Listeners</a></li>
+<li><a href="#org38c9b16">IPs</a></li>
+</ul>
+</li>
+<li><a href="#orgd3fc76c">IAM</a>
+<ul>
+<li><a href="#org6ffebc7">Create Policy</a></li>
+<li><a href="#org8f56945">Assume Role</a></li>
+<li><a href="#orgb9e4536">Delete IAM Instance Profile</a></li>
+</ul>
+</li>
+<li><a href="#org318ac70">IMDS</a></li>
+<li><a href="#org46a1746">Kinesis</a>
+<ul>
+<li><a href="#orgc24e498">Delete all Kinesis Streams</a></li>
+</ul>
+</li>
+<li><a href="#org960d238">Kinesis Firehose</a>
+<ul>
+<li><a href="#orgd069954">Describe Stream</a></li>
+<li><a href="#org4d55ab1">Update Stream S3 Destination Bucket</a></li>
+<li><a href="#org3589e31">Update Stream S3 Destination Prefix</a></li>
+</ul>
+</li>
+<li><a href="#org9bcbc4d">Lambda</a>
+<ul>
+<li><a href="#org8c043c9">Invoke function</a></li>
+<li><a href="#orgc665544">Create Function with Zip File</a></li>
+<li><a href="#orge55d28f">Update Function code with Zip File</a></li>
+<li><a href="#org77283f6">Container Image: Run Interactively</a></li>
+</ul>
+</li>
+<li><a href="#orgb5718d3">Organizations</a></li>
+<li><a href="#org19a10da">Polly</a>
+<ul>
+<li><a href="#orga898ea9">Say something from insultgenerator.org</a></li>
+</ul>
+</li>
+<li><a href="#org4558207">Route53</a>
+<ul>
+<li><a href="#orgf9ff1a6">Get HostedZoneId from Name</a></li>
+<li><a href="#org4857eb3">List Records for a HostedZone</a></li>
+</ul>
+</li>
+<li><a href="#org24186b3">ServiceCatalog</a>
+<ul>
+<li><a href="#orgfbc5258">Get Product IDs</a></li>
+<li><a href="#org4dfedcb">Launch Product</a></li>
+</ul>
+</li>
+<li><a href="#orgf365250">Service Quotas</a>
+<ul>
+<li><a href="#org7eff685">Get Quota</a></li>
+<li><a href="#org90bbabd">Get Default Quota</a></li>
+</ul>
+</li>
+<li><a href="#org5d67592">S3</a>
+<ul>
+<li><a href="#org1e8c132">Canonical ID</a></li>
+<li><a href="#org120ab9a">List objects in bucket</a></li>
+<li><a href="#org1f9f4e3">Get bucket policy</a></li>
+<li><a href="#orga5457b5">Delete Buckets with Name</a></li>
+</ul>
+</li>
+<li><a href="#org3484e63">SNS</a>
+<ul>
+<li><a href="#orgecfad26">SNS topics</a></li>
+</ul>
+</li>
+<li><a href="#org3d5e33e">SQS</a>
+<ul>
+<li><a href="#org1facf85">List Queues</a></li>
+</ul>
+</li>
+<li><a href="#org08efd2c">SSO</a>
+<ul>
+<li><a href="#org9628dcd">Token</a></li>
+<li><a href="#org50fba98">List Accounts I Can Access</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-orgecb4d37" class="outline-2">
+<h2 id="orgecb4d37"><a href="#orgecb4d37">Account</a></h2>
+<div class="outline-text-2" id="text-orgecb4d37">
+<p>
+Account number:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh" id="org58b0c5c">aws sts get-caller-identity --query <span style="color: #98be65;">'Account'</span> --output text
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org68e07f2" class="outline-2">
+<h2 id="org68e07f2"><a href="#org68e07f2">IP Address Ranges</a></h2>
+<div class="outline-text-2" id="text-org68e07f2">
+<p>
+AWS documentation is <a href="https://docs.aws.amazon.com/general/latest/gr/aws-ip-ranges.html">here</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh" id="org0b2c633">curl -s https://ip-ranges.amazonaws.com/ip-ranges.json
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh">cat <span style="color: #98be65;">"$IpRanges"</span> | jq <span style="color: #98be65;">'.prefixes[] | select(.region = "us-east-2") | .ip_prefix'</span>
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orga19ac76" class="outline-3">
+<h3 id="orga19ac76"><a href="#orga19ac76">Get Region of IP</a></h3>
+<div class="outline-text-3" id="text-orga19ac76">
+<p>
+(Would be cool).
+</p>
+
+<p>
+Check IP address against each CIDR range. Would be cool to do this using bit
+comparisons.
+</p>
+
+<p>
+See: <a href="https://unix.stackexchange.com/questions/274330/check-ip-is-in-range-of-whitelist-array">https://unix.stackexchange.com/questions/274330/check-ip-is-in-range-of-whitelist-array</a>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc8421ec" class="outline-2">
+<h2 id="orgc8421ec"><a href="#orgc8421ec">All Regions</a></h2>
+<div class="outline-text-2" id="text-orgc8421ec">
+</div>
+<div id="outline-container-orgd6db255" class="outline-3">
+<h3 id="orgd6db255"><a href="#orgd6db255">All Regions in Partition</a></h3>
+<div class="outline-text-3" id="text-orgd6db255">
+<div class="org-src-container">
+<pre class="src src-sh" id="orgc9a27ed">aws ec2 describe-regions | jq -r <span style="color: #98be65;">".Regions[].RegionName"</span>
+</pre>
+</div>
+
+<pre class="example" id="org4d0d5af">
+eu-north-1
+ap-south-1
+eu-west-3
+eu-west-2
+eu-west-1
+ap-northeast-3
+ap-northeast-2
+ap-northeast-1
+sa-east-1
+ca-central-1
+ap-southeast-1
+ap-southeast-2
+eu-central-1
+us-east-1
+us-east-2
+us-west-1
+us-west-2
+</pre>
+
+<p>
+Number of regions:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">AllRegions</span> | wc -w
+<span style="color: #5B6268;"># </span><span style="color: #5B6268;">Or use an array</span>
+<span style="color: #dcaeea;">regions</span>=($<span style="color: #dcaeea;">AllRegions</span>)
+<span style="color: #c678dd;">echo</span> ${#<span style="color: #dcaeea;">regions</span>[*]}
+</pre>
+</div>
+
+<pre class="example">
+      17
+17
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgad7f0d6" class="outline-3">
+<h3 id="orgad7f0d6"><a href="#orgad7f0d6">All Regions in All Partitions</a></h3>
+<div class="outline-text-3" id="text-orgad7f0d6">
+<p>
+Should be in the botocore data files. Also, we can pull them from the IpRanges
+document. You have to decide whether "GLOBAL" is a "region" in your situation.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">cat <span style="color: #98be65;">"$IpRanges"</span> | jq -r <span style="color: #98be65;">'.prefixes[].region'</span> | sort | uniq
+</pre>
+</div>
+
+<pre class="example" id="org1473723">
+GLOBAL
+af-south-1
+ap-east-1
+ap-northeast-1
+ap-northeast-2
+ap-northeast-3
+ap-south-1
+ap-south-2
+ap-southeast-1
+ap-southeast-2
+ap-southeast-3
+ap-southeast-4
+ca-central-1
+cn-north-1
+cn-northwest-1
+eu-central-1
+eu-central-2
+eu-north-1
+eu-south-1
+eu-south-2
+eu-west-1
+eu-west-2
+eu-west-3
+me-south-1
+sa-east-1
+us-east-1
+us-east-2
+us-gov-east-1
+us-gov-west-1
+us-west-1
+us-west-2
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org19bcb58" class="outline-3">
+<h3 id="org19bcb58"><a href="#org19bcb58">Run a Command in All Regions</a></h3>
+<div class="outline-text-3" id="text-org19bcb58">
+<p>
+Get the number of VPCs in each region the slow and simple way.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #51afef;">for</span> region<span style="color: #51afef;"> in</span> $<span style="color: #dcaeea;">AllRegions</span>; <span style="color: #51afef;">do</span>
+    <span style="color: #dcaeea;">vpcs</span>=($(aws --region $<span style="color: #dcaeea;">region</span> ec2 describe-vpcs | jq <span style="color: #98be65;">'.Vpcs[].VpcId'</span>))
+    <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"$region: ${#vpcs[*]}"</span>
+<span style="color: #51afef;">done</span>
+</pre>
+</div>
+
+<pre class="example" id="org70fa776">
+eu-north-1: 0
+ap-south-1: 0
+eu-west-3: 0
+eu-west-2: 0
+eu-west-1: 0
+ap-northeast-3: 1
+ap-northeast-2: 0
+ap-northeast-1: 0
+sa-east-1: 0
+ca-central-1: 0
+ap-southeast-1: 1
+ap-southeast-2: 0
+eu-central-1: 0
+us-east-1: 2
+us-east-2: 2
+us-west-1: 0
+us-west-2: 0
+</pre>
+
+<p>
+Get the number of VPCs in each region the 🚀 and 😎 (and 🤮) way by starting a
+subprocess for each region in parallel. Note that <code>${#regions[*]}</code> is bash
+syntax for th length of the <code>$regions</code> array.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #dcaeea;">script</span>=$(cat &lt;&lt;-<span style="color: #98be65;">"EOF"</span>
+<span style="color: #98be65;">vpcs=($(aws --region {} ec2 describe-vpcs | jq '.Vpcs[].VpcId'))</span>
+<span style="color: #98be65;">echo "{}: ${#vpcs[*]}"</span>
+<span style="color: #98be65;">EOF</span>
+)
+<span style="color: #dcaeea;">regions</span>=($<span style="color: #dcaeea;">AllRegions</span>)
+<span style="color: #c678dd;">echo</span> ${<span style="color: #dcaeea;">regions</span>[*]} | xargs -n 1 -P ${#<span style="color: #dcaeea;">regions</span>[*]} -I {} bash -c <span style="color: #98be65;">"$script"</span>
+</pre>
+</div>
+
+<pre class="example" id="org152b233">
+us-east-1: 2
+ca-central-1: 0
+us-east-2: 2
+us-west-1: 0
+eu-west-3: 0
+eu-west-2: 0
+eu-west-1: 0
+us-west-2: 0
+eu-central-1: 0
+eu-north-1: 0
+sa-east-1: 0
+ap-northeast-3: 1
+ap-northeast-1: 0
+ap-northeast-2: 0
+ap-southeast-2: 0
+ap-south-1: 0
+ap-southeast-1: 1
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga3ad8a9" class="outline-2">
+<h2 id="orga3ad8a9"><a href="#orga3ad8a9">ACM</a></h2>
+<div class="outline-text-2" id="text-orga3ad8a9">
+</div>
+<div id="outline-container-orgb9b204e" class="outline-3">
+<h3 id="orgb9b204e"><a href="#orgb9b204e">List</a></h3>
+<div class="outline-text-3" id="text-orgb9b204e">
+<div class="org-src-container">
+<pre class="src src-sh">aws acm list-certificates --includes <span style="color: #98be65;">"keyUsage=ANY"</span> | jq <span style="color: #98be65;">'.CertificateSummaryList[]'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd540dd0" class="outline-3">
+<h3 id="orgd540dd0"><a href="#orgd540dd0">Describe</a></h3>
+<div class="outline-text-3" id="text-orgd540dd0">
+<div class="org-src-container">
+<pre class="src src-sh">aws acm describe-certificate --certificate-arn $<span style="color: #dcaeea;">CertArn</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgac41550" class="outline-3">
+<h3 id="orgac41550"><a href="#orgac41550">Get Certificate</a></h3>
+<div class="outline-text-3" id="text-orgac41550">
+<div class="org-src-container">
+<pre class="src src-sh">aws acm get-certificate --certificate-arn $<span style="color: #dcaeea;">CertificateArn</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb935171" class="outline-3">
+<h3 id="orgb935171"><a href="#orgb935171">Get Certificate PEM File</a></h3>
+<div class="outline-text-3" id="text-orgb935171">
+<div class="org-src-container">
+<pre class="src src-sh">aws acm get-certificate --certificate-arn $<span style="color: #dcaeea;">CertificateArn</span> <span style="color: #98be65;">\</span>
+    | jq -r <span style="color: #98be65;">'.Certificate'</span> &gt; route_guide_cert.pem
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh">cat appliance_cert.pem
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgefa0a93" class="outline-2">
+<h2 id="orgefa0a93"><a href="#orgefa0a93">API Gateway V2</a></h2>
+<div class="outline-text-2" id="text-orgefa0a93">
+</div>
+<div id="outline-container-org703e59c" class="outline-3">
+<h3 id="org703e59c"><a href="#org703e59c">List APIs</a></h3>
+<div class="outline-text-3" id="text-org703e59c">
+<div class="org-src-container">
+<pre class="src src-sh">aws apigatewayv2 get-apis | jq <span style="color: #98be65;">'.Items[]'</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgcca3574" class="outline-2">
+<h2 id="orgcca3574"><a href="#orgcca3574">CloudFormation</a></h2>
+<div class="outline-text-2" id="text-orgcca3574">
+</div>
+<div id="outline-container-org9b8dc57" class="outline-3">
+<h3 id="org9b8dc57"><a href="#org9b8dc57">Create Stack</a></h3>
+<div class="outline-text-3" id="text-org9b8dc57">
+<div class="org-src-container">
+<pre class="src src-sh">aws cloudformation create-stack --stack-name $<span style="color: #dcaeea;">StackName</span> --template-body
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf3bf287" class="outline-3">
+<h3 id="orgf3bf287"><a href="#orgf3bf287">View Stack Log</a></h3>
+<div class="outline-text-3" id="text-orgf3bf287">
+<div class="org-src-container">
+<pre class="src src-sh">aws cloudformation list-stacks <span style="color: #98be65;">\</span>
+    | jq -M <span style="color: #98be65;">'.StackSummaries[0].StackId'</span> <span style="color: #98be65;">\</span>
+    | xargs aws cloudformation describe-stack-events --stack-name
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd962121" class="outline-3">
+<h3 id="orgd962121"><a href="#orgd962121">List Stacks</a></h3>
+<div class="outline-text-3" id="text-orgd962121">
+<p>
+List only the created stacks
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">aws cloudformation list-stacks <span style="color: #98be65;">\</span>
+    --stack-status-filter CREATE_IN_PROGRESS CREATE_COMPLETE
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org538a22c" class="outline-3">
+<h3 id="org538a22c"><a href="#org538a22c">Describe Stack Outputs</a></h3>
+<div class="outline-text-3" id="text-org538a22c">
+<div class="org-src-container">
+<pre class="src src-sh">aws cloudformation describe-stacks <span style="color: #98be65;">\</span>
+    --stack-name $<span style="color: #dcaeea;">StackName</span> <span style="color: #98be65;">\</span>
+    --query <span style="color: #98be65;">"Stacks[0].Outputs[?OutputKey=='PublicIP'].OutputValue"</span> <span style="color: #98be65;">\</span>
+    --output text
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org938e599" class="outline-3">
+<h3 id="org938e599"><a href="#org938e599">Exports</a></h3>
+<div class="outline-text-3" id="text-org938e599">
+<div class="org-src-container">
+<pre class="src src-sh">aws cloudformation list-exports <span style="color: #98be65;">\</span>
+    --query <span style="color: #98be65;">"Exports[?Name=='cf-ALB'].Value"</span> <span style="color: #98be65;">\</span>
+    --output text
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2af8b72" class="outline-3">
+<h3 id="org2af8b72"><a href="#org2af8b72">Spec Files</a></h3>
+<div class="outline-text-3" id="text-org2af8b72">
+<p>
+Spec files are documented <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html">here</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">curl https://dnwj8swjjbsbt.cloudfront.net/latest/CloudFormationResourceSpecification.zip <span style="color: #98be65;">\</span>
+     -o us_east_2.zip
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org36e14fe" class="outline-2">
+<h2 id="org36e14fe"><a href="#org36e14fe">CloudWatch</a></h2>
+<div class="outline-text-2" id="text-org36e14fe">
+</div>
+<div id="outline-container-org1ffc1e3" class="outline-3">
+<h3 id="org1ffc1e3"><a href="#org1ffc1e3">Delete All Alarms</a></h3>
+<div class="outline-text-3" id="text-org1ffc1e3">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #dcaeea;">alarms</span>=$(aws cloudwatch describe-alarms | jq -r <span style="color: #98be65;">'.MetricAlarms[].AlarmName'</span>)
+<span style="color: #51afef;">for</span> alarm<span style="color: #51afef;"> in</span> $<span style="color: #dcaeea;">alarms</span>; <span style="color: #51afef;">do</span>
+    aws --output=json cloudwatch delete-alarms --alarm-names $<span style="color: #dcaeea;">alarm</span>;
+<span style="color: #51afef;">done</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org58faf95" class="outline-3">
+<h3 id="org58faf95"><a href="#org58faf95">Create Alarm Targeting ASG policy</a></h3>
+<div class="outline-text-3" id="text-org58faf95">
+<div class="org-src-container">
+<pre class="src src-sh">aws cloudwatch put-metric-alarm <span style="color: #98be65;">\</span>
+    --alarm-name AddCapacity <span style="color: #98be65;">\</span>
+    --metric-name CPUUtilization <span style="color: #98be65;">\</span>
+    --namespace AWS/EC2 <span style="color: #98be65;">\</span>
+    --statistic Average <span style="color: #98be65;">\</span>
+    --period 120 <span style="color: #98be65;">\</span>
+    --threshold 80 <span style="color: #98be65;">\</span>
+    --comparison-operator GreaterThanOrEqualToThreshold <span style="color: #98be65;">\</span>
+    --dimensions <span style="color: #98be65;">"Name=AutoScalingGroupName,Value=my-asg"</span> <span style="color: #98be65;">\</span>
+    --evaluation-periods 2 <span style="color: #98be65;">\</span>
+    --alarm-actions $<span style="color: #dcaeea;">ScalingPolicyArn</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga305ce9" class="outline-2">
+<h2 id="orga305ce9"><a href="#orga305ce9">DynamoDB</a></h2>
+<div class="outline-text-2" id="text-orga305ce9">
+</div>
+<div id="outline-container-org2ab650a" class="outline-3">
+<h3 id="org2ab650a"><a href="#org2ab650a">Create table with local secondary index</a></h3>
+<div class="outline-text-3" id="text-org2ab650a">
+<div class="org-src-container">
+<pre class="src src-sh">aws dynamodb create-table <span style="color: #98be65;">\</span>
+    --table-name MusicCollection2 <span style="color: #98be65;">\</span>
+    --attribute-definitions <span style="color: #dcaeea;">AttributeName</span>=Artist,<span style="color: #dcaeea;">AttributeType</span>=S <span style="color: #dcaeea;">AttributeName</span>=SongTitle,<span style="color: #dcaeea;">AttributeType</span>=S <span style="color: #dcaeea;">AttributeName</span>=Score,<span style="color: #dcaeea;">AttributeType</span>=S <span style="color: #98be65;">\</span>
+    --key-schema <span style="color: #dcaeea;">AttributeName</span>=Artist,<span style="color: #dcaeea;">KeyType</span>=HASH <span style="color: #dcaeea;">AttributeName</span>=SongTitle,<span style="color: #dcaeea;">KeyType</span>=RANGE <span style="color: #98be65;">\</span>
+    --provisioned-throughput <span style="color: #dcaeea;">ReadCapacityUnits</span>=5,<span style="color: #dcaeea;">WriteCapacityUnits</span>=5 <span style="color: #98be65;">\</span>
+    --local-secondary-indexes <span style="color: #98be65;">"IndexName=SuperCat,KeySchema=[{AttributeName=Artist,KeyType=HASH},{AttributeName=Score,KeyType=RANGE}],Projection={ProjectionType=KEYS_ONLY}"</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4bbbff4" class="outline-3">
+<h3 id="org4bbbff4"><a href="#org4bbbff4">List Tables</a></h3>
+<div class="outline-text-3" id="text-org4bbbff4">
+<div class="org-src-container">
+<pre class="src src-sh">aws dynamodb  list-tables | jq <span style="color: #98be65;">'.TableNames[]'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org12b337b" class="outline-3">
+<h3 id="org12b337b"><a href="#org12b337b">Delete Tables Like a Maniac</a></h3>
+<div class="outline-text-3" id="text-org12b337b">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #c678dd;">echo</span> ${<span style="color: #dcaeea;">tables</span>[*]} <span style="color: #98be65;">\</span>
+    | xargs -n 1 -P 10 -I {} sh -c <span style="color: #98be65;">\</span>
+            <span style="color: #98be65;">'aws dynamodb delete-table --table-name {} &amp;&amp; aws dynamodb wait table-not-exists --table-name {}'</span>
+</pre>
+</div>
+
+<p>
+TODO: When I originally wrote this, I remember needing to add a <code>tr " " "\n"</code>
+or something for portability with Linux. Test this out again.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org85113a1" class="outline-2">
+<h2 id="org85113a1"><a href="#org85113a1">EC2 AMIs</a></h2>
+<div class="outline-text-2" id="text-org85113a1">
+</div>
+<div id="outline-container-orge6c2a6a" class="outline-3">
+<h3 id="orge6c2a6a"><a href="#orge6c2a6a">List AMIs</a></h3>
+<div class="outline-text-3" id="text-orge6c2a6a">
+<p>
+All of this account's AMIs:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">aws ec2 describe-images --owners $<span style="color: #dcaeea;">Account</span>
+</pre>
+</div>
+
+<p>
+All of this account's AMIs with a particular Name tag:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">aws ec2 describe-images <span style="color: #98be65;">\</span>
+    --owners $<span style="color: #dcaeea;">account</span> <span style="color: #98be65;">\</span>
+    --filters <span style="color: #98be65;">"Name=tag:Name,Values=My AMI"</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgaf05b36" class="outline-3">
+<h3 id="orgaf05b36"><a href="#orgaf05b36">Get Latest Image</a></h3>
+<div class="outline-text-3" id="text-orgaf05b36">
+<div class="org-src-container">
+<pre class="src src-sh">aws ec2 describe-images <span style="color: #98be65;">\</span>
+    --owners $<span style="color: #dcaeea;">Account</span> <span style="color: #98be65;">\</span>
+    --filters <span style="color: #98be65;">"Name=state,Values=available"</span> <span style="color: #98be65;">\</span>
+    | jq -r <span style="color: #98be65;">'.Images | sort_by(.CreationDate) | last | .ImageId'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4a22e82" class="outline-3">
+<h3 id="org4a22e82"><a href="#org4a22e82">Delete AMIs and EBS Snapshots</a></h3>
+<div class="outline-text-3" id="text-org4a22e82">
+<p>
+List AMIs to delete and set to variable <code>AmisToDelete</code>. Then:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">jq -c <span style="color: #98be65;">'.Images</span>
+<span style="color: #98be65;">       | sort_by(.CreationDate)</span>
+<span style="color: #98be65;">       | .[]</span>
+<span style="color: #98be65;">       | {name: .Name, snap: .BlockDeviceMappings[]</span>
+<span style="color: #98be65;">       | select(.Ebs != null)</span>
+<span style="color: #98be65;">       | .Ebs.SnapshotId}'</span> &lt; $<span style="color: #dcaeea;">AmisToDelete</span> &gt; images.txt
+</pre>
+</div>
+
+<p>
+And then&#x2026; what did I do?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #51afef;">for</span> i<span style="color: #51afef;"> in</span> (cat images.txt | jq); <span style="color: #51afef;">do</span>
+    <span style="color: #5B6268;"># </span><span style="color: #5B6268;">deregister image</span>
+    <span style="color: #5B6268;"># </span><span style="color: #5B6268;">delete the snapshot</span>
+<span style="color: #51afef;">done</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgdfb623f" class="outline-3">
+<h3 id="orgdfb623f"><a href="#orgdfb623f">List Accounts That Can Access AMI</a></h3>
+<div class="outline-text-3" id="text-orgdfb623f">
+<div class="org-src-container">
+<pre class="src src-sh">aws ec2 describe-image-attribute <span style="color: #98be65;">\</span>
+    --image-id $<span style="color: #dcaeea;">ImageID</span> <span style="color: #98be65;">\</span>
+    --attribute launchPermission
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7d82d3e" class="outline-2">
+<h2 id="org7d82d3e"><a href="#org7d82d3e">EC2 Instances</a></h2>
+<div class="outline-text-2" id="text-org7d82d3e">
+</div>
+<div id="outline-container-org76292c3" class="outline-3">
+<h3 id="org76292c3"><a href="#org76292c3">Describe running EC2 instances</a></h3>
+<div class="outline-text-3" id="text-org76292c3">
+<div class="org-src-container">
+<pre class="src src-sh">aws ec2 describe-instances <span style="color: #98be65;">\</span>
+    --query <span style="color: #98be65;">"Reservations[].Instances[?State.name=="</span>running<span style="color: #98be65;">"]"</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgdecfa38" class="outline-3">
+<h3 id="orgdecfa38"><a href="#orgdecfa38">All Instance Tags</a></h3>
+<div class="outline-text-3" id="text-orgdecfa38">
+<div class="org-src-container">
+<pre class="src src-sh">aws ec2 describe-instances <span style="color: #98be65;">\</span>
+    | jq -c <span style="color: #98be65;">'.Reservations[] | .Instances[] | .Tags[]'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6cf632e" class="outline-3">
+<h3 id="org6cf632e"><a href="#org6cf632e">Instances with Tag</a></h3>
+<div class="outline-text-3" id="text-org6cf632e">
+<p>
+With just a specific Tag key:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">aws ec2 describe-instances <span style="color: #98be65;">\</span>
+    --filter <span style="color: #98be65;">"Name=tag-key,Values=k8s.io/role/node"</span> <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.Reservations[].Instances[]'</span>
+</pre>
+</div>
+
+<p>
+With a specific tag key and value
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org786da18" class="outline-2">
+<h2 id="org786da18"><a href="#org786da18">EC2 VPCs</a></h2>
+<div class="outline-text-2" id="text-org786da18">
+</div>
+<div id="outline-container-org964ec27" class="outline-3">
+<h3 id="org964ec27"><a href="#org964ec27">VPCs</a></h3>
+<div class="outline-text-3" id="text-org964ec27">
+<div class="org-src-container">
+<pre class="src src-bash">aws ec2 describe-vpcs | jq <span style="color: #98be65;">'.Vpcs[]'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8a9946a" class="outline-3">
+<h3 id="org8a9946a"><a href="#org8a9946a">Subnets</a></h3>
+<div class="outline-text-3" id="text-org8a9946a">
+<div class="org-src-container">
+<pre class="src src-sh">aws ec2 describe-subnets  | jq <span style="color: #98be65;">'.Subnets'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga2bfce1" class="outline-3">
+<h3 id="orga2bfce1"><a href="#orga2bfce1">SecurityGroups</a></h3>
+<div class="outline-text-3" id="text-orga2bfce1">
+<div class="org-src-container">
+<pre class="src src-sh">aws ec2 describe-security-groups  | jq <span style="color: #98be65;">'.SecurityGroups'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org269499f" class="outline-3">
+<h3 id="org269499f"><a href="#org269499f">Private ALB IPs</a></h3>
+<div class="outline-text-3" id="text-org269499f">
+<div class="org-src-container">
+<pre class="src src-sh">aws ec2 describe-network-interfaces <span style="color: #98be65;">\</span>
+    | jq -r <span style="color: #98be65;">'.NetworkInterfaces[]</span>
+<span style="color: #98be65;">          | select(.Attachment.InstanceOwnerId == "amazon-elb")</span>
+<span style="color: #98be65;">          | .PrivateIpAddress'</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org41c79d6" class="outline-2">
+<h2 id="org41c79d6"><a href="#org41c79d6">ECR</a></h2>
+<div class="outline-text-2" id="text-org41c79d6">
+</div>
+<div id="outline-container-org23dd3fc" class="outline-3">
+<h3 id="org23dd3fc"><a href="#org23dd3fc">Log in</a></h3>
+<div class="outline-text-3" id="text-org23dd3fc">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #dcaeea;">PW</span>=$(aws ecr get-login-password)
+docker login <span style="color: #98be65;">\</span>
+       --username AWS <span style="color: #98be65;">\</span>
+       --password <span style="color: #98be65;">"$PW"</span> <span style="color: #98be65;">\</span>
+       <span style="color: #98be65;">"https://$Account.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com"</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3953121" class="outline-2">
+<h2 id="org3953121"><a href="#org3953121">ECS</a></h2>
+<div class="outline-text-2" id="text-org3953121">
+<p>
+Fix a CloudFormation deployment where an ECS service fails to stabilize. Taken
+from <a href="https://aws.amazon.com/premiumsupport/knowledge-center/cloudformation-ecs-service-stabilize/">this</a> AWS blog post. Just updates the number of ECS service tasks to 0.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">aws ecs update-service <span style="color: #98be65;">\</span>
+    --cluster $<span style="color: #dcaeea;">ECS_CLUSTER_NAME</span> <span style="color: #98be65;">\</span>
+    --service $<span style="color: #dcaeea;">ECS_SERVICE_NAME</span> <span style="color: #98be65;">\</span>
+    --desired-count 0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org25772fa" class="outline-2">
+<h2 id="org25772fa"><a href="#org25772fa">EKS</a></h2>
+<div class="outline-text-2" id="text-org25772fa">
+</div>
+<div id="outline-container-org09284e9" class="outline-3">
+<h3 id="org09284e9"><a href="#org09284e9">List Clusters</a></h3>
+<div class="outline-text-3" id="text-org09284e9">
+<div class="org-src-container">
+<pre class="src src-sh">aws eks list-clusters | jq <span style="color: #98be65;">'.clusters[]'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3830ba5" class="outline-3">
+<h3 id="org3830ba5"><a href="#org3830ba5">Get Kube Config</a></h3>
+<div class="outline-text-3" id="text-org3830ba5">
+<div class="org-src-container">
+<pre class="src src-sh">aws eks update-kubeconfig --name $<span style="color: #dcaeea;">CLUSTER_NAME</span> --kubeconfig $<span style="color: #dcaeea;">KUBECONFIG</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7c988d5" class="outline-2">
+<h2 id="org7c988d5"><a href="#org7c988d5">Elasticache</a></h2>
+<div class="outline-text-2" id="text-org7c988d5">
+</div>
+<div id="outline-container-org49b4a9c" class="outline-3">
+<h3 id="org49b4a9c"><a href="#org49b4a9c">List CasheClusters</a></h3>
+<div class="outline-text-3" id="text-org49b4a9c">
+<div class="org-src-container">
+<pre class="src src-sh">aws elasticache describe-cache-clusters <span style="color: #98be65;">\</span>
+    --show-cache-node-info | jq <span style="color: #98be65;">'.CacheClusters'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga432a69" class="outline-3">
+<h3 id="orga432a69"><a href="#orga432a69">List ReplicationGroups</a></h3>
+<div class="outline-text-3" id="text-orga432a69">
+<div class="org-src-container">
+<pre class="src src-sh">aws elasticache describe-replication-groups | jq <span style="color: #98be65;">'.ReplicationGroups'</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org458ad12" class="outline-2">
+<h2 id="org458ad12"><a href="#org458ad12">ElasticBeanstalk</a></h2>
+<div class="outline-text-2" id="text-org458ad12">
+</div>
+<div id="outline-container-org8572529" class="outline-3">
+<h3 id="org8572529"><a href="#org8572529">Config Options for Nampespace</a></h3>
+<div class="outline-text-3" id="text-org8572529">
+<div class="org-src-container">
+<pre class="src src-sh">aws elasticbeanstalk describe-configuration-options <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.Options[]</span>
+<span style="color: #98be65;">         | if .Namespace == "aws:autoscaling:launchconfiguration" then . else null end'</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5335304" class="outline-2">
+<h2 id="org5335304"><a href="#org5335304">ElasticLoadBalancingV2</a></h2>
+<div class="outline-text-2" id="text-org5335304">
+</div>
+<div id="outline-container-org37f89dc" class="outline-3">
+<h3 id="org37f89dc"><a href="#org37f89dc">Describe ALBs</a></h3>
+<div class="outline-text-3" id="text-org37f89dc">
+<div class="org-src-container">
+<pre class="src src-sh">aws elbv2 describe-load-balancers <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.LoadBalancers[] | select(.Type == "application")'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgff53c49" class="outline-3">
+<h3 id="orgff53c49"><a href="#orgff53c49">Get DNS Name</a></h3>
+<div class="outline-text-3" id="text-orgff53c49">
+<div class="org-src-container">
+<pre class="src src-sh">aws elbv2 describe-load-balancers <span style="color: #98be65;">\</span>
+    | jq -r --arg DEPLOYMENT_NAME <span style="color: #98be65;">"$DEPLOYMENT_NAME"</span> <span style="color: #98be65;">\</span>
+         <span style="color: #98be65;">'.LoadBalancers[]</span>
+<span style="color: #98be65;">          | select(.Type == "application")</span>
+<span style="color: #98be65;">          | select(.LoadBalancerName | startswith($DEPLOYMENT_NAME))</span>
+<span style="color: #98be65;">          | .DNSName'</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org723766c" class="outline-2">
+<h2 id="org723766c"><a href="#org723766c">GlobalAccelerator</a></h2>
+<div class="outline-text-2" id="text-org723766c">
+<p>
+GlobalAccelerator is only in <code>us-west-2</code>, so set the region explicitly.
+</p>
+</div>
+
+<div id="outline-container-orgb089c6d" class="outline-3">
+<h3 id="orgb089c6d"><a href="#orgb089c6d">List Accelerators</a></h3>
+<div class="outline-text-3" id="text-orgb089c6d">
+<div class="org-src-container">
+<pre class="src src-sh">aws --region us-west-2 globalaccelerator <span style="color: #98be65;">\</span>
+    list-accelerators | jq <span style="color: #98be65;">'.Accelerators[]'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3edaf2e" class="outline-3">
+<h3 id="org3edaf2e"><a href="#org3edaf2e">List Listeners</a></h3>
+<div class="outline-text-3" id="text-org3edaf2e">
+<div class="org-src-container">
+<pre class="src src-sh">aws --region us-west-2 globalaccelerator <span style="color: #98be65;">\</span>
+    list-listeners --accelerator-arn $<span style="color: #dcaeea;">AcceleratorArn</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org38c9b16" class="outline-3">
+<h3 id="org38c9b16"><a href="#org38c9b16">IPs</a></h3>
+<div class="outline-text-3" id="text-org38c9b16">
+<div class="org-src-container">
+<pre class="src src-sh">aws --region us-west-2 globalaccelerator list-accelerators <span style="color: #98be65;">\</span>
+    | jq -r <span style="color: #98be65;">'.Accelerators[].IpSets[].IpAddresses[]'</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd3fc76c" class="outline-2">
+<h2 id="orgd3fc76c"><a href="#orgd3fc76c">IAM</a></h2>
+<div class="outline-text-2" id="text-orgd3fc76c">
+</div>
+<div id="outline-container-org6ffebc7" class="outline-3">
+<h3 id="org6ffebc7"><a href="#org6ffebc7">Create Policy</a></h3>
+<div class="outline-text-3" id="text-org6ffebc7">
+<div class="org-src-container">
+<pre class="src src-sh">aws iam create-policy --policy-name nginx-deployment-policy --policy-document <span style="color: #98be65;">'{</span>
+<span style="color: #98be65;">    "Version": "2012-10-17",</span>
+<span style="color: #98be65;">    "Statement": [ {</span>
+<span style="color: #98be65;">        "Effect": "Allow",</span>
+<span style="color: #98be65;">        "Action": ["secretsmanager:GetSecretValue", "secretsmanager:DescribeSecret"],</span>
+<span style="color: #98be65;">        "Resource": ["arn:*:secretsmanager:*:*:secret:MySecret-??????"]</span>
+<span style="color: #98be65;">    } ]</span>
+<span style="color: #98be65;">}'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8f56945" class="outline-3">
+<h3 id="org8f56945"><a href="#org8f56945">Assume Role</a></h3>
+<div class="outline-text-3" id="text-org8f56945">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #dcaeea;">creds</span>=$(aws sts assume-role --role-session-name foo --role-arn $<span style="color: #dcaeea;">RoleArn</span>)
+<span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">AWS_ACCESS_KEY_ID</span>=$(<span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">creds</span> | jq -r <span style="color: #98be65;">'.Credentials.AccessKeyId'</span>)
+<span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">AWS_SECRET_ACCESS_KEY</span>=$(<span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">creds</span> | jq -r <span style="color: #98be65;">'.Credentials.SecretAccessKey'</span>)
+<span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">AWS_SESSION_TOKEN</span>=$(<span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">creds</span> | jq -r <span style="color: #98be65;">'.Credentials.SessionToken'</span>)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb9e4536" class="outline-3">
+<h3 id="orgb9e4536"><a href="#orgb9e4536">Delete IAM Instance Profile</a></h3>
+<div class="outline-text-3" id="text-orgb9e4536">
+<div class="org-src-container">
+<pre class="src src-sh">aws iam delete-instance-profile --instance-profile-name $<span style="color: #dcaeea;">name</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org318ac70" class="outline-2">
+<h2 id="org318ac70"><a href="#org318ac70">IMDS</a></h2>
+<div class="outline-text-2" id="text-org318ac70">
+<p>
+<a href="http://169.254.169.254/latest/meta-data/">http://169.254.169.254/latest/meta-data/</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org46a1746" class="outline-2">
+<h2 id="org46a1746"><a href="#org46a1746">Kinesis</a></h2>
+<div class="outline-text-2" id="text-org46a1746">
+</div>
+<div id="outline-container-orgc24e498" class="outline-3">
+<h3 id="orgc24e498"><a href="#orgc24e498">Delete all Kinesis Streams</a></h3>
+<div class="outline-text-3" id="text-orgc24e498">
+<div class="org-src-container">
+<pre class="src src-fish"><span style="color: #51afef;">for</span> <span style="color: #c678dd;">region</span> in <span style="color: #98be65;">$</span><span style="color: #dcaeea;">regions</span>
+    <span style="color: #51afef;">set</span> <span style="color: #dcaeea;">streams</span> (<span style="color: #c678dd;">aws</span> --region <span style="color: #98be65;">$</span><span style="color: #dcaeea;">region</span> kinesis list-streams <span style="color: #51afef; font-weight: bold;">|</span> <span style="color: #c678dd;">jq</span> -r <span style="color: #98be65;">".StreamNames[]"</span>)
+    <span style="color: #51afef;">for</span> <span style="color: #c678dd;">stream</span> in <span style="color: #98be65;">$</span><span style="color: #dcaeea;">streams</span>
+        <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">$</span><span style="color: #dcaeea;">region</span> <span style="color: #98be65;">$</span><span style="color: #dcaeea;">stream</span>
+        <span style="color: #c678dd;">aws</span> --region <span style="color: #98be65;">$</span><span style="color: #dcaeea;">region</span> kinesis delete-stream --stream-name <span style="color: #98be65;">$</span><span style="color: #dcaeea;">stream</span>
+    <span style="color: #51afef;">end</span>
+<span style="color: #51afef;">end</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org960d238" class="outline-2">
+<h2 id="org960d238"><a href="#org960d238">Kinesis Firehose</a></h2>
+<div class="outline-text-2" id="text-org960d238">
+</div>
+<div id="outline-container-orgd069954" class="outline-3">
+<h3 id="orgd069954"><a href="#orgd069954">Describe Stream</a></h3>
+<div class="outline-text-3" id="text-orgd069954">
+<div class="org-src-container">
+<pre class="src src-sh">aws firehose describe-delivery-stream <span style="color: #98be65;">\</span>
+    --delivery-stream-name $<span style="color: #dcaeea;">StreamName</span> | jq <span style="color: #98be65;">'.DeliveryStreamDescription'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4d55ab1" class="outline-3">
+<h3 id="org4d55ab1"><a href="#org4d55ab1">Update Stream S3 Destination Bucket</a></h3>
+<div class="outline-text-3" id="text-org4d55ab1">
+<div class="org-src-container">
+<pre class="src src-sh">aws firehose update-destination <span style="color: #98be65;">\</span>
+    --delivery-stream-name $<span style="color: #dcaeea;">StreamName</span> <span style="color: #98be65;">\</span>
+    --current-delivery-stream-version-id 1 <span style="color: #98be65;">\</span>
+    --destination-id destinationId-000000000001 <span style="color: #98be65;">\</span>
+    --extended-s3-destination-update <span style="color: #dcaeea;">BucketARN</span>=arn:aws:s3:::$<span style="color: #dcaeea;">BucketName</span>
+</pre>
+</div>
+
+<p>
+THEN:
+</p>
+<ul class="org-ul">
+<li>Update the Stream's IAM policy to allow it to write to the new location</li>
+<li>Update the S3 Bucket Policy to allow the Stream's IAM Role to write to it</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org3589e31" class="outline-3">
+<h3 id="org3589e31"><a href="#org3589e31">Update Stream S3 Destination Prefix</a></h3>
+<div class="outline-text-3" id="text-org3589e31">
+<div class="org-src-container">
+<pre class="src src-sh">aws firehose update-destination <span style="color: #98be65;">\</span>
+    --delivery-stream-name $<span style="color: #dcaeea;">StreamName</span> <span style="color: #98be65;">\</span>
+    --current-delivery-stream-version-id 1 <span style="color: #98be65;">\</span>
+    --destination-id destinationId-000000000001 <span style="color: #98be65;">\</span>
+    --extended-s3-destination-update <span style="color: #dcaeea;">Prefix</span>=$<span style="color: #dcaeea;">Prefix</span>
+</pre>
+</div>
+
+<p>
+Also may need to update the IAM Policy and the S3 Bucket policy, as above.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9bcbc4d" class="outline-2">
+<h2 id="org9bcbc4d"><a href="#org9bcbc4d">Lambda</a></h2>
+<div class="outline-text-2" id="text-org9bcbc4d">
+</div>
+<div id="outline-container-org8c043c9" class="outline-3">
+<h3 id="org8c043c9"><a href="#org8c043c9">Invoke function</a></h3>
+<div class="outline-text-3" id="text-org8c043c9">
+<div class="org-src-container">
+<pre class="src src-bash">aws lambda invoke <span style="color: #98be65;">\</span>
+    --cli-binary-format raw-in-base64-out <span style="color: #98be65;">\</span>
+    --function-name cf-Hello-World <span style="color: #98be65;">\</span>
+    /tmp/cats.json
+</pre>
+</div>
+
+<p>
+Invoke from a bastion host:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">/usr/local/bin/aws lambda invoke <span style="color: #98be65;">\</span>
+ --cli-binary-format raw-in-base64-out <span style="color: #98be65;">\</span>
+ --function-name cf-Hello-World <span style="color: #98be65;">\</span>
+ /tmp/cats.json
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh">cat /tmp/out.json | jq -r <span style="color: #98be65;">'.body'</span> | jq
+</pre>
+</div>
+
+<p>
+With payload file:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">aws lambda invoke <span style="color: #98be65;">\</span>
+    --cli-binary-format raw-in-base64-out <span style="color: #98be65;">\</span>
+    --function-name hello-world <span style="color: #98be65;">\</span>
+    --payload file://tests/resources/event_alb.json <span style="color: #98be65;">\</span>
+    /tmp/out.json
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc665544" class="outline-3">
+<h3 id="orgc665544"><a href="#orgc665544">Create Function with Zip File</a></h3>
+<div class="outline-text-3" id="text-orgc665544">
+<div class="org-src-container">
+<pre class="src src-sh">aws lambda create-function <span style="color: #98be65;">\</span>
+    --function-name artifacttool <span style="color: #98be65;">\</span>
+    --runtime python2.7 <span style="color: #98be65;">\</span>
+    --role $<span style="color: #dcaeea;">RoleArn</span> <span style="color: #98be65;">\</span>
+    --handler lambda_function.lambda_handler <span style="color: #98be65;">\</span>
+    --zip-file fileb://$<span style="color: #dcaeea;">ZipFileName</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge55d28f" class="outline-3">
+<h3 id="orge55d28f"><a href="#orge55d28f">Update Function code with Zip File</a></h3>
+<div class="outline-text-3" id="text-orge55d28f">
+<div class="org-src-container">
+<pre class="src src-sh">aws lambda update-function-code <span style="color: #98be65;">\</span>
+    --function-name artifacttool <span style="color: #98be65;">\</span>
+    --zip-file fileb://$<span style="color: #dcaeea;">ZipFileName</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org77283f6" class="outline-3">
+<h3 id="org77283f6"><a href="#org77283f6">Container Image: Run Interactively</a></h3>
+<div class="outline-text-3" id="text-org77283f6">
+<div class="org-src-container">
+<pre class="src src-sh">docker run -it --rm --entrypoint bash public.ecr.aws/lambda/python:3.8
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb5718d3" class="outline-2">
+<h2 id="orgb5718d3"><a href="#orgb5718d3">Organizations</a></h2>
+<div class="outline-text-2" id="text-orgb5718d3">
+<div class="org-src-container">
+<pre class="src src-sh" id="org68b6bf2">aws organizations list-roots | jq -r <span style="color: #98be65;">'.Roots[].Id'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org19a10da" class="outline-2">
+<h2 id="org19a10da"><a href="#org19a10da">Polly</a></h2>
+<div class="outline-text-2" id="text-org19a10da">
+<div class="org-src-container">
+<pre class="src src-sh">aws polly synthesize-speech <span style="color: #98be65;">\</span>
+    --engine standard <span style="color: #98be65;">\</span>
+    --output-format mp3 <span style="color: #98be65;">\</span>
+    --voice-id Amy <span style="color: #98be65;">\</span>
+    --text <span style="color: #98be65;">"All these cats wear hats."</span> <span style="color: #98be65;">\</span>
+    /tmp/speech_standard.mp3 <span style="color: #98be65;">\</span>
+    &amp;&amp; afplay /tmp/speech_standard.mp3
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orga898ea9" class="outline-3">
+<h3 id="orga898ea9"><a href="#orga898ea9">Say something from insultgenerator.org</a></h3>
+<div class="outline-text-3" id="text-orga898ea9">
+<p>
+Doesn't work anymore. Get a new insult.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">aws polly synthesize-speech <span style="color: #98be65;">\</span>
+    --output-format mp3 <span style="color: #98be65;">\</span>
+    --text <span style="color: #98be65;">"$(curl insultgenerator.org | sed -n '/wrap/,/div/ { s/&lt;[^&gt;]*&gt;//g; p; } ')"</span> <span style="color: #98be65;">\</span>
+    --voice-id Justin <span style="color: #98be65;">\</span>
+    /tmp/speech.mp3 <span style="color: #98be65;">\</span>
+    &amp;&amp; afplay /tmp/speech.mp3
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4558207" class="outline-2">
+<h2 id="org4558207"><a href="#org4558207">Route53</a></h2>
+<div class="outline-text-2" id="text-org4558207">
+</div>
+<div id="outline-container-orgf9ff1a6" class="outline-3">
+<h3 id="orgf9ff1a6"><a href="#orgf9ff1a6">Get HostedZoneId from Name</a></h3>
+<div class="outline-text-3" id="text-orgf9ff1a6">
+<div class="org-src-container">
+<pre class="src src-sh" id="org4dd214c">aws route53 list-hosted-zones <span style="color: #98be65;">\</span>
+    | jq -r --arg name $<span style="color: #dcaeea;">HostedZoneName</span> <span style="color: #98be65;">\</span>
+         <span style="color: #98be65;">'.HostedZones[] | select(.Name == $name + ".") | .Id'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4857eb3" class="outline-3">
+<h3 id="org4857eb3"><a href="#org4857eb3">List Records for a HostedZone</a></h3>
+<div class="outline-text-3" id="text-org4857eb3">
+<div class="org-src-container">
+<pre class="src src-sh">aws route53 list-resource-record-sets <span style="color: #98be65;">\</span>
+    --hosted-zone-id $<span style="color: #dcaeea;">HostedZoneId</span> <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.ResourceRecordSets[]</span>
+<span style="color: #98be65;">          | select(.Name | contains("daily"))</span>
+<span style="color: #98be65;">          | .Name'</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org24186b3" class="outline-2">
+<h2 id="org24186b3"><a href="#org24186b3">ServiceCatalog</a></h2>
+<div class="outline-text-2" id="text-org24186b3">
+</div>
+<div id="outline-container-orgfbc5258" class="outline-3">
+<h3 id="orgfbc5258"><a href="#orgfbc5258">Get Product IDs</a></h3>
+<div class="outline-text-3" id="text-orgfbc5258">
+<div class="org-src-container">
+<pre class="src src-sh">aws --profile main servicecatalog search-products-as-admin
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4dfedcb" class="outline-3">
+<h3 id="org4dfedcb"><a href="#org4dfedcb">Launch Product</a></h3>
+<div class="outline-text-3" id="text-org4dfedcb">
+<p>
+Note that user, even Admin user, must be added to the Portfolio users/groups.
+You can do this with <code>aws servicecatalog associate-principal-with-portfolio</code>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf365250" class="outline-2">
+<h2 id="orgf365250"><a href="#orgf365250">Service Quotas</a></h2>
+<div class="outline-text-2" id="text-orgf365250">
+</div>
+<div id="outline-container-org7eff685" class="outline-3">
+<h3 id="org7eff685"><a href="#org7eff685">Get Quota</a></h3>
+<div class="outline-text-3" id="text-org7eff685">
+<div class="org-src-container">
+<pre class="src src-sh">aws service-quotas list-service-quotas <span style="color: #98be65;">\</span>
+    --service-code firehose <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.Quotas[] | {QuotaName, Value}'</span>
+</pre>
+</div>
+
+<pre class="example">
+{
+  "QuotaName": "Delivery streams",
+  "Value": 50
+}
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org90bbabd" class="outline-3">
+<h3 id="org90bbabd"><a href="#org90bbabd">Get Default Quota</a></h3>
+<div class="outline-text-3" id="text-org90bbabd">
+<div class="org-src-container">
+<pre class="src src-sh">aws service-quotas get-aws-default-service-quota <span style="color: #98be65;">\</span>
+    --service-code firehose <span style="color: #98be65;">\</span>
+    --quota-code $<span style="color: #dcaeea;">QuotaCode</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5d67592" class="outline-2">
+<h2 id="org5d67592"><a href="#org5d67592">S3</a></h2>
+<div class="outline-text-2" id="text-org5d67592">
+</div>
+<div id="outline-container-org1e8c132" class="outline-3">
+<h3 id="org1e8c132"><a href="#org1e8c132">Canonical ID</a></h3>
+<div class="outline-text-3" id="text-org1e8c132">
+<div class="org-src-container">
+<pre class="src src-sh">aws s3api get-bucket-acl --bucket $<span style="color: #dcaeea;">BucketName</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org120ab9a" class="outline-3">
+<h3 id="org120ab9a"><a href="#org120ab9a">List objects in bucket</a></h3>
+<div class="outline-text-3" id="text-org120ab9a">
+<div class="org-src-container">
+<pre class="src src-sh">aws s3api list-objects-v2 --bucket $<span style="color: #dcaeea;">BucketName</span> | jq <span style="color: #98be65;">'.Contents[]'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1f9f4e3" class="outline-3">
+<h3 id="org1f9f4e3"><a href="#org1f9f4e3">Get bucket policy</a></h3>
+<div class="outline-text-3" id="text-org1f9f4e3">
+<div class="org-src-container">
+<pre class="src src-sh">aws s3api get-bucket-policy --bucket $<span style="color: #dcaeea;">BucketName</span> <span style="color: #98be65;">\</span>
+    | jq -r <span style="color: #98be65;">'.Policy'</span> | jq
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga5457b5" class="outline-3">
+<h3 id="orga5457b5"><a href="#orga5457b5">Delete Buckets with Name</a></h3>
+<div class="outline-text-3" id="text-orga5457b5">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #dcaeea;">buckets</span>=$(aws s3api list-buckets | jq -r .Buckets[].Name  | grep <span style="color: #98be65;">"name-with-this"</span>)
+<span style="color: #51afef;">for</span> bucket<span style="color: #51afef;"> in</span> $<span style="color: #dcaeea;">buckets</span>; <span style="color: #51afef;">do</span>
+    aws s3 rb s3://$<span style="color: #dcaeea;">bucket</span>
+<span style="color: #51afef;">done</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3484e63" class="outline-2">
+<h2 id="org3484e63"><a href="#org3484e63">SNS</a></h2>
+<div class="outline-text-2" id="text-org3484e63">
+</div>
+<div id="outline-container-orgecfad26" class="outline-3">
+<h3 id="orgecfad26"><a href="#orgecfad26">SNS topics</a></h3>
+<div class="outline-text-3" id="text-orgecfad26">
+<div class="org-src-container">
+<pre class="src src-sh">aws sns list-topics | jq <span style="color: #98be65;">'.Topics[] | .TopicArn'</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3d5e33e" class="outline-2">
+<h2 id="org3d5e33e"><a href="#org3d5e33e">SQS</a></h2>
+<div class="outline-text-2" id="text-org3d5e33e">
+</div>
+<div id="outline-container-org1facf85" class="outline-3">
+<h3 id="org1facf85"><a href="#org1facf85">List Queues</a></h3>
+<div class="outline-text-3" id="text-org1facf85">
+<div class="org-src-container">
+<pre class="src src-sh">aws sqs list-queues | jq <span style="color: #98be65;">'.QueueUrls[]'</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org08efd2c" class="outline-2">
+<h2 id="org08efd2c"><a href="#org08efd2c">SSO</a></h2>
+<div class="outline-text-2" id="text-org08efd2c">
+</div>
+<div id="outline-container-org9628dcd" class="outline-3">
+<h3 id="org9628dcd"><a href="#org9628dcd">Token</a></h3>
+<div class="outline-text-3" id="text-org9628dcd">
+<p>
+TODO: Look up token file programatically
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh" id="orga528fb1"><span style="color: #dcaeea;">token</span>=$(cat $<span style="color: #dcaeea;">tokenFile</span> | jq -r <span style="color: #98be65;">'.accessToken'</span>)
+<span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">token</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org50fba98" class="outline-3">
+<h3 id="org50fba98"><a href="#org50fba98">List Accounts I Can Access</a></h3>
+<div class="outline-text-3" id="text-org50fba98">
+<div class="org-src-container">
+<pre class="src src-sh">aws  sso list-accounts <span style="color: #98be65;">\</span>
+     --access-token $<span style="color: #dcaeea;">SsoToken</span> <span style="color: #98be65;">\</span>
+    | jq -c <span style="color: #98be65;">'.accountList[] | {accountName, accountId}'</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

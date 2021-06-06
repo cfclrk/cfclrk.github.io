@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Random Notes</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Random Notes</h1>
+</header><nav id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org36b5d7f">Managed Service Identities</a></li>
+<li><a href="#org5938223">Resource Providers</a></li>
+<li><a href="#org35c4d65">RBAC</a>
+<ul>
+<li><a href="#orge89ae90">Security Principal</a></li>
+<li><a href="#orgd21388d">Role</a></li>
+<li><a href="#org8d2dfc2">Scope</a></li>
+</ul>
+</li>
+<li><a href="#org8d988ed">Subscription Model</a>
+<ul>
+<li><a href="#org25826ca">Tenant</a></li>
+<li><a href="#org8ab312c">User</a></li>
+<li><a href="#org0a30885">Subscription</a></li>
+<li><a href="#org3aca359">Account</a></li>
+<li><a href="#org4e56529">Management Group</a></li>
+<li><a href="#orgc6dbd49">Storage Account</a></li>
+<li><a href="#org1bc9378">Role</a></li>
+<li><a href="#org7942c19">Resource</a></li>
+<li><a href="#org4fdef3c">Application</a></li>
+</ul>
+</li>
+<li><a href="#orgad73486">IMDS</a></li>
+<li><a href="#org460e526">VM</a>
+<ul>
+<li><a href="#orgd1c38c4">List VM offers in region</a></li>
+</ul>
+</li>
+<li><a href="#org430ee92">VM Extensions</a></li>
+<li><a href="#orgc89bbe7">API</a></li>
+<li><a href="#org182f28d">All Locations</a>
+<ul>
+<li><a href="#org48fcc4f">List</a></li>
+<li><a href="#org28c89f4">Loop</a></li>
+</ul>
+</li>
+<li><a href="#org40d5d4f">Load Balancers</a>
+<ul>
+<li><a href="#org528e8c0">Create LB Rule</a></li>
+<li><a href="#orgc16b137">Create Load Balancer</a></li>
+</ul>
+</li>
+<li><a href="#org932d7c6">Providers</a>
+<ul>
+<li><a href="#orgf213750">All provides and registration state</a></li>
+<li><a href="#org2a22b44">Registerd namespaces</a></li>
+</ul>
+</li>
+<li><a href="#orga52d028">Subscription Quotas</a></li>
+<li><a href="#org62bcc69">Create Public Static Ip</a></li>
+<li><a href="#org8d26513">ACR</a>
+<ul>
+<li><a href="#org907b5c1">List registries</a></li>
+<li><a href="#orgc93a8d5">List repositories</a></li>
+<li><a href="#org1354994">List repository versions</a></li>
+</ul>
+</li>
+<li><a href="#org9510575">Api Versions</a>
+<ul>
+<li><a href="#orgb15851c">Python</a></li>
+</ul>
+</li>
+<li><a href="#org085ed9c">Users</a>
+<ul>
+<li><a href="#orgb5014cf">Get My User</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-org36b5d7f" class="outline-2">
+<h2 id="org36b5d7f"><a href="#org36b5d7f">Managed Service Identities</a></h2>
+<div class="outline-text-2" id="text-org36b5d7f">
+<p>
+No need to have credentials or service principal.
+</p>
+
+<p>
+Docs - Part of the Active Directory docs
+<a href="https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/">https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5938223" class="outline-2">
+<h2 id="org5938223"><a href="#org5938223">Resource Providers</a></h2>
+<div class="outline-text-2" id="text-org5938223">
+<p>
+That is, "cloud services".
+</p>
+
+<p>
+For example, there is a resource provider that provides virtual machines. It's
+called Microsoft.Compute.
+</p>
+
+<p>
+Every resource provider exposes a set of actions. That is, the service has an
+API.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org35c4d65" class="outline-2">
+<h2 id="org35c4d65"><a href="#org35c4d65">RBAC</a></h2>
+<div class="outline-text-2" id="text-org35c4d65">
+<p>
+Fine-grained control to the Azure "control plane".
+</p>
+
+<p>
+When you assign a role to a certain scope, resources within that scope inherit
+the role assignment.
+</p>
+
+<p>
+A <b>Role</b> is a collection of actions (i.e. a collection of API operations). A
+<b>Role Assignment</b> gives a <span class="underline">security principal</span> the ability to perform that set
+of <span class="underline">actions</span> on that <span class="underline">scope</span>.
+</p>
+
+<p>
+There are 3 top level roles in Azure:
+</p>
+
+<ol class="org-ol">
+<li>Owner</li>
+<li>Contributor</li>
+<li>Reader</li>
+</ol>
+</div>
+
+<div id="outline-container-orge89ae90" class="outline-3">
+<h3 id="orge89ae90"><a href="#orge89ae90">Security Principal</a></h3>
+<div class="outline-text-3" id="text-orge89ae90">
+<ul class="org-ul">
+<li>User</li>
+<li>Group</li>
+<li>Service Principal</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgd21388d" class="outline-3">
+<h3 id="orgd21388d"><a href="#orgd21388d">Role</a></h3>
+<div class="outline-text-3" id="text-orgd21388d">
+<ul class="org-ul">
+<li>Built-in</li>
+<li>Custom</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org8d2dfc2" class="outline-3">
+<h3 id="org8d2dfc2"><a href="#org8d2dfc2">Scope</a></h3>
+<div class="outline-text-3" id="text-org8d2dfc2">
+<ul class="org-ul">
+<li>Subscription</li>
+<li>Resource Group</li>
+<li>Resource</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8d988ed" class="outline-2">
+<h2 id="org8d988ed"><a href="#org8d988ed">Subscription Model</a></h2>
+<div class="outline-text-2" id="text-org8d988ed">
+<p>
+Scope heirarchy:
+Tenant -&gt; Management Group -&gt; Subscription -&gt; Resource Group -&gt; Resource
+</p>
+</div>
+
+<div id="outline-container-org25826ca" class="outline-3">
+<h3 id="org25826ca"><a href="#org25826ca">Tenant</a></h3>
+<div class="outline-text-3" id="text-org25826ca">
+<p>
+Azure Active Directory entity that encompasses a whole organization. A tenant
+has at least one subscription and user. You use it to manage subscriptions
+and users in the organization.
+</p>
+
+<p>
+This is kind of like an AWS Organization that is used to manage all the AWS
+accounts in a company.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8ab312c" class="outline-3">
+<h3 id="org8ab312c"><a href="#org8ab312c">User</a></h3>
+<div class="outline-text-3" id="text-org8ab312c">
+<p>
+An individual and is associated with only one tenant, the organization that
+they belong to. May have access to multiple subscriptions.
+</p>
+
+<p>
+A user is a "User" in the Active Directory. That means users are tenant-level
+entities. Each user can have multiple subscriptions.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org0a30885" class="outline-3">
+<h3 id="org0a30885"><a href="#org0a30885">Subscription</a></h3>
+<div class="outline-text-3" id="text-org0a30885">
+<p>
+The agreements with Microsoft to use cloud services, including Azure.
+</p>
+
+<p>
+Sometimes a "subscription" is referred to as an "account" i.e. "az account
+set" command. I think a subscription is the most similar thing to an AWS
+account.
+</p>
+
+<p>
+The fact that Azure has resource groups adds a layer of isolation within
+subscriptions that's harder to attain in AWS accounts, so in Azure you are
+likely to have less subscriptions that you'd have accounts in AWS.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3aca359" class="outline-3">
+<h3 id="org3aca359"><a href="#org3aca359">Account</a></h3>
+<div class="outline-text-3" id="text-org3aca359">
+<p>
+Can mean a few things:
+</p>
+
+<ol class="org-ol">
+<li>The Microsoft Account that was used when signing up for Azure. A Microsoft
+Account is the account you use to access Office 365, XBox Live, etc.
+
+<ul class="org-ul">
+<li>When you sign up for an Azure subscription with a personal Microsoft
+Account, an Azure AD Tenant is created for you.</li>
+
+<li>Or, you can create an Azure subscription associated with an existing
+Azure AD Tenant.</li>
+</ul></li>
+
+<li>An Azure subscription. This is what `azure account list` and `azure account
+set` do</li>
+
+<li>A Service Principal, which is sometimes referred to as using a "service
+account". "Service principals are accounts not tied to any particular user" -
+<a href="https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest#sign-in-with-a-service-principal">https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest#sign-in-with-a-service-principal</a></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org4e56529" class="outline-3">
+<h3 id="org4e56529"><a href="#org4e56529">Management Group</a></h3>
+<div class="outline-text-3" id="text-org4e56529">
+<p>
+A level of management above subscriptions (but still within a single
+tenant). Management Groups allow you to associate certain settings with many
+subscriptions.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc6dbd49" class="outline-3">
+<h3 id="orgc6dbd49"><a href="#orgc6dbd49">Storage Account</a></h3>
+<div class="outline-text-3" id="text-orgc6dbd49">
+<p>
+How is this different from account or resource group?
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1bc9378" class="outline-3">
+<h3 id="org1bc9378"><a href="#org1bc9378">Role</a></h3>
+<div class="outline-text-3" id="text-org1bc9378">
+<p>
+Controls access to resources. Can be assigned to users, groups, or services.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7942c19" class="outline-3">
+<h3 id="org7942c19"><a href="#org7942c19">Resource</a></h3>
+<div class="outline-text-3" id="text-org7942c19">
+<p>
+Associated with a subscription
+</p>
+</div>
+</div>
+
+<div id="outline-container-org4fdef3c" class="outline-3">
+<h3 id="org4fdef3c"><a href="#org4fdef3c">Application</a></h3>
+<div class="outline-text-3" id="text-org4fdef3c">
+<p>
+Something in Azure that outsources authentication to Azure AD. AD uses Oauth
+2.0 to authenticate to the application, which mean the application must have
+a URL.
+</p>
+
+<p>
+Sometimes "Application" refers to the entity requesting an auth token in an
+Oauth2 authentication flow. I think OAuth2 refers to this entity as the
+"client application". See:
+<a href="https://docs.microsoft.com/en-us/azure/active-directory/develop/developer-glossary#client-application">https://docs.microsoft.com/en-us/azure/active-directory/develop/developer-glossary#client-application</a>
+</p>
+
+<p>
+Sometimes "Application" refers to a VM. For example when adding an access
+policy to keyvault; if you add a VM, it is labelled as an "application". In
+this case I suppose "application" refers to "code on the VM that needs
+keyvault creds".
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgad73486" class="outline-2">
+<h2 id="orgad73486"><a href="#orgad73486">IMDS</a></h2>
+<div class="outline-text-2" id="text-orgad73486">
+<p>
+Available to all vms created with ARM.
+</p>
+
+<p>
+Get Token
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">curl -H Metadata:true <span style="color: #98be65;">\</span>
+     <span style="color: #98be65;">"http://169.254.169.254/metadata/identity/oauth2/token?resource=https://management.azure.com&amp;api-version=2018-04-02"</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org460e526" class="outline-2">
+<h2 id="org460e526"><a href="#org460e526">VM</a></h2>
+<div class="outline-text-2" id="text-org460e526">
+</div>
+<div id="outline-container-orgd1c38c4" class="outline-3">
+<h3 id="orgd1c38c4"><a href="#orgd1c38c4">List VM offers in region</a></h3>
+<div class="outline-text-3" id="text-orgd1c38c4">
+<div class="org-src-container">
+<pre class="src src-sh">az vm image list --all -l eastus
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org430ee92" class="outline-2">
+<h2 id="org430ee92"><a href="#org430ee92">VM Extensions</a></h2>
+<div class="outline-text-2" id="text-org430ee92">
+<p>
+VM Extensions are run using a vm agent. The agent is installed by default in
+Azure Marketplace images.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc89bbe7" class="outline-2">
+<h2 id="orgc89bbe7"><a href="#orgc89bbe7">API</a></h2>
+<div class="outline-text-2" id="text-orgc89bbe7">
+<p>
+List vms
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #dcaeea;">r</span>=$(curl -H Metadata:true <span style="color: #98be65;">"http://169.254.169.254/metadata/identity/oauth2/token?resource=https://management.azure.com&amp;api-version=2018-04-02"</span>)
+<span style="color: #dcaeea;">access_token</span>=$(<span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">r</span> | jq -r <span style="color: #98be65;">'.access_token'</span>)
+<span style="color: #dcaeea;">url</span>=<span style="color: #98be65;">"https://management.azure.com/subscriptions/10f9b671-4896-4336-ba3d-82e9d4ab0b52/providers/Microsoft.Compute/virtualMachines?api-version=2018-06-01"</span>
+curl $<span style="color: #dcaeea;">url</span> -H <span style="color: #98be65;">"Authorization: Bearer $access_token"</span> | jq
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org182f28d" class="outline-2">
+<h2 id="org182f28d"><a href="#org182f28d">All Locations</a></h2>
+<div class="outline-text-2" id="text-org182f28d">
+</div>
+<div id="outline-container-org48fcc4f" class="outline-3">
+<h3 id="org48fcc4f"><a href="#org48fcc4f">List</a></h3>
+<div class="outline-text-3" id="text-org48fcc4f">
+<div class="org-src-container">
+<pre class="src src-sh">az account list-locations --query <span style="color: #98be65;">"[].name"</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org28c89f4" class="outline-3">
+<h3 id="org28c89f4"><a href="#org28c89f4">Loop</a></h3>
+<div class="outline-text-3" id="text-org28c89f4">
+<p>
+Create a Public IP in each location
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #dcaeea;">locations</span>=($(az account list-locations | jq -r <span style="color: #98be65;">'.[].name'</span>))
+<span style="color: #51afef;">for</span> i<span style="color: #51afef;"> in</span> <span style="color: #98be65;">"${!locations[@]}"</span>; <span style="color: #51afef;">do</span>
+    <span style="color: #dcaeea;">location</span>=${<span style="color: #dcaeea;">locations</span>[$<span style="color: #dcaeea;">i</span>]}
+    <span style="color: #c678dd;">echo</span> ip-$<span style="color: #dcaeea;">i</span> $<span style="color: #dcaeea;">$location</span>
+    az network public-ip create <span style="color: #98be65;">\</span>
+       -g PublicIpPool <span style="color: #98be65;">\</span>
+       -n ip-$<span style="color: #dcaeea;">i</span> <span style="color: #98be65;">\</span>
+       --allocation-method Static
+<span style="color: #51afef;">done</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org40d5d4f" class="outline-2">
+<h2 id="org40d5d4f"><a href="#org40d5d4f">Load Balancers</a></h2>
+<div class="outline-text-2" id="text-org40d5d4f">
+</div>
+<div id="outline-container-org528e8c0" class="outline-3">
+<h3 id="org528e8c0"><a href="#org528e8c0">Create LB Rule</a></h3>
+<div class="outline-text-3" id="text-org528e8c0">
+<div class="org-src-container">
+<pre class="src src-sh">az network lb rule create -g $<span style="color: #dcaeea;">CLUSTER_NAME</span> <span style="color: #98be65;">\</span>
+   --lb-name fixed-ip-lb <span style="color: #98be65;">\</span>
+   -n fixed-ip-ssh-rule <span style="color: #98be65;">\</span>
+   --protocol Tcp <span style="color: #98be65;">\</span>
+   --frontend-port 443 <span style="color: #98be65;">\</span>
+   --backend-pool-name fixed-ip-lbbepool <span style="color: #98be65;">\</span>
+   --backend-port 443
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc16b137" class="outline-3">
+<h3 id="orgc16b137"><a href="#orgc16b137">Create Load Balancer</a></h3>
+<div class="outline-text-3" id="text-orgc16b137">
+<div class="org-src-container">
+<pre class="src src-sh">az network lb create <span style="color: #98be65;">\</span>
+   -n mylb <span style="color: #98be65;">\</span>
+   -g $<span style="color: #dcaeea;">ResourceGroup</span> <span style="color: #98be65;">\</span>
+   -l westus2 <span style="color: #98be65;">\</span>
+   --public-ip-address <span style="color: #98be65;">"/subscriptions/$SUBSCRIPTION_ID/resourceGroups/PublicIpPool/providers/Microsoft.Network/publicIPAddresses/$IP_NAME"</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org932d7c6" class="outline-2">
+<h2 id="org932d7c6"><a href="#org932d7c6">Providers</a></h2>
+<div class="outline-text-2" id="text-org932d7c6">
+</div>
+<div id="outline-container-orgf213750" class="outline-3">
+<h3 id="orgf213750"><a href="#orgf213750">All provides and registration state</a></h3>
+<div class="outline-text-3" id="text-orgf213750">
+<p>
+az provider list &#x2013;query "[].{Provider:namespace, Status:registrationState}"
+&#x2013;out table
+</p>
+</div>
+</div>
+
+<div id="outline-container-org2a22b44" class="outline-3">
+<h3 id="org2a22b44"><a href="#org2a22b44">Registerd namespaces</a></h3>
+<div class="outline-text-3" id="text-org2a22b44">
+<p>
+az provider list &#x2013;query "[?registrationState == 'Registered'].namespace"
+&#x2013;out table
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga52d028" class="outline-2">
+<h2 id="orga52d028"><a href="#orga52d028">Subscription Quotas</a></h2>
+<div class="outline-text-2" id="text-orga52d028">
+<div class="org-src-container">
+<pre class="src src-fish"><span style="color: #51afef;">function</span> <span style="color: #c678dd;">getLimit</span> <span style="color: #51afef; font-weight: bold;">--description</span> <span style="color: #98be65;">"Get a quota limit in the given region"</span>
+    <span style="color: #51afef;">set</span> <span style="color: #dcaeea;">location</span> <span style="color: #98be65;">$</span><span style="color: #dcaeea;">argv</span>[<span style="color: #a9a1e1;">1</span>]
+    <span style="color: #51afef;">set</span> <span style="color: #dcaeea;">limit</span> (az vm list-usage <span style="color: #51afef; font-weight: bold;">\</span>
+        <span style="color: #c678dd;">--location</span> <span style="color: #98be65;">$</span><span style="color: #dcaeea;">location</span> <span style="color: #51afef; font-weight: bold;">\</span>
+        <span style="color: #c678dd;">-o</span> json <span style="color: #51afef; font-weight: bold;">\</span>
+        <span style="color: #51afef; font-weight: bold;">|</span> jq -r <span style="color: #98be65;">'.[] | select(.localName == "Total Regional vCPUs") | .limit'</span>)
+    <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"$location: $limit"</span>
+<span style="color: #51afef;">end</span>
+
+<span style="color: #51afef;">function</span> <span style="color: #c678dd;">getAllLimits</span> <span style="color: #51afef; font-weight: bold;">--description</span> <span style="color: #98be65;">"Get all Total Region vCPU limits"</span>
+    <span style="color: #51afef;">set</span> <span style="color: #dcaeea;">locations</span> (<span style="color: #c678dd;">az</span> account list-locations <span style="color: #51afef; font-weight: bold;">|</span> <span style="color: #c678dd;">jq</span> -r <span style="color: #98be65;">'.[].name'</span>)
+    <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">$</span><span style="color: #dcaeea;">locations</span> <span style="color: #51afef; font-weight: bold;">|</span> <span style="color: #c678dd;">xargs</span> -n <span style="color: #a9a1e1;">1</span> -P (<span style="color: #c678dd;">count</span> <span style="color: #98be65;">$</span><span style="color: #dcaeea;">locations</span>) -I {} <span style="color: #c678dd;">fish</span> -c <span style="color: #98be65;">'getLimit {}'</span>
+<span style="color: #51afef;">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #dcaeea;">allLocations</span>=$(az account list-locations | jq -r <span style="color: #98be65;">'.[].name'</span>)
+
+<span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">allLocations</span> | xargs
+<span style="color: #51afef;">for</span> location<span style="color: #51afef;"> in</span> ; <span style="color: #51afef;">do</span>
+    <span style="color: #dcaeea;">limit</span>=$(az vm list-usage <span style="color: #98be65;">\</span>
+               --location $<span style="color: #dcaeea;">location</span> <span style="color: #98be65;">\</span>
+               -o json <span style="color: #98be65;">\</span>
+                | jq -r <span style="color: #98be65;">'.[] | select(.localName == "Total Regional vCPUs") | .limit'</span>)
+    <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"$location: $limit"</span>
+<span style="color: #51afef;">done</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org62bcc69" class="outline-2">
+<h2 id="org62bcc69"><a href="#org62bcc69">Create Public Static Ip</a></h2>
+<div class="outline-text-2" id="text-org62bcc69">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #dcaeea;">location</span>=<span style="color: #98be65;">"westus2"</span>
+az network public-ip create <span style="color: #98be65;">\</span>
+   -g PublicIpPool <span style="color: #98be65;">\</span>
+   -n ip-$<span style="color: #dcaeea;">location</span>-1 <span style="color: #98be65;">\</span>
+   -l $<span style="color: #dcaeea;">location</span> <span style="color: #98be65;">\</span>
+   --allocation-method Static
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8d26513" class="outline-2">
+<h2 id="org8d26513"><a href="#org8d26513">ACR</a></h2>
+<div class="outline-text-2" id="text-org8d26513">
+</div>
+<div id="outline-container-org907b5c1" class="outline-3">
+<h3 id="org907b5c1"><a href="#org907b5c1">List registries</a></h3>
+<div class="outline-text-3" id="text-org907b5c1">
+<div class="org-src-container">
+<pre class="src src-sh">az acr list | jq -c <span style="color: #98be65;">'.[] | {name, loginServer, location}'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc93a8d5" class="outline-3">
+<h3 id="orgc93a8d5"><a href="#orgc93a8d5">List repositories</a></h3>
+<div class="outline-text-3" id="text-orgc93a8d5">
+<div class="org-src-container">
+<pre class="src src-sh">az acr repository list -n $<span style="color: #dcaeea;">name</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1354994" class="outline-3">
+<h3 id="org1354994"><a href="#org1354994">List repository versions</a></h3>
+<div class="outline-text-3" id="text-org1354994">
+<div class="org-src-container">
+<pre class="src src-sh">az acr repository show-manifests <span style="color: #98be65;">\</span>
+   -n $<span style="color: #dcaeea;">name</span> <span style="color: #98be65;">\</span>
+   --repository quay.io/kubernetes-ingress-controller/nginx-ingress-controller
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9510575" class="outline-2">
+<h2 id="org9510575"><a href="#org9510575">Api Versions</a></h2>
+<div class="outline-text-2" id="text-org9510575">
+<p>
+Get the latest Api Version for something
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">az provider list --query <span style="color: #98be65;">"[?namespace=='Microsoft.ClassicNetwork']"</span> &gt; ~/cats/resource_provider.json
+jq <span style="color: #98be65;">'.[].resourceTypes[] | select(.resourceType == "reservedIps").apiVersions | first'</span> &lt;~/cats/resource_provider.json
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgb15851c" class="outline-3">
+<h3 id="orgb15851c"><a href="#orgb15851c">Python</a></h3>
+<div class="outline-text-3" id="text-orgb15851c">
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #51afef;">from</span> msrestazure.tools <span style="color: #51afef;">import</span> parse_resource_id
+
+<span style="color: #51afef;">def</span> <span style="color: #c678dd;">_get_ip_address</span>(<span style="color: #51afef;">self</span>, resource_id: <span style="color: #c678dd;">str</span>) -&gt; <span style="color: #c678dd;">str</span>:
+    <span style="color: #5B6268;"># </span><span style="color: #5B6268;">Determine the latest API version for this resource type</span>
+    parsed_id = parse_resource_id(resource_id)
+    <span style="color: #dcaeea;">provider</span> = <span style="color: #51afef;">self</span>.resource_client.providers.get(parsed_id[<span style="color: #98be65;">"namespace"</span>])
+    <span style="color: #dcaeea;">resource_type_def</span> = <span style="color: #c678dd;">next</span>(
+        i
+        <span style="color: #51afef;">for</span> i <span style="color: #51afef;">in</span> provider.resource_types
+        <span style="color: #51afef;">if</span> i.resource_type.lower() == parsed_id[<span style="color: #98be65;">"resource_type"</span>].lower()
+    )
+
+    <span style="color: #5B6268;"># </span><span style="color: #5B6268;">Supported API versions are ordered from newest to oldest</span>
+    <span style="color: #dcaeea;">api_version</span> = resource_type_def.api_versions[0]
+
+    <span style="color: #5B6268;"># </span><span style="color: #5B6268;">Fetch the IP resource and return its IP address</span>
+    <span style="color: #dcaeea;">resource</span> = <span style="color: #51afef;">self</span>.resource_client.resources.get_by_id(resource_id, api_version)
+    <span style="color: #51afef;">return</span> resource.properties[<span style="color: #98be65;">"ipAddress"</span>]
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org085ed9c" class="outline-2">
+<h2 id="org085ed9c"><a href="#org085ed9c">Users</a></h2>
+<div class="outline-text-2" id="text-org085ed9c">
+</div>
+<div id="outline-container-orgb5014cf" class="outline-3">
+<h3 id="orgb5014cf"><a href="#orgb5014cf">Get My User</a></h3>
+<div class="outline-text-3" id="text-orgb5014cf">
+<div class="org-src-container">
+<pre class="src src-sh">az ad user list --query <span style="color: #98be65;">"[?mailNickname=='chris.clark']"</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

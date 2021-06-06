@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Service Principals</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Service Principals</h1>
+</header><nav id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org5385df8">Read</a></li>
+<li><a href="#orge5b6816">CLI Login with a Service Principal</a></li>
+<li><a href="#org8fe95e1">Create</a>
+<ul>
+<li><a href="#orgfe33453">Contributer Role (default?)</a></li>
+<li><a href="#org4664df6">Owner Role</a></li>
+<li><a href="#orgddb18e7">Grant more perms</a></li>
+</ul>
+</li>
+<li><a href="#org8e799b8">List</a></li>
+<li><a href="#org2f3a611">Describe</a>
+<ul>
+<li><a href="#orgd586cab">Using service principal name</a></li>
+<li><a href="#orgb48b3ac">Using service principal client id</a></li>
+</ul>
+</li>
+<li><a href="#org75f14c4">Delete</a></li>
+<li><a href="#org5b258b9">View Role Assignments</a>
+<ul>
+<li><a href="#org3bb9392">Role Assignments Scoped to this Subscription</a></li>
+<li><a href="#org060bc4f">Role Assignments Scoped to Another Subscription</a></li>
+</ul>
+</li>
+<li><a href="#org0c85801">Grant Access to Another Subscription</a>
+<ul>
+<li><a href="#orgae259aa">Create Role Assignment</a></li>
+<li><a href="#org0b90e0b">View the new role assignment</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-org5385df8" class="outline-2">
+<h2 id="org5385df8"><a href="#org5385df8">Read</a></h2>
+<div class="outline-text-2" id="text-org5385df8">
+<p>
+<a href="https://serverfault.com/questions/889976/how-to-give-azure-service-principal-the-same-rights-as-my-own-user?rq=1">https://serverfault.com/questions/889976/how-to-give-azure-service-principal-the-same-rights-as-my-own-user?rq=1</a>
+<a href="https://github.com/Azure/azure-sdk-for-node/issues/2363#issuecomment-354897064">https://github.com/Azure/azure-sdk-for-node/issues/2363#issuecomment-354897064</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge5b6816" class="outline-2">
+<h2 id="orge5b6816"><a href="#orge5b6816">CLI Login with a Service Principal</a></h2>
+<div class="outline-text-2" id="text-orge5b6816">
+<p>
+The <code>appId</code> is the <code>AZURE_CLIENT_ID</code> and the <code>password</code> is the
+<code>AZURE_CLIENT_SECRET</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">az login --service-principal <span style="color: #98be65;">\</span>
+   --username $<span style="color: #dcaeea;">AZURE_CLIENT_ID</span> <span style="color: #98be65;">\</span>
+   --password $<span style="color: #dcaeea;">AZURE_CLIENT_SECRET</span> <span style="color: #98be65;">\</span>
+   --tenant $<span style="color: #dcaeea;">AZURE_TENANT_ID</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8fe95e1" class="outline-2">
+<h2 id="org8fe95e1"><a href="#org8fe95e1">Create</a></h2>
+<div class="outline-text-2" id="text-org8fe95e1">
+<p>
+Create a service principal called "foo" (the name will actually be
+<code>http://foo</code>). Service principals are global to an Azure Tenant (not, as one
+might think, to a Subscription). The subscriptions or resources that a Service
+Principal can see are controlled by the Role Assignments attached to the
+Service Principal.
+</p>
+</div>
+
+<div id="outline-container-orgfe33453" class="outline-3">
+<h3 id="orgfe33453"><a href="#orgfe33453">Contributer Role (default?)</a></h3>
+<div class="outline-text-3" id="text-orgfe33453">
+<p>
+By default, the service principal will have the "owner" role (is this true
+anymore?).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh" id="org5f68568">az ad sp create-for-rbac -n foo
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4664df6" class="outline-3">
+<h3 id="org4664df6"><a href="#org4664df6">Owner Role</a></h3>
+<div class="outline-text-3" id="text-org4664df6">
+<p>
+Just pass a <code>--role owner</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgddb18e7" class="outline-3">
+<h3 id="orgddb18e7"><a href="#orgddb18e7">Grant more perms</a></h3>
+<div class="outline-text-3" id="text-orgddb18e7">
+<p>
+By default, a service principal can't do as much as a User, even if the
+service principal has the Owner role. This is because Azure is stupid.
+</p>
+
+<p>
+To allow an Azure service principal to create new service principals:
+</p>
+
+<ol class="org-ol">
+<li>Click on your service principal in Azure Active Directory -&gt; App
+registrations.</li>
+<li>Go to Settings -&gt; Required permissions.</li>
+<li>Add four permissions for Windows Azure Active Directory:
+<ul class="org-ul">
+<li>Read and write all applications</li>
+<li>Manage apps that this app creates or owns</li>
+<li>Read and write directory data</li>
+<li>Read directory data</li>
+</ul></li>
+<li>Save.</li>
+<li>Click “Grant permissions” and confirm. This step can only be performed by
+a Global AD Admin, which you are now in both public and government
+tenants.</li>
+</ol>
+
+<p>
+More info: <a href="https://github.com/Azure/azure-sdk-for-node/issues/2363#issuecomment-354897064">https://github.com/Azure/azure-sdk-for-node/issues/2363#issuecomment-354897064</a>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8e799b8" class="outline-2">
+<h2 id="org8e799b8"><a href="#org8e799b8">List</a></h2>
+<div class="outline-text-2" id="text-org8e799b8">
+<div class="org-src-container">
+<pre class="src src-sh">az ad sp list <span style="color: #98be65;">\</span>
+   --query <span style="color: #98be65;">"[?appOwnerTenantId=='$AZURE_TENANT_ID'].displayName"</span> <span style="color: #98be65;">\</span>
+   --all
+</pre>
+</div>
+
+<p>
+Or, by a more readable publisher name:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">az ad sp list --all --query <span style="color: #98be65;">"[?publisherName=="</span>Fugue<span style="color: #98be65;">"].displayName"</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2f3a611" class="outline-2">
+<h2 id="org2f3a611"><a href="#org2f3a611">Describe</a></h2>
+<div class="outline-text-2" id="text-org2f3a611">
+</div>
+<div id="outline-container-orgd586cab" class="outline-3">
+<h3 id="orgd586cab"><a href="#orgd586cab">Using service principal name</a></h3>
+<div class="outline-text-3" id="text-orgd586cab">
+<div class="org-src-container">
+<pre class="src src-sh">az ad sp show --id <span style="color: #98be65;">"http://chrisc-owner"</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb48b3ac" class="outline-3">
+<h3 id="orgb48b3ac"><a href="#orgb48b3ac">Using service principal client id</a></h3>
+<div class="outline-text-3" id="text-orgb48b3ac">
+<div class="org-src-container">
+<pre class="src src-sh">az ad sp show --id $<span style="color: #dcaeea;">AZURE_CLIENT_ID</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org75f14c4" class="outline-2">
+<h2 id="org75f14c4"><a href="#org75f14c4">Delete</a></h2>
+<div class="outline-text-2" id="text-org75f14c4">
+<div class="org-src-container">
+<pre class="src src-sh">az ad sp delete --id http://foo
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5b258b9" class="outline-2">
+<h2 id="org5b258b9"><a href="#org5b258b9">View Role Assignments</a></h2>
+<div class="outline-text-2" id="text-org5b258b9">
+<p>
+Every service principal has 0 or more <b>role assignments</b> which, taken
+together, define what the service principal is allowed to do.
+</p>
+
+<p>
+A Role Assignment assigns a <i>ROLE</i> to an <i>ASSIGNEE</i> for a given <i>SCOPE</i>. A
+<i>ROLE</i> is a set of permissions. Examples of some pre-defined named roles are
+"Owner", "Contributor", and "KeyVault Reader". The <i>ASSIGNEE</i> is, in this
+case, the Service Principal. The <i>SCOPE</i> limits permissions to a certain set
+of cloud resources. Examples of scopes are a subsccription, a resource group,
+or a particular cloud resource.
+</p>
+
+<p>
+Apparently role assignments can only be viewed one subscription at a time?
+</p>
+</div>
+
+<div id="outline-container-org3bb9392" class="outline-3">
+<h3 id="org3bb9392"><a href="#org3bb9392">Role Assignments Scoped to this Subscription</a></h3>
+<div class="outline-text-3" id="text-org3bb9392">
+<p>
+View a service principal's role assignments that are scoped to the currently
+active subscription.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">az role assignment list <span style="color: #98be65;">\</span>
+   --all <span style="color: #98be65;">\</span>
+   --assignee $(az ad signed-in-user show | jq -r <span style="color: #98be65;">'.objectId'</span>)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh">az role assignment list <span style="color: #98be65;">\</span>
+   --assignee <span style="color: #98be65;">"http://chrisc-owner"</span> <span style="color: #98be65;">\</span>
+   --all <span style="color: #98be65;">\</span>
+   --include-inherited <span style="color: #98be65;">\</span>
+   --include-groups
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh">az ad user list --query <span style="color: #98be65;">"[?mailNickname=='chris.clark'].objectId"</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org060bc4f" class="outline-3">
+<h3 id="org060bc4f"><a href="#org060bc4f">Role Assignments Scoped to Another Subscription</a></h3>
+<div class="outline-text-3" id="text-org060bc4f">
+<div class="org-src-container">
+<pre class="src src-sh">az role assignment list <span style="color: #98be65;">\</span>
+   --assignee <span style="color: #98be65;">"http://chrisc-owner"</span> <span style="color: #98be65;">\</span>
+   --all <span style="color: #98be65;">\</span>
+   --include-inherited <span style="color: #98be65;">\</span>
+   --include-groups <span style="color: #98be65;">\</span>
+   --subscription $<span style="color: #dcaeea;">SubscriptionId</span>
+</pre>
+</div>
+
+<p>
+<b>QUESTION</b>: Is there a way to see <b>all</b> role assignments for a service
+principal at one time, accross all subsrcriptions? For example, what if I
+want to see what subscriptions a service principal has "Contributor" access
+to?
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0c85801" class="outline-2">
+<h2 id="org0c85801"><a href="#org0c85801">Grant Access to Another Subscription</a></h2>
+<div class="outline-text-2" id="text-org0c85801">
+<p>
+To do this we create another role assignment for the service principal that
+gives the service principal access to a particular subscription.
+</p>
+</div>
+
+<div id="outline-container-orgae259aa" class="outline-3">
+<h3 id="orgae259aa"><a href="#orgae259aa">Create Role Assignment</a></h3>
+<div class="outline-text-3" id="text-orgae259aa">
+<p>
+In this case we will assign "Contributor" access (the <i>ROLE</i>) to the service
+principal <code>http://chrisc-owner</code> (the <i>ASSIGNEE</i>) for subscription
+<code>$SubscriptionId</code> (the <i>SCOPE</i>).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">az role assignment create <span style="color: #98be65;">\</span>
+   --role <span style="color: #98be65;">"Contributor"</span> <span style="color: #98be65;">\</span>
+   --assignee <span style="color: #98be65;">"http://chrisc-owner"</span> <span style="color: #98be65;">\</span>
+   --scope <span style="color: #98be65;">"/subscriptions/a083ee74-78e4-4afc-9848-1336af393d20"</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0b90e0b" class="outline-3">
+<h3 id="org0b90e0b"><a href="#org0b90e0b">View the new role assignment</a></h3>
+<div class="outline-text-3" id="text-org0b90e0b">
+<p>
+Now you should see one role assignment for the other subscription.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">az role assignment list <span style="color: #98be65;">\</span>
+   --assignee <span style="color: #98be65;">"http://chrisc-owner"</span> <span style="color: #98be65;">\</span>
+   --all <span style="color: #98be65;">\</span>
+   --include-inherited <span style="color: #98be65;">\</span>
+   --include-groups <span style="color: #98be65;">\</span>
+   --subscription $<span style="color: #dcaeea;">SubscriptionId</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Python</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Python</h1>
+</header><nav id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org2a308b7">Pyenv</a>
+<ul>
+<li><a href="#orgab4e5c9">Latest Version</a></li>
+</ul>
+</li>
+<li><a href="#org24c4da3">Package Structure</a></li>
+<li><a href="#orgfa303db">Package summary info</a></li>
+<li><a href="#org35c39b0">Class attributes</a></li>
+<li><a href="#org56bfd7d">Require zip of github repo</a></li>
+<li><a href="#orgdc153c0">Strings</a>
+<ul>
+<li><a href="#orgf412dc8">Convert binary to utf8</a></li>
+</ul>
+</li>
+<li><a href="#org451d718">Random String</a></li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-org2a308b7" class="outline-2">
+<h2 id="org2a308b7"><a href="#org2a308b7">Pyenv</a></h2>
+<div class="outline-text-2" id="text-org2a308b7">
+</div>
+<div id="outline-container-orgab4e5c9" class="outline-3">
+<h3 id="orgab4e5c9"><a href="#orgab4e5c9">Latest Version</a></h3>
+<div class="outline-text-3" id="text-orgab4e5c9">
+<div class="org-src-container">
+<pre class="src src-sh">pyenv install --list <span style="color: #98be65;">\</span>
+    | grep <span style="color: #98be65;">"^  3"</span> <span style="color: #98be65;">\</span>
+    | grep -v <span style="color: #98be65;">"src|dev"</span> <span style="color: #98be65;">\</span>
+    | tail -1 <span style="color: #98be65;">\</span>
+    | tr -d <span style="color: #98be65;">'[:space:]'</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org24c4da3" class="outline-2">
+<h2 id="org24c4da3"><a href="#org24c4da3">Package Structure</a></h2>
+<div class="outline-text-2" id="text-org24c4da3">
+<p>
+<a href="https://blog.ionelmc.ro/2014/05/25/python-packaging/">https://blog.ionelmc.ro/2014/05/25/python-packaging/</a>
+<a href="https://hynek.me/articles/testing-packaging/">https://hynek.me/articles/testing-packaging/</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgfa303db" class="outline-2">
+<h2 id="orgfa303db"><a href="#orgfa303db">Package summary info</a></h2>
+<div class="outline-text-2" id="text-orgfa303db">
+<p>
+Print sys.path
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">python -c <span style="color: #98be65;">"import sys; [print(i[19:]) for i in sys.path]"</span>
+</pre>
+</div>
+
+<p>
+Print summary of sys.path and some other stuff
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">python -m site
+</pre>
+</div>
+
+<p>
+or interactively in a python interpreter:
+</p>
+
+<pre class="example" id="org7745014">
+&gt;&gt;&gt; import site
+&gt;&gt;&gt; site._script()
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org35c39b0" class="outline-2">
+<h2 id="org35c39b0"><a href="#org35c39b0">Class attributes</a></h2>
+<div class="outline-text-2" id="text-org35c39b0">
+<p>
+Define a class:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Pizza</span>(<span style="color: #c678dd;">object</span>):
+    <span style="color: #51afef;">def</span> <span style="color: #c678dd;">__init__</span>(<span style="color: #51afef;">self</span>, size):
+        <span style="color: #51afef;">self</span>.<span style="color: #dcaeea;">size</span> = size
+    <span style="color: #51afef;">def</span> <span style="color: #c678dd;">get_size</span>(<span style="color: #51afef;">self</span>):
+        <span style="color: #51afef;">return</span> <span style="color: #51afef;">self</span>.size
+</pre>
+</div>
+
+<p>
+Create an instance:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #dcaeea;">p</span> = Pizza(8)
+</pre>
+</div>
+
+<p>
+See: <a href="https://blog.ionelmc.ro/2015/02/09/understanding-python-metaclasses/#object-attribute-lookup">https://blog.ionelmc.ro/2015/02/09/understanding-python-metaclasses/#object-attribute-lookup</a>
+</p>
+
+<p>
+Now, calling <code>p.get_size()</code> or <code>p.size</code> roughly equates to:
+</p>
+
+<ol class="org-ol">
+<li><p>
+Call the type slot for <code>Class.__getattribute__(attribute)</code>. The default does
+this:
+</p>
+
+<ul class="org-ul">
+<li>Does <code>Pizza.__dict__</code> have a <code>size</code> (or <code>get_size</code>) that has a <code>__get__</code>
+method and is a data descriptor? (size: no, get<sub>size</sub>: no). Note: functions
+are not data descriptors. A data descriptor must have at least a <code>__set__</code>
+OR a <code>__delete__</code> attribute.</li>
+
+<li>Else, does <code>p.__dict__</code> have a <code>size</code> (or <code>get_size</code>) item in it? (size: yes,
+get<sub>size</sub>: no)</li>
+</ul>
+
+<p>
+_ Else, does <code>Pizza.__dict__</code> have a <code>size</code> (or <code>get_size</code>) item that is <b>not</b>
+a data descriptor?
+</p></li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-python">Pizza.<span style="color: #c678dd;">__dict__</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">Pizza.<span style="color: #c678dd;">__dict__</span>[<span style="color: #98be65;">"get_size"</span>].__get__(p, Pizza)()
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org56bfd7d" class="outline-2">
+<h2 id="org56bfd7d"><a href="#org56bfd7d">Require zip of github repo</a></h2>
+<div class="outline-text-2" id="text-org56bfd7d">
+<p>
+You can get a tarball or zipball of a repo as documented here:
+<a href="https://developer.github.com/v3/repos/contents/#get-archive-link">https://developer.github.com/v3/repos/contents/#get-archive-link</a>
+</p>
+
+<p>
+In requirements.txt, you can do something like
+<a href="https://github.com/cfclrk/python-demo/zipball/master#egg=botocore">https://github.com/cfclrk/python-demo/zipball/master#egg=botocore</a>
+</p>
+
+<p>
+e.g. see:
+<a href="https://github.com/aws/aws-cli/blob/1973ca9709d41121b45c1a0d764ef6788028c708/requirements.txt#L6">https://github.com/aws/aws-cli/blob/1973ca9709d41121b45c1a0d764ef6788028c708/requirements.txt#L6</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgdc153c0" class="outline-2">
+<h2 id="orgdc153c0"><a href="#orgdc153c0">Strings</a></h2>
+<div class="outline-text-2" id="text-orgdc153c0">
+</div>
+<div id="outline-container-orgf412dc8" class="outline-3">
+<h3 id="orgf412dc8"><a href="#orgf412dc8">Convert binary to utf8</a></h3>
+<div class="outline-text-3" id="text-orgf412dc8">
+<p>
+Byte strings can only be ASCII. For example, this works:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #dcaeea;">foo</span>=b<span style="color: #98be65;">"foo"</span>
+</pre>
+</div>
+
+<p>
+But this does not:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #dcaeea;">bar</span>=b<span style="color: #98be65;">"&#1054;&#1060;&#1048;&#1057;"</span>
+</pre>
+</div>
+
+<p>
+ASCII and "binary" are really the same&#x2026; there isn't really any encoding or
+decoding going on.
+</p>
+
+<p>
+So what's going on here?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #dcaeea;">foo</span> = b<span style="color: #98be65;">"foo"</span>
+<span style="color: #51afef;">return</span> foo.decode(<span style="color: #98be65;">"ascii"</span>)
+</pre>
+</div>
+
+<pre class="example">
+foo
+</pre>
+
+
+<p>
+I <b>think</b> what's going on is: We attempt to decode <code>foo</code> using the ASCII codec.
+The result is a sequence of ASCII numbers. Python then tries to show us the
+result, and it looks like a string, so Python interprets it as unicode code
+points (?)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #dcaeea;">bar</span>=<span style="color: #98be65;">"&#1054;&#1060;&#1048;&#1057;"</span>
+<span style="color: #51afef;">return</span> bar.encode(<span style="color: #98be65;">"utf-8"</span>)
+</pre>
+</div>
+
+<pre class="example">
+b'\xd0\x9e\xd0\xa4\xd0\x98\xd0\xa1'
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org451d718" class="outline-2">
+<h2 id="org451d718"><a href="#org451d718">Random String</a></h2>
+<div class="outline-text-2" id="text-org451d718">
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #51afef;">import</span> random
+<span style="color: #51afef;">import</span> string
+<span style="color: #51afef;">return</span> <span style="color: #98be65;">""</span>.join(random.choice(string.ascii_letters) <span style="color: #51afef;">for</span> _ <span style="color: #51afef;">in</span> <span style="color: #c678dd;">range</span>(8))
+</pre>
+</div>
+
+<pre class="example">
+knMyinMG
+</pre>
+</div>
+</div>
+</div>
+</body>
+</html>
