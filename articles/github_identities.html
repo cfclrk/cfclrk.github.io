@@ -26,13 +26,19 @@
   </ul>
 </nav>
 </div>
-<div id="content">
+<div id="content" class="content">
 <header>
 <h1 class="title">Multiple GitHub Accounts</h1>
 </header><nav id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
+<li><a href="#org08dba1e">The Problem</a>
+<ul>
+<li><a href="#org9742331">Current Solution</a></li>
+<li><a href="#orgde06d66">Unsolved</a></li>
+</ul>
+</li>
 <li><a href="#org0590ed1">The git config</a>
 <ul>
 <li><a href="#url-rewriting">More About Git URL Rewriting</a></li>
@@ -46,15 +52,41 @@
 </ul>
 </div>
 </nav>
+
+<div id="outline-container-org08dba1e" class="outline-2">
+<h2 id="org08dba1e"><a href="#org08dba1e">The Problem</a></h2>
+<div class="outline-text-2" id="text-org08dba1e">
 <p>
 <b><i>The Problem</i></b>: You have multiple GitHub accounts, and you want to git to
-automatically use a particular account depending on the local directory a
-project is in.
+automatically use a particular account depending on the directory a project is
+in.
+</p>
+</div>
+
+<div id="outline-container-org9742331" class="outline-3">
+<h3 id="org9742331"><a href="#org9742331">Current Solution</a></h3>
+<div class="outline-text-3" id="text-org9742331">
+<p>
+In this article I use two GitHub accounts: <b>work</b> and <b>home</b>, but the idea
+supports any number of accounts. I set things up so that:
 </p>
 
+<ul class="org-ul">
+<li>Projects in <code>~/work/</code> use the <b>work</b> GitHub account</li>
+<li>Projects in <code>~/projects/</code> use the <b>home</b> GitHub account</li>
+</ul>
+
 <p>
-In this article I use two GitHub accounts: <b>work</b> and <b>home</b> (but the idea
-supports any number of accounts). I set things up so that:
+One directory cannot contain the other.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgde06d66" class="outline-3">
+<h3 id="orgde06d66"><a href="#orgde06d66">Unsolved</a></h3>
+<div class="outline-text-3" id="text-orgde06d66">
+<p>
+It would be <i>awesome</i> to set things up so that:
 </p>
 
 <ul class="org-ul">
@@ -63,9 +95,13 @@ supports any number of accounts). I set things up so that:
 </ul>
 
 <p>
-This is all just git and ssh configuration; no editor-specific configuration
-should be required (since editors should be shelling out to git anyway).
+Unfortunately I have not found a way to get that working (have you? <a href="https://cfclrk.github.io/">Contact</a>
+me!). The problem that I have been unable to get around is with git URL
+rewriting:
 </p>
+</div>
+</div>
+</div>
 
 <div id="outline-container-org0590ed1" class="outline-2">
 <h2 id="org0590ed1"><a href="#org0590ed1">The git config</a></h2>
@@ -91,7 +127,7 @@ File: <code>~/.config/git/config</code>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-gitconfig">[<span style="color: #ECBE7B;">includeIf</span> <span style="color: #c678dd;">"gitdir:/"</span>]
+<pre class="src src-gitconfig">[<span style="color: #ECBE7B;">includeIf</span> <span style="color: #c678dd;">"gitdir:~/home/"</span>]
     <span style="color: #dcaeea;">path</span> = home.gitconfig
 [<span style="color: #ECBE7B;">includeIf</span> <span style="color: #c678dd;">"gitdir:~/work/"</span>]
     <span style="color: #dcaeea;">path</span> = work.gitconfig
@@ -212,15 +248,24 @@ and in your SSH config (as explained in the section <a href="#the-ssh-config">Th
 <h3 id="config-loading"><a href="#config-loading">More About Git Config Loading</a></h3>
 <div class="outline-text-3" id="text-config-loading">
 <p>
-Git loads <i>all</i> applicable config files. When a single option is set multiple
-times from multiple files, the last value loaded wins.
+Git loads <i>all</i> applicable config files. If a single option is set multiple
+times (potentially form differnt files), the last value wins.
 </p>
 
 <p>
-For example: say you have the git config specified above, and you are
-currently in a git repository located at <code>~/work/projectA/</code>. Git first loads
-the <code>~/.config/git/config</code> file and expands all of the <code>[includeIf]</code>
-statements.
+For example: say you try <code>~/.config/git/config</code> like this.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-gitconfig">[<span style="color: #ECBE7B;">includeIf</span> <span style="color: #c678dd;">"gitdir:/"</span>]
+    <span style="color: #dcaeea;">path</span> = home.gitconfig
+[<span style="color: #ECBE7B;">includeIf</span> <span style="color: #c678dd;">"gitdir:~/work/"</span>]
+    <span style="color: #dcaeea;">path</span> = work.gitconfig
+</pre>
+</div>
+
+<p>
+Now you run a git command in a project located at: <code>~/work/projectA/</code>.
 </p>
 
 <ul class="org-ul">
@@ -249,9 +294,19 @@ directives in order from <i>most general</i> to <i>most specific</i>.
 </p>
 
 <p>
+🛑 <b>Problem</b> The above configuration heirarchy plays out nicely for for the
+<code>user.email</code> option. However, it does not seem to work for URL-rewriting
+rules. In the above example, if the <code>home.gitconfig</code> performs URL-rewriting,
+it seems like the <code>work.gitconfig</code> cannot overwrite those URLs (at least, I
+haven't found a way). For this reason, I haven't been able to create a git
+configuration that uses my work account in my <code>~/work</code> directory and my home
+account in all other directories.
+</p>
+
+<p>
 <i>Aside</i>: The value of <code>user.email</code> is the only piece of information GitHub
 uses when determining what profile picture to display next to a commit. You
-can set that email address to anything! Set it to
+can set that email address to anything! E.g. set it to
 <code>torvalds@linux-foundation.org</code>, and GitHub will happily put Linus Torvalds'
 picture next to your git commits. And to be sure, <a href="https://news.ycombinator.com/item?id=10005577">that happens</a>. You can
 <i>partially</i> mitigate this problem of attribution by using <a href="https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work">signed commits</a>, as
@@ -272,7 +327,7 @@ for both accounts, I've tried). Assuming you've <a href="https://docs.github.com
 directory looks something like:
 </p>
 
-<pre class="example" id="org4d7ac43">
+<pre class="example" id="org4f80b10">
 $ tree ~/.ssh/
 /Users/cfclrk/.ssh/
 ├── config
