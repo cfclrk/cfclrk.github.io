@@ -107,15 +107,6 @@ situation where several URL-rewriting rules apply. More about that in the
 <h2 id="org0590ed1"><a href="#org0590ed1">The git config</a></h2>
 <div class="outline-text-2" id="text-org0590ed1">
 <p>
-The git configuration must do two things:
-</p>
-
-<ol class="org-ol">
-<li>Perform git URL-rewriting with <a href="https://git-scm.com/docs/git-config#Documentation/git-config.txt-urlltbasegtinsteadOf">insteadOf</a>, which will allow SSH to properly
-associate SSH keys with GitHub accounts.</li>
-</ol>
-
-<p>
 First, tell git to use different git configurations depending on the directory
 a project is in. Git supports this with the <a href="https://git-scm.com/docs/git-config#_conditional_includes">includeIf</a> directive.
 </p>
@@ -325,7 +316,7 @@ you to use the same SSH key for both accounts, I've tried). Assuming you've
 <a href="https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh">created</a> those, your <code>~/.ssh</code> directory looks something like:
 </p>
 
-<pre class="example" id="org9944a80">
+<pre class="example" id="org10057fe">
 $ tree ~/.ssh/
 /Users/cfclrk/.ssh/
 ├── config
