@@ -51,7 +51,7 @@ body {
   margin: 0;
   padding: 0;
   font-size: 1.4rem;
-  line-height: 1.8rem;
+  line-height: 1.9rem;
   background-color: #282c34;
   color: #bbc2cf;
   font-family: "EB Garamond", serif;
@@ -110,9 +110,8 @@ b, i {
   color: #DFDFDF;
 }
 
-img {
-  display: block;
-  margin: auto;
+textarea {
+  overflow-x: auto;
 }
 
 #navbar {
@@ -138,12 +137,33 @@ img {
 
 #content {
   max-width: 1400px;
-  margin: 1rem 3rem 1rem 5rem;
-  margin-bottom: 3rem;
+  margin: 0rem 5rem 0rem 5rem;
 }
 
+@media screen and (max-width: 900px) {
+  #content {
+    margin: 0rem 1rem 0rem 1rem;
+  }
+}
 p.verse {
   margin-left: 3%;
+}
+
+img {
+  display: block;
+  margin: auto;
+}
+
+.figure {
+  padding: 1em;
+}
+
+.figure p {
+  text-align: center;
+}
+
+.org-svg {
+  width: 90%;
 }
 
 code {
@@ -159,6 +179,10 @@ pre {
   margin-left: auto;
   margin-right: auto;
   line-height: 1.4rem;
+}
+
+.code-highlighted {
+  background-color: #ffff00;
 }
 
 table {
@@ -213,14 +237,6 @@ dt {
   margin-bottom: 1em;
 }
 
-.figure {
-  padding: 1em;
-}
-
-.figure p {
-  text-align: center;
-}
-
 .equation-container {
   display: table;
   text-align: center;
@@ -250,20 +266,8 @@ dt {
   white-space: nowrap;
 }
 
-textarea {
-  overflow-x: auto;
-}
-
 .linenr {
   font-size: smaller;
-}
-
-.code-highlighted {
-  background-color: #ffff00;
-}
-
-.org-svg {
-  width: 90%;
 }
 
 /*# sourceMappingURL=main.css.map */

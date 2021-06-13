@@ -6,3 +6,8 @@
   #+begin_src sh
     serve .
   #+end_src
+
+* TODO
+
+  - [ ] Add documentatation to this README
+  - [ ] Exclude README.org from HTML export (from site project?)
