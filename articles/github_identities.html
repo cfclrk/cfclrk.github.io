@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Multiple GitHub Accounts</title>
+<title>Git/SSH Config For Multiple GitHub Accounts</title>
 <meta name="generator" content="Org Mode" />
 <link rel="stylesheet" type="text/css" href="/static/main.css" />
 </head>
@@ -28,15 +28,15 @@
 </div>
 <div id="content" class="content">
 <header>
-<h1 class="title">Multiple GitHub Accounts</h1>
+<h1 class="title">Git/SSH Config For Multiple GitHub Accounts</h1>
 </header><nav id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
 <li><a href="#org08dba1e">The Problem</a>
 <ul>
-<li><a href="#org5b43633">My Current Solution</a></li>
-<li><a href="#orgeb0bcfa">Still Unsolved</a></li>
+<li><a href="#org16464af">Current Solution</a></li>
+<li><a href="#org3634f22">Unsolved</a></li>
 </ul>
 </li>
 <li><a href="#org0590ed1">The git config</a>
@@ -47,7 +47,6 @@
 </li>
 <li><a href="#the-ssh-config">The SSH Config</a></li>
 <li><a href="#signed-commits">Signed Commits</a></li>
-<li><a href="#orgef631d7">Emacs</a></li>
 <li><a href="#orga43e9ab">Resources</a></li>
 </ul>
 </div>
@@ -57,21 +56,21 @@
 <h2 id="org08dba1e"><a href="#org08dba1e">The Problem</a></h2>
 <div class="outline-text-2" id="text-org08dba1e">
 <p>
-You have multiple GitHub accounts, and you want to git to automatically use a
-particular account depending on the directory a project is in.
+You have multiple GitHub accounts, and you want to git to automatically
+push/pull to the correct GitHub account for each local project.
 </p>
 </div>
 
-<div id="outline-container-org5b43633" class="outline-3">
-<h3 id="org5b43633"><a href="#org5b43633">My Current Solution</a></h3>
-<div class="outline-text-3" id="text-org5b43633">
+<div id="outline-container-org16464af" class="outline-3">
+<h3 id="org16464af"><a href="#org16464af">Current Solution</a></h3>
+<div class="outline-text-3" id="text-org16464af">
 <p>
 In this article I set things up so that:
 </p>
 
 <ul class="org-ul">
-<li>Projects in <code>~/work/</code> use the <b>work</b> GitHub account</li>
-<li>Projects in <code>~/projects/</code> use the <b>home</b> GitHub account</li>
+<li>Projects in your <code>~/work/</code> directory use the <b>work</b> GitHub account</li>
+<li>Projects in your <code>~/projects/</code> directory use the <b>home</b> GitHub account</li>
 </ul>
 
 <p>
@@ -81,23 +80,23 @@ One directory cannot contain the other. I use two GitHub accounts: <b>work</b> a
 </div>
 </div>
 
-<div id="outline-container-orgeb0bcfa" class="outline-3">
-<h3 id="orgeb0bcfa"><a href="#orgeb0bcfa">Still Unsolved</a></h3>
-<div class="outline-text-3" id="text-orgeb0bcfa">
+<div id="outline-container-org3634f22" class="outline-3">
+<h3 id="org3634f22"><a href="#org3634f22">Unsolved</a></h3>
+<div class="outline-text-3" id="text-org3634f22">
 <p>
-It would be <i>awesome</i> to set things up so that:
+What happens when you clone a repo to <code>~/some_other_dir</code>? You have to re-do
+the steps in this article for that directory. What I <i>really want</i> is a
+setup that does this:
 </p>
 
 <ul class="org-ul">
-<li>Projects in <code>~/work/</code> use the <b>work</b> GitHub account</li>
+<li>Projects in <code>~/work/</code> and <code>~/go</code> use the <b>work</b> GitHub account</li>
 <li>Projects elsewhere use the <b>home</b> GitHub account</li>
 </ul>
 
 <p>
-Unfortunately I have not found a way to make that work (have you? <a href="https://cfclrk.github.io/">Contact</a>
-me!). Specifically, I have not found how to make git URL-rewriting work in a
-situation where several URL-rewriting rules apply. More about that in the
-<a href="#config-loading">More About Git Config Loading</a> section.
+Unfortunately, I haven't gotten that working yet (have you? <a href="https://cfclrk.github.io/">Contact</a> me!).
+More about that in the <a href="#config-loading">More About Git Config Loading</a> section.
 </p>
 </div>
 </div>
@@ -116,7 +115,7 @@ File: <code>~/.config/git/config</code>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-gitconfig">[<span style="color: #ECBE7B;">includeIf</span> <span style="color: #c678dd;">"gitdir:~/home/"</span>]
+<pre class="src src-gitconfig">[<span style="color: #ECBE7B;">includeIf</span> <span style="color: #c678dd;">"gitdir:~/projects/"</span>]
     <span style="color: #dcaeea;">path</span> = home.gitconfig
 [<span style="color: #ECBE7B;">includeIf</span> <span style="color: #c678dd;">"gitdir:~/work/"</span>]
     <span style="color: #dcaeea;">path</span> = work.gitconfig
@@ -176,7 +175,7 @@ To take a closer look at what this <a href="https://git-scm.com/docs/git-config#
 </div>
 
 <p>
-Here I've said: "Mr. Git, any time you see a URL that starts with
+Here we've said: "Mr. Git, any time you see a URL that starts with
 <code>git@github.com</code>, please just pretend like the URL actually starts with
 <code>git@github-home</code>".
 </p>
@@ -200,8 +199,8 @@ writing this article. If I just <code>cat</code> the git config file in my local
 
 
 <p>
-But when I use a <code>git</code> command (like <code>git remote</code>) to view that value, I see
-the <i>rewritten</i> URL:
+But when I use a <code>git</code> command (like <code>git remote</code>) to view that same value, I
+see the <i>rewritten</i> URL:
 </p>
 
 <div class="org-src-container">
@@ -218,9 +217,10 @@ origin	git@github-home:cfclrk/articles.git (push)
 <p>
 All git commands will see this rewritten form. The rewritten form is
 determined by whatever git config file was loaded when the <code>git</code> command was
-run. If we were to simply move this project out of the <code>~/home/</code> directory, a
-different git config file would be loaded, different URL-rewriting rules
-would apply, and <code>git remote -v</code> would show a different URL.
+run. If we were to simply move this project out of the <code>~/projects/</code>
+directory, a different git config file would be loaded, different
+URL-rewriting rules would apply, and <code>git remote -v</code> would show a different
+URL.
 </p>
 
 <p>
@@ -278,18 +278,18 @@ wins</i>.
 </p>
 
 <p>
-So, when you define multiple <code>includeIf</code> directives, you must specify the
+So, when you define multiple <code>includeIf</code> directives, you should specify the
 directives in order from <i>most general</i> to <i>most specific</i>.
 </p>
 
 <p>
-🛑 <b>Problem</b> The above configuration heirarchy plays out nicely for for the
-<code>user.email</code> option. However, it does not seem to work for URL-rewriting
-rules. In the above example, if the <code>home.gitconfig</code> performs URL-rewriting,
-it seems like the <code>work.gitconfig</code> cannot overwrite those same URLs (at
-least, I haven't found a way). For this reason, I haven't been able to create
-a git configuration that uses my work account in my <code>~/work</code> directory and my
-home account in all other directories.
+🛑 <b>Problem</b> The above configuration heirarchy works for the <code>user.email</code>
+option. However, it does not seem to work for URL-rewriting rules. In the
+above example, if the <code>home.gitconfig</code> performs URL-rewriting, it seems like
+the <code>work.gitconfig</code> cannot overwrite those same URLs (at least, I haven't
+found a way). For this reason, I haven't been able to create a git
+configuration that uses my work account in my <code>~/work</code> directory and my home
+account in all other directories.
 </p>
 
 <p>
@@ -316,7 +316,7 @@ you to use the same SSH key for both accounts, I've tried). Assuming you've
 <a href="https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh">created</a> those, your <code>~/.ssh</code> directory looks something like:
 </p>
 
-<pre class="example" id="org10057fe">
+<pre class="example" id="org0dce366">
 $ tree ~/.ssh/
 /Users/cfclrk/.ssh/
 ├── config
@@ -389,20 +389,6 @@ TODO: I haven't actually set this up with one (let alone two!) accounts.
 If you have a setup to automatically sign commits when using multiple GitHub
 accounts (with different email addresses) let me know!
 </p>
-</div>
-</div>
-
-<div id="outline-container-orgef631d7" class="outline-2">
-<h2 id="orgef631d7"><a href="#orgef631d7">Emacs</a></h2>
-<div class="outline-text-2" id="text-orgef631d7">
-<p>
-Some extra notes about Emacs.
-</p>
-
-<ul class="org-ul">
-<li>Use gitconfig mode in <code>home.gitconfig</code> and <code>work.gitconfig</code></li>
-<li>Configure Forge using <code>[github.user]</code></li>
-</ul>
 </div>
 </div>
 
