@@ -1,5 +1,4 @@
-#+TITLE: ALB with Lambda Function
-#+AUTHOR: Chris Clark
+#+TITLE: ALB with a Lambda Target
 #+setupfile: ../setup.org
 
 * Overview
@@ -32,8 +31,8 @@ is part of.
 
 #+begin_src yaml
   DeploymentName:
-    Description: A name for this deployment
     Type: String
+    Description: A name for this deployment
 #+end_src
 
 * Resources
@@ -163,7 +162,7 @@ Outputs:
 
 * Testing
 
-Show how to curl the ALB.
+Send an HTTP GET request to the ALB.
 
 #+begin_src sh
   alb=$(aws cloudformation list-exports \

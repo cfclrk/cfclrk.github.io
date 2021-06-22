@@ -44,6 +44,7 @@
 <li><a href="#org56bfd7d">Require zip of github repo</a></li>
 <li><a href="#orgdc153c0">Strings</a>
 <ul>
+<li><a href="#org13186af">Unicode</a></li>
 <li><a href="#orgf412dc8">Convert binary to utf8</a></li>
 </ul>
 </li>
@@ -106,7 +107,7 @@ Print summary of sys.path and some other stuff
 or interactively in a python interpreter:
 </p>
 
-<pre class="example" id="org7745014">
+<pre class="example" id="org805bced">
 &gt;&gt;&gt; import site
 &gt;&gt;&gt; site._script()
 </pre>
@@ -204,6 +205,34 @@ e.g. see:
 <h2 id="orgdc153c0"><a href="#orgdc153c0">Strings</a></h2>
 <div class="outline-text-2" id="text-orgdc153c0">
 </div>
+<div id="outline-container-org13186af" class="outline-3">
+<h3 id="org13186af"><a href="#org13186af">Unicode</a></h3>
+<div class="outline-text-3" id="text-org13186af">
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #51afef;">return</span> <span style="color: #c678dd;">len</span>(<span style="color: #98be65;">"&#128514;"</span>)
+</pre>
+</div>
+
+<pre class="example">
+1
+</pre>
+
+
+<p>
+From: <a href="https://hsivonen.fi/string-length/">https://hsivonen.fi/string-length/</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #51afef;">return</span> <span style="color: #c678dd;">len</span>(<span style="color: #98be65;">"&#129318;&#127996;&#8205;&#9794;&#65039;"</span>)
+</pre>
+</div>
+
+<pre class="example">
+5
+</pre>
+</div>
+</div>
+
 <div id="outline-container-orgf412dc8" class="outline-3">
 <h3 id="orgf412dc8"><a href="#orgf412dc8">Convert binary to utf8</a></h3>
 <div class="outline-text-3" id="text-orgf412dc8">

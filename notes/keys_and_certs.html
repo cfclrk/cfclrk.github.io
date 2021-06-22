@@ -306,8 +306,8 @@ practice I'm not sure of any examples where that actually happens.
 <div class="org-src-container">
 <pre class="src src-sh">openssl x509 -req <span style="color: #98be65;">\</span>
         -in client.csr <span style="color: #98be65;">\</span>
-        -CA ca.crt <span style="color: #98be65;">\</span>
-        -CAkey ca.key <span style="color: #98be65;">\</span>
+        -CA $<span style="color: #dcaeea;">CACertFile</span> <span style="color: #98be65;">\</span>
+        -CAkey $<span style="color: #dcaeea;">CAKeyFile</span> <span style="color: #98be65;">\</span>
         -CAcreateserial <span style="color: #98be65;">\</span>
         -out client.crt <span style="color: #98be65;">\</span>
         -days 3650 <span style="color: #98be65;">\</span>

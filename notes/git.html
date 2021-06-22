@@ -68,11 +68,18 @@
 <h3 id="org5f4592a"><a href="#org5f4592a">Commit to Wrong Branch</a></h3>
 <div class="outline-text-3" id="text-org5f4592a">
 <p>
-You commit to master instead of develop, and haven't pushed changes yet.
+You committed to main instead of develop, but haven't pushed changes yet.
 </p>
 
+<ul class="org-ul">
+<li>Soft-reset main back to origin/develop</li>
+<li>The committed changes will now be staged</li>
+<li>Switch to develop branch</li>
+<li>Commit staged changes</li>
+</ul>
+
 <div class="org-src-container">
-<pre class="src src-sh">git reset --soft ^HEAD
+<pre class="src src-sh">git reset --soft origin/develop
 </pre>
 </div>
 </div>
@@ -82,13 +89,12 @@ You commit to master instead of develop, and haven't pushed changes yet.
 <h3 id="org9237b2d"><a href="#org9237b2d">Rebase</a></h3>
 <div class="outline-text-3" id="text-org9237b2d">
 <p>
-You rebased without remembering that the branch you were on has already been
-pushed to a remote repo.
+You rebased, and then remembered that the branch you were on has already been
+pushed to a remote repo. You shouldn't push this rebase!
 </p>
 
 <ul class="org-ul">
-<li>You need to return the current branch to where it was before the rebase.
-Then, merge dev into the current branch. (example?)</li>
+<li>You need to return the current branch to where it was before the rebase.</li>
 </ul>
 </div>
 </div>

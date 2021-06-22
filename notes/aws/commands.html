@@ -33,7 +33,7 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgecb4d37">Account</a></li>
+<li><a href="#org4a73113">Account</a></li>
 <li><a href="#org68e07f2">IP Address Ranges</a>
 <ul>
 <li><a href="#orga19ac76">Get Region of IP</a></li>
@@ -64,7 +64,8 @@
 <li><a href="#org9b8dc57">Create Stack</a></li>
 <li><a href="#orgf3bf287">View Stack Log</a></li>
 <li><a href="#orgd962121">List Stacks</a></li>
-<li><a href="#org538a22c">Describe Stack Outputs</a></li>
+<li><a href="#org5146699">Stack Outputs</a></li>
+<li><a href="#org94a8b59">Stack Parameters</a></li>
 <li><a href="#org938e599">Exports</a></li>
 <li><a href="#org2af8b72">Spec Files</a></li>
 </ul>
@@ -92,7 +93,7 @@
 </li>
 <li><a href="#org7d82d3e">EC2 Instances</a>
 <ul>
-<li><a href="#org76292c3">Describe running EC2 instances</a></li>
+<li><a href="#orgd729903">Running Instances</a></li>
 <li><a href="#orgdecfa38">All Instance Tags</a></li>
 <li><a href="#org6cf632e">Instances with Tag</a></li>
 </ul>
@@ -145,7 +146,8 @@
 <ul>
 <li><a href="#org6ffebc7">Create Policy</a></li>
 <li><a href="#org8f56945">Assume Role</a></li>
-<li><a href="#orgb9e4536">Delete IAM Instance Profile</a></li>
+<li><a href="#org80e5834">List Instance Profiles</a></li>
+<li><a href="#org17dbb05">Delete Instance Profile</a></li>
 </ul>
 </li>
 <li><a href="#org318ac70">IMDS</a></li>
@@ -221,15 +223,15 @@
 </div>
 </nav>
 
-<div id="outline-container-orgecb4d37" class="outline-2">
-<h2 id="orgecb4d37"><a href="#orgecb4d37">Account</a></h2>
-<div class="outline-text-2" id="text-orgecb4d37">
+<div id="outline-container-org4a73113" class="outline-2">
+<h2 id="org4a73113"><a href="#org4a73113">Account</a></h2>
+<div class="outline-text-2" id="text-org4a73113">
 <p>
 Account number:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="org58b0c5c">aws sts get-caller-identity --query <span style="color: #98be65;">'Account'</span> --output text
+<pre class="src src-sh" id="orgecb4d37">aws sts get-caller-identity --query <span style="color: #98be65;">'Account'</span> --output text
 </pre>
 </div>
 </div>
@@ -284,7 +286,7 @@ See: <a href="https://unix.stackexchange.com/questions/274330/check-ip-is-in-ran
 </pre>
 </div>
 
-<pre class="example" id="org4d0d5af">
+<pre class="example" id="org758f17f">
 eu-north-1
 ap-south-1
 eu-west-3
@@ -336,7 +338,7 @@ document. You have to decide whether "GLOBAL" is a "region" in your situation.
 </pre>
 </div>
 
-<pre class="example" id="org1473723">
+<pre class="example" id="orga690c39">
 GLOBAL
 af-south-1
 ap-east-1
@@ -387,7 +389,7 @@ Get the number of VPCs in each region the slow and simple way.
 </pre>
 </div>
 
-<pre class="example" id="org70fa776">
+<pre class="example" id="org9d483a4">
 eu-north-1: 0
 ap-south-1: 0
 eu-west-3: 0
@@ -424,7 +426,7 @@ syntax for th length of the <code>$regions</code> array.
 </pre>
 </div>
 
-<pre class="example" id="org152b233">
+<pre class="example" id="orge47b1a8">
 us-east-1: 2
 ca-central-1: 0
 us-east-2: 2
@@ -554,13 +556,48 @@ List only the created stacks
 </div>
 </div>
 
-<div id="outline-container-org538a22c" class="outline-3">
-<h3 id="org538a22c"><a href="#org538a22c">Describe Stack Outputs</a></h3>
-<div class="outline-text-3" id="text-org538a22c">
+<div id="outline-container-org5146699" class="outline-3">
+<h3 id="org5146699"><a href="#org5146699">Stack Outputs</a></h3>
+<div class="outline-text-3" id="text-org5146699">
 <div class="org-src-container">
 <pre class="src src-sh">aws cloudformation describe-stacks <span style="color: #98be65;">\</span>
     --stack-name $<span style="color: #dcaeea;">StackName</span> <span style="color: #98be65;">\</span>
-    --query <span style="color: #98be65;">"Stacks[0].Outputs[?OutputKey=='PublicIP'].OutputValue"</span> <span style="color: #98be65;">\</span>
+   | jq <span style="color: #98be65;">'.Stacks[].Outputs[]'</span>
+</pre>
+</div>
+
+<p>
+Get the value of a single output:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">aws cloudformation describe-stacks <span style="color: #98be65;">\</span>
+    --stack-name $<span style="color: #dcaeea;">StackName</span> <span style="color: #98be65;">\</span>
+    --query <span style="color: #98be65;">"Stacks[0].Outputs[?OutputKey=='$OutputKey'].OutputValue"</span> <span style="color: #98be65;">\</span>
+    --output text
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org94a8b59" class="outline-3">
+<h3 id="org94a8b59"><a href="#org94a8b59">Stack Parameters</a></h3>
+<div class="outline-text-3" id="text-org94a8b59">
+<div class="org-src-container">
+<pre class="src src-sh">aws cloudformation describe-stacks <span style="color: #98be65;">\</span>
+    --stack-name $<span style="color: #dcaeea;">StackName</span> <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.Stacks[].Parameters[]'</span>
+</pre>
+</div>
+
+<p>
+Get the value of a single parameter:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">aws cloudformation describe-stacks <span style="color: #98be65;">\</span>
+    --stack-name $<span style="color: #dcaeea;">StackName</span> <span style="color: #98be65;">\</span>
+    --query <span style="color: #98be65;">"Stacks[0].Parameters[?ParameterKey=='$Parameter'].ParameterValue"</span> <span style="color: #98be65;">\</span>
     --output text
 </pre>
 </div>
@@ -572,7 +609,7 @@ List only the created stacks
 <div class="outline-text-3" id="text-org938e599">
 <div class="org-src-container">
 <pre class="src src-sh">aws cloudformation list-exports <span style="color: #98be65;">\</span>
-    --query <span style="color: #98be65;">"Exports[?Name=='cf-ALB'].Value"</span> <span style="color: #98be65;">\</span>
+    --query <span style="color: #98be65;">"Exports[?Name=='$ExportName'].Value"</span> <span style="color: #98be65;">\</span>
     --output text
 </pre>
 </div>
@@ -636,7 +673,24 @@ Spec files are documented <a href="https://docs.aws.amazon.com/AWSCloudFormation
 <div id="outline-container-orga305ce9" class="outline-2">
 <h2 id="orga305ce9"><a href="#orga305ce9">DynamoDB</a></h2>
 <div class="outline-text-2" id="text-orga305ce9">
+<p>
+The paper: <a href="https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf">Dynamo: Amazon’s Highly Available Key-value Store</a>. This describes a
+distributed database with a leaderless replication model.
+</p>
+
+<p>
+From <a href="https://shop.aer.io/oreilly/p/designing-data-intensive-applications/9781449373320-9149">Designing Data-Intensive Applications</a> by Martin Kleppmann:
+</p>
+
+<blockquote>
+<p>
+Dynamo is not available to users outside of Amazon. Confusingly, AWS offers a
+hosted database product called DynamoDB, which uses a completely different
+architecture: it is based on single-leader replication.
+</p>
+</blockquote>
 </div>
+
 <div id="outline-container-org2ab650a" class="outline-3">
 <h3 id="org2ab650a"><a href="#org2ab650a">Create table with local secondary index</a></h3>
 <div class="outline-text-3" id="text-org2ab650a">
@@ -770,9 +824,9 @@ And then&#x2026; what did I do?
 <h2 id="org7d82d3e"><a href="#org7d82d3e">EC2 Instances</a></h2>
 <div class="outline-text-2" id="text-org7d82d3e">
 </div>
-<div id="outline-container-org76292c3" class="outline-3">
-<h3 id="org76292c3"><a href="#org76292c3">Describe running EC2 instances</a></h3>
-<div class="outline-text-3" id="text-org76292c3">
+<div id="outline-container-orgd729903" class="outline-3">
+<h3 id="orgd729903"><a href="#orgd729903">Running Instances</a></h3>
+<div class="outline-text-3" id="text-orgd729903">
 <div class="org-src-container">
 <pre class="src src-sh">aws ec2 describe-instances <span style="color: #98be65;">\</span>
     --query <span style="color: #98be65;">"Reservations[].Instances[?State.name=="</span>running<span style="color: #98be65;">"]"</span>
@@ -1047,13 +1101,15 @@ GlobalAccelerator is only in <code>us-west-2</code>, so set the region explicitl
 <h3 id="org6ffebc7"><a href="#org6ffebc7">Create Policy</a></h3>
 <div class="outline-text-3" id="text-org6ffebc7">
 <div class="org-src-container">
-<pre class="src src-sh">aws iam create-policy --policy-name nginx-deployment-policy --policy-document <span style="color: #98be65;">'{</span>
-<span style="color: #98be65;">    "Version": "2012-10-17",</span>
-<span style="color: #98be65;">    "Statement": [ {</span>
-<span style="color: #98be65;">        "Effect": "Allow",</span>
-<span style="color: #98be65;">        "Action": ["secretsmanager:GetSecretValue", "secretsmanager:DescribeSecret"],</span>
-<span style="color: #98be65;">        "Resource": ["arn:*:secretsmanager:*:*:secret:MySecret-??????"]</span>
-<span style="color: #98be65;">    } ]</span>
+<pre class="src src-sh">aws iam create-policy <span style="color: #98be65;">\</span>
+    --policy-name $<span style="color: #dcaeea;">PolicyName</span> <span style="color: #98be65;">\</span>
+    --policy-document <span style="color: #98be65;">'{</span>
+<span style="color: #98be65;">  "Version": "2012-10-17",</span>
+<span style="color: #98be65;">  "Statement": [{</span>
+<span style="color: #98be65;">    "Effect": "Allow",</span>
+<span style="color: #98be65;">    "Action": ["secretsmanager:GetSecretValue", "secretsmanager:DescribeSecret"],</span>
+<span style="color: #98be65;">    "Resource": ["arn:*:secretsmanager:*:*:secret:MySecret-??????"]</span>
+<span style="color: #98be65;">  }]</span>
 <span style="color: #98be65;">}'</span>
 </pre>
 </div>
@@ -1073,11 +1129,23 @@ GlobalAccelerator is only in <code>us-west-2</code>, so set the region explicitl
 </div>
 </div>
 
-<div id="outline-container-orgb9e4536" class="outline-3">
-<h3 id="orgb9e4536"><a href="#orgb9e4536">Delete IAM Instance Profile</a></h3>
-<div class="outline-text-3" id="text-orgb9e4536">
+<div id="outline-container-org80e5834" class="outline-3">
+<h3 id="org80e5834"><a href="#org80e5834">List Instance Profiles</a></h3>
+<div class="outline-text-3" id="text-org80e5834">
 <div class="org-src-container">
-<pre class="src src-sh">aws iam delete-instance-profile --instance-profile-name $<span style="color: #dcaeea;">name</span>
+<pre class="src src-sh">aws iam list-instance-profiles <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.InstanceProfiles[].InstanceProfileName'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org17dbb05" class="outline-3">
+<h3 id="org17dbb05"><a href="#org17dbb05">Delete Instance Profile</a></h3>
+<div class="outline-text-3" id="text-org17dbb05">
+<div class="org-src-container">
+<pre class="src src-sh">aws iam delete-instance-profile <span style="color: #98be65;">\</span>
+    --instance-profile-name $<span style="color: #dcaeea;">Name</span>
 </pre>
 </div>
 </div>
@@ -1369,13 +1437,6 @@ You can do this with <code>aws servicecatalog associate-principal-with-portfolio
     | jq <span style="color: #98be65;">'.Quotas[] | {QuotaName, Value}'</span>
 </pre>
 </div>
-
-<pre class="example">
-{
-  "QuotaName": "Delivery streams",
-  "Value": 50
-}
-</pre>
 </div>
 </div>
 

@@ -36,8 +36,13 @@
 <li><a href="#orge201c4a">Python</a>
 <ul>
 <li><a href="#org1180616">Goals</a></li>
-<li><a href="#org7578215">PATH</a></li>
+<li><a href="#orgf2b0ae2">Emacs installs pyright automatically</a></li>
+</ul>
+</li>
 <li><a href="#org6f91338">Questions</a></li>
+<li><a href="#orgaf7ab6b">Old Notes</a>
+<ul>
+<li><a href="#org7578215">PATH</a></li>
 </ul>
 </li>
 </ul>
@@ -61,6 +66,39 @@ different maximum line length.</li>
 <li>Each project can define its own linting rules (using say <code>pylint</code>).</li>
 </ul>
 </div>
+</div>
+
+<div id="outline-container-orgf2b0ae2" class="outline-3">
+<h3 id="orgf2b0ae2"><a href="#orgf2b0ae2">Emacs installs pyright automatically</a></h3>
+<div class="outline-text-3" id="text-orgf2b0ae2">
+<p>
+Emacs ran:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">/usr/local/bin/npm -g --prefix /Users/chris.clark/emacs/cfclrk/.cache/lsp/npm/pyright install pyright
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6f91338" class="outline-2">
+<h2 id="org6f91338"><a href="#org6f91338">Questions</a></h2>
+<div class="outline-text-2" id="text-org6f91338">
+<p>
+Is there a way to conditionally load either the black or yapf lsp plugins
+depending on project config?
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgaf7ab6b" class="outline-2">
+<h2 id="orgaf7ab6b"><a href="#orgaf7ab6b">Old Notes</a></h2>
+<div class="outline-text-2" id="text-orgaf7ab6b">
+<p>
+I don't use <code>pyls</code> anymore, I've switched to <code>pyright</code>.
+</p>
 </div>
 
 <div id="outline-container-org7578215" class="outline-3">
@@ -116,24 +154,6 @@ CAN I MAKE LSP use the versions of mypy and isort in the virtual environment?
 </pre>
 </div></li>
 </ol>
-</div>
-</div>
-
-<div id="outline-container-org6f91338" class="outline-3">
-<h3 id="org6f91338"><a href="#org6f91338">Questions</a></h3>
-<div class="outline-text-3" id="text-org6f91338">
-<p>
-Pyright or mypy?
-</p>
-
-<p>
-Is there a way to conditionally load either the black or yapf lsp plugins
-depending on project config?
-</p>
-
-<p>
-DNS tunneling, periodic beaconing, one other one
-</p>
 </div>
 </div>
 </div>

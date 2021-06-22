@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2021-06-22 Tue 10:38 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>&lrm;</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<nav id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgd80bfce">npm</a>
+<ul>
+<li><a href="#orgdc02049">Global Packages</a>
+<ul>
+<li><a href="#org64cc445">List</a></li>
+<li><a href="#org6ad3dd1">Delete Them All</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgd5928ac">yarn</a>
+<ul>
+<li><a href="#orgc21f586">Global Packages</a>
+<ul>
+<li><a href="#orgd5c3ec1">Install</a></li>
+<li><a href="#org84f01b3">List</a></li>
+<li><a href="#org35e7b83">Upgrade</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org5603328">Strings</a></li>
+</ul>
+</div>
+</nav>
+<div id="outline-container-orgd80bfce" class="outline-2">
+<h2 id="orgd80bfce"><a href="#orgd80bfce">npm</a></h2>
+<div class="outline-text-2" id="text-orgd80bfce">
+</div>
+<div id="outline-container-orgdc02049" class="outline-3">
+<h3 id="orgdc02049"><a href="#orgdc02049">Global Packages</a></h3>
+<div class="outline-text-3" id="text-orgdc02049">
+</div>
+<div id="outline-container-org64cc445" class="outline-4">
+<h4 id="org64cc445"><a href="#org64cc445">List</a></h4>
+<div class="outline-text-4" id="text-org64cc445">
+<div class="org-src-container">
+<pre class="src src-sh">npm -g list --depth 0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6ad3dd1" class="outline-4">
+<h4 id="org6ad3dd1"><a href="#org6ad3dd1">Delete Them All</a></h4>
+<div class="outline-text-4" id="text-org6ad3dd1">
+<div class="org-src-container">
+<pre class="src src-sh">npm list -gp --depth=0 <span style="color: #98be65;">\</span>
+    | awk -F/ <span style="color: #98be65;">'/node_modules/ &amp;&amp; !/\/npm$/ {print $NF}'</span> <span style="color: #98be65;">\</span>
+    | xargs npm -g uninstall
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd5928ac" class="outline-2">
+<h2 id="orgd5928ac"><a href="#orgd5928ac">yarn</a></h2>
+<div class="outline-text-2" id="text-orgd5928ac">
+</div>
+<div id="outline-container-orgc21f586" class="outline-3">
+<h3 id="orgc21f586"><a href="#orgc21f586">Global Packages</a></h3>
+<div class="outline-text-3" id="text-orgc21f586">
+<p>
+Global packages are installed to <code>$(yarn global dir)/node_modules/</code> and
+symlinks are placed in <code>$(yarn global bin)</code>.
+</p>
+</div>
+
+<div id="outline-container-orgd5c3ec1" class="outline-4">
+<h4 id="orgd5c3ec1"><a href="#orgd5c3ec1">Install</a></h4>
+<div class="outline-text-4" id="text-orgd5c3ec1">
+<div class="org-src-container">
+<pre class="src src-sh">yarn global add $<span style="color: #dcaeea;">package</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org84f01b3" class="outline-4">
+<h4 id="org84f01b3"><a href="#org84f01b3">List</a></h4>
+<div class="outline-text-4" id="text-org84f01b3">
+<div class="org-src-container">
+<pre class="src src-sh">yarn global list
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org35e7b83" class="outline-4">
+<h4 id="org35e7b83"><a href="#org35e7b83">Upgrade</a></h4>
+<div class="outline-text-4" id="text-org35e7b83">
+<div class="org-src-container">
+<pre class="src src-sh">yarn global upgrade $<span style="color: #dcaeea;">package</span> --latest
+</pre>
+</div>
+
+<p>
+Or to upgrade all global packages:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">yarn global upgrade
+</pre>
+</div>
+
+<p>
+Without <code>--latest</code>, yarn will respect semver specs in <code>$(yarn global
+    dir)/package.json</code>.
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5603328" class="outline-2">
+<h2 id="org5603328"><a href="#org5603328">Strings</a></h2>
+<div class="outline-text-2" id="text-org5603328">
+<div class="org-src-container">
+<pre class="src src-js"><span style="color: #51afef;">return</span> <span style="color: #98be65;">"&#128514;"</span>.length
+</pre>
+</div>
+
+<pre class="example">
+2
+</pre>
+
+
+<p>
+From: <a href="https://hsivonen.fi/string-length/">https://hsivonen.fi/string-length/</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #51afef;">return</span> <span style="color: #98be65;">"&#129318;&#127996;&#8205;&#9794;&#65039;"</span>.length
+</pre>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
