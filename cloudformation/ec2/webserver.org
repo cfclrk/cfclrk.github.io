@@ -1,0 +1,246 @@
+#+TITLE: Web Server
+#+setupfile: ../setup.org
+
+* Overview
+
+This CloudFormation template creates an EC2 instance running a web server.
+
+#+begin_src yaml
+AWSTemplateFormatVersion: 2010-09-09
+Description: An EC2 Instance
+#+end_src
+
+* Prerequisets
+
+- [[file:../network/public.org]] deployed with the same =DeploymentName=
+- An EC2 KeyPair in this region
+
+* Parameters
+
+#+begin_src yaml
+Parameters:
+#+end_src
+
+** DeploymentName
+
+A *deployment* is a complete deployed application, potentially comprised of many
+CloudFormation stacks. This is sometimes called an "environment", but that is an
+overloaded term. Use the =DeploymentName= to indicate which deployment a Stack
+is part of.
+
+#+begin_src yaml
+  DeploymentName:
+    Type: String
+    Description: A name for this deployment
+#+end_src
+
+** KeyName
+
+AWS does not provide a CloudFormation type for EC2 KeyPairs. This was a
+deliberate choice: a KeyPair consists of a public and private key, and AWS does
+not want to expose the private key in CloudFormation outputs.
+
+This is one example where Terraform has an advantage: since Terraform runs
+locally, it can create a KeyPair and save the private key locally.
+
+So, in CloudFormation, you have two options:
+
+1. Create the KeyPair beforehand. Then provide the =KeyName= to your
+   CloudFormation template as a parameter.
+2. Create the KeyPair using a CloudFormation Custom Resource (i.e. a Lambda
+   Function) in your CloudFormation template. The Custom Resource must save the
+   private key somewhere (like SecretsManager or SSM Parameter Store).
+
+#+begin_src yaml
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: The name of an EC2 KeyPair
+    Default: test
+#+end_src
+
+** BuiltArtifactBucketName
+
+#+begin_src yaml
+  BuildArtifactBucketName:
+    Type: String
+    Description: Name of the S3 bucket with build artifacts
+    Default: test-s3-bucket-bucket-1n9japign3xm7
+#+end_src
+
+* Mappings
+
+#+begin_src yaml
+Mappings:
+#+end_src
+
+Instance mapping
+
+#+begin_src yaml
+  RegionMap:
+    us-east-1:
+      AMI: ami-0aeeebd8d2ab47354
+    us-east-2:
+      AMI: ami-0d8d212151031f51c
+#+end_src
+
+* Resources
+
+#+begin_src yaml
+Resources:
+#+end_src
+
+** IAM
+
+The EC2 instance needs access to CloudWatch Logs and S3.
+
+*** Role
+
+#+begin_src yaml
+  InstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${DeploymentName}-InstanceRole"
+      Description: Allows EC2 instances to call AWS services
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: InstancePolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                  - logs:DescribeLogStreams
+                  - cloudformation:DescribeStackResource
+                  - cloudformation:SignalResource
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                Resource: !Sub "arn:aws:s3:::${BuildArtifactBucketName}/*"
+#+end_src
+
+*** Instance Profile
+
+#+begin_src yaml
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      InstanceProfileName: !Sub "${DeploymentName}-InstanceProfile"
+      Roles:
+        - !Ref InstanceRole
+#+end_src
+
+** Security Group
+
+#+begin_src yaml
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow HTTP and SSH
+      GroupName: !Sub "${DeploymentName}"
+      VpcId: {Fn::ImportValue: !Sub "${DeploymentName}-VpcId"}
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: !Sub "${DeploymentName}-instance"
+#+end_src
+
+** Instance
+
+#+begin_src yaml
+  Instance:
+    Type: AWS::EC2::Instance
+    Metadata:
+      AWS::CloudFormation::Authentication:
+        S3AccessCreds:
+          type: S3
+          buckets:
+            - !Sub "${BuildArtifactBucketName}"
+          roleName: !Ref InstanceRole
+      AWS::CloudFormation::Init:
+        config:
+          files:
+
+            # Config file for cfn-hup
+            /etc/cfn/cfn-hup.conf:
+              content: !Sub |
+                [main]
+                stack=${AWS::StackName}
+                region=${AWS::Region}
+                verbose=true
+                interval=3
+              mode: "000400"
+              owner: root
+              group: root
+
+            # Re-run cfn-init after every cloudformation update
+            /etc/cfn/hooks.d/cfn-auto-reloader.conf:
+              content: !Sub |
+                [cfn-auto-reloader-hook]
+                triggers=post.update
+                path=Resources.Instance.Metadata.AWS::CloudFormation::Init
+                action=/opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource Instance --region ${AWS::Region}
+                runas=root
+              mode: "000400"
+              owner: root
+              group: root
+
+            # TODO: Restart the web server after every cloudformation update
+
+            /home/ec2-user/go-webserver:
+              source: https://test-s3-bucket-bucket-1n9japign3xm7.s3.us-east-2.amazonaws.com/main/go-webserver-amd64
+              mode: "000755"
+              owner: root
+              group: root
+              authentication: S3AccessCreds
+    Properties:
+      IamInstanceProfile: !Sub "${DeploymentName}-InstanceProfile"
+      ImageId: !FindInMap [RegionMap, !Ref "AWS::Region", AMI]
+      InstanceType: t2.nano
+      KeyName: !Ref KeyName
+      SecurityGroupIds:
+        - !Ref SecurityGroup
+      # SsmAssociations:
+      #   - SsmAssociation
+      SubnetId: {Fn::ImportValue: !Sub "${DeploymentName}-PublicSubnet1"}
+      Tags:
+        - Key: Name
+          Value: !Sub "${DeploymentName}-instance"
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          yum install -y aws-cfn-bootstrap
+          # Run cfn-init which processes the AWS::CloudFormation::Init section
+          /opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource Instance --region ${AWS::Region}
+          # Start cfn-hup daemon, which checks Metadata every $interval and then
+          # performs actions in /etc/cfn/hooks.d/
+          #
+          # TODO: Should this be a systemd service? See:
+          # https://aws.amazon.com/premiumsupport/knowledge-center/install-cloudformation-scripts/
+          /opt/aws/bin/cfn-hup || error_exit "Failed to start cfn-hup"
+#+end_src
+
+* Outputs
+
+#+begin_src yaml
+Outputs:
+  PublicIP:
+    Description: Public IP of the EC2 instance
+    Value: !GetAtt Instance.PublicDnsName
+    Export:
+      Name: !Sub "${DeploymentName}-PublicIP"
+#+end_src

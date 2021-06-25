@@ -116,7 +116,7 @@ is part of.
 <h3 id="org0216283"><a href="#org0216283">KeyName</a></h3>
 <div class="outline-text-3" id="text-org0216283">
 <p>
-AWS does not provide a built-in CloudFormation type for EC2 KeyPairs. This was a
+AWS does not provide a CloudFormation type for EC2 KeyPairs. This was a
 deliberate choice: a KeyPair consists of a public and private key, and AWS does
 not want to expose the private key in CloudFormation outputs.
 </p>
@@ -131,17 +131,18 @@ So, in CloudFormation, you have two options:
 </p>
 
 <ol class="org-ol">
-<li>Create the EC2 KeyPair beforehand. Then, provide the existing <code>KeyName</code> to
-your CloudFormation template as a parameter.</li>
-<li>Define a CloudFormation Custom Resource (i.e. a Lambda Function) in your
-CloudFormation template. The Custom Resource could create the KeyPair and
-save the private key somewhere (like SecretsManager or SSM Parameter Store).</li>
+<li>Create the KeyPair beforehand. Then provide the <code>KeyName</code> to your
+CloudFormation template as a parameter.</li>
+<li>Create the KeyPair using a CloudFormation Custom Resource (i.e. a Lambda
+Function) in your CloudFormation template. The Custom Resource must save the
+private key somewhere (like SecretsManager or SSM Parameter Store).</li>
 </ol>
 
 <div class="org-src-container">
-<pre class="src src-yaml">  <span style="color: #dcaeea;">KeyPair</span>:
+<pre class="src src-yaml">  <span style="color: #dcaeea;">KeyName</span>:
     <span style="color: #dcaeea;">Type</span>: AWS::EC2::KeyPair::KeyName
     <span style="color: #dcaeea;">Description</span>: The name of an EC2 KeyPair
+    <span style="color: #dcaeea;">Default</span>: test
 </pre>
 </div>
 </div>
@@ -269,11 +270,11 @@ somehow.
         - <span style="color: #dcaeea;">IpProtocol</span>: tcp
           <span style="color: #dcaeea;">FromPort</span>: 80
           <span style="color: #dcaeea;">ToPort</span>: 80
-          <span style="color: #dcaeea;">CidrIp</span>: 67.23.104.250/32
+          <span style="color: #dcaeea;">CidrIp</span>: 0.0.0.0/0
         - <span style="color: #dcaeea;">IpProtocol</span>: tcp
           <span style="color: #dcaeea;">FromPort</span>: 22
           <span style="color: #dcaeea;">ToPort</span>: 22
-          <span style="color: #dcaeea;">CidrIp</span>: 67.23.104.250/32
+          <span style="color: #dcaeea;">CidrIp</span>: 0.0.0.0/0
       <span style="color: #dcaeea;">Tags</span>:
         - <span style="color: #dcaeea;">Key</span>: Name
           <span style="color: #dcaeea;">Value</span>: <span style="color: #ECBE7B;">!Sub</span> <span style="color: #98be65;">"${DeploymentName}-instance"</span>
@@ -290,18 +291,15 @@ somehow.
     <span style="color: #dcaeea;">Type</span>: AWS::EC2::Instance
     <span style="color: #dcaeea;">Properties</span>:
       <span style="color: #dcaeea;">IamInstanceProfile</span>: <span style="color: #ECBE7B;">!Sub</span> <span style="color: #98be65;">"${DeploymentName}-InstanceProfile"</span>
-      <span style="color: #dcaeea;">ImageId</span>: <span style="color: #ECBE7B;">!FindInMap</span> [RegionMap, <span style="color: #ECBE7B;">!Ref</span> AWS::Region, AMI]
+      <span style="color: #dcaeea;">ImageId</span>: Fn::FindInMap [RegionMap, <span style="color: #ECBE7B;">!Ref</span> AWS::Region, AMI]
       <span style="color: #dcaeea;">InstanceType</span>: t2.nano
       <span style="color: #dcaeea;">KeyName</span>: <span style="color: #ECBE7B;">!Ref</span> KeyName
       <span style="color: #dcaeea;">SecurityGroupIds</span>:
         - <span style="color: #ECBE7B;">!Ref</span> SecurityGroup
-      <span style="color: #5B6268;"># </span><span style="color: #5B6268;">SsmAssociations:</span>
-      <span style="color: #5B6268;">#   </span><span style="color: #5B6268;">- SsmAssociation</span>
       <span style="color: #dcaeea;">SubnetId</span>: {<span style="color: #dcaeea;">Fn::ImportValue</span>: <span style="color: #ECBE7B;">!Sub</span> <span style="color: #98be65;">"${DeploymentName}-PublicSubnet1"</span>}
       <span style="color: #dcaeea;">Tags</span>:
         - <span style="color: #dcaeea;">Key</span>: Name
           <span style="color: #dcaeea;">Value</span>: <span style="color: #ECBE7B;">!Sub</span> <span style="color: #98be65;">"${DeploymentName}-instance"</span>
-      <span style="color: #5B6268;"># </span><span style="color: #5B6268;">UserData: String</span>
 </pre>
 </div>
 </div>
