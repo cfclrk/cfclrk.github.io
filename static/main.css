@@ -47,6 +47,10 @@
   _display: inline;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -136,10 +140,38 @@ textarea {
 }
 
 #content {
-  max-width: 1200px;
-  margin: 0rem 5rem 0rem 5rem;
+  max-width: 1400px;
+  margin: 0rem 2rem 0rem 1rem;
+  display: inline-grid;
+  grid-template-columns: 360px 1fr;
+  grid-template-rows: auto [last-line];
+}
+#content #table-of-contents {
+  grid-column: 1;
+  grid-row: 1/last-line;
+  grid-row-start: span 20;
+  margin: 2rem 2rem 1rem 1rem;
+}
+#content :not(#table-of-contents) {
+  grid-column: 2;
 }
 
+@media screen and (max-width: 1200px) {
+  #content {
+    margin: 1rem;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+
+  #content > #table-of-contents {
+    grid-column: 1;
+    margin: 0rem;
+  }
+
+  #content > :not(#table-of-contents) {
+    grid-column: 1;
+  }
+}
 @media screen and (max-width: 900px) {
   #content {
     margin: 0rem 1rem 0rem 1rem;
@@ -171,14 +203,11 @@ code {
 }
 
 pre {
+  white-space: pre-wrap;
   padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0px 0px 5px 1px #5699AF;
   font-size: 1.2rem;
-  width: 95%;
-  margin-left: auto;
-  margin-right: auto;
   line-height: 1.4rem;
+  background-color: #202328;
 }
 
 .code-highlighted {
@@ -188,6 +217,11 @@ pre {
 table {
   border-collapse: collapse;
 }
+table th, table td {
+  vertical-align: top;
+  padding: 0.5rem;
+  border: 1px solid #3f444a;
+}
 
 caption.t-above {
   caption-side: top;
@@ -195,10 +229,6 @@ caption.t-above {
 
 caption.t-bottom {
   caption-side: bottom;
-}
-
-td, th {
-  vertical-align: top;
 }
 
 th.org-right {
