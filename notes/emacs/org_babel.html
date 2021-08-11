@@ -29,13 +29,20 @@
 <div id="content" class="content">
 <header>
 <h1 class="title">Org Babel</h1>
-</header><nav id="table-of-contents">
+</header><nav id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgb3b45fd">Print Error of Code Block</a></li>
-<li><a href="#org59495c4">Execute Block on Remote Machine</a>
+<li><a href="#orgb3b45fd">Print Error of Code Block</a>
 <ul>
+<li><a href="#orgf067e2e">Shell</a></li>
+<li><a href="#org319813e">Python</a></li>
+</ul>
+</li>
+<li><a href="#org759e78e">Emacs Lisp</a></li>
+<li><a href="#org63cdee4">TRAMP</a>
+<ul>
+<li><a href="#org59745fa">Single Hop</a></li>
 <li><a href="#org648983c">Double-Hop (Use a Bastion)</a></li>
 </ul>
 </li>
@@ -48,30 +55,101 @@
 <div id="outline-container-orgb3b45fd" class="outline-2">
 <h2 id="orgb3b45fd"><a href="#orgb3b45fd">Print Error of Code Block</a></h2>
 <div class="outline-text-2" id="text-orgb3b45fd">
+<p>
+Relevant SO questions:
+</p>
+
+<ul class="org-ul">
+<li><a href="https://emacs.stackexchange.com/questions/60649/show-compilation-errors-in-results-code-blocks">Show compilation errors in “#+RESULTS” code blocks</a></li>
+<li><a href="https://emacs.stackexchange.com/questions/48835/help-me-avoid-true-in-org-babel-bash-statements/48842#48842">Help me avoid “|| true” in org babel bash statements</a></li>
+</ul>
+</div>
+
+<div id="outline-container-orgf067e2e" class="outline-3">
+<h3 id="orgf067e2e"><a href="#orgf067e2e">Shell</a></h3>
+<div class="outline-text-3" id="text-orgf067e2e">
 <div class="org-src-container">
-<pre class="src src-sh">ls --foo
+<pre class="src src-bash">ls --foo
 </pre>
 </div>
 
 <pre class="example">
 ls: illegal option -- -
-usage: ls [-ABCFGHLOPRSTUWabcdefghiklmnopqrstuwx1] [file ...]
+usage: ls [-@ABCFGHLOPRSTUWabcdefghiklmnopqrstuwx1%] [file ...]
+</pre>
+
+
+<p>
+Doesn't work:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"hi"</span>
+<span style="color: #51afef;">exit</span> 1
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #c678dd;">set</span> -u
+<span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">foo</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org319813e" class="outline-3">
+<h3 id="org319813e"><a href="#org319813e">Python</a></h3>
+<div class="outline-text-3" id="text-org319813e">
+<div class="org-src-container">
+<pre class="src src-sh">python -c <span style="color: #98be65;">'bar=b"&#1054;&#1060;&#1048;&#1057;"''</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org759e78e" class="outline-2">
+<h2 id="org759e78e"><a href="#org759e78e">Emacs Lisp</a></h2>
+<div class="outline-text-2" id="text-org759e78e">
+<p>
+To print data structure, use <code>:results value pp</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp" id="org738c239">'<span style="color: #51afef;">(</span><span style="color: #c678dd;">(</span><span style="color: #98be65;">"DeploymentName"</span> <span style="color: #98be65;">"webserver"</span><span style="color: #c678dd;">)</span>
+  <span style="color: #c678dd;">(</span><span style="color: #98be65;">"KeyName"</span> <span style="color: #98be65;">"cfc"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">Params
+</pre>
+</div>
+
+<pre class="example">
+(("DeploymentName" "webserver")
+ ("KeyName" "cfc"))
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org59495c4" class="outline-2">
-<h2 id="org59495c4"><a href="#org59495c4">Execute Block on Remote Machine</a></h2>
-<div class="outline-text-2" id="text-org59495c4">
-<pre class="example" id="orgfaa8de9">
+<div id="outline-container-org63cdee4" class="outline-2">
+<h2 id="org63cdee4"><a href="#org63cdee4">TRAMP</a></h2>
+<div class="outline-text-2" id="text-org63cdee4">
+</div>
+<div id="outline-container-org59745fa" class="outline-3">
+<h3 id="org59745fa"><a href="#org59745fa">Single Hop</a></h3>
+<div class="outline-text-3" id="text-org59745fa">
+<pre class="example" id="orgfebc432">
 :dir /ssh:ec2-user@1.2.3.4:/
 </pre>
+</div>
 </div>
 
 <div id="outline-container-org648983c" class="outline-3">
 <h3 id="org648983c"><a href="#org648983c">Double-Hop (Use a Bastion)</a></h3>
 <div class="outline-text-3" id="text-org648983c">
-<pre class="example" id="org7792dcc">
+<pre class="example" id="org8dc0cda">
 :dir /ssh:ec2-user@1.2.3.4|ssh:ec2-user@10.192.1.2:/
 </pre>
 </div>
@@ -96,9 +174,31 @@ This leverages my <code>host</code> function.
 <h2 id="org7462563"><a href="#org7462563">IP Address Variable</a></h2>
 <div class="outline-text-2" id="text-org7462563">
 <p>
-You don't want to hard-code IP addresses in your sourc blocks like some kind
-of animal!
+Because you don't want to hard-code IP addresses in your source blocks like
+some kind of animal!
 </p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">host</span> <span style="color: #c678dd;">(</span>user ip path <span style="color: #ECBE7B;">&amp;optional</span> sudo<span style="color: #c678dd;">)</span>
+  <span style="color: #83898d;">"Return a TRAMP string for SSHing to a remote host.</span>
+<span style="color: #83898d;">USER is a user name on the remote host IP. PATH is the path on</span>
+<span style="color: #83898d;">the remote host at which to execute the source block. If SUDO is</span>
+<span style="color: #83898d;">non-nil, use sudo on the remote host."</span>
+  <span style="color: #c678dd;">(</span><span style="color: #51afef;">if</span> sudo
+      <span style="color: #98be65;">(</span><span style="color: #51afef;">s-lex-format</span> <span style="color: #98be65;">"/ssh:${user}@${ip}|sudo:${ip}:${path}"</span><span style="color: #98be65;">)</span>
+    <span style="color: #98be65;">(</span><span style="color: #51afef;">s-lex-format</span> <span style="color: #98be65;">"/ssh:${user}@${ip}:${path}"</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<p>
+Then set variables at the top of a file, and use something like:
+</p>
+
+<pre class="example" id="org0112c67">
+#+begin_src bash :dir (host (getenv "HOST") (getenv "USER") "/home/ec2-user")
+  pwd
+#+end_src
+</pre>
 </div>
 </div>
 </div>

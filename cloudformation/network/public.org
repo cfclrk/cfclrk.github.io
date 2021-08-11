@@ -1,18 +1,23 @@
 #+TITLE: Network with Public Subnets
 #+setupfile: ../setup.org
 
-* Overview
-
-[[file:../../static/img/Network-Public.png]]
-
-This document creates a VPC with two public subnets.
-
 #+begin_src yaml
 AWSTemplateFormatVersion: 2010-09-09
 Description: VPC with two public Subnets.
 #+end_src
 
+* Overview
+
+[[file:../../static/img/Network-Public.png]]
+
+This CloudFormation template creates a VPC with two public subnets.
+
 * Parameters
+
+#+name: Params
+| Param          | Value     |
+|----------------+-----------|
+| DeploymentName | webserver |
 
 #+begin_src yaml
 Parameters:
@@ -20,19 +25,19 @@ Parameters:
 
 ** DeploymentName
 
-A *deployment* is a complete deployed application, potentially comprised of many
-CloudFormation stacks. This is sometimes called an "environment", but that is an
-overloaded term. Use the =DeploymentName= to indicate which deployment a Stack
-is part of.
-
 #+begin_src yaml
   DeploymentName:
     Type: String
     Description: A name for this deployment
 #+end_src
 
+A *deployment* is a complete deployed application, potentially comprised of many
+CloudFormation stacks. This is sometimes called an "environment", but that is an
+overloaded term. Use the =DeploymentName= to indicate which deployment a Stack
+is part of.
+
 #+begin_src yaml
-  VpcCIDR:
+  VPCCIDR:
     Description: CIDR range for this VPC
     Type: String
     Default: 10.192.0.0/16
@@ -60,7 +65,7 @@ Resources:
   VPC:
     Type: AWS::EC2::VPC
     Properties:
-      CidrBlock: !Ref VpcCIDR
+      CidrBlock: !Ref VPCCIDR
       EnableDnsSupport: true
       EnableDnsHostnames: true
       Tags:

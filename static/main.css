@@ -143,7 +143,7 @@ textarea {
   max-width: 1400px;
   margin: 0rem 2rem 0rem 1rem;
   display: inline-grid;
-  grid-template-columns: 360px 1fr;
+  grid-template-columns: 400px 1fr;
   grid-template-rows: auto [last-line];
 }
 #content #table-of-contents {

@@ -29,9 +29,9 @@
 <div id="content" class="content">
 <header>
 <h1 class="title">Network with Public Subnets </h1>
-</header><nav id="table-of-contents">
+</header><nav id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
 <li><a href="#org930e698">Overview</a></li>
 <li><a href="#org74313d7">Parameters</a>
@@ -51,31 +51,52 @@
 </ul>
 </div>
 </nav>
-
-<div id="outline-container-org930e698" class="outline-2">
-<h2 id="org930e698"><a href="#org930e698">Overview</a></h2>
-<div class="outline-text-2" id="text-org930e698">
-
-<figure id="org4f8e32f">
-<img src="../../static/img/Network-Public.png" alt="Network-Public.png">
-
-</figure>
-
-<p>
-This document creates a VPC with two public subnets.
-</p>
-
 <div class="org-src-container">
 <pre class="src src-yaml"><span style="color: #dcaeea;">AWSTemplateFormatVersion</span>: 2010-09-09
 <span style="color: #dcaeea;">Description</span>: VPC with two public Subnets.
 </pre>
 </div>
+
+<div id="outline-container-org930e698" class="outline-2">
+<h2 id="org930e698"><a href="#org930e698">Overview</a></h2>
+<div class="outline-text-2" id="text-org930e698">
+
+<figure id="org9f23e24">
+<img src="../../static/img/Network-Public.png" alt="Network-Public.png">
+
+</figure>
+
+<p>
+This CloudFormation template creates a VPC with two public subnets.
+</p>
 </div>
 </div>
 
 <div id="outline-container-org74313d7" class="outline-2">
 <h2 id="org74313d7"><a href="#org74313d7">Parameters</a></h2>
 <div class="outline-text-2" id="text-org74313d7">
+<table id="org410962e">
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Param</th>
+<th scope="col" class="org-left">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">DeploymentName</td>
+<td class="org-left">webserver</td>
+</tr>
+</tbody>
+</table>
+
 <div class="org-src-container">
 <pre class="src src-yaml"><span style="color: #dcaeea;">Parameters</span>:
 </pre>
@@ -85,6 +106,13 @@ This document creates a VPC with two public subnets.
 <div id="outline-container-org91a044a" class="outline-3">
 <h3 id="org91a044a"><a href="#org91a044a">DeploymentName</a></h3>
 <div class="outline-text-3" id="text-org91a044a">
+<div class="org-src-container">
+<pre class="src src-yaml">  <span style="color: #dcaeea;">DeploymentName</span>:
+    <span style="color: #dcaeea;">Type</span>: String
+    <span style="color: #dcaeea;">Description</span>: A name for this deployment
+</pre>
+</div>
+
 <p>
 A <b>deployment</b> is a complete deployed application, potentially comprised of many
 CloudFormation stacks. This is sometimes called an "environment", but that is an
@@ -93,14 +121,7 @@ is part of.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-yaml">  <span style="color: #dcaeea;">DeploymentName</span>:
-    <span style="color: #dcaeea;">Type</span>: String
-    <span style="color: #dcaeea;">Description</span>: A name for this deployment
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-yaml">  <span style="color: #dcaeea;">VpcCIDR</span>:
+<pre class="src src-yaml">  <span style="color: #dcaeea;">VPCCIDR</span>:
     <span style="color: #dcaeea;">Description</span>: CIDR range for this VPC
     <span style="color: #dcaeea;">Type</span>: String
     <span style="color: #dcaeea;">Default</span>: 10.192.0.0/16
@@ -136,7 +157,7 @@ is part of.
 <pre class="src src-yaml">  <span style="color: #dcaeea;">VPC</span>:
     <span style="color: #dcaeea;">Type</span>: AWS::EC2::VPC
     <span style="color: #dcaeea;">Properties</span>:
-      <span style="color: #dcaeea;">CidrBlock</span>: <span style="color: #ECBE7B;">!Ref</span> VpcCIDR
+      <span style="color: #dcaeea;">CidrBlock</span>: <span style="color: #ECBE7B;">!Ref</span> VPCCIDR
       <span style="color: #dcaeea;">EnableDnsSupport</span>: <span style="color: #a9a1e1;">true</span>
       <span style="color: #dcaeea;">EnableDnsHostnames</span>: <span style="color: #a9a1e1;">true</span>
       <span style="color: #dcaeea;">Tags</span>:

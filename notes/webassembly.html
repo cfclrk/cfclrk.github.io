@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>WebAssembly</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">WebAssembly</h1>
+</header><nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgd156457">wat, wasm, and wast</a></li>
+<li><a href="#orgcea14ba">Tooling</a></li>
+<li><a href="#org5ddaed8">Convert wat to wasm</a></li>
+<li><a href="#orgd26ccc2">Convert wasm to wat</a></li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-orgd156457" class="outline-2">
+<h2 id="orgd156457"><a href="#orgd156457">wat, wasm, and wast</a></h2>
+<div class="outline-text-2" id="text-orgd156457">
+<p>
+<code>wat</code> is the WebAssembly text format (lisp). <code>wasm</code> is the WebAssembly binary
+format. <code>wast</code> is &#x2026;
+</p>
+
+<p>
+Also, "wasm" is used to abbreviate "WebAssembly", as in: "the wasm text format
+and the wasm binary format".
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgcea14ba" class="outline-2">
+<h2 id="orgcea14ba"><a href="#orgcea14ba">Tooling</a></h2>
+<div class="outline-text-2" id="text-orgcea14ba">
+<p>
+Install <a href="https://github.com/webassembly/wabt">wabt</a>, the WebAssembly Binary Toolkit.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">brew install wabt
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5ddaed8" class="outline-2">
+<h2 id="org5ddaed8"><a href="#org5ddaed8">Convert wat to wasm</a></h2>
+<div class="outline-text-2" id="text-org5ddaed8">
+<p>
+Tangle this to <code>simple.wat</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-wat"><span style="color: #51afef;">(</span><span style="color: #51afef;">module</span>
+ <span style="color: #c678dd;">(</span><span style="color: #51afef;">func</span> <span style="color: #dcaeea;">$i</span> <span style="color: #98be65;">(</span><span style="color: #51afef;">import</span> <span style="color: #98be65;">"imports"</span> <span style="color: #98be65;">"imported_func"</span><span style="color: #98be65;">)</span> <span style="color: #98be65;">(</span><span style="color: #ECBE7B;">param i32</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
+ <span style="color: #c678dd;">(</span><span style="color: #51afef;">func</span> <span style="color: #98be65;">(</span><span style="color: #51afef;">export</span> <span style="color: #98be65;">"exported_func"</span><span style="color: #98be65;">)</span>
+       <span style="color: #c678dd;">i32.const</span> 42
+       <span style="color: #c678dd;">call</span> <span style="color: #dcaeea;">$i</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<p>
+This produces a binary file called <code>simple.wasm</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">wat2wasm simple.wat -o simple.wasm
+</pre>
+</div>
+
+<p>
+Why is this writing to stderr?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">wat2wasm simple.wat -v
+</pre>
+</div>
+
+<pre class="example" id="org125dead">
+0000000: 0061 736d                                 ; WASM_BINARY_MAGIC
+0000004: 0100 0000                                 ; WASM_BINARY_VERSION
+; section "Type" (1)
+0000008: 01                                        ; section code
+0000009: 00                                        ; section size (guess)
+000000a: 02                                        ; num types
+; func type 0
+000000b: 60                                        ; func
+000000c: 01                                        ; num params
+000000d: 7f                                        ; i32
+000000e: 00                                        ; num results
+; func type 1
+000000f: 60                                        ; func
+0000010: 00                                        ; num params
+0000011: 00                                        ; num results
+0000009: 08                                        ; FIXUP section size
+; section "Import" (2)
+0000012: 02                                        ; section code
+0000013: 00                                        ; section size (guess)
+0000014: 01                                        ; num imports
+; import header 0
+0000015: 07                                        ; string length
+0000016: 696d 706f 7274 73                        imports  ; import module name
+000001d: 0d                                        ; string length
+000001e: 696d 706f 7274 6564 5f66 756e 63         imported_func  ; import field name
+000002b: 00                                        ; import kind
+000002c: 00                                        ; import signature index
+0000013: 19                                        ; FIXUP section size
+; section "Function" (3)
+000002d: 03                                        ; section code
+000002e: 00                                        ; section size (guess)
+000002f: 01                                        ; num functions
+0000030: 01                                        ; function 0 signature index
+000002e: 02                                        ; FIXUP section size
+; section "Export" (7)
+0000031: 07                                        ; section code
+0000032: 00                                        ; section size (guess)
+0000033: 01                                        ; num exports
+0000034: 0d                                        ; string length
+0000035: 6578 706f 7274 6564 5f66 756e 63         exported_func  ; export name
+0000042: 00                                        ; export kind
+0000043: 01                                        ; export func index
+0000032: 11                                        ; FIXUP section size
+; section "Code" (10)
+0000044: 0a                                        ; section code
+0000045: 00                                        ; section size (guess)
+0000046: 01                                        ; num functions
+; function body 0
+0000047: 00                                        ; func body size (guess)
+0000048: 00                                        ; local decl count
+0000049: 41                                        ; i32.const
+000004a: 2a                                        ; i32 literal
+000004b: 10                                        ; call
+000004c: 00                                        ; function index
+000004d: 0b                                        ; end
+0000047: 06                                        ; FIXUP func body size
+0000045: 08                                        ; FIXUP section size
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgd26ccc2" class="outline-2">
+<h2 id="orgd26ccc2"><a href="#orgd26ccc2">Convert wasm to wat</a></h2>
+<div class="outline-text-2" id="text-orgd26ccc2">
+<p>
+We can disassemble! Ain't that peachy!
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">wasm2wat simple.wasm
+</pre>
+</div>
+
+<pre class="example">
+(module
+  (type (;0;) (func (param i32)))
+  (type (;1;) (func))
+  (import "imports" "imported_func" (func (;0;) (type 0)))
+  (func (;1;) (type 1)
+    i32.const 42
+    call 0)
+  (export "exported_func" (func 1)))
+</pre>
+</div>
+</div>
+</div>
+</body>
+</html>

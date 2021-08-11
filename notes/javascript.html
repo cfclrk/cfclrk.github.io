@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2021-06-22 Tue 10:38 -->
+<!-- 2021-08-11 Wed 14:24 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>&lrm;</title>
@@ -28,20 +28,10 @@
 </nav>
 </div>
 <div id="content" class="content">
-<nav id="table-of-contents">
+<nav id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgd80bfce">npm</a>
-<ul>
-<li><a href="#orgdc02049">Global Packages</a>
-<ul>
-<li><a href="#org64cc445">List</a></li>
-<li><a href="#org6ad3dd1">Delete Them All</a></li>
-</ul>
-</li>
-</ul>
-</li>
 <li><a href="#orgd5928ac">yarn</a>
 <ul>
 <li><a href="#orgc21f586">Global Packages</a>
@@ -53,42 +43,20 @@
 </li>
 </ul>
 </li>
+<li><a href="#orgd80bfce">npm</a>
+<ul>
+<li><a href="#org65b1bfc">Global Packages</a>
+<ul>
+<li><a href="#org1633a85">List</a></li>
+<li><a href="#org6ad3dd1">Delete Them All</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="#org5603328">Strings</a></li>
 </ul>
 </div>
 </nav>
-<div id="outline-container-orgd80bfce" class="outline-2">
-<h2 id="orgd80bfce"><a href="#orgd80bfce">npm</a></h2>
-<div class="outline-text-2" id="text-orgd80bfce">
-</div>
-<div id="outline-container-orgdc02049" class="outline-3">
-<h3 id="orgdc02049"><a href="#orgdc02049">Global Packages</a></h3>
-<div class="outline-text-3" id="text-orgdc02049">
-</div>
-<div id="outline-container-org64cc445" class="outline-4">
-<h4 id="org64cc445"><a href="#org64cc445">List</a></h4>
-<div class="outline-text-4" id="text-org64cc445">
-<div class="org-src-container">
-<pre class="src src-sh">npm -g list --depth 0
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org6ad3dd1" class="outline-4">
-<h4 id="org6ad3dd1"><a href="#org6ad3dd1">Delete Them All</a></h4>
-<div class="outline-text-4" id="text-org6ad3dd1">
-<div class="org-src-container">
-<pre class="src src-sh">npm list -gp --depth=0 <span style="color: #98be65;">\</span>
-    | awk -F/ <span style="color: #98be65;">'/node_modules/ &amp;&amp; !/\/npm$/ {print $NF}'</span> <span style="color: #98be65;">\</span>
-    | xargs npm -g uninstall
-</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-
 <div id="outline-container-orgd5928ac" class="outline-2">
 <h2 id="orgd5928ac"><a href="#orgd5928ac">yarn</a></h2>
 <div class="outline-text-2" id="text-orgd5928ac">
@@ -143,6 +111,38 @@ Or to upgrade all global packages:
 Without <code>--latest</code>, yarn will respect semver specs in <code>$(yarn global
     dir)/package.json</code>.
 </p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd80bfce" class="outline-2">
+<h2 id="orgd80bfce"><a href="#orgd80bfce">npm</a></h2>
+<div class="outline-text-2" id="text-orgd80bfce">
+</div>
+<div id="outline-container-org65b1bfc" class="outline-3">
+<h3 id="org65b1bfc"><a href="#org65b1bfc">Global Packages</a></h3>
+<div class="outline-text-3" id="text-org65b1bfc">
+</div>
+<div id="outline-container-org1633a85" class="outline-4">
+<h4 id="org1633a85"><a href="#org1633a85">List</a></h4>
+<div class="outline-text-4" id="text-org1633a85">
+<div class="org-src-container">
+<pre class="src src-sh">npm -g list --depth 0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6ad3dd1" class="outline-4">
+<h4 id="org6ad3dd1"><a href="#org6ad3dd1">Delete Them All</a></h4>
+<div class="outline-text-4" id="text-org6ad3dd1">
+<div class="org-src-container">
+<pre class="src src-sh">npm list -gp --depth=0 <span style="color: #98be65;">\</span>
+    | awk -F/ <span style="color: #98be65;">'/node_modules/ &amp;&amp; !/\/npm$/ {print $NF}'</span> <span style="color: #98be65;">\</span>
+    | xargs npm -g uninstall
+</pre>
+</div>
 </div>
 </div>
 </div>

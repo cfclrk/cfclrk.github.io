@@ -29,14 +29,16 @@
 <div id="content" class="content">
 <header>
 <h1 class="title">Clojure</h1>
-</header><nav id="table-of-contents">
+</header><nav id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
+<li><a href="#orgac5320c">clj vs clojure</a></li>
+<li><a href="#org48c0395">Cmd Execution and REPL</a></li>
 <li><a href="#org7b79fed">Project Creation</a>
 <ul>
-<li><a href="#org88b9cd1">Using clj-new</a></li>
 <li><a href="#org433c503">Minimal command line</a></li>
+<li><a href="#org88b9cd1">Using clj-new</a></li>
 </ul>
 </li>
 <li><a href="#orgf3174e9">Testing</a>
@@ -47,29 +49,76 @@
 </li>
 <li><a href="#org709f46a">Symbols vs Keywords</a></li>
 <li><a href="#org2d32370">How to (+ 1 2)</a></li>
+<li><a href="#org307f00b">core.async</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-org7b79fed" class="outline-2">
-<h2 id="org7b79fed"><a href="#org7b79fed">Project Creation</a></h2>
-<div class="outline-text-2" id="text-org7b79fed">
+<div id="outline-container-orgac5320c" class="outline-2">
+<h2 id="orgac5320c"><a href="#orgac5320c">clj vs clojure</a></h2>
+<div class="outline-text-2" id="text-orgac5320c">
 <p>
-Use clj-new. The following makes use of an alias defined in
-~/.clojure/deps.edn.
+<code>clj</code> is just a program that wraps <code>clojure</code> with <code>readline</code> support.
 </p>
+
+<div class="org-src-container">
+<pre class="src src-sh">cat $(which clj) | grep exec
+</pre>
 </div>
 
-<div id="outline-container-org88b9cd1" class="outline-3">
-<h3 id="org88b9cd1"><a href="#org88b9cd1">Using clj-new</a></h3>
-<div class="outline-text-3" id="text-org88b9cd1">
+<pre class="example">
+exec rlwrap -r -q '\"' -b "(){}[],^%#@\";:'" "$bin_dir/clojure" "$@"
+</pre>
+
+
+<p>
+<code>readline</code> provides support for editing a command in the terminal (e.g. using
+arrow keys for moving around within the command, using <code>C-a</code> <code>C-e</code> <code>C-f</code> <code>C-b</code>
+movement commands) and stuff like that.
+</p>
+
+<p>
+So, <code>clj</code> just provides better interactivity in the REPL. As an end user, you
+might as well just use <code>clj</code> for everything.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org48c0395" class="outline-2">
+<h2 id="org48c0395"><a href="#org48c0395">Cmd Execution and REPL</a></h2>
+<div class="outline-text-2" id="text-org48c0395">
+<p>
+Call a function
+</p>
+
 <div class="org-src-container">
-<pre class="src src-sh">clj -A:new lib cfclrk/$<span style="color: #dcaeea;">projectName</span>
+<pre class="src src-sh">clj -X $<span style="color: #dcaeea;">nsname</span>/$<span style="color: #dcaeea;">funcname</span>
+</pre>
+</div>
+
+<pre class="example">
+Hello world, the time is 10:00 AM
+</pre>
+
+
+<p>
+Start a REPL that I can attach to from Emacs (I <i>assume</i> you can specify
+<code>:mvn/version</code> like this? My mvn is very rusty.)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">clj -Sdeps <span style="color: #98be65;">'{:deps {cider/cider-nrepl {:mvn/version "RELEASE"}}}'</span> <span style="color: #98be65;">\</span>
+    -m nrepl.cmdline <span style="color: #98be65;">\</span>
+    --middleware <span style="color: #98be65;">"[cider.nrepl/cider-middleware]"</span>
 </pre>
 </div>
 </div>
 </div>
 
+<div id="outline-container-org7b79fed" class="outline-2">
+<h2 id="org7b79fed"><a href="#org7b79fed">Project Creation</a></h2>
+<div class="outline-text-2" id="text-org7b79fed">
+</div>
 <div id="outline-container-org433c503" class="outline-3">
 <h3 id="org433c503"><a href="#org433c503">Minimal command line</a></h3>
 <div class="outline-text-3" id="text-org433c503">
@@ -78,12 +127,12 @@ All you need is a project directory with a
 </p>
 
 <ol class="org-ol">
-<li>deps.edn</li>
-<li>src/foo.clj</li>
+<li><code>deps.edn</code></li>
+<li><code>src/foo.clj</code></li>
 </ol>
 
 <p>
-However it should be namespaced properly. Work on this.
+However it should be namespaced properly (TODO: work on this).
 </p>
 
 <div class="org-src-container">
@@ -91,6 +140,20 @@ However it should be namespaced properly. Work on this.
 <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"{:deps {org.clojure/clojure {:mvn/version \"1.10.0\"}}}"</span> &gt; $<span style="color: #dcaeea;">d</span>/deps.edn
 <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"(ns core) (defn -main [] (println \"hello world\"))"</span> &gt;&gt; src/core.clj
 clj -m core
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org88b9cd1" class="outline-3">
+<h3 id="org88b9cd1"><a href="#org88b9cd1">Using clj-new</a></h3>
+<div class="outline-text-3" id="text-org88b9cd1">
+<p>
+The following makes use of an alias defined in <code>~/.clojure/deps.edn</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">clj -X:new-app :name cfclrk/$<span style="color: #dcaeea;">projectName</span>
 </pre>
 </div>
 </div>
@@ -161,7 +224,7 @@ A few ways to add 1 and 2, in increasing complexity.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-clojure">(+ 1 2)
+<pre class="src src-clojure"><span style="color: #51afef;">(</span>+ 1 2<span style="color: #51afef;">)</span>
 </pre>
 </div>
 
@@ -171,7 +234,7 @@ A few ways to add 1 and 2, in increasing complexity.
 
 
 <div class="org-src-container">
-<pre class="src src-clojure">(reduce + [1 2])
+<pre class="src src-clojure"><span style="color: #51afef;">(</span>apply + <span style="color: #c678dd;">[</span>1 2<span style="color: #c678dd;">]</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
 
@@ -181,7 +244,7 @@ A few ways to add 1 and 2, in increasing complexity.
 
 
 <div class="org-src-container">
-<pre class="src src-clojure">(apply + [1 2])
+<pre class="src src-clojure"><span style="color: #51afef;">(</span>reduce + <span style="color: #c678dd;">[</span>1 2<span style="color: #c678dd;">]</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
 
@@ -191,13 +254,24 @@ A few ways to add 1 and 2, in increasing complexity.
 
 
 <div class="org-src-container">
-<pre class="src src-clojure">(reduce (<span style="color: #51afef;">fn</span> [acc i] (+ acc i)) [1 2])
+<pre class="src src-clojure"><span style="color: #51afef;">(</span>reduce <span style="color: #c678dd;">(</span><span style="color: #51afef;">fn</span> <span style="color: #98be65;">[</span>acc i<span style="color: #98be65;">]</span> <span style="color: #98be65;">(</span>+ acc i<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">[</span>1 2<span style="color: #c678dd;">]</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
 
 <pre class="example">
 3
 </pre>
+</div>
+</div>
+
+<div id="outline-container-org307f00b" class="outline-2">
+<h2 id="org307f00b"><a href="#org307f00b">core.async</a></h2>
+<div class="outline-text-2" id="text-org307f00b">
+<p>
+There are some great examples from O'Reilly <a href="https://resources.oreilly.com/examples/0636920041474/">here</a>, which is supplemental
+content for their excellent video course <a href="https://learning.oreilly.com/videos/communicating-sequential-processes/9781771374293/">Communicating Sequential Processes
+with core.async</a>.
+</p>
 </div>
 </div>
 </div>

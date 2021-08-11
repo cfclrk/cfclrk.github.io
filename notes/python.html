@@ -29,17 +29,33 @@
 <div id="content" class="content">
 <header>
 <h1 class="title">Python</h1>
-</header><nav id="table-of-contents">
+</header><nav id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
 <li><a href="#org2a308b7">Pyenv</a>
 <ul>
 <li><a href="#orgab4e5c9">Latest Version</a></li>
 </ul>
 </li>
-<li><a href="#org24c4da3">Package Structure</a></li>
-<li><a href="#orgfa303db">Package summary info</a></li>
+<li><a href="#orga2dbc5c">Using a src directory</a></li>
+<li><a href="#org3e6211c">Packaging</a>
+<ul>
+<li><a href="#orgbf5cb9a">Kinds of Packages</a>
+<ul>
+<li><a href="#org3249625">wheel (.whl)</a></li>
+<li><a href="#org2010b97">Source Tree (git)</a></li>
+<li><a href="#org9d76a37">Source Distribution (sdist)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgfa303db">Package summary info</a>
+<ul>
+<li><a href="#org7d643e6">sys.path</a></li>
+<li><a href="#org1d03514">site</a></li>
+</ul>
+</li>
 <li><a href="#org35c39b0">Class attributes</a></li>
 <li><a href="#org56bfd7d">Require zip of github repo</a></li>
 <li><a href="#orgdc153c0">Strings</a>
@@ -72,30 +88,133 @@
 </div>
 </div>
 
-<div id="outline-container-org24c4da3" class="outline-2">
-<h2 id="org24c4da3"><a href="#org24c4da3">Package Structure</a></h2>
-<div class="outline-text-2" id="text-org24c4da3">
+<div id="outline-container-orga2dbc5c" class="outline-2">
+<h2 id="orga2dbc5c"><a href="#orga2dbc5c">Using a src directory</a></h2>
+<div class="outline-text-2" id="text-orga2dbc5c">
 <p>
-<a href="https://blog.ionelmc.ro/2014/05/25/python-packaging/">https://blog.ionelmc.ro/2014/05/25/python-packaging/</a>
-<a href="https://hynek.me/articles/testing-packaging/">https://hynek.me/articles/testing-packaging/</a>
+<a href="https://blog.ionelmc.ro/2014/05/25/python-packaging/">Packaging a python library</a> (Ionel Cristian Mărieș)
+<a href="https://hynek.me/articles/testing-packaging/">Testing &amp; Packaging</a> (Hynek Schlawack)
 </p>
+
+<p>
+I am currently a fan of the <code>src</code> directory. The main reasons for this are:
+</p>
+
+<ul class="org-ul">
+<li>Ionel's first point about <i>import parity</i>; it is important that all your
+top-level repo cruft isn't on your <code>sys.path</code> during local development.</li>
+<li>A directory named <code>src</code> is explicit and says what it is.</li>
+<li>Different python projects can have a more similar top-level directory layout
+and a more similar <code>setup.cfg</code>.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org3e6211c" class="outline-2">
+<h2 id="org3e6211c"><a href="#org3e6211c">Packaging</a></h2>
+<div class="outline-text-2" id="text-org3e6211c">
+</div>
+<div id="outline-container-orgbf5cb9a" class="outline-3">
+<h3 id="orgbf5cb9a"><a href="#orgbf5cb9a">Kinds of Packages</a></h3>
+<div class="outline-text-3" id="text-orgbf5cb9a">
+<p>
+From: <a href="https://bernat.tech/posts/pep-517-and-python-packaging/">https://bernat.tech/posts/pep-517-and-python-packaging/</a>
+</p>
+</div>
+
+<div id="outline-container-org3249625" class="outline-4">
+<h4 id="org3249625"><a href="#org3249625">wheel (.whl)</a></h4>
+<div class="outline-text-4" id="text-org3249625">
+<p>
+The project is built and then zipped up. Building usually means executing
+setuptools, which in turn may call build scripts in the project.
+</p>
+
+<p>
+If the package includes native extensions, they are complied. This means a
+separate wheel must be created and published for each computer architecture.
+</p>
+
+<p>
+The zip includes the source code, the <code>.dist_info</code> directory, and potentiall
+compiled native extensions. During a <code>pip install</code>, pip only needs to
+extract the zip in the right location.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org2010b97" class="outline-4">
+<h4 id="org2010b97"><a href="#org2010b97">Source Tree (git)</a></h4>
+<div class="outline-text-4" id="text-org2010b97">
+<p>
+Every file in the project's VC repository.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org9d76a37" class="outline-4">
+<h4 id="org9d76a37"><a href="#org9d76a37">Source Distribution (sdist)</a></h4>
+<div class="outline-text-4" id="text-org9d76a37">
+<p>
+A zip of the project source code. It may not include <i>all</i> files in the
+repository, like the <code>.git/</code>, <code>.github/</code>, <code>Jenkinsfile</code>, and tests (but I
+think it can, right?). It must <i>at least</i> include the Python source code and
+files required to build the project (<code>setup.cfg</code>, etc).
+</p>
+
+<p>
+Does not include a <code>.dist_info/</code> or compiled extensions. During a <code>pip
+    install</code>, pip needs to build the package, which usually means executing
+<code>setuptools</code>, which in turn may call build scripts.
+</p>
+
+<p>
+The installing user must:
+</p>
+
+<ul class="org-ul">
+<li>Have an appropriate version of <code>setuptools</code></li>
+<li>Have the tools required by the project build scripts</li>
+</ul>
+</div>
+</div>
 </div>
 </div>
 
 <div id="outline-container-orgfa303db" class="outline-2">
 <h2 id="orgfa303db"><a href="#orgfa303db">Package summary info</a></h2>
 <div class="outline-text-2" id="text-orgfa303db">
+</div>
+<div id="outline-container-org7d643e6" class="outline-3">
+<h3 id="org7d643e6"><a href="#org7d643e6">sys.path</a></h3>
+<div class="outline-text-3" id="text-org7d643e6">
 <p>
-Print sys.path
+As explained in the <a href="https://docs.python.org/3/library/sys.html#sys.path">docs</a>, the first element of <code>sys.path</code> is often the empty
+string.
 </p>
 
+<blockquote>
+<p>
+&#x2026; the first item of this list, <code>path[0]</code>, is the directory containing the
+script that was used to invoke the Python interpreter. If the script
+directory is not available (e.g. if the interpreter is invoked interactively
+or if the script is read from standard input), path[0] is the empty string,
+which directs Python to search modules in the current directory first.
+</p>
+</blockquote>
+
 <div class="org-src-container">
-<pre class="src src-sh">python -c <span style="color: #98be65;">"import sys; [print(i[19:]) for i in sys.path]"</span>
+<pre class="src src-python"><span style="color: #51afef;">import</span> sys; <span style="color: #51afef;">return</span> sys.path
 </pre>
 </div>
+</div>
+</div>
 
+<div id="outline-container-org1d03514" class="outline-3">
+<h3 id="org1d03514"><a href="#org1d03514">site</a></h3>
+<div class="outline-text-3" id="text-org1d03514">
 <p>
-Print summary of sys.path and some other stuff
+Print a summary including <code>sys.path</code> and some other stuff.
 </p>
 
 <div class="org-src-container">
@@ -104,13 +223,15 @@ Print summary of sys.path and some other stuff
 </div>
 
 <p>
-or interactively in a python interpreter:
+Or interactively in a python interpreter:
 </p>
 
-<pre class="example" id="org805bced">
-&gt;&gt;&gt; import site
-&gt;&gt;&gt; site._script()
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #51afef;">import</span> site
+site._script()
 </pre>
+</div>
+</div>
 </div>
 </div>
 
@@ -140,7 +261,7 @@ Create an instance:
 </div>
 
 <p>
-See: <a href="https://blog.ionelmc.ro/2015/02/09/understanding-python-metaclasses/#object-attribute-lookup">https://blog.ionelmc.ro/2015/02/09/understanding-python-metaclasses/#object-attribute-lookup</a>
+From: <a href="https://blog.ionelmc.ro/2015/02/09/understanding-python-metaclasses/#object-attribute-lookup">https://blog.ionelmc.ro/2015/02/09/understanding-python-metaclasses/#object-attribute-lookup</a>
 </p>
 
 <p>
@@ -148,25 +269,21 @@ Now, calling <code>p.get_size()</code> or <code>p.size</code> roughly equates to
 </p>
 
 <ol class="org-ol">
-<li><p>
-Call the type slot for <code>Class.__getattribute__(attribute)</code>. The default does
-this:
-</p>
+<li>Call the type slot for <code>Class.__getattribute__(attribute)</code>. The default
+does this:
 
 <ul class="org-ul">
 <li>Does <code>Pizza.__dict__</code> have a <code>size</code> (or <code>get_size</code>) that has a <code>__get__</code>
-method and is a data descriptor? (size: no, get<sub>size</sub>: no). Note: functions
-are not data descriptors. A data descriptor must have at least a <code>__set__</code>
-OR a <code>__delete__</code> attribute.</li>
+method and is a data descriptor? (size: no, get<sub>size</sub>: no). Note:
+functions are not data descriptors. A data descriptor must have at least
+a <code>__set__</code> OR a <code>__delete__</code> attribute.</li>
 
-<li>Else, does <code>p.__dict__</code> have a <code>size</code> (or <code>get_size</code>) item in it? (size: yes,
-get<sub>size</sub>: no)</li>
-</ul>
+<li>Else, does <code>p.__dict__</code> have a <code>size</code> (or <code>get_size</code>) item in it? (size:
+yes, get<sub>size</sub>: no)</li>
 
-<p>
-_ Else, does <code>Pizza.__dict__</code> have a <code>size</code> (or <code>get_size</code>) item that is <b>not</b>
-a data descriptor?
-</p></li>
+<li>Else, does <code>Pizza.__dict__</code> have a <code>size</code> (or <code>get_size</code>) item that is
+<b>not</b> a data descriptor?</li>
+</ul></li>
 </ol>
 
 <div class="org-src-container">

@@ -29,14 +29,15 @@
 <div id="content" class="content">
 <header>
 <h1 class="title">Keys and Certificates</h1>
-</header><nav id="table-of-contents">
+</header><nav id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
 <li><a href="#orge31f694">Discover Public Certificates</a></li>
-<li><a href="#org55a89c1">Create an SSH Key</a>
+<li><a href="#org21815e3">Create an SSH Key Pair</a>
 <ul>
 <li><a href="#org7c0fd65">No Passphrase</a></li>
+<li><a href="#orgfa28800">With Passphrase</a></li>
 </ul>
 </li>
 <li><a href="#org979edcc">Conversions</a></li>
@@ -50,9 +51,9 @@
 <li><a href="#org8ed5967">Create Keypair</a></li>
 <li><a href="#orgdbd3d62">CA Certificates</a>
 <ul>
-<li><a href="#org4e28bbc">Cross-Certificate</a></li>
 <li><a href="#org4546b00">Self-Issued Certificates</a></li>
 <li><a href="#orge5c9c16">Self-Signed Certificates</a></li>
+<li><a href="#org4e28bbc">Cross-Certificate</a></li>
 </ul>
 </li>
 <li><a href="#org6a36595">Entity Certificates</a></li>
@@ -92,15 +93,19 @@ page.
 </div>
 </div>
 
-<div id="outline-container-org55a89c1" class="outline-2">
-<h2 id="org55a89c1"><a href="#org55a89c1">Create an SSH Key</a></h2>
-<div class="outline-text-2" id="text-org55a89c1">
+<div id="outline-container-org21815e3" class="outline-2">
+<h2 id="org21815e3"><a href="#org21815e3">Create an SSH Key Pair</a></h2>
+<div class="outline-text-2" id="text-org21815e3">
+<p>
+<code>ssh-keygen</code> creates two files: <code>$keyname</code> and <code>$keyname.pub</code>.
+</p>
 </div>
+
 <div id="outline-container-org7c0fd65" class="outline-3">
 <h3 id="org7c0fd65"><a href="#org7c0fd65">No Passphrase</a></h3>
 <div class="outline-text-3" id="text-org7c0fd65">
 <div class="org-src-container">
-<pre class="src src-sh">ssh-keygen -t rsa -b 4096 -f ~/.ssh/$<span style="color: #dcaeea;">keyname</span> -N <span style="color: #98be65;">""</span> -C <span style="color: #98be65;">"$email"</span>
+<pre class="src src-sh">ssh-keygen -t ed25519 -N <span style="color: #98be65;">""</span> -f ~/.ssh/$<span style="color: #dcaeea;">keyname</span> -C <span style="color: #98be65;">"$email"</span>
 </pre>
 </div>
 
@@ -109,7 +114,17 @@ The email address is optional:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">ssh-keygen -t rsa -b 4096 -f ./$<span style="color: #dcaeea;">keyname</span> -N <span style="color: #98be65;">""</span>
+<pre class="src src-sh">ssh-keygen -t ed25519 -f ~/.ssh/$<span style="color: #dcaeea;">keyname</span> -N <span style="color: #98be65;">""</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfa28800" class="outline-3">
+<h3 id="orgfa28800"><a href="#orgfa28800">With Passphrase</a></h3>
+<div class="outline-text-3" id="text-orgfa28800">
+<div class="org-src-container">
+<pre class="src src-sh">ssh-keygen -t ed25519 -f ~/.ssh/$<span style="color: #dcaeea;">keyname</span>
 </pre>
 </div>
 </div>
@@ -152,7 +167,12 @@ Generate a public key from a private key:
 <div id="outline-container-orgca85071" class="outline-2">
 <h2 id="orgca85071"><a href="#orgca85071">Creating Certificates</a></h2>
 <div class="outline-text-2" id="text-orgca85071">
+<p>
+Note: there is a golang tool to create self-signed certs at <code>$(go env
+  GOROOT)/src/crypto/tls/generate_cert.go</code>.
+</p>
 </div>
+
 <div id="outline-container-org8ed5967" class="outline-3">
 <h3 id="org8ed5967"><a href="#org8ed5967">Create Keypair</a></h3>
 <div class="outline-text-3" id="text-org8ed5967">
@@ -197,38 +217,20 @@ certificates are not self-signed; they are signed by their parent CA.
 </p>
 
 <p>
-The following command creates a <code>ca.key</code> and a <code>ca.crt</code> file. Remember that
-the <code>ca.key</code> actually contains both the public and private key. The
-certificate has the public key and some metadata.
+The following commands create a <code>ca.key</code> and a <code>ca.crt</code> file. Remember, the
+<code>ca.key</code> actually contains both the public and private key. The certificate
+has the public key, some metadata, and a signature (signed by some private
+key).
 </p>
-
-<div class="org-src-container">
-<pre class="src src-sh">openssl genrsa -out ca.key 2048
-openssl req -x509 -new -nodes <span style="color: #98be65;">\</span>
-        -key ca.key <span style="color: #98be65;">\</span>
-        -subj <span style="color: #98be65;">"/CN=${CommonName}"</span> <span style="color: #98be65;">\</span>
-        -days 3650 <span style="color: #98be65;">\</span>
-        -out ca.crt
-</pre>
-</div>
-</div>
-
-<div id="outline-container-org4e28bbc" class="outline-4">
-<h4 id="org4e28bbc"><a href="#org4e28bbc">Cross-Certificate</a></h4>
-<div class="outline-text-4" id="text-org4e28bbc">
-<blockquote>
-<p>
-Cross-certificates are CA certificates in which the issuer and subject are
-different entities. Cross-certificates describe a trust relationship between
-the two CAs.
-</p>
-</blockquote>
-</div>
 </div>
 
 <div id="outline-container-org4546b00" class="outline-4">
 <h4 id="org4546b00"><a href="#org4546b00">Self-Issued Certificates</a></h4>
 <div class="outline-text-4" id="text-org4546b00">
+<p>
+From <a href="https://datatracker.ietf.org/doc/html/rfc5280#section-3.2">RFC 5280</a>:
+</p>
+
 <blockquote>
 <p>
 Self-issued certificates are CA certificates in which the issuer and subject
@@ -242,6 +244,10 @@ changes in policy or operations.
 <div id="outline-container-orge5c9c16" class="outline-4">
 <h4 id="orge5c9c16"><a href="#orge5c9c16">Self-Signed Certificates</a></h4>
 <div class="outline-text-4" id="text-orge5c9c16">
+<p>
+From <a href="https://datatracker.ietf.org/doc/html/rfc5280#section-3.2">RFC 5280</a>:
+</p>
+
 <blockquote>
 <p>
 Self-signed certificates are self-issued certificates where the digital
@@ -257,8 +263,35 @@ That is, self-signed certificates are either:
 
 <ol class="org-ol">
 <li>Root CA certifaces</li>
-<li>You've gone rogue; you are a wild renegade signing certs like a villian</li>
+<li>You're a rogue renegade signing certs like a villian</li>
 </ol>
+
+<div class="org-src-container">
+<pre class="src src-sh">openssl genrsa -out ca.key 2048
+openssl req -x509 -new -nodes <span style="color: #98be65;">\</span>
+        -key ca.key <span style="color: #98be65;">\</span>
+        -subj <span style="color: #98be65;">"/CN=${CommonName}"</span> <span style="color: #98be65;">\</span>
+        -days 3650 <span style="color: #98be65;">\</span>
+        -out ca.crt
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4e28bbc" class="outline-4">
+<h4 id="org4e28bbc"><a href="#org4e28bbc">Cross-Certificate</a></h4>
+<div class="outline-text-4" id="text-org4e28bbc">
+<p>
+From <a href="https://datatracker.ietf.org/doc/html/rfc5280#section-3.2">RFC 5280</a>:
+</p>
+
+<blockquote>
+<p>
+Cross-certificates are CA certificates in which the issuer and subject are
+different entities. Cross-certificates describe a trust relationship between
+the two CAs.
+</p>
+</blockquote>
 </div>
 </div>
 </div>

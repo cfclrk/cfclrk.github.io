@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Personal Git Notes</title>
+<title>Git</title>
 <meta name="generator" content="Org Mode" />
 <link rel="stylesheet" type="text/css" href="/static/main.css" />
 </head>
@@ -28,17 +28,24 @@
 </div>
 <div id="content" class="content">
 <header>
-<h1 class="title">Personal Git Notes</h1>
-</header><nav id="table-of-contents">
+<h1 class="title">Git</h1>
+</header><nav id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org3978327">Accidental</a>
+<li><a href="#org844b424">Refs</a></li>
+<li><a href="#orgb1c7615">I Accidentally&#x2026;</a>
 <ul>
-<li><a href="#org5f4592a">Commit to Wrong Branch</a></li>
-<li><a href="#org9237b2d">Rebase</a></li>
-<li><a href="#org8703b54">Made an Ammend Commit</a></li>
+<li><a href="#org2bc8d27">Commited to the Wrong Branch</a></li>
+<li><a href="#org2aa14d6">Rebased Remote Branch</a></li>
+<li><a href="#org99c581c">Ammended Remote Commit</a></li>
 <li><a href="#org813f76b">Committed Locally Before Pulling Remote</a></li>
+</ul>
+</li>
+<li><a href="#org1668720">Rebase</a>
+<ul>
+<li><a href="#orgdf17bd2">Rebase to Ancestor</a></li>
+<li><a href="#orgf2d5ea6">Rebase to Commit on Another Branch</a></li>
 </ul>
 </li>
 <li><a href="#orgebeba5e">Fixup</a></li>
@@ -50,8 +57,7 @@
 </ul>
 </li>
 <li><a href="#org94c3d2b">Project Root Dir</a></li>
-<li><a href="#orgfd3510c">What is this?</a></li>
-<li><a href="#orgd76a017">Cool Resources</a>
+<li><a href="#org9f358fa">Tools and Resources</a>
 <ul>
 <li><a href="#org91402e5">git-quick-stats</a></li>
 </ul>
@@ -60,15 +66,39 @@
 </div>
 </nav>
 
-<div id="outline-container-org3978327" class="outline-2">
-<h2 id="org3978327"><a href="#org3978327">Accidental</a></h2>
-<div class="outline-text-2" id="text-org3978327">
-</div>
-<div id="outline-container-org5f4592a" class="outline-3">
-<h3 id="org5f4592a"><a href="#org5f4592a">Commit to Wrong Branch</a></h3>
-<div class="outline-text-3" id="text-org5f4592a">
+<div id="outline-container-org844b424" class="outline-2">
+<h2 id="org844b424"><a href="#org844b424">Refs</a></h2>
+<div class="outline-text-2" id="text-org844b424">
 <p>
-You committed to main instead of develop, but haven't pushed changes yet.
+SHA
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">git rev-parse HEAD
+</pre>
+</div>
+
+<p>
+Branch
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">git rev-parse --abbrev-ref HEAD
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb1c7615" class="outline-2">
+<h2 id="orgb1c7615"><a href="#orgb1c7615">I Accidentally&#x2026;</a></h2>
+<div class="outline-text-2" id="text-orgb1c7615">
+</div>
+<div id="outline-container-org2bc8d27" class="outline-3">
+<h3 id="org2bc8d27"><a href="#org2bc8d27">Commited to the Wrong Branch</a></h3>
+<div class="outline-text-3" id="text-org2bc8d27">
+<p>
+You locally committed to <code>main</code> instead of <code>develop</code>, but you haven't pushed
+the commit yet.
 </p>
 
 <ul class="org-ul">
@@ -85,9 +115,9 @@ You committed to main instead of develop, but haven't pushed changes yet.
 </div>
 </div>
 
-<div id="outline-container-org9237b2d" class="outline-3">
-<h3 id="org9237b2d"><a href="#org9237b2d">Rebase</a></h3>
-<div class="outline-text-3" id="text-org9237b2d">
+<div id="outline-container-org2aa14d6" class="outline-3">
+<h3 id="org2aa14d6"><a href="#org2aa14d6">Rebased Remote Branch</a></h3>
+<div class="outline-text-3" id="text-org2aa14d6">
 <p>
 You rebased, and then remembered that the branch you were on has already been
 pushed to a remote repo. You shouldn't push this rebase!
@@ -99,9 +129,9 @@ pushed to a remote repo. You shouldn't push this rebase!
 </div>
 </div>
 
-<div id="outline-container-org8703b54" class="outline-3">
-<h3 id="org8703b54"><a href="#org8703b54">Made an Ammend Commit</a></h3>
-<div class="outline-text-3" id="text-org8703b54">
+<div id="outline-container-org99c581c" class="outline-3">
+<h3 id="org99c581c"><a href="#org99c581c">Ammended Remote Commit</a></h3>
+<div class="outline-text-3" id="text-org99c581c">
 <p>
 You ran a <code>git commit --ammend</code>, and then realized you've actually already
 pushed that commit you were ammending. You can't push the ammended commit!
@@ -126,6 +156,85 @@ locally. Now your branch and the remote branch have diverged.
 <li>Option 1: Merge remote into local. Just do a git merge of
 remote/branch-name.</li>
 </ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1668720" class="outline-2">
+<h2 id="org1668720"><a href="#org1668720">Rebase</a></h2>
+<div class="outline-text-2" id="text-org1668720">
+</div>
+<div id="outline-container-orgdf17bd2" class="outline-3">
+<h3 id="orgdf17bd2"><a href="#orgdf17bd2">Rebase to Ancestor</a></h3>
+<div class="outline-text-3" id="text-orgdf17bd2">
+<p>
+Mostly adapted from <a href="https://stackoverflow.com/a/55049181/340613">this SO answer</a>.
+</p>
+
+<p>
+Given
+</p>
+
+<pre class="example" id="orgb7a563d">
+A --- B --- C --- D         main
+</pre>
+
+<p>
+And I want to rebase <code>D</code> to an ancestor <code>B</code> (I want <code>C</code> and <code>D</code> to be siblings):
+</p>
+
+<pre class="example" id="org94aa4dd">
+A --- B --- C         main
+      \
+       \-- D          feature
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-sh">git checkout main
+git rebase --onto B C
+</pre>
+</div>
+
+<p>
+The form of the command is <code>git rebase --onto &lt;Target&gt; [&lt;Upstream&gt;]</code>.
+</p>
+
+<p>
+In this case, a <code>git rebase --onto B</code> doesn't do anything, because <code>D</code> is
+already based on <code>B</code>. The optional <code>&lt;Upstream&gt;</code> argument serves as the cut
+point.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgf2d5ea6" class="outline-3">
+<h3 id="orgf2d5ea6"><a href="#orgf2d5ea6">Rebase to Commit on Another Branch</a></h3>
+<div class="outline-text-3" id="text-orgf2d5ea6">
+<p>
+Given
+</p>
+
+<pre class="example" id="org4d42fbe">
+A --- B --- C          main
+ \
+  \-- D                topic
+</pre>
+
+<p>
+And you want to rebase <code>topic</code> to <code>B</code> like so:
+</p>
+
+<pre class="example" id="org466bd55">
+A --- B --- C          main
+       \
+        \-- D          topic
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-sh">git checkout topic
+git rebase --onto B
+</pre>
+</div>
 </div>
 </div>
 </div>
@@ -188,8 +297,7 @@ Some ways to find the first commit in a Git repository:
 <h3 id="org63113a8"><a href="#org63113a8">Get Project Version From Tag</a></h3>
 <div class="outline-text-3" id="text-org63113a8">
 <p>
-I got this from cider:
-<a href="https://github.com/clojure-emacs/cider/blob/18bb5e12bfff4196de4102b5abce226dcd7d4b9a/Makefile#L4">https://github.com/clojure-emacs/cider/blob/18bb5e12bfff4196de4102b5abce226dcd7d4b9a/Makefile#L4</a>
+I got this from cider <a href="https://github.com/clojure-emacs/cider/blob/18bb5e12bfff4196de4102b5abce226dcd7d4b9a/Makefile#L4">here</a>.
 </p>
 
 <div class="org-src-container">
@@ -224,19 +332,9 @@ If HEAD is a tag, this will print the tag name. If not, it prints nothing.
 </div>
 </div>
 
-<div id="outline-container-orgfd3510c" class="outline-2">
-<h2 id="orgfd3510c"><a href="#orgfd3510c">What is this?</a></h2>
-<div class="outline-text-2" id="text-orgfd3510c">
-<p>
-commit=$(git rev-parse HEAD)
-git name-rev &#x2013;no-undefined &#x2013;name-only $commit
-</p>
-</div>
-</div>
-
-<div id="outline-container-orgd76a017" class="outline-2">
-<h2 id="orgd76a017"><a href="#orgd76a017">Cool Resources</a></h2>
-<div class="outline-text-2" id="text-orgd76a017">
+<div id="outline-container-org9f358fa" class="outline-2">
+<h2 id="org9f358fa"><a href="#org9f358fa">Tools and Resources</a></h2>
+<div class="outline-text-2" id="text-org9f358fa">
 </div>
 <div id="outline-container-org91402e5" class="outline-3">
 <h3 id="org91402e5"><a href="#org91402e5">git-quick-stats</a></h3>

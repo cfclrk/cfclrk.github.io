@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Date</title>
+<title>sed</title>
 <meta name="generator" content="Org Mode" />
 <link rel="stylesheet" type="text/css" href="/static/main.css" />
 </head>
@@ -28,42 +28,27 @@
 </div>
 <div id="content" class="content">
 <header>
-<h1 class="title">Date</h1>
-</header><nav id="table-of-contents">
+<h1 class="title">sed</h1>
+</header><nav id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org28cc035">Since epoch</a></li>
-<li><a href="#org65c4dee">UTC</a></li>
+<li><a href="#orgd7f1f08">Delete <code>/d</code></a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-org28cc035" class="outline-2">
-<h2 id="org28cc035"><a href="#org28cc035">Since epoch</a></h2>
-<div class="outline-text-2" id="text-org28cc035">
+<div id="outline-container-orgd7f1f08" class="outline-2">
+<h2 id="orgd7f1f08"><a href="#orgd7f1f08">Delete <code>/d</code></a></h2>
+<div class="outline-text-2" id="text-orgd7f1f08">
+<p>
+Delete a block comment in a Go file.
+</p>
+
 <div class="org-src-container">
-<pre class="src src-sh">gdate +%s
+<pre class="src src-sh">sed <span style="color: #98be65;">'/\/\*/,/\*\//d'</span> cmd/root.go
 </pre>
 </div>
-
-<pre class="example">
-1589548609
-</pre>
-</div>
-</div>
-
-<div id="outline-container-org65c4dee" class="outline-2">
-<h2 id="org65c4dee"><a href="#org65c4dee">UTC</a></h2>
-<div class="outline-text-2" id="text-org65c4dee">
-<div class="org-src-container">
-<pre class="src src-sh">gdate -u
-</pre>
-</div>
-
-<pre class="example">
-Fri May 15 13:16:51 UTC 2020
-</pre>
 </div>
 </div>
 </div>

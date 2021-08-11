@@ -29,11 +29,11 @@
 <div id="content" class="content">
 <header>
 <h1 class="title">AWS Commands</h1>
-</header><nav id="table-of-contents">
+</header><nav id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org4a73113">Account</a></li>
+<li><a href="#org8c61e32">Account</a></li>
 <li><a href="#org68e07f2">IP Address Ranges</a>
 <ul>
 <li><a href="#orga19ac76">Get Region of IP</a></li>
@@ -49,7 +49,7 @@
 <li><a href="#orga3ad8a9">ACM</a>
 <ul>
 <li><a href="#orgb9b204e">List</a></li>
-<li><a href="#orgd540dd0">Describe</a></li>
+<li><a href="#org528380d">Describe</a></li>
 <li><a href="#orgac41550">Get Certificate</a></li>
 <li><a href="#orgb935171">Get Certificate PEM File</a></li>
 </ul>
@@ -61,11 +61,10 @@
 </li>
 <li><a href="#orgcca3574">CloudFormation</a>
 <ul>
-<li><a href="#org9b8dc57">Create Stack</a></li>
 <li><a href="#orgf3bf287">View Stack Log</a></li>
 <li><a href="#orgd962121">List Stacks</a></li>
 <li><a href="#org5146699">Stack Outputs</a></li>
-<li><a href="#org94a8b59">Stack Parameters</a></li>
+<li><a href="#orga862dc6">Get Stack Parameters</a></li>
 <li><a href="#org938e599">Exports</a></li>
 <li><a href="#org2af8b72">Spec Files</a></li>
 </ul>
@@ -91,11 +90,23 @@
 <li><a href="#orgdfb623f">List Accounts That Can Access AMI</a></li>
 </ul>
 </li>
-<li><a href="#org7d82d3e">EC2 Instances</a>
+<li><a href="#org6f16057">EC2 KeyPairs</a>
 <ul>
-<li><a href="#orgd729903">Running Instances</a></li>
-<li><a href="#orgdecfa38">All Instance Tags</a></li>
-<li><a href="#org6cf632e">Instances with Tag</a></li>
+<li><a href="#org83ba08a">Create</a></li>
+<li><a href="#orgab1f3f5">Describe</a></li>
+<li><a href="#org535b56d">Delete</a></li>
+</ul>
+</li>
+<li><a href="#org4397e78">EC2 Instance</a>
+<ul>
+<li><a href="#org7621a9c">Get Running Instances</a></li>
+<li><a href="#org75a7dd5">Get All Instance Tags</a></li>
+<li><a href="#orga274d3a">Get Instances with Tag</a></li>
+</ul>
+</li>
+<li><a href="#orgde6950f">EC2 Transit Gateway</a>
+<ul>
+<li><a href="#org874c9aa">List Routes in a TG Route Table</a></li>
 </ul>
 </li>
 <li><a href="#org786da18">EC2 VPCs</a>
@@ -104,6 +115,7 @@
 <li><a href="#org8a9946a">Subnets</a></li>
 <li><a href="#orga2bfce1">SecurityGroups</a></li>
 <li><a href="#org269499f">Private ALB IPs</a></li>
+<li><a href="#orgaf79f46">Managed Prefix Lists</a></li>
 </ul>
 </li>
 <li><a href="#org41c79d6">ECR</a>
@@ -177,10 +189,18 @@
 <li><a href="#orga898ea9">Say something from insultgenerator.org</a></li>
 </ul>
 </li>
+<li><a href="#orge4d8741">Reosurce Access Manager (RAM)</a></li>
 <li><a href="#org4558207">Route53</a>
 <ul>
 <li><a href="#orgf9ff1a6">Get HostedZoneId from Name</a></li>
 <li><a href="#org4857eb3">List Records for a HostedZone</a></li>
+</ul>
+</li>
+<li><a href="#org7f441cb">SecretsManager</a>
+<ul>
+<li><a href="#org5b07153">List Secrets</a></li>
+<li><a href="#org99a1807">Get Secret</a></li>
+<li><a href="#orgfaca1c3">Create Secret</a></li>
 </ul>
 </li>
 <li><a href="#org24186b3">ServiceCatalog</a>
@@ -199,6 +219,7 @@
 <ul>
 <li><a href="#org1e8c132">Canonical ID</a></li>
 <li><a href="#org120ab9a">List objects in bucket</a></li>
+<li><a href="#orgaf1f5d8">Get Object</a></li>
 <li><a href="#org1f9f4e3">Get bucket policy</a></li>
 <li><a href="#orga5457b5">Delete Buckets with Name</a></li>
 </ul>
@@ -223,15 +244,15 @@
 </div>
 </nav>
 
-<div id="outline-container-org4a73113" class="outline-2">
-<h2 id="org4a73113"><a href="#org4a73113">Account</a></h2>
-<div class="outline-text-2" id="text-org4a73113">
+<div id="outline-container-org8c61e32" class="outline-2">
+<h2 id="org8c61e32"><a href="#org8c61e32">Account</a></h2>
+<div class="outline-text-2" id="text-org8c61e32">
 <p>
 Account number:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="orgecb4d37">aws sts get-caller-identity --query <span style="color: #98be65;">'Account'</span> --output text
+<pre class="src src-sh" id="orgec35e7f">aws sts get-caller-identity --query <span style="color: #98be65;">'Account'</span> --output text
 </pre>
 </div>
 </div>
@@ -286,7 +307,7 @@ See: <a href="https://unix.stackexchange.com/questions/274330/check-ip-is-in-ran
 </pre>
 </div>
 
-<pre class="example" id="org758f17f">
+<pre class="example" id="orgbec9504">
 eu-north-1
 ap-south-1
 eu-west-3
@@ -338,7 +359,7 @@ document. You have to decide whether "GLOBAL" is a "region" in your situation.
 </pre>
 </div>
 
-<pre class="example" id="orga690c39">
+<pre class="example" id="orgdb10d7e">
 GLOBAL
 af-south-1
 ap-east-1
@@ -389,7 +410,7 @@ Get the number of VPCs in each region the slow and simple way.
 </pre>
 </div>
 
-<pre class="example" id="org9d483a4">
+<pre class="example" id="org1ede63f">
 eu-north-1: 0
 ap-south-1: 0
 eu-west-3: 0
@@ -426,7 +447,7 @@ syntax for th length of the <code>$regions</code> array.
 </pre>
 </div>
 
-<pre class="example" id="orge47b1a8">
+<pre class="example" id="org3221841">
 us-east-1: 2
 ca-central-1: 0
 us-east-2: 2
@@ -463,9 +484,9 @@ ap-southeast-1: 1
 </div>
 </div>
 
-<div id="outline-container-orgd540dd0" class="outline-3">
-<h3 id="orgd540dd0"><a href="#orgd540dd0">Describe</a></h3>
-<div class="outline-text-3" id="text-orgd540dd0">
+<div id="outline-container-org528380d" class="outline-3">
+<h3 id="org528380d"><a href="#org528380d">Describe</a></h3>
+<div class="outline-text-3" id="text-org528380d">
 <div class="org-src-container">
 <pre class="src src-sh">aws acm describe-certificate --certificate-arn $<span style="color: #dcaeea;">CertArn</span>
 </pre>
@@ -518,15 +539,9 @@ ap-southeast-1: 1
 <div id="outline-container-orgcca3574" class="outline-2">
 <h2 id="orgcca3574"><a href="#orgcca3574">CloudFormation</a></h2>
 <div class="outline-text-2" id="text-orgcca3574">
-</div>
-<div id="outline-container-org9b8dc57" class="outline-3">
-<h3 id="org9b8dc57"><a href="#org9b8dc57">Create Stack</a></h3>
-<div class="outline-text-3" id="text-org9b8dc57">
-<div class="org-src-container">
-<pre class="src src-sh">aws cloudformation create-stack --stack-name $<span style="color: #dcaeea;">StackName</span> --template-body
-</pre>
-</div>
-</div>
+<p>
+For create/deploy/update, see my <a href="https://github.com/cfclrk/cloudformation/blob/main/README.org">cloudformation/README.org</a>.
+</p>
 </div>
 
 <div id="outline-container-orgf3bf287" class="outline-3">
@@ -580,9 +595,13 @@ Get the value of a single output:
 </div>
 </div>
 
-<div id="outline-container-org94a8b59" class="outline-3">
-<h3 id="org94a8b59"><a href="#org94a8b59">Stack Parameters</a></h3>
-<div class="outline-text-3" id="text-org94a8b59">
+<div id="outline-container-orga862dc6" class="outline-3">
+<h3 id="orga862dc6"><a href="#orga862dc6">Get Stack Parameters</a></h3>
+<div class="outline-text-3" id="text-orga862dc6">
+<p>
+Get all parameters used to create a particular stack:
+</p>
+
 <div class="org-src-container">
 <pre class="src src-sh">aws cloudformation describe-stacks <span style="color: #98be65;">\</span>
     --stack-name $<span style="color: #dcaeea;">StackName</span> <span style="color: #98be65;">\</span>
@@ -640,9 +659,10 @@ Spec files are documented <a href="https://docs.aws.amazon.com/AWSCloudFormation
 <h3 id="org1ffc1e3"><a href="#org1ffc1e3">Delete All Alarms</a></h3>
 <div class="outline-text-3" id="text-org1ffc1e3">
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #dcaeea;">alarms</span>=$(aws cloudwatch describe-alarms | jq -r <span style="color: #98be65;">'.MetricAlarms[].AlarmName'</span>)
+<pre class="src src-sh"><span style="color: #dcaeea;">alarms</span>=$(aws cloudwatch describe-alarms <span style="color: #98be65;">\</span>
+             | jq -r <span style="color: #98be65;">'.MetricAlarms[].AlarmName'</span>)
 <span style="color: #51afef;">for</span> alarm<span style="color: #51afef;"> in</span> $<span style="color: #dcaeea;">alarms</span>; <span style="color: #51afef;">do</span>
-    aws --output=json cloudwatch delete-alarms --alarm-names $<span style="color: #dcaeea;">alarm</span>;
+    aws cloudwatch delete-alarms --alarm-names $<span style="color: #dcaeea;">alarm</span>;
 <span style="color: #51afef;">done</span>
 </pre>
 </div>
@@ -820,13 +840,76 @@ And then&#x2026; what did I do?
 </div>
 </div>
 
-<div id="outline-container-org7d82d3e" class="outline-2">
-<h2 id="org7d82d3e"><a href="#org7d82d3e">EC2 Instances</a></h2>
-<div class="outline-text-2" id="text-org7d82d3e">
+<div id="outline-container-org6f16057" class="outline-2">
+<h2 id="org6f16057"><a href="#org6f16057">EC2 KeyPairs</a></h2>
+<div class="outline-text-2" id="text-org6f16057">
 </div>
-<div id="outline-container-orgd729903" class="outline-3">
-<h3 id="orgd729903"><a href="#orgd729903">Running Instances</a></h3>
-<div class="outline-text-3" id="text-orgd729903">
+<div id="outline-container-org83ba08a" class="outline-3">
+<h3 id="org83ba08a"><a href="#org83ba08a">Create</a></h3>
+<div class="outline-text-3" id="text-org83ba08a">
+<div class="org-src-container">
+<pre class="src src-sh" id="org22f2d17">aws ec2 create-key-pair --key-name $<span style="color: #dcaeea;">KeyName</span>
+</pre>
+</div>
+
+<p>
+Copy private key to <code>~/.ssh</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #dcaeea;">KeyName</span>=$(<span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">KeyPair</span> | jq -r <span style="color: #98be65;">'.KeyName'</span>)
+<span style="color: #dcaeea;">KeyFile</span>=~/.ssh/$<span style="color: #dcaeea;">dir</span>/$<span style="color: #dcaeea;">KeyName</span>
+<span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">KeyPair</span> | jq -r <span style="color: #98be65;">'.KeyMaterial'</span> &gt; $<span style="color: #dcaeea;">KeyFile</span>
+chmod 0600 $<span style="color: #dcaeea;">KeyFile</span>
+<span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">KeyFile</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgab1f3f5" class="outline-3">
+<h3 id="orgab1f3f5"><a href="#orgab1f3f5">Describe</a></h3>
+<div class="outline-text-3" id="text-orgab1f3f5">
+<div class="org-src-container">
+<pre class="src src-sh">aws ec2 describe-key-pairs | jq <span style="color: #98be65;">'.KeyPairs[]'</span>
+</pre>
+</div>
+
+<pre class="example" id="orgc2894f4">
+{
+  "KeyPairId": "key-086cc980cd005be07",
+  "KeyFingerprint": "d2:51:6b:bd:8a:af:cd:91:23:7f:12:b8:c9:a9:ed:87",
+  "KeyName": "chrisclark",
+  "Tags": []
+}
+{
+  "KeyPairId": "key-0e4a6a6133dcfbff4",
+  "KeyFingerprint": "47:b3:fa:a0:72:c7:78:d2:6c:52:88:83:e1:b9:e1:59:79:2d:86:5c",
+  "KeyName": "test",
+  "Tags": []
+}
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org535b56d" class="outline-3">
+<h3 id="org535b56d"><a href="#org535b56d">Delete</a></h3>
+<div class="outline-text-3" id="text-org535b56d">
+<div class="org-src-container">
+<pre class="src src-sh">aws ec2 delete-key-pair --key-name $<span style="color: #dcaeea;">KeyName</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4397e78" class="outline-2">
+<h2 id="org4397e78"><a href="#org4397e78">EC2 Instance</a></h2>
+<div class="outline-text-2" id="text-org4397e78">
+</div>
+<div id="outline-container-org7621a9c" class="outline-3">
+<h3 id="org7621a9c"><a href="#org7621a9c">Get Running Instances</a></h3>
+<div class="outline-text-3" id="text-org7621a9c">
 <div class="org-src-container">
 <pre class="src src-sh">aws ec2 describe-instances <span style="color: #98be65;">\</span>
     --query <span style="color: #98be65;">"Reservations[].Instances[?State.name=="</span>running<span style="color: #98be65;">"]"</span>
@@ -835,9 +918,9 @@ And then&#x2026; what did I do?
 </div>
 </div>
 
-<div id="outline-container-orgdecfa38" class="outline-3">
-<h3 id="orgdecfa38"><a href="#orgdecfa38">All Instance Tags</a></h3>
-<div class="outline-text-3" id="text-orgdecfa38">
+<div id="outline-container-org75a7dd5" class="outline-3">
+<h3 id="org75a7dd5"><a href="#org75a7dd5">Get All Instance Tags</a></h3>
+<div class="outline-text-3" id="text-org75a7dd5">
 <div class="org-src-container">
 <pre class="src src-sh">aws ec2 describe-instances <span style="color: #98be65;">\</span>
     | jq -c <span style="color: #98be65;">'.Reservations[] | .Instances[] | .Tags[]'</span>
@@ -846,9 +929,9 @@ And then&#x2026; what did I do?
 </div>
 </div>
 
-<div id="outline-container-org6cf632e" class="outline-3">
-<h3 id="org6cf632e"><a href="#org6cf632e">Instances with Tag</a></h3>
-<div class="outline-text-3" id="text-org6cf632e">
+<div id="outline-container-orga274d3a" class="outline-3">
+<h3 id="orga274d3a"><a href="#orga274d3a">Get Instances with Tag</a></h3>
+<div class="outline-text-3" id="text-orga274d3a">
 <p>
 With just a specific Tag key:
 </p>
@@ -863,6 +946,25 @@ With just a specific Tag key:
 <p>
 With a specific tag key and value
 </p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgde6950f" class="outline-2">
+<h2 id="orgde6950f"><a href="#orgde6950f">EC2 Transit Gateway</a></h2>
+<div class="outline-text-2" id="text-orgde6950f">
+</div>
+<div id="outline-container-org874c9aa" class="outline-3">
+<h3 id="org874c9aa"><a href="#org874c9aa">List Routes in a TG Route Table</a></h3>
+<div class="outline-text-3" id="text-org874c9aa">
+<div class="org-src-container">
+<pre class="src src-sh">aws --profile shared-services --region us-east-1 <span style="color: #98be65;">\</span>
+    ec2 search-transit-gateway-routes <span style="color: #98be65;">\</span>
+    --transit-gateway-route-table-id $<span style="color: #dcaeea;">TGWRouteTableId</span> <span style="color: #98be65;">\</span>
+    --filters <span style="color: #98be65;">"Name=type,Values=propagated"</span> <span style="color: #98be65;">\</span>
+    | jq -r <span style="color: #98be65;">'.Routes[].DestinationCidrBlock'</span>
+</pre>
+</div>
 </div>
 </div>
 </div>
@@ -909,6 +1011,22 @@ With a specific tag key and value
     | jq -r <span style="color: #98be65;">'.NetworkInterfaces[]</span>
 <span style="color: #98be65;">          | select(.Attachment.InstanceOwnerId == "amazon-elb")</span>
 <span style="color: #98be65;">          | .PrivateIpAddress'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgaf79f46" class="outline-3">
+<h3 id="orgaf79f46"><a href="#orgaf79f46">Managed Prefix Lists</a></h3>
+<div class="outline-text-3" id="text-orgaf79f46">
+<div class="org-src-container">
+<pre class="src src-sh">aws ec2 describe-managed-prefix-lists | jq <span style="color: #98be65;">'.PrefixLists[]'</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh">aws ec2 get-managed-prefix-list-entries <span style="color: #98be65;">\</span>
+    --prefix-list-id $<span style="color: #dcaeea;">plid</span> | jq <span style="color: #98be65;">'.Entries[]'</span>
 </pre>
 </div>
 </div>
@@ -1368,6 +1486,22 @@ Doesn't work anymore. Get a new insult.
 </div>
 </div>
 
+<div id="outline-container-orge4d8741" class="outline-2">
+<h2 id="orge4d8741"><a href="#orge4d8741">Reosurce Access Manager (RAM)</a></h2>
+<div class="outline-text-2" id="text-orge4d8741">
+<p>
+This needs to be run against the AWS account that actually owns the shared
+resources. E.g. in a LandingZone environment, probably the shared-services
+account.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">aws ram list-resources --resource-owner SELF
+</pre>
+</div>
+</div>
+</div>
+
 <div id="outline-container-org4558207" class="outline-2">
 <h2 id="org4558207"><a href="#org4558207">Route53</a></h2>
 <div class="outline-text-2" id="text-org4558207">
@@ -1393,6 +1527,45 @@ Doesn't work anymore. Get a new insult.
     | jq <span style="color: #98be65;">'.ResourceRecordSets[]</span>
 <span style="color: #98be65;">          | select(.Name | contains("daily"))</span>
 <span style="color: #98be65;">          | .Name'</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7f441cb" class="outline-2">
+<h2 id="org7f441cb"><a href="#org7f441cb">SecretsManager</a></h2>
+<div class="outline-text-2" id="text-org7f441cb">
+</div>
+<div id="outline-container-org5b07153" class="outline-3">
+<h3 id="org5b07153"><a href="#org5b07153">List Secrets</a></h3>
+<div class="outline-text-3" id="text-org5b07153">
+<div class="org-src-container">
+<pre class="src src-sh">aws secretsmanager list-secrets
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org99a1807" class="outline-3">
+<h3 id="org99a1807"><a href="#org99a1807">Get Secret</a></h3>
+<div class="outline-text-3" id="text-org99a1807">
+<div class="org-src-container">
+<pre class="src src-sh">aws secretsmanager get-secret-value <span style="color: #98be65;">\</span>
+    --secret-id $<span style="color: #dcaeea;">SecretName</span> <span style="color: #98be65;">\</span>
+    | jq -r <span style="color: #98be65;">'.SecretString'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfaca1c3" class="outline-3">
+<h3 id="orgfaca1c3"><a href="#orgfaca1c3">Create Secret</a></h3>
+<div class="outline-text-3" id="text-orgfaca1c3">
+<div class="org-src-container">
+<pre class="src src-sh">aws secretsmanager create-secret <span style="color: #98be65;">\</span>
+    --name $<span style="color: #dcaeea;">SecretName</span> <span style="color: #98be65;">\</span>
+    --secret-string $<span style="color: #dcaeea;">SecretValue</span>
 </pre>
 </div>
 </div>
@@ -1471,7 +1644,21 @@ You can do this with <code>aws servicecatalog associate-principal-with-portfolio
 <h3 id="org120ab9a"><a href="#org120ab9a">List objects in bucket</a></h3>
 <div class="outline-text-3" id="text-org120ab9a">
 <div class="org-src-container">
-<pre class="src src-sh">aws s3api list-objects-v2 --bucket $<span style="color: #dcaeea;">BucketName</span> | jq <span style="color: #98be65;">'.Contents[]'</span>
+<pre class="src src-sh">aws s3api list-objects-v2 <span style="color: #98be65;">\</span>
+    --bucket $<span style="color: #dcaeea;">BucketName</span> <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.Contents[]'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgaf1f5d8" class="outline-3">
+<h3 id="orgaf1f5d8"><a href="#orgaf1f5d8">Get Object</a></h3>
+<div class="outline-text-3" id="text-orgaf1f5d8">
+<div class="org-src-container">
+<pre class="src src-sh">aws s3api get-object <span style="color: #98be65;">\</span>
+    --bucket $<span style="color: #dcaeea;">BucketName</span> <span style="color: #98be65;">\</span>
+    --key $<span style="color: #dcaeea;">Key</span> ./foo
 </pre>
 </div>
 </div>
@@ -1492,7 +1679,7 @@ You can do this with <code>aws servicecatalog associate-principal-with-portfolio
 <h3 id="orga5457b5"><a href="#orga5457b5">Delete Buckets with Name</a></h3>
 <div class="outline-text-3" id="text-orga5457b5">
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #dcaeea;">buckets</span>=$(aws s3api list-buckets | jq -r .Buckets[].Name  | grep <span style="color: #98be65;">"name-with-this"</span>)
+<pre class="src src-sh"><span style="color: #dcaeea;">buckets</span>=$(aws s3api list-buckets | jq -r .Buckets[].Name  | grep $<span style="color: #dcaeea;">Name</span>)
 <span style="color: #51afef;">for</span> bucket<span style="color: #51afef;"> in</span> $<span style="color: #dcaeea;">buckets</span>; <span style="color: #51afef;">do</span>
     aws s3 rb s3://$<span style="color: #dcaeea;">bucket</span>
 <span style="color: #51afef;">done</span>

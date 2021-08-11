@@ -29,18 +29,20 @@
 <div id="content" class="content">
 <header>
 <h1 class="title">Programming Languages</h1>
-</header><nav id="table-of-contents">
+</header><nav id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
 <li><a href="#orge201c4a">Python</a>
 <ul>
 <li><a href="#org1180616">Goals</a></li>
+<li><a href="#org39c09fa">Debugging with dap-mode</a></li>
 <li><a href="#orgf2b0ae2">Emacs installs pyright automatically</a></li>
+<li><a href="#org6f91338">Questions</a></li>
 </ul>
 </li>
-<li><a href="#org6f91338">Questions</a></li>
-<li><a href="#orgaf7ab6b">Old Notes</a>
+<li><a href="#orgbd8f973">Bash</a></li>
+<li><a href="#orge43011c">Deprecated Notes</a>
 <ul>
 <li><a href="#org7578215">PATH</a></li>
 </ul>
@@ -57,14 +59,22 @@
 <h3 id="org1180616"><a href="#org1180616">Goals</a></h3>
 <div class="outline-text-3" id="text-org1180616">
 <ul class="org-ul">
-<li>Use LSP.</li>
 <li>Each project has its own virtual environment.</li>
 <li>Different projects use different versions of Python.</li>
-<li>Each python project can define its own formatting rules. So, some projects may
-use <code>black</code>, while others use <code>yapf</code>, and each project might define, say,
-different maximum line length.</li>
+<li>Each python project can define its own formatting rules. Some projects may
+use <code>black</code>, while others use <code>yapf</code>. Each project might define, say,
+different maximum line lengths.</li>
 <li>Each project can define its own linting rules (using say <code>pylint</code>).</li>
 </ul>
+</div>
+</div>
+
+<div id="outline-container-org39c09fa" class="outline-3">
+<h3 id="org39c09fa"><a href="#org39c09fa">Debugging with dap-mode</a></h3>
+<div class="outline-text-3" id="text-org39c09fa">
+<p>
+Install <a href="https://github.com/microsoft/debugpy/">debugpy</a> - how can I install this globally?
+</p>
 </div>
 </div>
 
@@ -81,21 +91,35 @@ Emacs ran:
 </div>
 </div>
 </div>
-</div>
 
-<div id="outline-container-org6f91338" class="outline-2">
-<h2 id="org6f91338"><a href="#org6f91338">Questions</a></h2>
-<div class="outline-text-2" id="text-org6f91338">
+<div id="outline-container-org6f91338" class="outline-3">
+<h3 id="org6f91338"><a href="#org6f91338">Questions</a></h3>
+<div class="outline-text-3" id="text-org6f91338">
 <p>
 Is there a way to conditionally load either the black or yapf lsp plugins
 depending on project config?
 </p>
 </div>
 </div>
+</div>
 
-<div id="outline-container-orgaf7ab6b" class="outline-2">
-<h2 id="orgaf7ab6b"><a href="#orgaf7ab6b">Old Notes</a></h2>
-<div class="outline-text-2" id="text-orgaf7ab6b">
+<div id="outline-container-orgbd8f973" class="outline-2">
+<h2 id="orgbd8f973"><a href="#orgbd8f973">Bash</a></h2>
+<div class="outline-text-2" id="text-orgbd8f973">
+<p>
+Install bash-language-server:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">yarn global add bash-language-server
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge43011c" class="outline-2">
+<h2 id="orge43011c"><a href="#orge43011c">Deprecated Notes</a></h2>
+<div class="outline-text-2" id="text-orge43011c">
 <p>
 I don't use <code>pyls</code> anymore, I've switched to <code>pyright</code>.
 </p>

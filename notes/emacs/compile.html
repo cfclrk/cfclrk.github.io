@@ -29,15 +29,15 @@
 <div id="content" class="content">
 <header>
 <h1 class="title">Comiling Emacs on MacOS</h1>
-</header><nav id="table-of-contents">
+</header><nav id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
 <li><a href="#org956aced">Git Clone</a></li>
 <li><a href="#org803c21a">Install Prerequisites</a></li>
 <li><a href="#orgad024cc">Provide path to libxml headers</a></li>
 <li><a href="#org0017a4c">Autogen</a></li>
-<li><a href="#org1635976">Using &#x2013;with-native-compilation</a>
+<li><a href="#orge829ec5">Native Compilation</a>
 <ul>
 <li><a href="#org0698ebf">Notes/Questions</a></li>
 </ul>
@@ -45,6 +45,7 @@
 <li><a href="#orgb551475">Compile</a></li>
 <li><a href="#org15d665d">Add Icon to Dock</a></li>
 <li><a href="#orgaedf59f">Verify Features</a></li>
+<li><a href="#org09b39d9">Debugging</a></li>
 <li><a href="#orgbfc0cd6">Resources</a></li>
 </ul>
 </div>
@@ -98,18 +99,30 @@ Assuming you have already run <code>brew install libxml2</code> from above:
 </div>
 </div>
 
-<div id="outline-container-org1635976" class="outline-2">
-<h2 id="org1635976"><a href="#org1635976">Using &#x2013;with-native-compilation</a></h2>
-<div class="outline-text-2" id="text-org1635976">
+<div id="outline-container-orge829ec5" class="outline-2">
+<h2 id="orge829ec5"><a href="#orge829ec5">Native Compilation</a></h2>
+<div class="outline-text-2" id="text-orge829ec5">
+<blockquote>
 <p>
-NOTE: I sort of got this working, but decided to re-compile Emacs without
-native compilation. The last straw was when I edited a bug in a package, and
-re-running the function did not include my change.
+NOTE 1: After a lot of struggle, I got this sort of working, but eventually gave
+up on native compilation. Some of the beauty if interpreted languages is&#x2026;
+not having to deal with compilation.
 </p>
+</blockquote>
+
+<blockquote>
+<p>
+NOTE 2: Next time, probably best to use: <a href="https://github.com/jimeh/build-emacs-for-macos">https://github.com/jimeh/build-emacs-for-macos</a>
+</p>
+</blockquote>
 
 <p>
 Do things in this section if you want to compile Emacs
 <code>--with-native-compilation</code>.
+</p>
+
+<p>
+Get libgccjit:
 </p>
 
 <div class="org-src-container">
@@ -142,7 +155,7 @@ Do <b>NOT</b> manually create that link (say, by doing something like <code>ln -
 following error during the <code>./configure</code> step of building Emacs:
 </p>
 
-<pre class="example" id="org12619bd">
+<pre class="example" id="org8360280">
 checking for AppKit/AppKit.h... no
 configure: error: The include files (AppKit/AppKit.h etc) that
 are required for a Nextstep build are missing or cannot be compiled.
@@ -181,7 +194,7 @@ Emacs from a pinned Dock icon, Emacs won't have <code>LIBRARY_PATH</code> set, a
 see an error like:
 </p>
 
-<pre class="example" id="org4c41659">
+<pre class="example" id="org2351fae">
 ld: library not found for -lgcc_ext.10.5
 libgccjit.so: error: error invoking gcc driver
 </pre>
@@ -317,6 +330,22 @@ t
 <pre class="example">
 t
 </pre>
+</div>
+</div>
+
+<div id="outline-container-org09b39d9" class="outline-2">
+<h2 id="org09b39d9"><a href="#org09b39d9">Debugging</a></h2>
+<div class="outline-text-2" id="text-org09b39d9">
+<pre class="example" id="org7db7c32">
+$ lldb
+(lldb) target create "nextstep/Emacs.app/Contents/MacOS/Emacs"
+Current executable set to '/Users/chris.clark/Projects/emacs/nextstep/Emacs.app/Contents/MacOS/Emacs' (x86_64).
+(lldb) run
+</pre>
+
+<p>
+To debug problems during running the <code>init.el</code> file, run <code>$EMACS --debug-init</code>.
+</p>
 </div>
 </div>
 

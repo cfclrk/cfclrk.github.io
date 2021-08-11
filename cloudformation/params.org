@@ -1,11 +1,11 @@
-# Created 2021-06-23 Wed 11:40
+# Created 2021-08-11 Wed 15:57
 #+TITLE:
-* DeploymentName
+This document contains some common CloudFormation parameters which are included
+in other documents in this project.
 
-A *deployment* is a complete deployed application, potentially comprised of many
-CloudFormation stacks. This is sometimes called an "environment", but that is an
-overloaded term. Use the =DeploymentName= to indicate which deployment a Stack
-is part of.
+Parameter names should adhere to AWS [[https://aws-quickstart.github.io/naming-parms.html][parameter naming standards]].
+
+* DeploymentName
 
 #+begin_src yaml
   DeploymentName:
@@ -13,7 +13,19 @@ is part of.
     Description: A name for this deployment
 #+end_src
 
+A *deployment* is a complete deployed application, potentially comprised of many
+CloudFormation stacks. This is sometimes called an "environment", but that is an
+overloaded term. Use the =DeploymentName= to indicate which deployment a Stack
+is part of.
+
 * KeyName
+
+#+begin_src yaml
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: The name of an EC2 KeyPair
+    Default: test
+#+end_src
 
 AWS does not provide a CloudFormation type for EC2 KeyPairs. This was a
 deliberate choice: a KeyPair consists of a public and private key, and AWS does
@@ -30,9 +42,12 @@ So, in CloudFormation, you have two options:
    Function) in your CloudFormation template. The Custom Resource must save the
    private key somewhere (like SecretsManager or SSM Parameter Store).
 
+* SSHCIDR
+
 #+begin_src yaml
-  KeyName:
-    Type: AWS::EC2::KeyPair::KeyName
-    Description: The name of an EC2 KeyPair
-    Default: test
+  SSHCIDR:
+    Type: String
+    Description: IP CIDR range
 #+end_src
+
+Allow SSH access from this CIDR range.

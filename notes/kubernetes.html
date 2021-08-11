@@ -68,6 +68,7 @@
 <li><a href="#org3c04d03">Scaling a deployment</a></li>
 </ul>
 </li>
+<li><a href="#orgf16f2ee">Service Accounts</a></li>
 <li><a href="#org1fae15e">Affinity, Taints, and Tolerations</a>
 <ul>
 <li><a href="#orga5a485d">Affinity</a></li>
@@ -324,6 +325,22 @@ Now, <code>ssh user@nodeIp</code>
 <pre class="src src-sh">kubectl scale deployment &lt;deployment-name&gt; --replicas=1
 </pre>
 </div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf16f2ee" class="outline-2">
+<h2 id="orgf16f2ee"><a href="#orgf16f2ee">Service Accounts</a></h2>
+<div class="outline-text-2" id="text-orgf16f2ee">
+<p>
+Get the default service account:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">kubectl get secret -o json <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.items[]</span>
+<span style="color: #98be65;">          | select(.metadata.annotations["kubernetes.io/service-account.name"] == "default")'</span>
+</pre>
 </div>
 </div>
 </div>
