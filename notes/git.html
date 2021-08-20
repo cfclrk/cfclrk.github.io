@@ -70,7 +70,7 @@
 <h2 id="org844b424"><a href="#org844b424">Refs</a></h2>
 <div class="outline-text-2" id="text-org844b424">
 <p>
-SHA
+The SHA of the HEAD ref:
 </p>
 
 <div class="org-src-container">
@@ -78,8 +78,13 @@ SHA
 </pre>
 </div>
 
+<div class="org-src-container">
+<pre class="src src-sh">git log -1 --format=<span style="color: #98be65;">'%H'</span>
+</pre>
+</div>
+
 <p>
-Branch
+Current branch
 </p>
 
 <div class="org-src-container">
@@ -175,7 +180,7 @@ Mostly adapted from <a href="https://stackoverflow.com/a/55049181/340613">this S
 Given
 </p>
 
-<pre class="example" id="orgb7a563d">
+<pre class="example" id="orgf4d9eed">
 A --- B --- C --- D         main
 </pre>
 
@@ -183,7 +188,7 @@ A --- B --- C --- D         main
 And I want to rebase <code>D</code> to an ancestor <code>B</code> (I want <code>C</code> and <code>D</code> to be siblings):
 </p>
 
-<pre class="example" id="org94aa4dd">
+<pre class="example" id="org91d0fbb">
 A --- B --- C         main
       \
        \-- D          feature
@@ -214,7 +219,7 @@ point.
 Given
 </p>
 
-<pre class="example" id="org4d42fbe">
+<pre class="example" id="orga30b6f9">
 A --- B --- C          main
  \
   \-- D                topic
@@ -224,7 +229,7 @@ A --- B --- C          main
 And you want to rebase <code>topic</code> to <code>B</code> like so:
 </p>
 
-<pre class="example" id="org466bd55">
+<pre class="example" id="org0f9727b">
 A --- B --- C          main
        \
         \-- D          topic

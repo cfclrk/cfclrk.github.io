@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2021-08-11 Wed 14:24 -->
+<!-- 2021-08-20 Fri 11:55 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Magit and Forge</title>
@@ -34,6 +34,7 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
+<li><a href="#org081dd54">Rebase and move branch pointers</a></li>
 <li><a href="#orgb167c57">View File History</a></li>
 <li><a href="#org6f95000">View File at Specific Commit</a></li>
 <li><a href="#org6f9cf0b">View PR Diff</a></li>
@@ -42,6 +43,26 @@
 </ul>
 </div>
 </nav>
+
+<div id="outline-container-org081dd54" class="outline-2">
+<h2 id="org081dd54"><a href="#org081dd54">Rebase and move branch pointers</a></h2>
+<div class="outline-text-2" id="text-org081dd54">
+<p>
+Do the rebase. The same commits will have different SHAs. Old branches will
+still be at previous SHAs.
+</p>
+
+<ul class="org-ul">
+<li>Go to logs buffer</li>
+<li>For each branch:
+<ul class="org-ul">
+<li>check out branch</li>
+<li>move cursor to commit where branch should be moved to</li>
+<li><code>x</code> to reset to this commit</li>
+</ul></li>
+</ul>
+</div>
+</div>
 
 <div id="outline-container-orgb167c57" class="outline-2">
 <h2 id="orgb167c57"><a href="#orgb167c57">View File History</a></h2>

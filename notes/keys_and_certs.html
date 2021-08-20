@@ -63,8 +63,8 @@
 <li><a href="#org93160ee">Fingerprint</a></li>
 <li><a href="#orgd8c7f59">Checking and Viewing Certs</a>
 <ul>
-<li><a href="#orgb7fbd8a">Check if a Private Key Matches a Public Key</a></li>
-<li><a href="#orge234d82">Certificate Details</a></li>
+<li><a href="#org74e46d9">View a Server's Certificate</a></li>
+<li><a href="#orgd8bd0dc">Check if a Private Key Matches a Certificate</a></li>
 <li><a href="#org251da9c">CSR</a></li>
 <li><a href="#orgfb82592">Verify Cert with CA</a></li>
 </ul>
@@ -366,7 +366,8 @@ practice I'm not sure of any examples where that actually happens.
 <h2 id="org93160ee"><a href="#org93160ee">Fingerprint</a></h2>
 <div class="outline-text-2" id="text-org93160ee">
 <div class="org-src-container">
-<pre class="src src-sh">openssl x509 -noout -fingerprint -sha256 -inform pem -in $<span style="color: #dcaeea;">file</span>
+<pre class="src src-sh">openssl x509 -noout -fingerprint -sha256 <span style="color: #98be65;">\</span>
+        -inform pem -in $<span style="color: #dcaeea;">file</span>
 </pre>
 </div>
 
@@ -381,12 +382,14 @@ practice I'm not sure of any examples where that actually happens.
 </div>
 
 <p>
-AWS EC2 KeyPairs created by AWS are pretty specific. This command is from the
-docs <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#verify-key-pair-fingerprints">here</a> about how to check the fingerprint.
+AWS EC2 KeyPairs created by AWS are rather specific. This command is from the
+docs <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#verify-key-pair-fingerprints">here</a> about how to check their fingerprint.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">openssl pkcs8 -in $<span style="color: #dcaeea;">file</span> -inform PEM -outform DER -topk8 -nocrypt | openssl sha1 -c
+<pre class="src src-sh">openssl pkcs8 -in $<span style="color: #dcaeea;">file</span> <span style="color: #98be65;">\</span>
+        -inform PEM -outform DER -topk8 -nocrypt <span style="color: #98be65;">\</span>
+    | openssl sha1 -c
 </pre>
 </div>
 </div>
@@ -396,37 +399,9 @@ docs <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.
 <h2 id="orgd8c7f59"><a href="#orgd8c7f59">Checking and Viewing Certs</a></h2>
 <div class="outline-text-2" id="text-orgd8c7f59">
 </div>
-<div id="outline-container-orgb7fbd8a" class="outline-3">
-<h3 id="orgb7fbd8a"><a href="#orgb7fbd8a">Check if a Private Key Matches a Public Key</a></h3>
-<div class="outline-text-3" id="text-orgb7fbd8a">
-<p>
-On the private key:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">openssl rsa -modulus -noout -in &lt;path/to/private/key.pem&gt;
-</pre>
-</div>
-
-<p>
-On the public key:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">openssl x509 -modulus -noout -in &lt;path/to/cert.pem&gt;
-</pre>
-</div>
-
-<p>
-If the output of those two match, then the keys go together. An easy way to
-compare them is to pipe them both to <code>openssl md5</code>.
-</p>
-</div>
-</div>
-
-<div id="outline-container-orge234d82" class="outline-3">
-<h3 id="orge234d82"><a href="#orge234d82">Certificate Details</a></h3>
-<div class="outline-text-3" id="text-orge234d82">
+<div id="outline-container-org74e46d9" class="outline-3">
+<h3 id="org74e46d9"><a href="#org74e46d9">View a Server's Certificate</a></h3>
+<div class="outline-text-3" id="text-org74e46d9">
 <p>
 Show cert info for a local certificate file.
 </p>
@@ -441,9 +416,37 @@ Show cert info for a website.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">openssl s_client -connect google.com:443 -showcerts
+<pre class="src src-sh">openssl s_client -connect $<span style="color: #dcaeea;">domain</span>:443 -showcerts
 </pre>
 </div>
+</div>
+</div>
+
+<div id="outline-container-orgd8bd0dc" class="outline-3">
+<h3 id="orgd8bd0dc"><a href="#orgd8bd0dc">Check if a Private Key Matches a Certificate</a></h3>
+<div class="outline-text-3" id="text-orgd8bd0dc">
+<p>
+On the private key:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">openssl rsa -modulus -noout -in $<span style="color: #dcaeea;">key</span>
+</pre>
+</div>
+
+<p>
+On the certificate:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">openssl x509 -modulus -noout -in $<span style="color: #dcaeea;">cert</span>
+</pre>
+</div>
+
+<p>
+If the output of those two are the same, then the keys go together. An easy
+way to compare them is to pipe them both to <code>openssl md5</code>.
+</p>
 </div>
 </div>
 

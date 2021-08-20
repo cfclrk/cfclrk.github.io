@@ -33,7 +33,7 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org8c61e32">Account</a></li>
+<li><a href="#orga43053f">Account</a></li>
 <li><a href="#org68e07f2">IP Address Ranges</a>
 <ul>
 <li><a href="#orga19ac76">Get Region of IP</a></li>
@@ -49,7 +49,7 @@
 <li><a href="#orga3ad8a9">ACM</a>
 <ul>
 <li><a href="#orgb9b204e">List</a></li>
-<li><a href="#org528380d">Describe</a></li>
+<li><a href="#orgab1f3f5">Describe</a></li>
 <li><a href="#orgac41550">Get Certificate</a></li>
 <li><a href="#orgb935171">Get Certificate PEM File</a></li>
 </ul>
@@ -93,7 +93,7 @@
 <li><a href="#org6f16057">EC2 KeyPairs</a>
 <ul>
 <li><a href="#org83ba08a">Create</a></li>
-<li><a href="#orgab1f3f5">Describe</a></li>
+<li><a href="#org3c07df1">Describe</a></li>
 <li><a href="#org535b56d">Delete</a></li>
 </ul>
 </li>
@@ -101,7 +101,8 @@
 <ul>
 <li><a href="#org7621a9c">Get Running Instances</a></li>
 <li><a href="#org75a7dd5">Get All Instance Tags</a></li>
-<li><a href="#orga274d3a">Get Instances with Tag</a></li>
+<li><a href="#orgfda4459">Get Instances with Tag Key</a></li>
+<li><a href="#org386b66d">Get Instances with Tag Key/Value</a></li>
 </ul>
 </li>
 <li><a href="#orgde6950f">EC2 Transit Gateway</a>
@@ -244,15 +245,15 @@
 </div>
 </nav>
 
-<div id="outline-container-org8c61e32" class="outline-2">
-<h2 id="org8c61e32"><a href="#org8c61e32">Account</a></h2>
-<div class="outline-text-2" id="text-org8c61e32">
+<div id="outline-container-orga43053f" class="outline-2">
+<h2 id="orga43053f"><a href="#orga43053f">Account</a></h2>
+<div class="outline-text-2" id="text-orga43053f">
 <p>
 Account number:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="orgec35e7f">aws sts get-caller-identity --query <span style="color: #98be65;">'Account'</span> --output text
+<pre class="src src-sh" id="org8c61e32">aws sts get-caller-identity --query <span style="color: #98be65;">'Account'</span> --output text
 </pre>
 </div>
 </div>
@@ -307,7 +308,7 @@ See: <a href="https://unix.stackexchange.com/questions/274330/check-ip-is-in-ran
 </pre>
 </div>
 
-<pre class="example" id="orgbec9504">
+<pre class="example" id="org1d2604d">
 eu-north-1
 ap-south-1
 eu-west-3
@@ -359,7 +360,7 @@ document. You have to decide whether "GLOBAL" is a "region" in your situation.
 </pre>
 </div>
 
-<pre class="example" id="orgdb10d7e">
+<pre class="example" id="org266dd7f">
 GLOBAL
 af-south-1
 ap-east-1
@@ -410,7 +411,7 @@ Get the number of VPCs in each region the slow and simple way.
 </pre>
 </div>
 
-<pre class="example" id="org1ede63f">
+<pre class="example" id="org221ab3a">
 eu-north-1: 0
 ap-south-1: 0
 eu-west-3: 0
@@ -447,7 +448,7 @@ syntax for th length of the <code>$regions</code> array.
 </pre>
 </div>
 
-<pre class="example" id="org3221841">
+<pre class="example" id="org54b4f20">
 us-east-1: 2
 ca-central-1: 0
 us-east-2: 2
@@ -484,9 +485,9 @@ ap-southeast-1: 1
 </div>
 </div>
 
-<div id="outline-container-org528380d" class="outline-3">
-<h3 id="org528380d"><a href="#org528380d">Describe</a></h3>
-<div class="outline-text-3" id="text-org528380d">
+<div id="outline-container-orgab1f3f5" class="outline-3">
+<h3 id="orgab1f3f5"><a href="#orgab1f3f5">Describe</a></h3>
+<div class="outline-text-3" id="text-orgab1f3f5">
 <div class="org-src-container">
 <pre class="src src-sh">aws acm describe-certificate --certificate-arn $<span style="color: #dcaeea;">CertArn</span>
 </pre>
@@ -626,9 +627,24 @@ Get the value of a single parameter:
 <div id="outline-container-org938e599" class="outline-3">
 <h3 id="org938e599"><a href="#org938e599">Exports</a></h3>
 <div class="outline-text-3" id="text-org938e599">
+<p>
+Get value of the exported field with name <code>$ExportName</code>:
+</p>
+
 <div class="org-src-container">
 <pre class="src src-sh">aws cloudformation list-exports <span style="color: #98be65;">\</span>
     --query <span style="color: #98be65;">"Exports[?Name=='$ExportName'].Value"</span> <span style="color: #98be65;">\</span>
+    --output text
+</pre>
+</div>
+
+<p>
+List exports that start with a string:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">aws cloudformation list-exports <span style="color: #98be65;">\</span>
+    --query <span style="color: #98be65;">"Exports[?starts_with(Name, 'foo-')].[Name, Value]"</span> <span style="color: #98be65;">\</span>
     --output text
 </pre>
 </div>
@@ -867,15 +883,15 @@ chmod 0600 $<span style="color: #dcaeea;">KeyFile</span>
 </div>
 </div>
 
-<div id="outline-container-orgab1f3f5" class="outline-3">
-<h3 id="orgab1f3f5"><a href="#orgab1f3f5">Describe</a></h3>
-<div class="outline-text-3" id="text-orgab1f3f5">
+<div id="outline-container-org3c07df1" class="outline-3">
+<h3 id="org3c07df1"><a href="#org3c07df1">Describe</a></h3>
+<div class="outline-text-3" id="text-org3c07df1">
 <div class="org-src-container">
 <pre class="src src-sh">aws ec2 describe-key-pairs | jq <span style="color: #98be65;">'.KeyPairs[]'</span>
 </pre>
 </div>
 
-<pre class="example" id="orgc2894f4">
+<pre class="example" id="orgf388a16">
 {
   "KeyPairId": "key-086cc980cd005be07",
   "KeyFingerprint": "d2:51:6b:bd:8a:af:cd:91:23:7f:12:b8:c9:a9:ed:87",
@@ -929,17 +945,33 @@ chmod 0600 $<span style="color: #dcaeea;">KeyFile</span>
 </div>
 </div>
 
-<div id="outline-container-orga274d3a" class="outline-3">
-<h3 id="orga274d3a"><a href="#orga274d3a">Get Instances with Tag</a></h3>
-<div class="outline-text-3" id="text-orga274d3a">
+<div id="outline-container-orgfda4459" class="outline-3">
+<h3 id="orgfda4459"><a href="#orgfda4459">Get Instances with Tag Key</a></h3>
+<div class="outline-text-3" id="text-orgfda4459">
 <p>
-With just a specific Tag key:
+With just a specific Tag key, disregarding value:
 </p>
 
 <div class="org-src-container">
 <pre class="src src-sh">aws ec2 describe-instances <span style="color: #98be65;">\</span>
     --filter <span style="color: #98be65;">"Name=tag-key,Values=k8s.io/role/node"</span> <span style="color: #98be65;">\</span>
     | jq <span style="color: #98be65;">'.Reservations[].Instances[]'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org386b66d" class="outline-3">
+<h3 id="org386b66d"><a href="#org386b66d">Get Instances with Tag Key/Value</a></h3>
+<div class="outline-text-3" id="text-org386b66d">
+<p>
+With just a specific Tag key:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">aws ec2 describe-instances <span style="color: #98be65;">\</span>
+    --filter <span style="color: #98be65;">"Name=tag:$TagName,Values=$TagValue"</span> <span style="color: #98be65;">\</span>
+    | jq -r <span style="color: #98be65;">'.Reservations[].Instances[].Tags[] | select(.Key == "Name") | .Value'</span>
 </pre>
 </div>
 
@@ -1521,6 +1553,10 @@ account.
 <div id="outline-container-org4857eb3" class="outline-3">
 <h3 id="org4857eb3"><a href="#org4857eb3">List Records for a HostedZone</a></h3>
 <div class="outline-text-3" id="text-org4857eb3">
+<p>
+Records containing a certain string:
+</p>
+
 <div class="org-src-container">
 <pre class="src src-sh">aws route53 list-resource-record-sets <span style="color: #98be65;">\</span>
     --hosted-zone-id $<span style="color: #dcaeea;">HostedZoneId</span> <span style="color: #98be65;">\</span>
@@ -1643,10 +1679,26 @@ You can do this with <code>aws servicecatalog associate-principal-with-portfolio
 <div id="outline-container-org120ab9a" class="outline-3">
 <h3 id="org120ab9a"><a href="#org120ab9a">List objects in bucket</a></h3>
 <div class="outline-text-3" id="text-org120ab9a">
+<p>
+All objects
+</p>
+
 <div class="org-src-container">
 <pre class="src src-sh">aws s3api list-objects-v2 <span style="color: #98be65;">\</span>
     --bucket $<span style="color: #dcaeea;">BucketName</span> <span style="color: #98be65;">\</span>
     | jq <span style="color: #98be65;">'.Contents[]'</span>
+</pre>
+</div>
+
+<p>
+10 most recent objects. AWS has no way of doing this filtering server-side,
+so you need to request all objects and then sort them.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">aws s3api list-objects-v2 <span style="color: #98be65;">\</span>
+    --bucket $<span style="color: #dcaeea;">BucketName</span> <span style="color: #98be65;">\</span>
+    | jq -r <span style="color: #98be65;">'.Contents | sort_by(.LastModified) | reverse | first | .Key'</span>
 </pre>
 </div>
 </div>

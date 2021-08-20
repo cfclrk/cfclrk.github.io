@@ -41,6 +41,7 @@
 <li><a href="#org88b9cd1">Using clj-new</a></li>
 </ul>
 </li>
+<li><a href="#orgf76524d">Emacs Cider</a></li>
 <li><a href="#orgf3174e9">Testing</a>
 <ul>
 <li><a href="#org8423586">Run all tests in namespace</a></li>
@@ -102,8 +103,7 @@ Hello world, the time is 10:00 AM
 
 
 <p>
-Start a REPL that I can attach to from Emacs (I <i>assume</i> you can specify
-<code>:mvn/version</code> like this? My mvn is very rusty.)
+Start a REPL that I can attach to from Emacs.
 </p>
 
 <div class="org-src-container">
@@ -137,7 +137,7 @@ However it should be namespaced properly (TODO: work on this).
 
 <div class="org-src-container">
 <pre class="src src-sh">touch $<span style="color: #dcaeea;">d</span>/deps.edn $<span style="color: #dcaeea;">d</span>/src/core.clj
-<span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"{:deps {org.clojure/clojure {:mvn/version \"1.10.0\"}}}"</span> &gt; $<span style="color: #dcaeea;">d</span>/deps.edn
+<span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"{:deps {org.clojure/clojure {:mvn/version \"RELEASE\"}}}"</span> &gt; $<span style="color: #dcaeea;">d</span>/deps.edn
 <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"(ns core) (defn -main [] (println \"hello world\"))"</span> &gt;&gt; src/core.clj
 clj -m core
 </pre>
@@ -157,6 +157,25 @@ The following makes use of an alias defined in <code>~/.clojure/deps.edn</code>.
 </pre>
 </div>
 </div>
+</div>
+</div>
+
+<div id="outline-container-orgf76524d" class="outline-2">
+<h2 id="orgf76524d"><a href="#orgf76524d">Emacs Cider</a></h2>
+<div class="outline-text-2" id="text-orgf76524d">
+<p>
+Basic workflow is described <a href="https://docs.cider.mx/cider/usage/cider_mode.html#basic-workflow">in the cider docs here</a>.
+</p>
+
+<ul class="org-ul">
+<li>Open a file at the root dir of the project</li>
+<li><code>M-x cider-jack-in</code></li>
+<li>Open a file in the project, and <code>C-c C-k</code> (<code>cider-load-buffer</code>)</li>
+<li>In the <code>*cider-repl</code> buffer, you know call the fully-qualified functions in
+that file. Or, <code>(in-ns &lt;ns-name&gt;)</code> to call functions in that file without
+namespace qualification.</li>
+<li>Edit a function, and <code>C-c C-e</code> on that function to reload it.</li>
+</ul>
 </div>
 </div>
 

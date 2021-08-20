@@ -35,7 +35,8 @@
 <ul>
 <li><a href="#orgd156457">wat, wasm, and wast</a></li>
 <li><a href="#orgcea14ba">Tooling</a></li>
-<li><a href="#org5ddaed8">Convert wat to wasm</a></li>
+<li><a href="#orgc9dfc4f">Runtimes</a></li>
+<li><a href="#org4823c43">Convert wat (text) to wasm (binary)</a></li>
 <li><a href="#orgd26ccc2">Convert wasm to wat</a></li>
 </ul>
 </div>
@@ -44,14 +45,15 @@
 <div id="outline-container-orgd156457" class="outline-2">
 <h2 id="orgd156457"><a href="#orgd156457">wat, wasm, and wast</a></h2>
 <div class="outline-text-2" id="text-orgd156457">
-<p>
-<code>wat</code> is the WebAssembly text format (lisp). <code>wasm</code> is the WebAssembly binary
-format. <code>wast</code> is &#x2026;
-</p>
+<ul class="org-ul">
+<li><code>wat</code>: is the textual format (lisp)</li>
+<li><code>wasm</code>: the binary format</li>
+<li><code>wast</code>: ??</li>
+</ul>
 
 <p>
-Also, "wasm" is used to abbreviate "WebAssembly", as in: "the wasm text format
-and the wasm binary format".
+Also, "wasm" is sometimes used to abbreviate "WebAssembly", as in: "the wasm
+text format and the wasm binary format".
 </p>
 </div>
 </div>
@@ -67,12 +69,31 @@ Install <a href="https://github.com/webassembly/wabt">wabt</a>, the WebAssembly 
 <pre class="src src-sh">brew install wabt
 </pre>
 </div>
+
+<ul class="org-ul">
+<li>Emscripten: LLVM backend for wasm</li>
+</ul>
 </div>
 </div>
 
-<div id="outline-container-org5ddaed8" class="outline-2">
-<h2 id="org5ddaed8"><a href="#org5ddaed8">Convert wat to wasm</a></h2>
-<div class="outline-text-2" id="text-org5ddaed8">
+<div id="outline-container-orgc9dfc4f" class="outline-2">
+<h2 id="orgc9dfc4f"><a href="#orgc9dfc4f">Runtimes</a></h2>
+<div class="outline-text-2" id="text-orgc9dfc4f">
+<p>
+The <a href="https://webassembly.org/roadmap/">roadmap</a> lists three non-browser runtimes:
+</p>
+
+<ul class="org-ul">
+<li>Node.js</li>
+<li>Wasmtime</li>
+<li>Wasmer</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org4823c43" class="outline-2">
+<h2 id="org4823c43"><a href="#org4823c43">Convert wat (text) to wasm (binary)</a></h2>
+<div class="outline-text-2" id="text-org4823c43">
 <p>
 Tangle this to <code>simple.wat</code>.
 </p>
@@ -87,7 +108,7 @@ Tangle this to <code>simple.wat</code>.
 </div>
 
 <p>
-This produces a binary file called <code>simple.wasm</code>.
+Now run <code>wat2wasm</code> to produce a binary file called <code>simple.wasm</code>.
 </p>
 
 <div class="org-src-container">
@@ -104,7 +125,7 @@ Why is this writing to stderr?
 </pre>
 </div>
 
-<pre class="example" id="org125dead">
+<pre class="example" id="org277c4eb">
 0000000: 0061 736d                                 ; WASM_BINARY_MAGIC
 0000004: 0100 0000                                 ; WASM_BINARY_VERSION
 ; section "Type" (1)

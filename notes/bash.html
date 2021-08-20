@@ -79,6 +79,7 @@
 </ul>
 </li>
 <li><a href="#org36e6ea8">Range</a></li>
+<li><a href="#org434f97e">Echo vs Printf</a></li>
 <li><a href="#orgb4e943d">Numbered List</a></li>
 </ul>
 </div>
@@ -637,6 +638,36 @@ baz
 </div>
 </div>
 
+<div id="outline-container-org434f97e" class="outline-2">
+<h2 id="org434f97e"><a href="#org434f97e">Echo vs Printf</a></h2>
+<div class="outline-text-2" id="text-org434f97e">
+<p>
+Notice that <code>echo</code> adds a newline.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"foo"</span> | od -c
+</pre>
+</div>
+
+<pre class="example">
+0000000    f   o   o  \n
+0000004
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-sh">printf <span style="color: #98be65;">"foo"</span> | od -c
+</pre>
+</div>
+
+<pre class="example">
+0000000    f   o   o
+0000003
+</pre>
+</div>
+</div>
+
 <div id="outline-container-orgb4e943d" class="outline-2">
 <h2 id="orgb4e943d"><a href="#orgb4e943d">Numbered List</a></h2>
 <div class="outline-text-2" id="text-orgb4e943d">
@@ -645,7 +676,7 @@ baz
 </pre>
 </div>
 
-<pre class="example" id="org09bdcad">
+<pre class="example" id="org3533b01">
  1	/Users/chris.clark/.rbenv/shims
  2	/usr/local/Cellar/pyenv-virtualenv/1.1.5/shims
  3	/Users/chris.clark/.pyenv/shims
