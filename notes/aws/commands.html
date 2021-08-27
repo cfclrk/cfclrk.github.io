@@ -33,7 +33,7 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orga43053f">Account</a></li>
+<li><a href="#org1dec936">Account</a></li>
 <li><a href="#org68e07f2">IP Address Ranges</a>
 <ul>
 <li><a href="#orga19ac76">Get Region of IP</a></li>
@@ -49,7 +49,7 @@
 <li><a href="#orga3ad8a9">ACM</a>
 <ul>
 <li><a href="#orgb9b204e">List</a></li>
-<li><a href="#orgab1f3f5">Describe</a></li>
+<li><a href="#org3c07df1">Describe</a></li>
 <li><a href="#orgac41550">Get Certificate</a></li>
 <li><a href="#orgb935171">Get Certificate PEM File</a></li>
 </ul>
@@ -93,7 +93,7 @@
 <li><a href="#org6f16057">EC2 KeyPairs</a>
 <ul>
 <li><a href="#org83ba08a">Create</a></li>
-<li><a href="#org3c07df1">Describe</a></li>
+<li><a href="#org350bcf6">Describe</a></li>
 <li><a href="#org535b56d">Delete</a></li>
 </ul>
 </li>
@@ -245,15 +245,15 @@
 </div>
 </nav>
 
-<div id="outline-container-orga43053f" class="outline-2">
-<h2 id="orga43053f"><a href="#orga43053f">Account</a></h2>
-<div class="outline-text-2" id="text-orga43053f">
+<div id="outline-container-org1dec936" class="outline-2">
+<h2 id="org1dec936"><a href="#org1dec936">Account</a></h2>
+<div class="outline-text-2" id="text-org1dec936">
 <p>
 Account number:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="org8c61e32">aws sts get-caller-identity --query <span style="color: #98be65;">'Account'</span> --output text
+<pre class="src src-sh" id="orga43053f">aws sts get-caller-identity --query <span style="color: #98be65;">'Account'</span> --output text
 </pre>
 </div>
 </div>
@@ -308,7 +308,7 @@ See: <a href="https://unix.stackexchange.com/questions/274330/check-ip-is-in-ran
 </pre>
 </div>
 
-<pre class="example" id="org1d2604d">
+<pre class="example" id="org63c1d52">
 eu-north-1
 ap-south-1
 eu-west-3
@@ -360,7 +360,7 @@ document. You have to decide whether "GLOBAL" is a "region" in your situation.
 </pre>
 </div>
 
-<pre class="example" id="org266dd7f">
+<pre class="example" id="orgc04abf9">
 GLOBAL
 af-south-1
 ap-east-1
@@ -411,7 +411,7 @@ Get the number of VPCs in each region the slow and simple way.
 </pre>
 </div>
 
-<pre class="example" id="org221ab3a">
+<pre class="example" id="org00b7516">
 eu-north-1: 0
 ap-south-1: 0
 eu-west-3: 0
@@ -448,7 +448,7 @@ syntax for th length of the <code>$regions</code> array.
 </pre>
 </div>
 
-<pre class="example" id="org54b4f20">
+<pre class="example" id="org6820ad0">
 us-east-1: 2
 ca-central-1: 0
 us-east-2: 2
@@ -485,9 +485,9 @@ ap-southeast-1: 1
 </div>
 </div>
 
-<div id="outline-container-orgab1f3f5" class="outline-3">
-<h3 id="orgab1f3f5"><a href="#orgab1f3f5">Describe</a></h3>
-<div class="outline-text-3" id="text-orgab1f3f5">
+<div id="outline-container-org3c07df1" class="outline-3">
+<h3 id="org3c07df1"><a href="#org3c07df1">Describe</a></h3>
+<div class="outline-text-3" id="text-org3c07df1">
 <div class="org-src-container">
 <pre class="src src-sh">aws acm describe-certificate --certificate-arn $<span style="color: #dcaeea;">CertArn</span>
 </pre>
@@ -883,15 +883,15 @@ chmod 0600 $<span style="color: #dcaeea;">KeyFile</span>
 </div>
 </div>
 
-<div id="outline-container-org3c07df1" class="outline-3">
-<h3 id="org3c07df1"><a href="#org3c07df1">Describe</a></h3>
-<div class="outline-text-3" id="text-org3c07df1">
+<div id="outline-container-org350bcf6" class="outline-3">
+<h3 id="org350bcf6"><a href="#org350bcf6">Describe</a></h3>
+<div class="outline-text-3" id="text-org350bcf6">
 <div class="org-src-container">
 <pre class="src src-sh">aws ec2 describe-key-pairs | jq <span style="color: #98be65;">'.KeyPairs[]'</span>
 </pre>
 </div>
 
-<pre class="example" id="orgf388a16">
+<pre class="example" id="orgb5857f8">
 {
   "KeyPairId": "key-086cc980cd005be07",
   "KeyFingerprint": "d2:51:6b:bd:8a:af:cd:91:23:7f:12:b8:c9:a9:ed:87",

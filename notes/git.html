@@ -180,15 +180,30 @@ Mostly adapted from <a href="https://stackoverflow.com/a/55049181/340613">this S
 Given
 </p>
 
-<pre class="example" id="orgf4d9eed">
-A --- B --- C --- D         main
+<div class="org-src-container">
+<pre class="src src-sh">touch A &amp;&amp; git add A
+git commit -m <span style="color: #98be65;">"Add A"</span>
+touch B &amp;&amp; git add B
+git commit -m <span style="color: #98be65;">"Add B"</span>
+touch C &amp;&amp; git add C
+git commit -m <span style="color: #98be65;">"Add C"</span>
+touch D &amp;&amp; git add D
+git commit -m <span style="color: #98be65;">"Add D"</span>
 </pre>
+</div>
+
+
+<figure id="org0d9e0b9">
+<img src="../img/ABCD.png" alt="ABCD.png">
+
+</figure>
 
 <p>
-And I want to rebase <code>D</code> to an ancestor <code>B</code> (I want <code>C</code> and <code>D</code> to be siblings):
+And I want to rebase <code>D</code> to an ancestor <code>B</code> (I want <code>C</code> and <code>D</code> to be
+siblings):
 </p>
 
-<pre class="example" id="org91d0fbb">
+<pre class="example" id="org3ed85b9">
 A --- B --- C         main
       \
        \-- D          feature
@@ -219,7 +234,7 @@ point.
 Given
 </p>
 
-<pre class="example" id="orga30b6f9">
+<pre class="example" id="org37989e4">
 A --- B --- C          main
  \
   \-- D                topic
@@ -229,7 +244,7 @@ A --- B --- C          main
 And you want to rebase <code>topic</code> to <code>B</code> like so:
 </p>
 
-<pre class="example" id="org0f9727b">
+<pre class="example" id="orgf4cbb26">
 A --- B --- C          main
        \
         \-- D          topic

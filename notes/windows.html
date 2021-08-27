@@ -26,12 +26,12 @@
   </ul>
 </nav>
 </div>
-<div id="content">
+<div id="content" class="content">
 <header>
 <h1 class="title">Windows Stuff</h1>
-</header><nav id="table-of-contents">
+</header><nav id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
 <li><a href="#org4e8e47f">Environment Variables</a>
 <ul>
@@ -83,17 +83,17 @@ It correctly sets a registry key, but it only takes effect after a reboot.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-powershell"><span style="color: #51afef;">Function</span> <span style="color: #ECBE7B; text-decoration: underline;">global</span><span style="color: #c678dd;">:Add-Path</span>()
+<pre class="src src-powershell">Function global:Add-Path()
 {
-    <span style="color: #51afef;">Param</span> (
-        <span style="color: #ECBE7B;">[String]</span><span style="color: #dcaeea;">$NewDir</span>
+    Param (
+        [String]$NewDir
     )
 
-    <span style="color: #dcaeea;">$RegKey</span> = <span style="color: #98be65;">'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Ses</span><span style="color: #ff6c6b; background-color: #1B2229; font-weight: bold;">sion Manager\Environment'</span>
-    <span style="color: #dcaeea;">$OldPath</span>=(<span style="color: #c678dd;">Get-ItemProperty</span> <span style="color: #a9a1e1;">-Path</span> <span style="color: #98be65;">"$RegKey"</span> <span style="color: #a9a1e1;">-Name</span> PATH).Path
-    <span style="color: #dcaeea;">$NewPath</span> = <span style="color: #dcaeea;">$OldPath</span> + <span style="color: #98be65;">';'</span> + <span style="color: #dcaeea;">$NewDir</span>
-    <span style="color: #c678dd;">Set-ItemProperty</span> <span style="color: #a9a1e1;">-Path</span> <span style="color: #98be65;">"$RegKey"</span> <span style="color: #a9a1e1;">-Name</span> PATH &#8211;Value <span style="color: #dcaeea;">$NewPath</span>
-    <span style="color: #51afef;">Return</span> <span style="color: #dcaeea;">$NewPath</span>
+    $RegKey = 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment'
+    $OldPath=(Get-ItemProperty -Path "$RegKey" -Name PATH).Path
+    $NewPath = $OldPath + ';' + $NewDir
+    Set-ItemProperty -Path "$RegKey" -Name PATH –Value $NewPath
+    Return $NewPath
 }
 </pre>
 </div>
@@ -104,7 +104,7 @@ currently-running processes. It would look something like:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-powershell">SendMessage (HWND_BROADCAST, WM_SETTINGCHANGE, 0, (LPARAM)<span style="color: #98be65;">"Environment"</span>)
+<pre class="src src-powershell">SendMessage (HWND_BROADCAST, WM_SETTINGCHANGE, 0, (LPARAM)"Environment")
 </pre>
 </div>
 
@@ -133,8 +133,8 @@ If you need the env var in the sshd environment, restart sshd:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-powershell"><span style="color: #c678dd;">Stop-Service</span> sshd
-<span style="color: #c678dd;">Start-Service</span> sshd
+<pre class="src src-powershell">Stop-Service sshd
+Start-Service sshd
 </pre>
 </div>
 </div>
@@ -149,11 +149,11 @@ If you need the env var in the sshd environment, restart sshd:
 <h3 id="orgf957511"><a href="#orgf957511">Start-Process</a></h3>
 <div class="outline-text-3" id="text-orgf957511">
 <div class="org-src-container">
-<pre class="src src-powershell"><span style="color: #c678dd;">Start-Process</span> `
-  <span style="color: #a9a1e1;">-FilePath</span> go.exe `
-  <span style="color: #a9a1e1;">-NoNewWindow</span> `
-  <span style="color: #a9a1e1;">-ArgumentList</span> (<span style="color: #98be65;">'run'</span>, <span style="color: #98be65;">'cli/tools/server/cmd/server.go'</span>) `
-  <span style="color: #a9a1e1;">-PassThru</span>
+<pre class="src src-powershell">Start-Process `
+  -FilePath go.exe `
+  -NoNewWindow `
+  -ArgumentList ('run', 'cli/tools/server/cmd/server.go') `
+  -PassThru
 </pre>
 </div>
 </div>
@@ -180,8 +180,8 @@ If you need the env var in the sshd environment, restart sshd:
 <h2 id="org50cce51"><a href="#org50cce51">Install Python</a></h2>
 <div class="outline-text-2" id="text-org50cce51">
 <div class="org-src-container">
-<pre class="src src-powershell"><span style="color: #dcaeea;">$url</span> = https://www.python.org/ftp/python/3.6.3/<span style="color: #c678dd;">python-3</span>.6.3-amd64.exe
-<span style="color: #c678dd;">Invoke-WebRequest</span> <span style="color: #a9a1e1;">-Uri</span> <span style="color: #dcaeea;">$url</span> <span style="color: #a9a1e1;">-OutFile</span> pythoninstaller.exe
+<pre class="src src-powershell">$url = https://www.python.org/ftp/python/3.6.3/python-3.6.3-amd64.exe
+Invoke-WebRequest -Uri $url -OutFile pythoninstaller.exe
 
 ./pythoninstaller.exe /quiet `
   InstallAllUsers=1 `
@@ -198,8 +198,8 @@ If you need the env var in the sshd environment, restart sshd:
 <h2 id="orgd8c0125"><a href="#orgd8c0125">Upgrade Powershell</a></h2>
 <div class="outline-text-2" id="text-orgd8c0125">
 <div class="org-src-container">
-<pre class="src src-powershell"><span style="color: #dcaeea;">$scriptUri</span> = https://raw.githubusercontent.com/jborean93/<span style="color: #c678dd;">ansible-windows</span>/master/<span style="color: #ff6c6b; background-color: #1B2229; font-weight: bold;">scripts/</span><span style="color: #ff6c6b; background-color: #1B2229; font-weight: bold;">Upgrade-PowerShell</span><span style="color: #ff6c6b; background-color: #1B2229; font-weight: bold;">.ps1</span>
-<span style="color: #c678dd;">Invoke-WebRequest</span> <span style="color: #a9a1e1;">-Uri</span> <span style="color: #dcaeea;">$scriptUri</span>
+<pre class="src src-powershell">$scriptUri = https://raw.githubusercontent.com/jborean93/ansible-windows/master/scripts/Upgrade-PowerShell.ps1
+Invoke-WebRequest -Uri $scriptUri
 </pre>
 </div>
 </div>
