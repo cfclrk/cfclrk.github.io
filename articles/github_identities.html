@@ -86,7 +86,7 @@ One directory <i>cannot contain the other</i>. Here I use two GitHub accounts,
 <p>
 What if you want to create a git repo in <code>~/some_other_dir</code> (i.e., not in
 <code>~/work</code> or <code>~/projects</code>)? You have to create another line item in your
-<code>~/.config/git/work.gitconfig</code> to tell git which config file to use.
+<code>~/.config/git/config</code> to tell git which config file to use.
 </p>
 
 <p>
@@ -286,18 +286,19 @@ value loaded for the <code>user.email</code> option. The determining factor is t
 </p>
 
 <p>
-So, when you define multiple <code>includeIf</code> directives, you should specify the
-directives in order from <i>most general</i> to <i>most specific</i>.
+So, if you define multiple <code>includeIf</code> directives that overwrite each other,
+you should specify the directives in order from <i>most general</i> to <i>most
+specific</i>.
 </p>
 
 <p>
 🛑 <b>Problem</b> The above configuration heirarchy works for the <code>user.email</code>
-option. However, it does not seem to work for URL-rewriting rules. In the
-above example, if the <code>home.gitconfig</code> performs URL-rewriting, it seems like
-the <code>work.gitconfig</code> cannot overwrite those same URLs (at least, I haven't
-found a way). For this reason, I haven't been able to create a git
-configuration that uses my work account in my <code>~/work</code> directory and my home
-account in all other directories.
+option. However, it does not seem to work for URL-rewriting rules. For
+example, if the <code>home.gitconfig</code> performs URL-rewriting, it seems like the
+<code>work.gitconfig</code> cannot overwrite those same URLs (at least, I haven't found
+a way). For this reason, I haven't been able to create a git configuration
+that uses my work account in my <code>~/work</code> directory and my home account in all
+other directories.
 </p>
 
 <p>
@@ -324,7 +325,7 @@ both accounts). Assuming you've <a href="https://docs.github.com/en/github/authe
 something like:
 </p>
 
-<pre class="example" id="orge31ec82">
+<pre class="example" id="orgf2fce12">
 $ tree ~/.ssh/
 /Users/cfclrk/.ssh/
 ├── config
