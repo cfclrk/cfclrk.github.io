@@ -33,11 +33,11 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org534805a">Global header args</a></li>
-<li><a href="#orgeca7584">Elisp association list</a></li>
-<li><a href="#orgeb3f5cb">Org table</a></li>
-<li><a href="#orge96b80a">Drawer header args</a></li>
-<li><a href="#orgba87863">Drawer header args using table</a></li>
+<li><a href="#org17e46db">Global header args</a></li>
+<li><a href="#orgd849d1e">Elisp association list</a></li>
+<li><a href="#org513ff3d">Org table</a></li>
+<li><a href="#orga052561">Drawer header args</a></li>
+<li><a href="#orgb342ac7">Drawer header args using table</a></li>
 </ul>
 </div>
 </nav>
@@ -46,9 +46,9 @@ In which I document ways to define variables in an org file, and use those
 variables in <code>SRC</code> blocks throughout the rest of the file.
 </p>
 
-<div id="outline-container-org534805a" class="outline-2">
-<h2 id="org534805a"><a href="#org534805a">Global header args</a></h2>
-<div class="outline-text-2" id="text-org534805a">
+<div id="outline-container-org17e46db" class="outline-2">
+<h2 id="org17e46db"><a href="#org17e46db">Global header args</a></h2>
+<div class="outline-text-2" id="text-org17e46db">
 <p>
 Define variables globally in an org file using <code>#+PROPERTY</code>. Notice that the
 values can be elisp expressions. values.
@@ -66,7 +66,7 @@ be reloaded to take effect. Use <code>M-x revert-buffer</code> to reload the buf
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 Global Var 1 Value
 5
 4
@@ -74,22 +74,22 @@ Global Var 1 Value
 </div>
 </div>
 
-<div id="outline-container-orgeca7584" class="outline-2">
-<h2 id="orgeca7584"><a href="#orgeca7584">Elisp association list</a></h2>
-<div class="outline-text-2" id="text-orgeca7584">
+<div id="outline-container-orgd849d1e" class="outline-2">
+<h2 id="orgd849d1e"><a href="#orgd849d1e">Elisp association list</a></h2>
+<div class="outline-text-2" id="text-orgd849d1e">
 <p>
 Define an elisp association list (alist) that maps variable names to values, and
 a lookup function for looking up a variable's value by name.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-elisp" id="org817d70f">'<span style="color: #51afef;">(</span><span style="color: #c678dd;">(</span><span style="color: #98be65;">"alistVar1"</span> <span style="color: #98be65;">"Alist Var 1 Value"</span>, <span style="color: #98be65;">"Alist var 1 description"</span><span style="color: #c678dd;">)</span>
+<pre class="src src-elisp" id="org83cbd30">'<span style="color: #51afef;">(</span><span style="color: #c678dd;">(</span><span style="color: #98be65;">"alistVar1"</span> <span style="color: #98be65;">"Alist Var 1 Value"</span>, <span style="color: #98be65;">"Alist var 1 description"</span><span style="color: #c678dd;">)</span>
   <span style="color: #c678dd;">(</span><span style="color: #98be65;">"alistVar2"</span> 7 <span style="color: #98be65;">"Alist var 2 description"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-elisp" id="org9ec8c05"><span style="color: #51afef;">(</span>nth 1 <span style="color: #c678dd;">(</span>assoc v data<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<pre class="src src-elisp" id="org92a5f96"><span style="color: #51afef;">(</span>nth 1 <span style="color: #c678dd;">(</span>assoc v data<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
 
@@ -99,22 +99,22 @@ a lookup function for looking up a variable's value by name.
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 Alist Var 1 Value
 7
 </pre>
 </div>
 </div>
 
-<div id="outline-container-orgeb3f5cb" class="outline-2">
-<h2 id="orgeb3f5cb"><a href="#orgeb3f5cb">Org table</a></h2>
-<div class="outline-text-2" id="text-orgeb3f5cb">
+<div id="outline-container-org513ff3d" class="outline-2">
+<h2 id="org513ff3d"><a href="#org513ff3d">Org table</a></h2>
+<div class="outline-text-2" id="text-org513ff3d">
 <p>
 Define an org table that maps variable names to values, and a lookup function for looking up a variable's
 value by name. Under the covers, the table is just an elisp alist.
 </p>
 
-<table id="orgdbca1ff">
+<table id="orgfca9e9b">
 
 
 <colgroup>
@@ -147,7 +147,7 @@ value by name. Under the covers, the table is just an elisp alist.
 </table>
 
 <div class="org-src-container">
-<pre class="src src-elisp" id="org50d480d"><span style="color: #51afef;">(</span>nth 1 <span style="color: #c678dd;">(</span>assoc v data<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<pre class="src src-elisp" id="org4276a30"><span style="color: #51afef;">(</span>nth 1 <span style="color: #c678dd;">(</span>assoc v data<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
 
@@ -157,16 +157,16 @@ value by name. Under the covers, the table is just an elisp alist.
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 Table Var 1 Value
 6
 </pre>
 </div>
 </div>
 
-<div id="outline-container-orge96b80a" class="outline-2">
-<h2 id="orge96b80a"><a href="#orge96b80a">Drawer header args</a></h2>
-<div class="outline-text-2" id="text-orge96b80a">
+<div id="outline-container-orga052561" class="outline-2">
+<h2 id="orga052561"><a href="#orga052561">Drawer header args</a></h2>
+<div class="outline-text-2" id="text-orga052561">
 <p>
 These variables apply to all source blogs within this section.
 </p>
@@ -177,16 +177,16 @@ These variables apply to all source blogs within this section.
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 Drawer Var 1
 8
 </pre>
 </div>
 </div>
 
-<div id="outline-container-orgba87863" class="outline-2">
-<h2 id="orgba87863"><a href="#orgba87863">Drawer header args using table</a></h2>
-<div class="outline-text-2" id="text-orgba87863">
+<div id="outline-container-orgb342ac7" class="outline-2">
+<h2 id="orgb342ac7"><a href="#orgb342ac7">Drawer header args using table</a></h2>
+<div class="outline-text-2" id="text-orgb342ac7">
 <p>
 Same as above, but look up variable values from a table (specifically, the table in section <code>Org table</code>).
 </p>
@@ -201,7 +201,7 @@ Same as above, but look up variable values from a table (specifically, the table
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 Table Var 1 Value
 6
 </pre>

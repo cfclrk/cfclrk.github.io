@@ -33,70 +33,70 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org9c1e935">Style</a></li>
-<li><a href="#orge24f72c">Function Parameters</a>
+<li><a href="#org5de0b66">Style</a></li>
+<li><a href="#org6f1e047">Function Parameters</a>
 <ul>
-<li><a href="#org9f64100">test</a></li>
-<li><a href="#org97abf0e">new-test</a></li>
-<li><a href="#orgf4e1813">if-else</a></li>
+<li><a href="#orgd0f8a1d">test</a></li>
+<li><a href="#orgb4f570c">new-test</a></li>
+<li><a href="#orge54b668">if-else</a></li>
 </ul>
 </li>
-<li><a href="#orgc895bf3">Set</a>
+<li><a href="#org43ed98c">Set</a>
 <ul>
-<li><a href="#orgee11b26">set -u</a></li>
+<li><a href="#orgab629af">set -u</a></li>
 </ul>
 </li>
-<li><a href="#orge17fcc5">Script Arguments</a></li>
-<li><a href="#orgd9b2701">Script Options</a>
+<li><a href="#org2e82c44">Script Arguments</a></li>
+<li><a href="#org3c8ee6a">Script Options</a>
 <ul>
-<li><a href="#org235734d">getopts</a></li>
+<li><a href="#orgace0c63">getopts</a></li>
 </ul>
 </li>
-<li><a href="#orgf2f92d1">Heredocs</a>
+<li><a href="#orgc5633cd">Heredocs</a>
 <ul>
-<li><a href="#orgde4919d">Whitespace</a></li>
-<li><a href="#org14ccab3">Interpolation</a>
+<li><a href="#org24533d0">Whitespace</a></li>
+<li><a href="#org917fefc">Interpolation</a>
 <ul>
-<li><a href="#org8d68b45">with interpolation</a></li>
-<li><a href="#org1ba94c0">without interpolation</a></li>
+<li><a href="#orgbbcd2b1">with interpolation</a></li>
+<li><a href="#org848ee23">without interpolation</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org0b80d27">Verify Environment variables</a></li>
-<li><a href="#org80c962f">Parameter Expansion</a>
+<li><a href="#org45e6563">Verify Environment variables</a></li>
+<li><a href="#orgc768c06">Parameter Expansion</a>
 <ul>
-<li><a href="#org56e98a3">Resources</a></li>
-<li><a href="#org6ff8f75"><code>:-</code></a></li>
-<li><a href="#orge410c22"><code>+</code></a></li>
+<li><a href="#orga2b6040">Resources</a></li>
+<li><a href="#org8dc1d4d"><code>:-</code></a></li>
+<li><a href="#org50e5d59"><code>+</code></a></li>
 </ul>
 </li>
-<li><a href="#org604713f">Arrays</a>
+<li><a href="#orgad07b73">Arrays</a>
 <ul>
-<li><a href="#org7732e67">Basic</a></li>
-<li><a href="#org5a8ad2c">Length</a></li>
-<li><a href="#orgb105997">Pipe Array to <code>xargs</code></a></li>
+<li><a href="#org3776dd9">Basic</a></li>
+<li><a href="#org4a20374">Length</a></li>
+<li><a href="#orgc0d6660">Pipe Array to <code>xargs</code></a></li>
 </ul>
 </li>
-<li><a href="#org36e6ea8">Range</a></li>
-<li><a href="#org434f97e">Echo vs Printf</a></li>
-<li><a href="#orgb4e943d">Numbered List</a></li>
+<li><a href="#org51f762f">Range</a></li>
+<li><a href="#org306bd2f">Echo vs Printf</a></li>
+<li><a href="#orgfaed4e1">Numbered List</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-org9c1e935" class="outline-2">
-<h2 id="org9c1e935"><a href="#org9c1e935">Style</a></h2>
-<div class="outline-text-2" id="text-org9c1e935">
+<div id="outline-container-org5de0b66" class="outline-2">
+<h2 id="org5de0b66"><a href="#org5de0b66">Style</a></h2>
+<div class="outline-text-2" id="text-org5de0b66">
 <p>
 See the <a href="https://github.com/azet/community_bash_style_guide">Bash style guide</a>.
 </p>
 </div>
 </div>
 
-<div id="outline-container-orge24f72c" class="outline-2">
-<h2 id="orge24f72c"><a href="#orge24f72c">Function Parameters</a></h2>
-<div class="outline-text-2" id="text-orge24f72c">
+<div id="outline-container-org6f1e047" class="outline-2">
+<h2 id="org6f1e047"><a href="#org6f1e047">Function Parameters</a></h2>
+<div class="outline-text-2" id="text-org6f1e047">
 <p>
 For more info, see <a href="http://mywiki.wooledge.org/BashFAQ/031">FAQ</a>: "What is the difference between test, [ and [[ ?"
 </p>
@@ -108,9 +108,9 @@ can return; if outside of a function, use "exit 1". See:
 </p>
 </div>
 
-<div id="outline-container-org9f64100" class="outline-3">
-<h3 id="org9f64100"><a href="#org9f64100">test</a></h3>
-<div class="outline-text-3" id="text-org9f64100">
+<div id="outline-container-orgd0f8a1d" class="outline-3">
+<h3 id="orgd0f8a1d"><a href="#orgd0f8a1d">test</a></h3>
+<div class="outline-text-3" id="text-orgd0f8a1d">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #c678dd;">foo</span>() {
     <span style="color: #dcaeea;">a</span>=${<span style="color: #dcaeea;">1</span>-}
@@ -139,9 +139,9 @@ as:
 </div>
 </div>
 
-<div id="outline-container-org97abf0e" class="outline-3">
-<h3 id="org97abf0e"><a href="#org97abf0e">new-test</a></h3>
-<div class="outline-text-3" id="text-org97abf0e">
+<div id="outline-container-orgb4f570c" class="outline-3">
+<h3 id="orgb4f570c"><a href="#orgb4f570c">new-test</a></h3>
+<div class="outline-text-3" id="text-orgb4f570c">
 <p>
 The double-bracket <code>[[</code> syntax is called "new-test" and can also be used.
 </p>
@@ -158,9 +158,9 @@ The double-bracket <code>[[</code> syntax is called "new-test" and can also be u
 </div>
 </div>
 
-<div id="outline-container-orgf4e1813" class="outline-3">
-<h3 id="orgf4e1813"><a href="#orgf4e1813">if-else</a></h3>
-<div class="outline-text-3" id="text-orgf4e1813">
+<div id="outline-container-orge54b668" class="outline-3">
+<h3 id="orge54b668"><a href="#orge54b668">if-else</a></h3>
+<div class="outline-text-3" id="text-orge54b668">
 <p>
 Can do same thing as for script arguments, but
 </p>
@@ -186,13 +186,13 @@ Can do same thing as for script arguments, but
 </div>
 </div>
 
-<div id="outline-container-orgc895bf3" class="outline-2">
-<h2 id="orgc895bf3"><a href="#orgc895bf3">Set</a></h2>
-<div class="outline-text-2" id="text-orgc895bf3">
+<div id="outline-container-org43ed98c" class="outline-2">
+<h2 id="org43ed98c"><a href="#org43ed98c">Set</a></h2>
+<div class="outline-text-2" id="text-org43ed98c">
 </div>
-<div id="outline-container-orgee11b26" class="outline-3">
-<h3 id="orgee11b26"><a href="#orgee11b26">set -u</a></h3>
-<div class="outline-text-3" id="text-orgee11b26">
+<div id="outline-container-orgab629af" class="outline-3">
+<h3 id="orgab629af"><a href="#orgab629af">set -u</a></h3>
+<div class="outline-text-3" id="text-orgab629af">
 <p>
 Without <code>set -u</code> this works fine and prints nothing, even though <code>foo</code> is not
 bound.
@@ -203,7 +203,7 @@ bound.
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 
 </pre>
 
@@ -231,16 +231,16 @@ Works with <code>eval</code>.
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 foo
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orge17fcc5" class="outline-2">
-<h2 id="orge17fcc5"><a href="#orge17fcc5">Script Arguments</a></h2>
-<div class="outline-text-2" id="text-orge17fcc5">
+<div id="outline-container-org2e82c44" class="outline-2">
+<h2 id="org2e82c44"><a href="#org2e82c44">Script Arguments</a></h2>
+<div class="outline-text-2" id="text-org2e82c44">
 <p>
 Same patterns as function parameters can be used.
 </p>
@@ -257,13 +257,13 @@ Same patterns as function parameters can be used.
 </div>
 </div>
 
-<div id="outline-container-orgd9b2701" class="outline-2">
-<h2 id="orgd9b2701"><a href="#orgd9b2701">Script Options</a></h2>
-<div class="outline-text-2" id="text-orgd9b2701">
+<div id="outline-container-org3c8ee6a" class="outline-2">
+<h2 id="org3c8ee6a"><a href="#org3c8ee6a">Script Options</a></h2>
+<div class="outline-text-2" id="text-org3c8ee6a">
 </div>
-<div id="outline-container-org235734d" class="outline-3">
-<h3 id="org235734d"><a href="#org235734d">getopts</a></h3>
-<div class="outline-text-3" id="text-org235734d">
+<div id="outline-container-orgace0c63" class="outline-3">
+<h3 id="orgace0c63"><a href="#orgace0c63">getopts</a></h3>
+<div class="outline-text-3" id="text-orgace0c63">
 <p>
 See home/bin/ssm script for a good example.
 </p>
@@ -306,13 +306,13 @@ See home/bin/ssm script for a good example.
 </div>
 </div>
 
-<div id="outline-container-orgf2f92d1" class="outline-2">
-<h2 id="orgf2f92d1"><a href="#orgf2f92d1">Heredocs</a></h2>
-<div class="outline-text-2" id="text-orgf2f92d1">
+<div id="outline-container-orgc5633cd" class="outline-2">
+<h2 id="orgc5633cd"><a href="#orgc5633cd">Heredocs</a></h2>
+<div class="outline-text-2" id="text-orgc5633cd">
 </div>
-<div id="outline-container-orgde4919d" class="outline-3">
-<h3 id="orgde4919d"><a href="#orgde4919d">Whitespace</a></h3>
-<div class="outline-text-3" id="text-orgde4919d">
+<div id="outline-container-org24533d0" class="outline-3">
+<h3 id="org24533d0"><a href="#org24533d0">Whitespace</a></h3>
+<div class="outline-text-3" id="text-org24533d0">
 <p>
 Use <code>&lt;&lt;-</code>. Each line in the HEREDOC has to begin with a TAB. Having trouble
 getting this working with org-babel.
@@ -329,7 +329,7 @@ getting this working with org-babel.
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 hello
 bar
 EOF
@@ -337,9 +337,9 @@ EOF
 </div>
 </div>
 
-<div id="outline-container-org14ccab3" class="outline-3">
-<h3 id="org14ccab3"><a href="#org14ccab3">Interpolation</a></h3>
-<div class="outline-text-3" id="text-org14ccab3">
+<div id="outline-container-org917fefc" class="outline-3">
+<h3 id="org917fefc"><a href="#org917fefc">Interpolation</a></h3>
+<div class="outline-text-3" id="text-org917fefc">
 <p>
 A heredoc can interpolate variable names to values, or the whole heredoc can
 be taken completely literally without any interpolation. The difference is
@@ -347,9 +347,9 @@ whether the limit string has single quotes around it.
 </p>
 </div>
 
-<div id="outline-container-org8d68b45" class="outline-4">
-<h4 id="org8d68b45"><a href="#org8d68b45">with interpolation</a></h4>
-<div class="outline-text-4" id="text-org8d68b45">
+<div id="outline-container-orgbbcd2b1" class="outline-4">
+<h4 id="orgbbcd2b1"><a href="#orgbbcd2b1">with interpolation</a></h4>
+<div class="outline-text-4" id="text-orgbbcd2b1">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #dcaeea;">foo</span>=<span style="color: #98be65;">"fooo"</span>
 <span style="color: #dcaeea;">a</span>=$(cat &lt;&lt;EOF
@@ -361,7 +361,7 @@ whether the limit string has single quotes around it.
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 hello
 fooo
 </pre>
@@ -382,16 +382,16 @@ Note, this also works with single quotes!
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 hello
 'fooo'
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org1ba94c0" class="outline-4">
-<h4 id="org1ba94c0"><a href="#org1ba94c0">without interpolation</a></h4>
-<div class="outline-text-4" id="text-org1ba94c0">
+<div id="outline-container-org848ee23" class="outline-4">
+<h4 id="org848ee23"><a href="#org848ee23">without interpolation</a></h4>
+<div class="outline-text-4" id="text-org848ee23">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #dcaeea;">foo</span>=<span style="color: #98be65;">"bar"</span>
 <span style="color: #dcaeea;">a</span>=$(cat &lt;&lt;<span style="color: #98be65;">'EOF'</span>
@@ -403,7 +403,7 @@ hello
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 hello
 $foo
 </pre>
@@ -412,9 +412,9 @@ $foo
 </div>
 </div>
 
-<div id="outline-container-org0b80d27" class="outline-2">
-<h2 id="org0b80d27"><a href="#org0b80d27">Verify Environment variables</a></h2>
-<div class="outline-text-2" id="text-org0b80d27">
+<div id="outline-container-org45e6563" class="outline-2">
+<h2 id="org45e6563"><a href="#org45e6563">Verify Environment variables</a></h2>
+<div class="outline-text-2" id="text-org45e6563">
 <p>
 Verify some environment variables exist.
 </p>
@@ -427,13 +427,13 @@ Verify some environment variables exist.
 </div>
 </div>
 
-<div id="outline-container-org80c962f" class="outline-2">
-<h2 id="org80c962f"><a href="#org80c962f">Parameter Expansion</a></h2>
-<div class="outline-text-2" id="text-org80c962f">
+<div id="outline-container-orgc768c06" class="outline-2">
+<h2 id="orgc768c06"><a href="#orgc768c06">Parameter Expansion</a></h2>
+<div class="outline-text-2" id="text-orgc768c06">
 </div>
-<div id="outline-container-org56e98a3" class="outline-3">
-<h3 id="org56e98a3"><a href="#org56e98a3">Resources</a></h3>
-<div class="outline-text-3" id="text-org56e98a3">
+<div id="outline-container-orga2b6040" class="outline-3">
+<h3 id="orga2b6040"><a href="#orga2b6040">Resources</a></h3>
+<div class="outline-text-3" id="text-orga2b6040">
 <ul class="org-ul">
 <li>GNU <a href="https://www.gnu.org/savannah-checkouts/gnu/bash/manual/">Bash docs</a> section on <a href="https://www.gnu.org/software/bash/manual/bashref.html#Shell-Parameter-Expansion">paremeter expansion</a></li>
 <li><i>The Open Group</i> has some excellent <a href="https://pubs.opengroup.org/onlinepubs/9699919799">POSIX documentation</a> with a section on
@@ -442,9 +442,9 @@ Verify some environment variables exist.
 </div>
 </div>
 
-<div id="outline-container-org6ff8f75" class="outline-3">
-<h3 id="org6ff8f75"><a href="#org6ff8f75"><code>:-</code></a></h3>
-<div class="outline-text-3" id="text-org6ff8f75">
+<div id="outline-container-org8dc1d4d" class="outline-3">
+<h3 id="org8dc1d4d"><a href="#org8dc1d4d"><code>:-</code></a></h3>
+<div class="outline-text-3" id="text-org8dc1d4d">
 <p>
 <a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02">Docs</a> for <code>${parameter:-[word]}</code>
 </p>
@@ -467,7 +467,7 @@ if <i>word</i> is omitted) shall be substituted; otherwise, the value of
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 var is set to ''
 </pre>
 
@@ -483,9 +483,9 @@ var is set to ''
 </div>
 </div>
 
-<div id="outline-container-orge410c22" class="outline-3">
-<h3 id="orge410c22"><a href="#orge410c22"><code>+</code></a></h3>
-<div class="outline-text-3" id="text-orge410c22">
+<div id="outline-container-org50e5d59" class="outline-3">
+<h3 id="org50e5d59"><a href="#org50e5d59"><code>+</code></a></h3>
+<div class="outline-text-3" id="text-org50e5d59">
 <p>
 <a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02">Docs</a> for <code>${parameter:+[word]}</code>
 </p>
@@ -512,7 +512,7 @@ substituted.
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 var is set to ''
 </pre>
 
@@ -532,7 +532,7 @@ Therefore the <code>+</code> parameter expansion expands this to <code>x</code> 
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 var is unset
 </pre>
 
@@ -552,7 +552,7 @@ parameter expansion expands it to <code>null</code>.
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 var is unset
 </pre>
 
@@ -566,43 +566,43 @@ empty argument, and this prints out <code>var is unset</code>.
 </div>
 </div>
 
-<div id="outline-container-org604713f" class="outline-2">
-<h2 id="org604713f"><a href="#org604713f">Arrays</a></h2>
-<div class="outline-text-2" id="text-org604713f">
+<div id="outline-container-orgad07b73" class="outline-2">
+<h2 id="orgad07b73"><a href="#orgad07b73">Arrays</a></h2>
+<div class="outline-text-2" id="text-orgad07b73">
 </div>
-<div id="outline-container-org7732e67" class="outline-3">
-<h3 id="org7732e67"><a href="#org7732e67">Basic</a></h3>
-<div class="outline-text-3" id="text-org7732e67">
+<div id="outline-container-org3776dd9" class="outline-3">
+<h3 id="org3776dd9"><a href="#org3776dd9">Basic</a></h3>
+<div class="outline-text-3" id="text-org3776dd9">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #dcaeea;">arr</span>=(<span style="color: #98be65;">"foo"</span> <span style="color: #98be65;">"bar"</span> <span style="color: #98be65;">"baz"</span>)
 <span style="color: #c678dd;">echo</span> ${<span style="color: #dcaeea;">arr</span>[*]}
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 foo bar baz
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org5a8ad2c" class="outline-3">
-<h3 id="org5a8ad2c"><a href="#org5a8ad2c">Length</a></h3>
-<div class="outline-text-3" id="text-org5a8ad2c">
+<div id="outline-container-org4a20374" class="outline-3">
+<h3 id="org4a20374"><a href="#org4a20374">Length</a></h3>
+<div class="outline-text-3" id="text-org4a20374">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #dcaeea;">arr</span>=(<span style="color: #98be65;">"foo"</span> <span style="color: #98be65;">"bar"</span> <span style="color: #98be65;">"baz"</span>)
 <span style="color: #c678dd;">echo</span> ${#<span style="color: #dcaeea;">arr</span>[*]}
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 3
 </pre>
 </div>
 </div>
 
-<div id="outline-container-orgb105997" class="outline-3">
-<h3 id="orgb105997"><a href="#orgb105997">Pipe Array to <code>xargs</code></a></h3>
-<div class="outline-text-3" id="text-orgb105997">
+<div id="outline-container-orgc0d6660" class="outline-3">
+<h3 id="orgc0d6660"><a href="#orgc0d6660">Pipe Array to <code>xargs</code></a></h3>
+<div class="outline-text-3" id="text-orgc0d6660">
 <p>
 Start a subprocess per element in an array, where each subprocess runs <code>$script</code>.
 </p>
@@ -617,7 +617,7 @@ Start a subprocess per element in an array, where each subprocess runs <code>$sc
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 foo
 bar
 baz
@@ -626,9 +626,9 @@ baz
 </div>
 </div>
 
-<div id="outline-container-org36e6ea8" class="outline-2">
-<h2 id="org36e6ea8"><a href="#org36e6ea8">Range</a></h2>
-<div class="outline-text-2" id="text-org36e6ea8">
+<div id="outline-container-org51f762f" class="outline-2">
+<h2 id="org51f762f"><a href="#org51f762f">Range</a></h2>
+<div class="outline-text-2" id="text-org51f762f">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #51afef;">for</span> i<span style="color: #51afef;"> in</span> {1..5}; <span style="color: #51afef;">do</span>
     <span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">i</span>
@@ -638,9 +638,9 @@ baz
 </div>
 </div>
 
-<div id="outline-container-org434f97e" class="outline-2">
-<h2 id="org434f97e"><a href="#org434f97e">Echo vs Printf</a></h2>
-<div class="outline-text-2" id="text-org434f97e">
+<div id="outline-container-org306bd2f" class="outline-2">
+<h2 id="org306bd2f"><a href="#org306bd2f">Echo vs Printf</a></h2>
+<div class="outline-text-2" id="text-org306bd2f">
 <p>
 Notice that <code>echo</code> adds a newline.
 </p>
@@ -650,7 +650,7 @@ Notice that <code>echo</code> adds a newline.
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 0000000    f   o   o  \n
 0000004
 </pre>
@@ -661,22 +661,22 @@ Notice that <code>echo</code> adds a newline.
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 0000000    f   o   o
 0000003
 </pre>
 </div>
 </div>
 
-<div id="outline-container-orgb4e943d" class="outline-2">
-<h2 id="orgb4e943d"><a href="#orgb4e943d">Numbered List</a></h2>
-<div class="outline-text-2" id="text-orgb4e943d">
+<div id="outline-container-orgfaed4e1" class="outline-2">
+<h2 id="orgfaed4e1"><a href="#orgfaed4e1">Numbered List</a></h2>
+<div class="outline-text-2" id="text-orgfaed4e1">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">PATH</span> | tr <span style="color: #98be65;">":"</span> <span style="color: #98be65;">"\n"</span> | nl
 </pre>
 </div>
 
-<pre class="example" id="orge32fb1c">
+<pre class="example" id="org4f339c5">
  1	/Users/chris.clark/.rbenv/shims
  2	/usr/local/Cellar/pyenv-virtualenv/1.1.5/shims
  3	/Users/chris.clark/.pyenv/shims

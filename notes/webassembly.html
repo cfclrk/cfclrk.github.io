@@ -33,22 +33,25 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgd156457">wat, wasm, and wast</a></li>
-<li><a href="#orgcea14ba">Tooling</a></li>
-<li><a href="#orgc9dfc4f">Runtimes</a></li>
-<li><a href="#org4823c43">Convert wat (text) to wasm (binary)</a></li>
-<li><a href="#orgd26ccc2">Convert wasm to wat</a></li>
+<li><a href="#org6e8fdd9">wat, wasm, and wast</a></li>
+<li><a href="#org49ea79d">Tooling</a></li>
+<li><a href="#org1c9c357">Runtimes</a></li>
+<li><a href="#org62bbddd">Convert wat (text) to wasm (binary)</a></li>
+<li><a href="#org9d0d22a">Convert wasm to wat</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-orgd156457" class="outline-2">
-<h2 id="orgd156457"><a href="#orgd156457">wat, wasm, and wast</a></h2>
-<div class="outline-text-2" id="text-orgd156457">
+<div id="outline-container-org6e8fdd9" class="outline-2">
+<h2 id="org6e8fdd9"><a href="#org6e8fdd9">wat, wasm, and wast</a></h2>
+<div class="outline-text-2" id="text-org6e8fdd9">
 <ul class="org-ul">
 <li><code>wat</code>: is the textual format (lisp)</li>
 <li><code>wasm</code>: the binary format</li>
 <li><code>wast</code>: ??</li>
+<li><code>wasi</code> - An API spec for talking to an OS. Much like POSIX. Needed/used only
+when running outside of a browser, because browsers define their own
+complete API for what is possible. See: <a href="https://wasi.dev/">wasi.dev</a>.</li>
 </ul>
 
 <p>
@@ -58,9 +61,9 @@ text format and the wasm binary format".
 </div>
 </div>
 
-<div id="outline-container-orgcea14ba" class="outline-2">
-<h2 id="orgcea14ba"><a href="#orgcea14ba">Tooling</a></h2>
-<div class="outline-text-2" id="text-orgcea14ba">
+<div id="outline-container-org49ea79d" class="outline-2">
+<h2 id="org49ea79d"><a href="#org49ea79d">Tooling</a></h2>
+<div class="outline-text-2" id="text-org49ea79d">
 <p>
 Install <a href="https://github.com/webassembly/wabt">wabt</a>, the WebAssembly Binary Toolkit.
 </p>
@@ -76,9 +79,9 @@ Install <a href="https://github.com/webassembly/wabt">wabt</a>, the WebAssembly 
 </div>
 </div>
 
-<div id="outline-container-orgc9dfc4f" class="outline-2">
-<h2 id="orgc9dfc4f"><a href="#orgc9dfc4f">Runtimes</a></h2>
-<div class="outline-text-2" id="text-orgc9dfc4f">
+<div id="outline-container-org1c9c357" class="outline-2">
+<h2 id="org1c9c357"><a href="#org1c9c357">Runtimes</a></h2>
+<div class="outline-text-2" id="text-org1c9c357">
 <p>
 The <a href="https://webassembly.org/roadmap/">roadmap</a> lists three non-browser runtimes:
 </p>
@@ -91,9 +94,9 @@ The <a href="https://webassembly.org/roadmap/">roadmap</a> lists three non-brows
 </div>
 </div>
 
-<div id="outline-container-org4823c43" class="outline-2">
-<h2 id="org4823c43"><a href="#org4823c43">Convert wat (text) to wasm (binary)</a></h2>
-<div class="outline-text-2" id="text-org4823c43">
+<div id="outline-container-org62bbddd" class="outline-2">
+<h2 id="org62bbddd"><a href="#org62bbddd">Convert wat (text) to wasm (binary)</a></h2>
+<div class="outline-text-2" id="text-org62bbddd">
 <p>
 Tangle this to <code>simple.wat</code>.
 </p>
@@ -125,7 +128,7 @@ Why is this writing to stderr?
 </pre>
 </div>
 
-<pre class="example" id="orgbd389da">
+<pre class="example" id="org78ba2d8">
 0000000: 0061 736d                                 ; WASM_BINARY_MAGIC
 0000004: 0100 0000                                 ; WASM_BINARY_VERSION
 ; section "Type" (1)
@@ -187,9 +190,9 @@ Why is this writing to stderr?
 </div>
 </div>
 
-<div id="outline-container-orgd26ccc2" class="outline-2">
-<h2 id="orgd26ccc2"><a href="#orgd26ccc2">Convert wasm to wat</a></h2>
-<div class="outline-text-2" id="text-orgd26ccc2">
+<div id="outline-container-org9d0d22a" class="outline-2">
+<h2 id="org9d0d22a"><a href="#org9d0d22a">Convert wasm to wat</a></h2>
+<div class="outline-text-2" id="text-org9d0d22a">
 <p>
 We can disassemble! Ain't that peachy!
 </p>
@@ -199,7 +202,7 @@ We can disassemble! Ain't that peachy!
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 (module
   (type (;0;) (func (param i32)))
   (type (;1;) (func))

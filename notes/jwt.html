@@ -33,16 +33,16 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgbc50384">Example token</a></li>
-<li><a href="#org48eaf86">Three Parts</a></li>
+<li><a href="#org19b7af4">Example token</a></li>
+<li><a href="#org5f92186">Three Parts</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-orgbc50384" class="outline-2">
-<h2 id="orgbc50384"><a href="#orgbc50384">Example token</a></h2>
-<div class="outline-text-2" id="text-orgbc50384">
-<pre class="example" id="org7af0475">
+<div id="outline-container-org19b7af4" class="outline-2">
+<h2 id="org19b7af4"><a href="#org19b7af4">Example token</a></h2>
+<div class="outline-text-2" id="text-org19b7af4">
+<pre class="example" id="org3dc6beb">
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 </pre>
 
@@ -52,15 +52,15 @@ Note tokens can be much different sizes depending on what algorithm is used.
 </div>
 </div>
 
-<div id="outline-container-org48eaf86" class="outline-2">
-<h2 id="org48eaf86"><a href="#org48eaf86">Three Parts</a></h2>
-<div class="outline-text-2" id="text-org48eaf86">
+<div id="outline-container-org5f92186" class="outline-2">
+<h2 id="org5f92186"><a href="#org5f92186">Three Parts</a></h2>
+<div class="outline-text-2" id="text-org5f92186">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">JWT</span> | cut -d <span style="color: #98be65;">"."</span> -f1
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 </pre>
 
@@ -70,7 +70,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ
 </pre>
 
@@ -80,7 +80,7 @@ eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 </pre>
 
@@ -104,7 +104,7 @@ Works:
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 {"alg":"HS256","typ":"JWT"}
 </pre>
 
@@ -118,7 +118,7 @@ Does not completey work, missing last <code>}</code> character:
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 {"sub":"1234567890","name":"John Doe","iat":1516239022
 </pre>
 
@@ -132,7 +132,7 @@ More reliable decoding, using only jq:
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 {
   "sub": "1234567890",
   "name": "John Doe",

@@ -33,36 +33,36 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org2a586bd">Association Lists</a></li>
-<li><a href="#orgaa0a7e2">Pretty Printing Objects</a>
+<li><a href="#org209d0a3">Association Lists</a></li>
+<li><a href="#orgf1636d4">Pretty Printing Objects</a>
 <ul>
-<li><a href="#org3b6c8b0">cl-prettyprint</a></li>
-<li><a href="#org6a1a8cf">pp</a></li>
+<li><a href="#org3b0c97b">cl-prettyprint</a></li>
+<li><a href="#org4157fc2">pp</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-org2a586bd" class="outline-2">
-<h2 id="org2a586bd"><a href="#org2a586bd">Association Lists</a></h2>
-<div class="outline-text-2" id="text-org2a586bd">
+<div id="outline-container-org209d0a3" class="outline-2">
+<h2 id="org209d0a3"><a href="#org209d0a3">Association Lists</a></h2>
+<div class="outline-text-2" id="text-org209d0a3">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>assoc <span style="color: #98be65;">"foo"</span> '<span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span><span style="color: #98be65;">"foo"</span> . <span style="color: #98be65;">"bar"</span><span style="color: #98be65;">)</span> <span style="color: #98be65;">(</span><span style="color: #98be65;">"baz"</span> . <span style="color: #98be65;">"qux"</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 (foo . bar)
 </pre>
 
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="org60222e8">'<span style="color: #51afef;">(</span><span style="color: #c678dd;">(</span><span style="color: #98be65;">"cats"</span> . <span style="color: #98be65;">"hats"</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">"dogs"</span> . <span style="color: #98be65;">"hogs"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp" id="orga8ae654">'<span style="color: #51afef;">(</span><span style="color: #c678dd;">(</span><span style="color: #98be65;">"cats"</span> . <span style="color: #98be65;">"hats"</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">"dogs"</span> . <span style="color: #98be65;">"hogs"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 ((cats . hats) (dogs . hogs))
 </pre>
 
@@ -72,19 +72,19 @@
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 (cats . hats)
 </pre>
 </div>
 </div>
 
-<div id="outline-container-orgaa0a7e2" class="outline-2">
-<h2 id="orgaa0a7e2"><a href="#orgaa0a7e2">Pretty Printing Objects</a></h2>
-<div class="outline-text-2" id="text-orgaa0a7e2">
+<div id="outline-container-orgf1636d4" class="outline-2">
+<h2 id="orgf1636d4"><a href="#orgf1636d4">Pretty Printing Objects</a></h2>
+<div class="outline-text-2" id="text-orgf1636d4">
 </div>
-<div id="outline-container-org3b6c8b0" class="outline-3">
-<h3 id="org3b6c8b0"><a href="#org3b6c8b0">cl-prettyprint</a></h3>
-<div class="outline-text-3" id="text-org3b6c8b0">
+<div id="outline-container-org3b0c97b" class="outline-3">
+<h3 id="org3b0c97b"><a href="#org3b0c97b">cl-prettyprint</a></h3>
+<div class="outline-text-3" id="text-org3b0c97b">
 <p>
 <code>cl-prettyprint</code> formats nicely, but weirdly, it's not a function that
 returns a string. Instead it literally inserts text into the buffer at point.
@@ -115,7 +115,7 @@ We can wrap <code>cl-prettyprint</code> in a function to yank the string. Taken 
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 pprint
 </pre>
 
@@ -127,7 +127,7 @@ pprint
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 
 (("foo" . "bar")
  ("baz" . "qux"))
@@ -135,9 +135,9 @@ pprint
 </div>
 </div>
 
-<div id="outline-container-org6a1a8cf" class="outline-3">
-<h3 id="org6a1a8cf"><a href="#org6a1a8cf">pp</a></h3>
-<div class="outline-text-3" id="text-org6a1a8cf">
+<div id="outline-container-org4157fc2" class="outline-3">
+<h3 id="org4157fc2"><a href="#org4157fc2">pp</a></h3>
+<div class="outline-text-3" id="text-org4157fc2">
 <p>
 <code>pp</code> is great. But I noticed sometimes it doesn't format as vertically as
 <code>cl-prettyprint</code> (example?).
@@ -150,7 +150,7 @@ pprint
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 (("foo" . "bar")
  ("baz" . "qux"))
 </pre>

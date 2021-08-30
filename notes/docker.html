@@ -33,37 +33,37 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org6796926">Clean Up</a>
+<li><a href="#org6fecf3e">Clean Up</a>
 <ul>
-<li><a href="#orgd9df82e">Remove Unused Images</a></li>
-<li><a href="#org44c4001">Remove All Images</a></li>
+<li><a href="#org3734e3e">Remove Unused Images</a></li>
+<li><a href="#orgcc611fd">Remove All Images</a></li>
 </ul>
 </li>
-<li><a href="#org0e7987e">Start docker with SSH</a>
+<li><a href="#org5e7cde1">Start docker with SSH</a>
 <ul>
-<li><a href="#org2646990">Run Docker with .ssh</a></li>
-<li><a href="#org220764c">In container, start ssh-agent</a></li>
-<li><a href="#orgbff17a6">Add your keys</a></li>
+<li><a href="#org02a514b">Run Docker with .ssh</a></li>
+<li><a href="#org94b0873">In container, start ssh-agent</a></li>
+<li><a href="#orga3e96e5">Add your keys</a></li>
 </ul>
 </li>
-<li><a href="#org65a8507">Run Simple Images</a>
+<li><a href="#org515727c">Run Simple Images</a>
 <ul>
-<li><a href="#orgcc8b97d">Python</a></li>
-<li><a href="#org31982b0">Golang</a></li>
+<li><a href="#org9cadac1">Python</a></li>
+<li><a href="#orgf9e8d3f">Golang</a></li>
 </ul>
 </li>
-<li><a href="#org9d2369f">Rate Limiting</a></li>
+<li><a href="#org42d2734">Rate Limiting</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-org6796926" class="outline-2">
-<h2 id="org6796926"><a href="#org6796926">Clean Up</a></h2>
-<div class="outline-text-2" id="text-org6796926">
+<div id="outline-container-org6fecf3e" class="outline-2">
+<h2 id="org6fecf3e"><a href="#org6fecf3e">Clean Up</a></h2>
+<div class="outline-text-2" id="text-org6fecf3e">
 </div>
-<div id="outline-container-orgd9df82e" class="outline-3">
-<h3 id="orgd9df82e"><a href="#orgd9df82e">Remove Unused Images</a></h3>
-<div class="outline-text-3" id="text-orgd9df82e">
+<div id="outline-container-org3734e3e" class="outline-3">
+<h3 id="org3734e3e"><a href="#org3734e3e">Remove Unused Images</a></h3>
+<div class="outline-text-3" id="text-org3734e3e">
 <div class="org-src-container">
 <pre class="src src-sh">docker system prune
 </pre>
@@ -82,9 +82,9 @@ This removes:
 </div>
 </div>
 
-<div id="outline-container-org44c4001" class="outline-3">
-<h3 id="org44c4001"><a href="#org44c4001">Remove All Images</a></h3>
-<div class="outline-text-3" id="text-org44c4001">
+<div id="outline-container-orgcc611fd" class="outline-3">
+<h3 id="orgcc611fd"><a href="#orgcc611fd">Remove All Images</a></h3>
+<div class="outline-text-3" id="text-orgcc611fd">
 <div class="org-src-container">
 <pre class="src src-sh">docker image rm -f $(docker images -a -q)
 </pre>
@@ -102,9 +102,9 @@ or
 </div>
 </div>
 
-<div id="outline-container-org0e7987e" class="outline-2">
-<h2 id="org0e7987e"><a href="#org0e7987e">Start docker with SSH</a></h2>
-<div class="outline-text-2" id="text-org0e7987e">
+<div id="outline-container-org5e7cde1" class="outline-2">
+<h2 id="org5e7cde1"><a href="#org5e7cde1">Start docker with SSH</a></h2>
+<div class="outline-text-2" id="text-org5e7cde1">
 <p>
 On linux it should be possible to actually use SSH agent forwarding. See:
 <a href="https://gist.github.com/d11wtq/8699521">https://gist.github.com/d11wtq/8699521</a>
@@ -122,9 +122,9 @@ container.
 </p>
 </div>
 
-<div id="outline-container-org2646990" class="outline-3">
-<h3 id="org2646990"><a href="#org2646990">Run Docker with .ssh</a></h3>
-<div class="outline-text-3" id="text-org2646990">
+<div id="outline-container-org02a514b" class="outline-3">
+<h3 id="org02a514b"><a href="#org02a514b">Run Docker with .ssh</a></h3>
+<div class="outline-text-3" id="text-org02a514b">
 <p>
 This uses a bind mount, which shares the files. Should probably use a volume
 to copy the files.
@@ -141,9 +141,9 @@ to copy the files.
 </div>
 </div>
 
-<div id="outline-container-org220764c" class="outline-3">
-<h3 id="org220764c"><a href="#org220764c">In container, start ssh-agent</a></h3>
-<div class="outline-text-3" id="text-org220764c">
+<div id="outline-container-org94b0873" class="outline-3">
+<h3 id="org94b0873"><a href="#org94b0873">In container, start ssh-agent</a></h3>
+<div class="outline-text-3" id="text-org94b0873">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #c678dd;">eval</span> $(ssh-agent -s)
 </pre>
@@ -151,9 +151,9 @@ to copy the files.
 </div>
 </div>
 
-<div id="outline-container-orgbff17a6" class="outline-3">
-<h3 id="orgbff17a6"><a href="#orgbff17a6">Add your keys</a></h3>
-<div class="outline-text-3" id="text-orgbff17a6">
+<div id="outline-container-orga3e96e5" class="outline-3">
+<h3 id="orga3e96e5"><a href="#orga3e96e5">Add your keys</a></h3>
+<div class="outline-text-3" id="text-orga3e96e5">
 <div class="org-src-container">
 <pre class="src src-sh">ssh-add ~/.ssh/id_rsa
 </pre>
@@ -162,17 +162,17 @@ to copy the files.
 </div>
 </div>
 
-<div id="outline-container-org65a8507" class="outline-2">
-<h2 id="org65a8507"><a href="#org65a8507">Run Simple Images</a></h2>
-<div class="outline-text-2" id="text-org65a8507">
+<div id="outline-container-org515727c" class="outline-2">
+<h2 id="org515727c"><a href="#org515727c">Run Simple Images</a></h2>
+<div class="outline-text-2" id="text-org515727c">
 <p>
 Images I sometimes run for debugging etc.
 </p>
 </div>
 
-<div id="outline-container-orgcc8b97d" class="outline-3">
-<h3 id="orgcc8b97d"><a href="#orgcc8b97d">Python</a></h3>
-<div class="outline-text-3" id="text-orgcc8b97d">
+<div id="outline-container-org9cadac1" class="outline-3">
+<h3 id="org9cadac1"><a href="#org9cadac1">Python</a></h3>
+<div class="outline-text-3" id="text-org9cadac1">
 <p>
 Run and mount current dir.
 </p>
@@ -187,9 +187,9 @@ Run and mount current dir.
 </div>
 </div>
 
-<div id="outline-container-org31982b0" class="outline-3">
-<h3 id="org31982b0"><a href="#org31982b0">Golang</a></h3>
-<div class="outline-text-3" id="text-org31982b0">
+<div id="outline-container-orgf9e8d3f" class="outline-3">
+<h3 id="orgf9e8d3f"><a href="#orgf9e8d3f">Golang</a></h3>
+<div class="outline-text-3" id="text-orgf9e8d3f">
 <p>
 Run golang container for interactive use
 </p>
@@ -202,11 +202,11 @@ Run golang container for interactive use
 </div>
 </div>
 
-<div id="outline-container-org9d2369f" class="outline-2">
-<h2 id="org9d2369f"><a href="#org9d2369f">Rate Limiting</a></h2>
-<div class="outline-text-2" id="text-org9d2369f">
+<div id="outline-container-org42d2734" class="outline-2">
+<h2 id="org42d2734"><a href="#org42d2734">Rate Limiting</a></h2>
+<div class="outline-text-2" id="text-org42d2734">
 <div class="org-src-container">
-<pre class="src src-sh" id="orgea72e49">curl <span style="color: #98be65;">"https://auth.docker.io/token?service=registry.docker.io&amp;scope=repository:ratelimitpreview/test:pull"</span> <span style="color: #98be65;">\</span>
+<pre class="src src-sh" id="orga1baef9">curl <span style="color: #98be65;">"https://auth.docker.io/token?service=registry.docker.io&amp;scope=repository:ratelimitpreview/test:pull"</span> <span style="color: #98be65;">\</span>
     | jq -r .token
 </pre>
 </div>
@@ -218,7 +218,7 @@ Run golang container for interactive use
 </pre>
 </div>
 
-<pre class="example" id="org3505de4">
+<pre class="example" id="org4f9b2b3">
 HTTP/1.1 200 OK
 Content-Length: 2782
 Content-Type: application/vnd.docker.distribution.manifest.v1+prettyjws

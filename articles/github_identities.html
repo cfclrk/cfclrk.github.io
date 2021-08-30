@@ -33,37 +33,37 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org57a6109">Problem</a>
+<li><a href="#org39f335e">Problem</a>
 <ul>
-<li><a href="#org16464af">Current Solution</a></li>
-<li><a href="#org3634f22">Unsolved</a></li>
+<li><a href="#org4b669f7">Current Solution</a></li>
+<li><a href="#org87d2cc4">Unsolved</a></li>
 </ul>
 </li>
-<li><a href="#org0590ed1">The git config</a>
+<li><a href="#org25e71b2">The git config</a>
 <ul>
-<li><a href="#url-rewriting">More About Git URL Rewriting</a></li>
-<li><a href="#config-loading">More About Git Config Loading</a></li>
+<li><a href="#url-rewriting">About Git URL Rewriting</a></li>
+<li><a href="#config-loading">About Git Config Loading</a></li>
 </ul>
 </li>
 <li><a href="#the-ssh-config">The SSH Config</a></li>
 <li><a href="#signed-commits">Signed Commits</a></li>
-<li><a href="#orga43e9ab">Resources</a></li>
+<li><a href="#orgb574aaf">Resources</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-org57a6109" class="outline-2">
-<h2 id="org57a6109"><a href="#org57a6109">Problem</a></h2>
-<div class="outline-text-2" id="text-org57a6109">
+<div id="outline-container-org39f335e" class="outline-2">
+<h2 id="org39f335e"><a href="#org39f335e">Problem</a></h2>
+<div class="outline-text-2" id="text-org39f335e">
 <p>
 You have multiple GitHub accounts, and you want git to automatically push/pull
 to the correct account.
 </p>
 </div>
 
-<div id="outline-container-org16464af" class="outline-3">
-<h3 id="org16464af"><a href="#org16464af">Current Solution</a></h3>
-<div class="outline-text-3" id="text-org16464af">
+<div id="outline-container-org4b669f7" class="outline-3">
+<h3 id="org4b669f7"><a href="#org4b669f7">Current Solution</a></h3>
+<div class="outline-text-3" id="text-org4b669f7">
 <p>
 In this article I set things up so that:
 </p>
@@ -80,9 +80,9 @@ One directory <i>cannot contain the other</i>. Here I use two GitHub accounts,
 </div>
 </div>
 
-<div id="outline-container-org3634f22" class="outline-3">
-<h3 id="org3634f22"><a href="#org3634f22">Unsolved</a></h3>
-<div class="outline-text-3" id="text-org3634f22">
+<div id="outline-container-org87d2cc4" class="outline-3">
+<h3 id="org87d2cc4"><a href="#org87d2cc4">Unsolved</a></h3>
+<div class="outline-text-3" id="text-org87d2cc4">
 <p>
 What if you want to create a git repo in <code>~/some_other_dir</code> (i.e., not in
 <code>~/work</code> or <code>~/projects</code>)? You have to create another line item in your
@@ -100,22 +100,24 @@ What I <i>really want</i> is a setup that does this:
 
 <p>
 Unfortunately I haven't gotten that working (have you? <a href="https://cfclrk.github.io/">Contact</a> me!). More
-about that in the <a href="#config-loading">More About Git Config Loading</a> section.
+about that in the <a href="#config-loading">About Git Config Loading</a> section.
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org0590ed1" class="outline-2">
-<h2 id="org0590ed1"><a href="#org0590ed1">The git config</a></h2>
-<div class="outline-text-2" id="text-org0590ed1">
+<div id="outline-container-org25e71b2" class="outline-2">
+<h2 id="org25e71b2"><a href="#org25e71b2">The git config</a></h2>
+<div class="outline-text-2" id="text-org25e71b2">
 <p>
 First, tell git to use different git configurations depending on the directory
-a project is in. Git supports this with the <a href="https://git-scm.com/docs/git-config#_conditional_includes">includeIf</a> directive.
+a project is in. Git supports this with the <a href="https://git-scm.com/docs/git-config#_conditional_includes">includeIf</a> directive. Do this by
+creating the following three files.
 </p>
 
-<p>
-File: <code>~/.config/git/config</code>
+<ol class="org-ol">
+<li><p>
+<code>~/.config/git/config</code>
 </p>
 
 <div class="org-src-container">
@@ -124,15 +126,10 @@ File: <code>~/.config/git/config</code>
 [<span style="color: #ECBE7B;">includeIf</span> <span style="color: #c678dd;">"gitdir:~/work/"</span>]
     <span style="color: #dcaeea;">path</span> = work.gitconfig
 </pre>
-</div>
+</div></li>
 
-<p>
-Next, create the <code>home.gitconfig</code> and <code>work.gitconfig</code> files referenced above.
-Each file specifies an email address and a URL-rewriting rule.
-</p>
-
-<p>
-File: <code>~/.config/git/work.gitconfig</code>
+<li><p>
+<code>~/.config/git/work.gitconfig</code>
 </p>
 
 <div class="org-src-container">
@@ -143,10 +140,10 @@ File: <code>~/.config/git/work.gitconfig</code>
 [<span style="color: #ECBE7B;">url</span> <span style="color: #c678dd;">"git@gist-work"</span>]
     <span style="color: #dcaeea;">insteadOf</span> = git@gist.github.com
 </pre>
-</div>
+</div></li>
 
-<p>
-File: <code>~/.config/git/home.gitconfig</code>
+<li><p>
+<code>~/.config/git/home.gitconfig</code>
 </p>
 
 <div class="org-src-container">
@@ -157,16 +154,17 @@ File: <code>~/.config/git/home.gitconfig</code>
 [<span style="color: #ECBE7B;">url</span> <span style="color: #c678dd;">"git@gist-home"</span>]
     <span style="color: #dcaeea;">insteadOf</span> = git@gist.github.com
 </pre>
-</div>
+</div></li>
+</ol>
 
 <p>
 That's it for the git config! Move on to <a href="#the-ssh-config">The SSH Config</a>. The next two
-subsections elaborate on the above, if you are interested.
+subsections explain the above, if you are interested.
 </p>
 </div>
 
 <div id="outline-container-url-rewriting" class="outline-3">
-<h3 id="url-rewriting"><a href="#url-rewriting">More About Git URL Rewriting</a></h3>
+<h3 id="url-rewriting"><a href="#url-rewriting">About Git URL Rewriting</a></h3>
 <div class="outline-text-3" id="text-url-rewriting">
 <div class="org-src-container">
 <pre class="src src-gitconfig">[<span style="color: #ECBE7B;">url</span> <span style="color: #c678dd;">"git@github-home"</span>]
@@ -191,7 +189,7 @@ writing this article. If I just <code>cat</code> the git config file in my local
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 [remote "origin"]
 	url = git@github.com:cfclrk/articles.git
 	fetch = +refs/heads/*:refs/remotes/origin/*
@@ -208,7 +206,7 @@ see the <i>rewritten</i> URL:
 </pre>
 </div>
 
-<pre class="example">
+<div class="results">#+RESULTS:</div><pre class="example">
 origin	git@github-home:cfclrk/articles.git (fetch)
 origin	git@github-home:cfclrk/articles.git (push)
 </pre>
@@ -217,10 +215,9 @@ origin	git@github-home:cfclrk/articles.git (push)
 <p>
 All git commands will see this rewritten form. The rewritten form is
 determined by the git config file that was loaded when the <code>git</code> command was
-run. If we were to simply move this project out of the <code>~/projects/</code>
-directory, a different git config file would be loaded, different
-URL-rewriting rules would apply, and <code>git remote -v</code> would show a different
-URL.
+run. If we were to move this project out of the <code>~/projects/</code> directory, a
+different git config file would be loaded, different URL-rewriting rules
+would apply, and <code>git remote -v</code> would show a different URL.
 </p>
 
 <p>
@@ -233,7 +230,7 @@ config (as explained in the section <a href="#the-ssh-config">The SSH Config</a>
 </div>
 
 <div id="outline-container-config-loading" class="outline-3">
-<h3 id="config-loading"><a href="#config-loading">More About Git Config Loading</a></h3>
+<h3 id="config-loading"><a href="#config-loading">About Git Config Loading</a></h3>
 <div class="outline-text-3" id="text-config-loading">
 <p>
 Git loads <i>all</i> applicable config files. If a single option is set multiple
@@ -271,22 +268,21 @@ git does something like:
 <ul class="org-ul">
 <li>Does <code>[includeIf "gitdir:/"]</code> apply?
 <ul class="org-ul">
-<li><b>Yes!</b> Load <code>home.gitconfig</code></li>
+<li><b>Yes!</b> Load the home.gitconfig file</li>
 <li>Set <code>user.email</code> to <code>cfclrk@home.com</code></li>
 </ul></li>
 <li>Does <code>[includeIf "gitdir:~/work/"]</code> apply?
 <ul class="org-ul">
-<li><b>Yes!</b> Load <code>work.gitconfig</code></li>
+<li><b>Yes!</b> Load the work.gitconfig file</li>
 <li>Set <code>user.email</code> to <code>cfclrk@work.com</code></li>
 </ul></li>
 </ul>
 
 <p>
-In this case, it works! <b>Both</b> the <code>work.gitconfig</code> and <code>home.gitconfig</code> are
-loaded. The email address will end up being <code>cfclrk@work.com</code> since that was
-the <i>last</i> value loaded for the <code>user.email</code> option. The determining factor
-is the <i>order in which the configuration is defined</i>, and the <i>last value
-wins</i>.
+In this case, it works! <b>Both</b> the <i>work</i> and <i>home</i> config files get loaded.
+The email address ends up being <code>cfclrk@work.com</code> since that was the <b>last</b>
+value loaded for the <code>user.email</code> option. The determining factor is the
+<i>order in which the configuration is defined</i>, and the <i>last value wins</i>.
 </p>
 
 <p>
@@ -328,7 +324,7 @@ both accounts). Assuming you've <a href="https://docs.github.com/en/github/authe
 something like:
 </p>
 
-<pre class="example" id="orgcd0fc05">
+<pre class="example" id="orge31ec82">
 $ tree ~/.ssh/
 /Users/cfclrk/.ssh/
 ├── config
@@ -383,7 +379,7 @@ IdentitiesOnly yes
 <h2 id="signed-commits"><a href="#signed-commits">Signed Commits</a></h2>
 <div class="outline-text-2" id="text-signed-commits">
 <p>
-In <a href="#config-loading">More About Git Config Loading</a>, I mentioned how to make git commits appear to be
+In <a href="#config-loading">About Git Config Loading</a>, I mentioned how to make git commits appear to be
 associated with someone else's GitHub account. To (somewhat) mitigate that
 situation, GitHub allows you to upload a PGP key to your GitHub account, and
 GitHub displays a "Verified" badge on commits that are signed with a PGP key
@@ -405,9 +401,9 @@ accounts (with different email addresses) let me know!
 </div>
 </div>
 
-<div id="outline-container-orga43e9ab" class="outline-2">
-<h2 id="orga43e9ab"><a href="#orga43e9ab">Resources</a></h2>
-<div class="outline-text-2" id="text-orga43e9ab">
+<div id="outline-container-orgb574aaf" class="outline-2">
+<h2 id="orgb574aaf"><a href="#orgb574aaf">Resources</a></h2>
+<div class="outline-text-2" id="text-orgb574aaf">
 <p>
 <a href="https://yayimorphology.org/ssh-identities-made-easy.html">https://yayimorphology.org/ssh-identities-made-easy.html</a>
 </p>
