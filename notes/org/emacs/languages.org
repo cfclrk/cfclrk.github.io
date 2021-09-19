@@ -1,0 +1,81 @@
+#+TITLE: Programming Languages
+#+SETUPFILE: ../../setup.org
+
+* Python
+
+** Goals
+
+   - Each project has its own virtual environment.
+   - Different projects use different versions of Python.
+   - Each python project can define its own formatting rules. Some projects may
+     use =black=, while others use =yapf=. Each project might define, say,
+     different maximum line lengths.
+   - Each project can define its own linting rules (using say =pylint=).
+
+** Debugging with dap-mode
+
+   Install [[https://github.com/microsoft/debugpy/][debugpy]] - how can I install this globally?
+
+** Emacs installs pyright automatically
+
+   Emacs ran:
+
+   #+begin_src sh
+     /usr/local/bin/npm -g --prefix /Users/chris.clark/emacs/cfclrk/.cache/lsp/npm/pyright install pyright
+   #+end_src
+
+** Questions
+
+   Is there a way to conditionally load either the black or yapf lsp plugins
+   depending on project config?
+
+* Bash
+
+  Install bash-language-server:
+
+  #+begin_src sh
+    yarn global add bash-language-server
+  #+end_src
+
+* Deprecated Notes
+
+  I don't use =pyls= anymore, I've switched to =pyright=.
+
+** PATH
+
+   =pyls=, =pyls-mypy=, etc must be on your =$PATH=. There are a few
+   ways to accomplish this.
+
+   1. Install =pyls= (etc) into every virtual environment. Perhaps, add it to
+      the pyenv default packages list.
+   2. Create a pyenv virtual env specifically for =pyls= etc. Then in each
+      project, do =pyenv local $PROJECTVENV $PYLSVENV=. With =pyenv= you can set
+      multiple active virtual environments, so always activate the environment
+      with =pyls=.
+   3. Install =pyls= etc. somewhere else on your =$PATH=, and *do not* install
+      it into *any* pyenv virtual environment.
+
+      I used (2) for a while. Now I'm going with (3). To install it in a
+      globally-accessible place:
+
+      #+begin_src sh
+        /usr/local/opt/python3/libexec/bin/pip install pyls
+        /usr/local/opt/python3/libexec/bin/pip install pyls-mypy
+        /usr/local/opt/python3/libexec/bin/pip install pyls-isort
+        /usr/local/opt/python3/libexec/bin/pip install pyls-black
+      #+end_src
+
+      Note that if any of =pyls=, =pyls-mypy=, etc are installed in *any* pyenv
+      virtual environment, things will start going wrong unless you really know
+      what you're doing. That shouldn't be a problem: no python package should
+      be requiring =pyls= or LSP plugins (even as development dependencies).
+      Different developers use different things, and not everyone uses LSP, so
+      requiring it would be silly.
+
+      NOTE: I ALSO NEEDED TO INSTALL mypy and isort into the top-level pip. HOW
+      CAN I MAKE LSP use the versions of mypy and isort in the virtual environment?
+
+      #+begin_src sh
+        /usr/local/opt/python3/libexec/bin/pip install isort
+        /usr/local/opt/python3/libexec/bin/pip install mypy
+      #+end_src

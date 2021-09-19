@@ -1,0 +1,51 @@
+#+TITLE: Go
+#+SETUPFILE: ../setup.org
+
+* New Project
+
+  #+begin_src sh :results output :dir ~/Projects/use
+    projectName=$(basename $(pwd))
+    go mod init github.com/cfclrk/$projectName
+    go mod tidy
+  #+end_src
+
+** Repo Structure
+
+   See: http://peter.bourgon.org/go-best-practices-2016/#repository-structure
+
+* Cobra
+
+  Create a new cobra project:
+
+  #+begin_src sh :results output :dir ~/Projects/use
+    projectName=$(basename $(pwd))
+    cobra init --pkg-name github.com/cfclrk/$projectName
+    rm LICENSE
+
+    # Remove all block comments (between /* and */) in each file
+    sed -i "" '/\/\*/,/\*\//d' main.go
+    sed -i "" '/\/\*/,/\*\//d' cmd/root.go
+
+    go mod init github.com/cfclrk/$projectName
+    go mod tidy
+  #+end_src
+
+  #+RESULTS:
+  : Your Cobra applicaton is ready at
+  : /Users/chris.clark/Projects/use
+
+* Docker
+
+  Run golang container for interactive use:
+
+  #+begin_src sh
+    docker run -it --rm golang:1.16
+  #+end_src
+
+  Mount current project in container:
+
+  #+begin_src sh
+    docker run -it --rm \
+           --mount type=bind,source=(pwd),target=/root/$(basename $(pwd)) \
+           golang:1.16
+  #+end_src

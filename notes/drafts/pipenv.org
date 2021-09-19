@@ -1,0 +1,51 @@
+Pipenv goes against the ethos of programming that I try to follow, which is one
+of [[https://youtu.be/ShEez0JkOFw][Programming with Hand Tools]].
+
+I think the folks over at https://packaging.python.org have done everyone a
+disservice by recommending pipenv in their [[https://packaging.python.org/guides/tool-recommendations/][Tool Recommendations]] and their guide
+on [[https://packaging.python.org/tutorials/managing-dependencies/][Managing Application Dependencies]].
+
+That group looks a lot more "official" than it really is. It's telling that they
+do not include pipenv in their guide on [[https://packaging.python.org/guides/distributing-packages-using-setuptools/][Packaging and distributing projects]], nor
+in their [[https://github.com/pypa/sampleproject][sample project]].
+
+* Too much stuff
+
+Forces a virtual environment workflow on everyone. I should be able to manage
+virtual environments in another way if I want to. Python 3.? introduced venv
+which is simple and excellent. In my opinion, any python project that makes it
+impossible to use venv is doing something very wrong.
+
+Pipenv should have been written as at least two, maybe three separate libraries:
+
+  1. one that handles the virtual environment stuff
+  2. one that introduces the whole Pipfile and Pipfile.lock thing
+  3. one that handles dependency resolution
+
+I could get behind the Pipfile idea if there were a minimal library that
+provided that functionality. Other tools could then b
+
+* Upgrading/adding new dependencies
+
+It's impossible to upgrade a single dependency. Pipenv goes and upgrades all
+dependencies. This makes diffs really strange; you make a PR that adds a new
+package, and the entire Package.lock changes. This issue is tracked here:
+
+https://github.com/pypa/pipenv/issues/966
+
+* Renaming directory breaks virtual env
+
+* Note on Import Path
+
+If you have both pipenv and pyenv, and you activate a pipenv virtual environment:
+
+  - you can’t import libraries unless they are actually `pip install`d in the
+    pipenv environment
+  - you can access shell commands that are installed in the pyenv environment
+
+Can get you into a spot of trouble if you have =ipython= installed in pyenv but
+not in pipenv.
+
+https://asciinema.org/a/lWyIGMcZk13QO4nNn8RImdyAB
+
+* Tools work with requirements.txt

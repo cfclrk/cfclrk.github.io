@@ -1,0 +1,264 @@
+#+TITLE: Keys and Certificates
+#+SETUPFILE: ../setup.org
+#+PROPERTY: header-args+ :results output
+
+* Variables                                                        :noexport:
+
+  #+NAME: key
+  : foo
+
+  #+NAME: cert
+  : /Users/chris.clark/IronNet/bp-cli/cert.pem
+
+  #+NAME: CommonName
+  : foo.com
+
+* Discover Public Certificates
+
+  Use [[https://cert.sh][cert.sh]]. For example, to see all certs issued for =cats.com=:
+  https://crt.sh/?q=%25.cats.com
+
+  Advanced search page: https://crt.sh/?a=1
+
+  The data is stored in a relational DB. Optionally show the SQL query a page
+  makes using =&showSQL=Y=, or by selecting "Show SQL?" on the advanced search
+  page.
+
+* Create an SSH Key Pair
+
+  =ssh-keygen= creates two files: =$keyname= and =$keyname.pub=.
+
+** No Passphrase
+
+   #+begin_src sh :var keyname="foo" email="chris.clark@ironnet.com"
+     ssh-keygen -t ed25519 -N "" -f ~/.ssh/$keyname -C "$email"
+   #+end_src
+
+   The email address is optional:
+
+   #+begin_src sh :results output :var keyname="gh_ixiactl_deploy_key"
+     ssh-keygen -t ed25519 -f ~/.ssh/$keyname -N ""
+   #+end_src
+
+** With Passphrase
+
+   #+begin_src sh :results output :var keyname="ixiactl-new" passphrase="foo"
+     ssh-keygen -t ed25519 -f ~/.ssh/$keyname
+   #+end_src
+
+* Conversions
+
+  Generate a public key from a private key:
+
+  #+begin_src sh :results output :var keyname="chrisclark"
+    ssh-keygen -y -f ~/.ssh/${keyname}.pem $HOME/.ssh/${keyname}.pub
+  #+end_src
+
+* Eliptic Curve Keys and Certs
+
+** List Curves
+
+   =prime256v1= is suitable for JWT signing ([[https://www.scottbrady91.com/OpenSSL/Creating-Elliptical-Curve-Keys-using-OpenSSL][ref]]).
+
+   #+begin_src sh
+     openssl ecparam -list_curves
+   #+end_src
+
+* Creating Certificates
+
+  Note: there is a golang tool to create self-signed certs at =$(go env
+  GOROOT)/src/crypto/tls/generate_cert.go=.
+
+** Create Keypair
+
+   The =openssl genrsa= command creates a private key that includes a public
+   key.
+
+   #+NAME: keypair
+   #+begin_src sh :results output
+     openssl genrsa 1024
+   #+end_src
+
+   Extract the public key from the private key:
+
+   #+begin_src sh :var keypair=keypair :results verbatim
+     echo "$keypair" | openssl rsa -outform PEM -pubout
+   #+end_src
+
+** CA Certificates
+
+   From [[https://datatracker.ietf.org/doc/html/rfc5280#section-3.2][RFC 5280]]:
+
+   #+begin_quote
+   CA certificates may be further divided into three classes:
+   cross-certificates, self-issued certificates, and self-signed certificates.
+   #+end_quote
+
+   Every root CA certificate is a self-signed certificate. Intermediate CA
+   certificates are not self-signed; they are signed by their parent CA.
+
+   The following commands create a =ca.key= and a =ca.crt= file. Remember, the
+   =ca.key= actually contains both the public and private key. The certificate
+   has the public key, some metadata, and a signature (signed by some private
+   key).
+
+*** Self-Issued Certificates
+
+    From [[https://datatracker.ietf.org/doc/html/rfc5280#section-3.2][RFC 5280]]:
+
+    #+begin_quote
+    Self-issued certificates are CA certificates in which the issuer and subject
+    are the same entity. Self-issued certificates are generated to support
+    changes in policy or operations.
+    #+end_quote
+
+*** Self-Signed Certificates
+
+    From [[https://datatracker.ietf.org/doc/html/rfc5280#section-3.2][RFC 5280]]:
+
+    #+begin_quote
+    Self-signed certificates are self-issued certificates where the digital
+    signature may be verified by the public key bound into the certificate.
+    Self-signed certificates are used to convey a public key for use to begin
+    certification paths.
+    #+end_quote
+
+    That is, self-signed certificates are either:
+
+    1. Root CA certifaces
+    2. You're a rogue renegade signing certs like a villian
+
+   #+begin_src sh :var CommonName=CommonName
+     openssl genrsa -out ca.key 2048
+     openssl req -x509 -new -nodes \
+             -key ca.key \
+             -subj "/CN=${CommonName}" \
+             -days 3650 \
+             -out ca.crt
+   #+end_src
+
+*** Cross-Certificate
+
+    From [[https://datatracker.ietf.org/doc/html/rfc5280#section-3.2][RFC 5280]]:
+
+    #+begin_quote
+    Cross-certificates are CA certificates in which the issuer and subject are
+    different entities. Cross-certificates describe a trust relationship between
+    the two CAs.
+    #+end_quote
+
+** Entity Certificates
+
+   #+begin_quote
+   End entity certificates are issued to subjects that are not authorized to
+   issue certificates.
+   #+end_quote
+
+   Create a new keypair. This creates two file: =client.key= (which actually has
+   both the public and private key in it).
+
+   #+begin_src sh
+     openssl genrsa -out client.key 2048
+   #+end_src
+
+   Create a Certificate Signing Request (CSR), which is a document that
+   associates some metadata with the key. This creates one file: =client.csr=.
+
+   #+begin_src sh :var CommonName="ChrisClark"
+     openssl req -new \
+             -key client.key \
+             -subj "/CN=${CommonName}" \
+             -out client.csr
+   #+end_src
+
+   Create a client certificate by signing the CSR with the CA's private key. I
+   suppose the CA might first verify that the information in the CSR is
+   consistent (does the requester actually own the Common Name?), but in
+   practice I'm not sure of any examples where that actually happens.
+
+   #+begin_src sh :var CAKeyFile="a.key" CACertFile=""
+     openssl x509 -req \
+             -in client.csr \
+             -CA $CACertFile \
+             -CAkey $CAKeyFile \
+             -CAcreateserial \
+             -out client.crt \
+             -days 3650 \
+             -sha256
+   #+end_src
+
+* cfssl
+
+  #+begin_src sh
+    cfssl selfsign www.example.net acm-test.json \
+        | cfssljson -bare acm-test
+  #+end_src
+
+* Fingerprint
+
+  #+begin_src sh :var file="/Users/chris.clark/.ssh/ironnet/chrisclark.pem"
+    openssl x509 -noout -fingerprint -sha256 \
+            -inform pem -in $file
+  #+end_src
+
+  #+begin_src sh :var file="/Users/chris.clark/.ssh/ironnet/chrisclark.pem"
+    ssh-keygen -lf $file
+  #+end_src
+
+  #+begin_src sh :var file="/Users/chris.clark/Downloads/cfctest.pem"
+    ssh-keygen -l -E md5 -f $file
+  #+end_src
+
+  AWS EC2 KeyPairs created by AWS are rather specific. This command is from the
+  docs [[https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#verify-key-pair-fingerprints][here]] about how to check their fingerprint.
+
+  #+begin_src sh :var file="/Users/chris.clark/Downloads/cfctest.pem"
+    openssl pkcs8 -in $file \
+            -inform PEM -outform DER -topk8 -nocrypt \
+        | openssl sha1 -c
+  #+end_src
+
+* Checking and Viewing Certs
+
+** View a Server's Certificate
+
+   Show cert info for a local certificate file.
+
+   #+begin_src sh :var cert="/Users/chris.clark/Projects/codenotes/aws/cert.pem"
+     openssl x509 -in $cert -text -noout
+   #+end_src
+
+   Show cert info for a website.
+
+   #+begin_src sh :var domain="google.com"
+     openssl s_client -connect $domain:443 -showcerts
+   #+end_src
+
+** Check if a Private Key Matches a Certificate
+
+  On the private key:
+
+  #+begin_src sh :var key=""
+    openssl rsa -modulus -noout -in $key
+  #+end_src
+
+  On the certificate:
+
+  #+begin_src sh :var cert=""
+    openssl x509 -modulus -noout -in $cert
+  #+end_src
+
+  If the output of those two are the same, then the keys go together. An easy
+  way to compare them is to pipe them both to =openssl md5=.
+
+** CSR
+
+   #+begin_src sh :var file=""
+     openssl req -text -noout -verify -in $file.csr
+   #+end_src
+
+** Verify Cert with CA
+
+   #+begin_src sh
+     openssl verify -CAfile ca.crt entity.crt
+   #+end_src

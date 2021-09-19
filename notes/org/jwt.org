@@ -1,0 +1,73 @@
+#+TITLE: JSON Web Tokens
+#+SETUPFILE: ../setup.org
+
+* Example token
+
+#+NAME: JWT
+#+begin_example
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+#+end_example
+
+Note tokens can be much different sizes depending on what algorithm is used.
+
+* Three Parts
+
+  #+begin_src sh :var JWT=JWT
+    echo $JWT | cut -d "." -f1
+  #+end_src
+
+  #+RESULTS:
+  : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+  #+begin_src sh :var JWT=JWT
+    echo $JWT | cut -d "." -f2
+  #+end_src
+
+  #+RESULTS:
+  : eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ
+
+  #+begin_src sh :var JWT=JWT
+    echo $JWT | cut -d "." -f3
+  #+end_src
+
+  #+RESULTS:
+  : SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+
+  All three parts are [[https://brockallen.com/2014/10/17/base64url-encoding/][base64url]]-encoded ([[https://tools.ietf.org/html/rfc4648#section-5][rfc]]). Neither =base64= nor =jq= fully
+  support base64url encoding, though it works sometimes. The first two parts are
+  JSON, the third is...? The third part is a signature.
+
+  In the example token, the first part decodes properly, second part does not.
+
+  Works:
+
+  #+begin_src sh :var JWT=JWT :results output
+    echo $JWT | cut -d "." -f1 | base64 --decode
+  #+end_src
+
+  #+RESULTS:
+  : {"alg":"HS256","typ":"JWT"}
+
+  Does not completey work, missing last =}= character:
+
+  #+begin_src sh :var JWT=JWT :results output
+    echo $JWT | cut -d "." -f2 | base64 --decode
+  #+end_src
+
+  #+RESULTS:
+  : {"sub":"1234567890","name":"John Doe","iat":1516239022
+
+  #+RESULTS:
+
+  More reliable decoding, using only jq:
+
+  #+begin_src sh :var JWT=JWT :results output
+    echo $JWT | jq -R 'gsub("-";"+") | gsub("_";"/") | split(".") | .[1] | @base64d | fromjson'
+  #+end_src
+
+  #+RESULTS:
+  : {
+  :   "sub": "1234567890",
+  :   "name": "John Doe",
+  :   "iat": 1516239022
+  : }

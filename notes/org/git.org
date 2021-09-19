@@ -1,0 +1,259 @@
+#+TITLE: Git
+#+SETUPFILE: ../setup.org
+
+* Refs
+
+** HEAD
+
+   HEAD is usually a symbolic ref, meaning it points to another ref.
+
+   #+begin_src sh
+     git symbolic-ref HEAD
+   #+end_src
+
+   #+RESULTS:
+   : refs/heads/main
+
+   Unless you are in a detached HEAD state, in which case HEAD points directly
+   to a commit.
+
+   Some ways to print the SHA of the HEAD ref:
+
+   #+begin_src sh
+     git rev-parse HEAD
+   #+end_src
+
+   #+RESULTS:
+   : 30946349acf16c90c4e892403fefa9e8ed04ee75
+
+   #+begin_src sh
+     git log -1 --format='%H'
+   #+end_src
+
+   #+RESULTS:
+   : 30946349acf16c90c4e892403fefa9e8ed04ee75
+
+** Branches
+
+   Current branch name:
+
+   #+begin_src sh
+     git rev-parse --abbrev-ref HEAD
+   #+end_src
+
+   #+RESULTS:
+   : main
+
+* I Accidentally...
+
+** Commited to the Wrong Branch
+
+   You locally committed to =main= instead of =develop=, but you haven't pushed
+   the commit yet.
+
+   - Soft-reset main back to origin/develop
+   - The committed changes will now be staged
+   - Switch to develop branch
+   - Commit staged changes
+
+   #+begin_src sh
+     git reset --soft origin/develop
+   #+end_src
+
+** Rebased Remote Branch
+
+   You rebased, and then remembered that the branch you were on has already been
+   pushed to a remote repo. You shouldn't push this rebase!
+
+   - You need to return the current branch to where it was before the rebase.
+
+** Ammended Remote Commit
+
+   You ran a =git commit --ammend=, then realized you've already pushed the
+   commit you were ammending! You can't push the ammended commit! (You /can/,
+   but that would be rewriting history on the remote).
+
+   - Reset soft to =origin/<branch-name>=. Then the changes you just committed
+     will be staged. Now you can commit again as a new commit.
+
+** Committed Locally Before Pulling Remote
+
+   Somebody pushed changes to your branch while you were still committing
+   locally. Now your branch and the remote branch have diverged.
+
+   - Option 1: Merge remote into local. Just do a git merge of
+     remote/branch-name.
+
+* Rebasing
+
+** Rebase to Ancestor
+
+   Adapted from [[https://stackoverflow.com/a/55049181/340613][this SO answer]].
+
+   Given
+
+   #+header: :prologue "mkdir -p z && cd z && git init"
+   #+begin_src sh :results none
+     touch A && git add A
+     git commit -m "Add A"
+     touch B && git add B
+     git commit -m "Add B"
+     touch C && git add C
+     git commit -m "Add C"
+     touch D && git add D
+     git commit -m "Add D"
+   #+end_src
+
+   #+NAME: ABCD
+   #+header: :results file :file-ext png
+   #+header: :output-dir (expand-file-name "img" notes/project-directory)
+   #+begin_src sh :dir z :exports results
+     git2dot --png
+   #+end_src
+
+   #+RESULTS: ABCD
+   [[file:../img/ABCD.png]]
+
+   And I want to rebase =D= to an ancestor =B= (I want =C= and =D= to be
+   siblings):
+
+   #+begin_example
+     A --- B --- C         main
+           \
+            \-- D          feature
+   #+end_example
+
+   #+begin_src sh :dir z :results output
+     git log --pretty --oneline
+   #+end_src
+
+   #+RESULTS:
+   : 02cbe96 Add D
+   : 081fb12 Add C
+   : 81d13ca Add B
+   : 334a6b5 Add A
+
+   #+begin_src sh :dir z :results output
+     git checkout main
+     git rebase --onto 81d13ca 081fb12
+   #+end_src
+
+   #+RESULTS:
+
+   #+begin_src sh :dir z :results output
+     git log -a --pretty --oneline
+   #+end_src
+
+   #+RESULTS:
+   : 7308a79 Add D
+   : 81d13ca Add B
+   : 334a6b5 Add A
+
+   #+NAME: RebaseAncestor
+   #+header: :results file :file-ext png
+   #+header: :output-dir (expand-file-name "img" notes/project-directory)
+   #+begin_src sh :dir z :exports results
+     git2dot --png
+   #+end_src
+
+   #+RESULTS: RebaseAncestor
+   [[file:../img/RebaseAncestor.png]]
+
+
+   The form of the command is =git rebase --onto <Target> [<Cut Point>]=.
+
+   In this case, a =git rebase --onto B= doesn't do anything, because =D= is
+   already based on =B=. The optional =<Upstream>= argument serves as the /cut
+   point/. We take everything after =C= and stick it on to =B=.
+
+** Rebase to Commit on Another Branch
+
+   Given
+
+   #+begin_example
+     A --- B --- C          main
+      \
+       \-- D                topic
+   #+end_example
+
+   And you want to rebase =topic= to =B= like so:
+
+   #+begin_example
+     A --- B --- C          main
+            \
+             \-- D          topic
+   #+end_example
+
+   #+begin_src sh
+     git checkout topic
+     git rebase --onto B
+   #+end_src
+
+* List Tags Matching Pattern
+
+  #+begin_src sh
+    git tag --list "v*"
+  #+end_src
+
+* Fixup
+
+  You make a change that ought to have been part of a previous commit, but that
+  previous commit is not the last commit (so you can't just =--amend= the last
+  commit).
+
+  First, make the commit and mark it as a =fixup= for the offending commit:
+
+  #+begin_src sh
+    git commit --fixup fb2f677
+  #+end_src
+
+  Next, run a =rebase --squash=, which does a rebase where fixup commits are
+  squashed into the commits that they fix up. The commit hash is the commit where
+  the rebase is started from.
+
+  #+begin_src sh
+    git rebase -i --squash ac5db87
+  #+end_src
+
+* First Commit
+
+  Some ways to find the first commit in a Git repository:
+
+  #+begin_src sh
+    git show $(git rev-list --max-parents=0 HEAD)
+  #+end_src
+
+  #+begin_src sh
+    git log --reverse
+  #+end_src
+
+* Tags
+
+** Get Project Version From Tag
+
+   I got this from cider [[https://github.com/clojure-emacs/cider/blob/18bb5e12bfff4196de4102b5abce226dcd7d4b9a/Makefile#L4][here]].
+
+   #+begin_src sh
+     git describe --tags --abbrev=0
+   #+end_src
+
+** Is HEAD a tag?
+
+   If HEAD is a tag, this will print the tag name. If not, it prints nothing.
+
+   #+begin_src sh
+     git tag --points-at HEAD
+   #+end_src
+
+* Project Root Dir
+
+  #+begin_src sh
+    git rev-parse --show-toplevel
+  #+end_src
+
+* Tools and Resources
+
+** git-quick-stats
+
+   Bash script that shows cool stats of git repos.
+   https://github.com/arzzen/git-quick-stats/blob/master/git-quick-stats

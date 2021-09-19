@@ -1,0 +1,150 @@
+#+TITLE: Clojure
+#+SETUPFILE: ../setup.org
+
+* clj vs clojure
+
+  =clj= is just a program that wraps =clojure= with =readline= support.
+
+  #+begin_src bash :results output
+    cat $(which clj) | grep exec
+  #+end_src
+
+  #+RESULTS:
+  :   exec rlwrap -r -q '\"' -b "(){}[],^%#@\";:'" "$bin_dir/clojure" "$@"
+
+  =readline= provides support for editing a command in the terminal (e.g. using
+  arrow keys for moving around within the command, using =C-a= =C-e= =C-f= =C-b=
+  movement commands) and stuff like that.
+
+  So, =clj= just provides better interactivity in the REPL. As an end user, you
+  might as well just use =clj= for everything.
+
+* Cmd Execution and REPL
+
+  Call a function
+
+  #+header: :dir ~/Projects/codenotes/clojure/scratch
+  #+begin_src sh :var nsname="hello" funcname="foo" :results output
+    clj -X $nsname/$funcname
+  #+end_src
+
+  #+RESULTS:
+  : Hello world, the time is 10:00 AM
+
+  Start a REPL that I can attach to from Emacs.
+
+  #+begin_src sh
+    clj -Sdeps '{:deps {cider/cider-nrepl {:mvn/version "RELEASE"}}}' \
+        -m nrepl.cmdline \
+        --middleware "[cider.nrepl/cider-middleware]"
+  #+end_src
+
+* Project Creation
+
+** Minimal command line
+
+   All you need is a project directory with a
+
+   1. =deps.edn=
+   2. =src/foo.clj=
+
+   However it should be namespaced properly (TODO: work on this).
+
+   #+begin_src sh :var d="helloworld"
+     touch $d/deps.edn $d/src/core.clj
+     echo "{:deps {org.clojure/clojure {:mvn/version \"RELEASE\"}}}" > $d/deps.edn
+     echo "(ns core) (defn -main [] (println \"hello world\"))" >> src/core.clj
+     clj -m core
+   #+end_src
+
+** Using clj-new
+
+   The following makes use of an alias defined in =~/.clojure/deps.edn=.
+
+   #+begin_src sh
+     clj -X:new-app :name cfclrk/$projectName
+   #+end_src
+
+* Emacs Cider
+
+  Basic workflow is described [[https://docs.cider.mx/cider/usage/cider_mode.html#basic-workflow][in the cider docs here]].
+
+  - Open a file at the root dir of the project
+  - =M-x cider-jack-in=
+  - Open a file in the project, and =C-c C-k= (=cider-load-buffer=)
+  - In the =*cider-repl= buffer, you know call the fully-qualified functions in
+    that file. Or, =(in-ns <ns-name>)= to call functions in that file without
+    namespace qualification.
+  - Edit a function, and =C-c C-e= on that function to reload it.
+
+* Testing
+
+  Use test-runner, which handles test discovery and running tests.
+  https://github.com/cognitect-labs/test-runner
+
+** Run all tests in namespace
+
+   #+begin_src sh
+     clj -A:test -n cfclrk.sicp-test
+   #+end_src
+
+** Run a single test
+
+   #+begin_src sh
+     clj -A:test -v cfclrk.sicp-test/a-test
+   #+end_src
+
+* Symbols vs Keywords
+
+  What's the difference between a symbol and a keyword?
+
+  Excerpt from "Clojure in Action, Second Edition" by Amit Rathore Francis
+  Avila:
+
+  #+begin_quote
+  Essetially what's happening when you quote a symbol is you’re treating the
+  symbol as data and not code. In practice you’ll almost never quote symbols to
+  use them as data because Clojure has a special type specifically for this use
+  case: the keyword. A keyword is sort of like an autoquoted symbol: keywords
+  never reference some other value and always evaluate to themselves. Keyword
+  syntax is almost like symbol syntax, except keywords always begin with a
+  colon.
+  #+end_quote
+
+* How to (+ 1 2)
+
+  A few ways to add 1 and 2, in increasing complexity.
+
+  #+begin_src clojure
+  (+ 1 2)
+  #+end_src
+
+  #+RESULTS:
+  : 3
+
+  #+begin_src clojure
+    (apply + [1 2])
+  #+end_src
+
+  #+RESULTS:
+  : 3
+
+  #+begin_src clojure
+    (reduce + [1 2])
+  #+end_src
+
+  #+RESULTS:
+  : 3
+
+  #+begin_src clojure
+    (reduce (fn [acc i] (+ acc i)) [1 2])
+  #+end_src
+
+  #+RESULTS:
+  : 3
+
+* core.async
+
+  There are some great examples from O'Reilly [[https://resources.oreilly.com/examples/0636920041474/][here]], which is supplemental
+  content for their excellent video course [[https://learning.oreilly.com/videos/communicating-sequential-processes/9781771374293/][Communicating Sequential Processes
+  with core.async]].

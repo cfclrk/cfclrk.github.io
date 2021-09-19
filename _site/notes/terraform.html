@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Terraform</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Terraform</h1>
+</header><nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org583ecd5">State</a></li>
+<li><a href="#org95b71a6">Workspaces</a></li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-org583ecd5" class="outline-2">
+<h2 id="org583ecd5"><a href="#org583ecd5">State</a></h2>
+<div class="outline-text-2" id="text-org583ecd5">
+<p>
+After a <code>terraform apply</code>, Terraform refreshes the local <code>terraform.tfstate</code>
+file.
+</p>
+
+<p>
+<code>terraform plan</code> refreshes local state first, but only in-memory.
+</p>
+
+<p>
+Kinds of terraform files:
+</p>
+
+<ul class="org-ul">
+<li>state files (terraform.tfstate)</li>
+<li>configs (.tf)</li>
+<li>plans (.tfplan)</li>
+<li>variables file (.tfvars)</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org95b71a6" class="outline-2">
+<h2 id="org95b71a6"><a href="#org95b71a6">Workspaces</a></h2>
+<div class="outline-text-2" id="text-org95b71a6">
+<p>
+A workspace has
+</p>
+
+<ul class="org-ul">
+<li>Terraform config (HCL files)</li>
+<li>Values for variables used by the config</li>
+<li>Terraform state</li>
+<li>Historical state and run logs</li>
+</ul>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,25 @@
+#+TITLE: Projectile
+#+SETUPFILE: ../../setup.org
+
+* Project Root
+
+  In a buffer, do a =C-m-:= (=eval-expression=) and run
+  =(projectile-project-root)=. Or:
+
+  #+begin_src emacs-lisp
+    (let ((default-directory
+            (expand-file-name "~/Projects/py-demo")))
+      (projectile-project-root))
+  #+end_src
+
+  #+RESULTS:
+  : /Users/chris.clark/Projects/py-demo
+
+* Project Type
+
+  #+begin_src emacs-lisp
+    (projectile-project-type)
+  #+end_src
+
+  #+RESULTS:
+  : generic

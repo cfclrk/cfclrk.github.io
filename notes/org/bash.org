@@ -1,0 +1,443 @@
+#+TITLE: Bash
+#+SETUPFILE: ../setup.org
+#+PROPERTY: header-args+ :results output
+
+* Style
+
+  See the [[https://github.com/azet/community_bash_style_guide][Bash style guide]].
+
+* Function Parameters
+
+  For more info, see [[http://mywiki.wooledge.org/BashFAQ/031][FAQ]]: "What is the difference between test, [ and [[ ?"
+
+  If there is an error, the function should return a non-zero code. Only functions
+  can return; if outside of a function, use "exit 1". See:
+  https://stackoverflow.com/questions/4419952/difference-between-return-and-exit-in-bash-functions
+
+** test
+
+   #+begin_src sh
+	 foo() {
+		 a=${1-}
+		 test -n "$a" || {
+			 echo "Error: a is required"
+			 return 1
+		 }
+	 }
+   #+end_src
+
+   Note that =[= =]= is an alias for =test=, so the same thing can be written
+   as:
+
+   #+begin_src sh
+	 foo() {
+		 [ -n "$1" ] || {
+			 echo "Error: param 1 is zero-length"
+			 return 1
+		 }
+	 }
+   #+end_src
+
+** new-test
+
+   The double-bracket =[[= syntax is called "new-test" and can also be used.
+
+   #+begin_src sh
+	 foo() {
+		 [[ -n "$1" ]] || {
+			 echo "Error: param 1 is zero-length"
+			 return 1
+		 }
+	 }
+   #+end_src
+
+** if-else
+
+   Can do same thing as for script arguments, but
+
+   - Use a =return= instead of an =exit=
+   - Make the variable local
+
+   #+begin_src sh
+	 func() {
+		 if [ -z ${1+x} ]; then
+			 echo "arg 1 (a) is required"
+			 return 1
+		 else
+			 local a=$1
+		 fi
+		 echo "a is '$a'"
+	 }
+   #+end_src
+
+* Set
+
+** set -u
+
+   Without =set -u= this works fine and prints nothing, even though =foo= is not
+   bound.
+
+   #+begin_src bash
+     echo $foo
+   #+end_src
+
+   #+RESULTS:
+   :
+
+   This produces an error: "bash: line 2: foo: unbound variable" (TODO: org mode
+   to print this).
+
+   #+begin_src bash :results output :epilogue "true"
+     set -u
+     echo $foo
+   #+end_src
+
+   #+RESULTS:
+
+   Works with =eval=.
+
+   #+begin_src bash
+     set -u
+     vars="FOO=foo BAR=bar"
+     eval $vars
+     echo $FOO
+   #+end_src
+
+   #+RESULTS:
+   : foo
+
+* Script Arguments
+
+  Same patterns as function parameters can be used.
+
+  #+begin_src sh
+	if [ -z ${1+x} ]; then
+		echo "arg 1 (foo) is required"
+		exit 1
+	fi
+	foo=$1
+	echo "foo is: '$foo'"
+  #+end_src
+
+* Script Options
+
+** getopts
+
+   See home/bin/ssm script for a good example.
+
+   #+begin_src sh
+	 showHelp() {
+		 cat <<END
+	 Usage: $(basename "$0") [-p profile]
+	 END
+	 }
+
+	 while getopts :hp: arg; do
+		 case ${arg} in
+			 h)
+				 showHelp
+				 exit 0
+				 ;;
+			 p)
+				 profile="$OPTARG"
+				 ;;
+			 \?)
+				 echo "Invalid option: -$OPTARG" >&2
+				 exit 1
+				 ;;
+			 :)
+				 echo "Option -$OPTARG requires an argument" >&2
+				 exit 1
+				 ;;
+		 esac
+	 done
+	 shift $((OPTIND -1))
+
+	 # Define default option values
+	 profile=${profile:="chrisc"}
+
+	 aws="aws --profile $profile --region us-east-1"
+   #+end_src
+
+* Heredocs
+
+** Whitespace
+
+   Use =<<-=. Each line in the HEREDOC has to begin with a TAB. Having trouble
+   getting this working with org-babel.
+
+	#+begin_src sh
+      foo="bar"
+      a=$(cat <<-EOF
+      hello
+      $foo
+      EOF
+      )
+      echo "$a"
+	#+end_src
+
+    #+RESULTS:
+    :     hello
+    :     bar
+    :     EOF
+
+** Interpolation
+
+   A heredoc can interpolate variable names to values, or the whole heredoc can
+   be taken completely literally without any interpolation. The difference is
+   whether the limit string has single quotes around it.
+
+*** with interpolation
+
+	#+begin_src sh
+      foo="fooo"
+      a=$(cat <<EOF
+      hello
+      $foo
+      EOF
+      )
+      echo "$a"
+	#+end_src
+
+	#+RESULTS:
+    : hello
+    : fooo
+
+    Note, this also works with single quotes!
+
+	#+begin_src sh
+      foo="fooo"
+      a=$(cat <<EOF
+      hello
+      '$foo'
+      EOF
+      )
+      echo "$a"
+	#+end_src
+
+    #+RESULTS:
+    : hello
+    : 'fooo'
+
+*** without interpolation
+
+	#+begin_src sh
+	  foo="bar"
+	  a=$(cat <<'EOF'
+	  hello
+	  $foo
+	  EOF
+	  )
+	  echo "$a"
+	#+end_src
+
+	#+RESULTS:
+	: hello
+	: $foo
+
+* Verify Environment variables
+
+  Verify some environment variables exist.
+
+  #+begin_src sh
+	: "${ARTIFACTORY_USER:?ARTIFACTORY_USER is not set}"
+	: "${ARTIFACTORY_PASSWORD:?ARTIFACTORY_PASSWORD is not set}"
+  #+end_src
+
+* Parameter Expansion
+
+** Resources
+
+   - GNU [[https://www.gnu.org/savannah-checkouts/gnu/bash/manual/][Bash docs]] section on [[https://www.gnu.org/software/bash/manual/bashref.html#Shell-Parameter-Expansion][paremeter expansion]]
+   - /The Open Group/ has some excellent [[https://pubs.opengroup.org/onlinepubs/9699919799][POSIX documentation]] with a section on
+     [[http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02][parameter expansion]]
+
+** =:-=
+
+   [[https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02][Docs]] for =${parameter:-[word]}=
+
+   #+begin_quote
+   If /parameter/ is unset or null, the expansion of /word/ (or an empty string
+   if /word/ is omitted) shall be substituted; otherwise, the value of
+   /parameter/ shall be substituted.
+   #+end_quote
+
+   #+begin_src bash
+     var=""
+	 if [ -z ${var:-x"} ]; then
+		 echo "var is unset"
+	 else
+		 echo "var is set to '$var'"
+	 fi
+   #+end_src
+
+   #+RESULTS:
+   : var is set to ''
+
+   #+begin_src sh
+	 if [ -z ${var:-"foo"} ]; then
+		 echo "var is unset"
+	 else
+		 echo "var is set to '$var'"
+	 fi
+   #+end_src
+
+   #+RESULTS:
+
+** =+=
+
+   [[https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02][Docs]] for =${parameter:+[word]}=
+
+   #+begin_quote
+   If /parameter/ is unset or null, null shall be substituted; otherwise, the
+   expansion of /word/ (or an empty string if /word/ is omitted) shall be
+   substituted.
+   #+end_quote
+
+   =-z= is a [[https://tldp.org/LDP/abs/html/comparison-ops.html][comparison operator]] that tests if the argument is null or empty.
+
+   #+begin_src sh
+	 var=""
+	 if [ -z ${var+x} ]; then
+		 echo "var is unset"
+	 else
+		 echo "var is set to '$var'"
+	 fi
+   #+end_src
+
+   #+RESULTS:
+   : var is set to ''
+
+   In this case, =var= is the empty string, which is not "unset or null".
+   Therefore the =+= parameter expansion expands this to =x= (which passes the
+   =-z= check).
+
+   #+begin_src sh
+	 if [ -z ${var+x} ]; then
+		 echo "var is unset"
+	 else
+		 echo "var is set to '$var'"
+	 fi
+   #+end_src
+
+   #+RESULTS:
+   : var is unset
+
+   In this case, =var= has not been declared, so it is "unset or null". The =+=
+   parameter expansion expands it to =null=.
+
+   #+begin_src sh
+	 var=""
+	 if [ -z ${var+} ]; then
+		 echo "var is unset"
+	 else
+		 echo "var is set to '$var'"
+	 fi
+   #+end_src
+
+   #+RESULTS:
+   : var is unset
+
+   In this case we leave the =word= spot empty in the parameter expansion, so if
+   =var= is empty, it is subsituted by an empty string. Now the =-z= test sees an
+   empty argument, and this prints out =var is unset=.
+
+* Arrays
+
+** Basic
+
+  #+begin_src sh
+    arr=("foo" "bar" "baz")
+    echo ${arr[*]}
+  #+end_src
+
+  #+RESULTS:
+  : foo bar baz
+
+** Length
+
+   #+begin_src sh
+     arr=("foo" "bar" "baz")
+     echo ${#arr[*]}
+   #+end_src
+
+   #+RESULTS:
+   : 3
+
+** Pipe Array to =xargs=
+
+   Start a subprocess per element in an array, where each subprocess runs =$script=.
+
+  #+begin_src sh
+    script=$(cat <<"EOF"
+    echo {}
+    EOF
+    )
+    arr=("foo" "bar" "baz")
+    echo ${arr[*]} | xargs -n 1 -P ${#arr[*]} -I {} bash -c "$script"
+  #+end_src
+
+  #+RESULTS:
+  : foo
+  : bar
+  : baz
+
+* Range
+
+  #+begin_src bash
+	for i in {1..5}; do
+		echo $i
+	done
+  #+end_src
+
+* Echo vs Printf
+
+  Notice that =echo= adds a newline.
+
+  #+begin_src sh
+    echo "foo" | od -c
+  #+end_src
+
+  #+RESULTS:
+  : 0000000    f   o   o  \n
+  : 0000004
+
+  #+begin_src sh
+    printf "foo" | od -c
+  #+end_src
+
+  #+RESULTS:
+  : 0000000    f   o   o
+  : 0000003
+
+* Numbered List
+
+  #+begin_src bash
+    echo $PATH | tr ":" "\n" | nl
+  #+end_src
+
+  #+RESULTS:
+  #+begin_example
+       1	/Users/chris.clark/.rbenv/shims
+       2	/usr/local/Cellar/pyenv-virtualenv/1.1.5/shims
+       3	/Users/chris.clark/.pyenv/shims
+       4	/Users/chris.clark/go/bin
+       5	/Users/chris.clark/bin
+       6	/Users/chris.clark/.local/bin
+       7	/Users/chris.clark/.cargo/bin
+       8	/Users/chris.clark/.cabal/bin
+       9	/Users/chris.clark/IronNet/bin
+      10	/usr/local/sbin
+      11	/usr/local/opt/make/libexec/gnubin
+      12	/usr/local/opt/texinfo/bin
+      13	/usr/local/opt/openjdk/bin
+      14	/usr/local/opt/curl/bin
+      15	/usr/local/opt/openssl@1.1/bin
+      16	/usr/local/bin
+      17	/usr/bin
+      18	/bin
+      19	/usr/sbin
+      20	/sbin
+      21	/Library/TeX/texbin
+      22	/Applications/Wireshark.app/Contents/MacOS
+  #+end_example

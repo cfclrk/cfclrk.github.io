@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ALB with a Lambda Target </title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">ALB with a Lambda Target </h1>
+</header><nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgefb0bc2">Overview</a></li>
+<li><a href="#org435ad46">Prerequisets</a></li>
+<li><a href="#org86878f2">Parameters</a>
+<ul>
+<li><a href="#orgc1bbc96">DeploymentName</a></li>
+</ul>
+</li>
+<li><a href="#org17b8ae6">Resources</a>
+<ul>
+<li><a href="#orgbc4f47f">ALB (internet-facing)</a></li>
+<li><a href="#org965bfa6">ALB Routing</a></li>
+<li><a href="#org030b5bd">Lambda Function</a></li>
+</ul>
+</li>
+<li><a href="#org1d1b05c">Outputs</a></li>
+<li><a href="#org33e57cf">Testing</a></li>
+</ul>
+</div>
+</nav>
+<ul class="org-ul">
+<li>YAML file: <a href="https://cfclrk.github.io/cloudformation/alb/lambda_target.yaml">https://cfclrk.github.io/cloudformation/alb/lambda_target.yaml</a></li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-yaml"><span style="color: #dcaeea;">AWSTemplateFormatVersion</span>: 2010-09-09
+<span style="color: #dcaeea;">Description</span>: A public ALB with a Lambda Function target.
+<span style="color: #dcaeea;">Transform</span>: AWS::Serverless-2016-10-31
+</pre>
+</div>
+
+<div id="outline-container-orgefb0bc2" class="outline-2">
+<h2 id="orgefb0bc2"><a href="#orgefb0bc2">Overview</a></h2>
+<div class="outline-text-2" id="text-orgefb0bc2">
+<p>
+This CloudFormation template creates an internet-facing ALB that invokes a
+Lambda Function. That is, you can <code>curl</code> the ALB and see a response from the
+Lambda Function.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org435ad46" class="outline-2">
+<h2 id="org435ad46"><a href="#org435ad46">Prerequisets</a></h2>
+<div class="outline-text-2" id="text-org435ad46">
+<ul class="org-ul">
+<li><a href="../network/public.html">../network/public.html</a> deployed with the same <code>DeploymentName</code></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org86878f2" class="outline-2">
+<h2 id="org86878f2"><a href="#org86878f2">Parameters</a></h2>
+<div class="outline-text-2" id="text-org86878f2">
+<div class="org-src-container">
+<pre class="src src-yaml"><span style="color: #dcaeea;">Parameters</span>:
+</pre>
+</div>
+
+<table id="org91b1697">
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Param</th>
+<th scope="col" class="org-left">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">DeploymentName</td>
+<td class="org-left">test</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div id="outline-container-orgc1bbc96" class="outline-3">
+<h3 id="orgc1bbc96"><a href="#orgc1bbc96">DeploymentName</a></h3>
+<div class="outline-text-3" id="text-orgc1bbc96">
+<div class="org-src-container">
+<pre class="src src-yaml">  <span style="color: #dcaeea;">DeploymentName</span>:
+    <span style="color: #dcaeea;">Type</span>: String
+    <span style="color: #dcaeea;">Description</span>: A name for this deployment
+</pre>
+</div>
+
+<p>
+A <b>deployment</b> is a deployed application, potentially comprised of many
+CloudFormation stacks. This is sometimes called an "environment", but that is an
+overloaded and confusing term. Use the <code>DeploymentName</code> to indicate which
+logical deployment a stack belongs to.
+</p>
+
+<p>
+If a deployment is completely specified by exactly one CloudFormation template,
+the <code>DeploymentName</code> and the <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/pseudo-parameter-reference.html#cfn-pseudo-param-stackname">AWS::StackName</a> would refer to the same things. In
+that case, consider not using a <code>DeploymentName</code> parameter.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org17b8ae6" class="outline-2">
+<h2 id="org17b8ae6"><a href="#org17b8ae6">Resources</a></h2>
+<div class="outline-text-2" id="text-org17b8ae6">
+<div class="org-src-container">
+<pre class="src src-yaml"><span style="color: #dcaeea;">Resources</span>:
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgbc4f47f" class="outline-3">
+<h3 id="orgbc4f47f"><a href="#orgbc4f47f">ALB (internet-facing)</a></h3>
+<div class="outline-text-3" id="text-orgbc4f47f">
+<p>
+If you want the ALB to be reachable from the internet, the ALB must:
+</p>
+
+<ul class="org-ul">
+<li>Use an internet-facing scheme</li>
+<li>Be associated with <i>public subnets</i></li>
+</ul>
+
+<p>
+Why can't we use private subnets?
+</p>
+
+<p>
+ALBs <i>can</i> be associated with private subnets, but in this case that would break
+everything. In AWS-land, only an Internet Gateway can provide a route from the
+internet into a Subnet, not an ALB. Maybe that isn't the best design in the
+world, but it is what it is.
+</p>
+
+<p>
+Some further explanation:
+</p>
+
+<p>
+An ALB has a couple of IP addresses (try <code>host $ALB_DNS_NAME</code>). If you associate
+the ALB with two subnets, the ALB has at least 2 IP addresses: one for each
+subnet. When the ALB is associated with a subnet, AWS creates an Elastic Network
+Interface (ENI) for the ALB in that subnet, and the ENI is assigned a public IP
+address (if this is an internet-facing ALB). <i>That</i> IP becomes one of the ALB's
+IP addresses!
+</p>
+
+<p>
+Now say those ENIs are in private subnets. This is the same situation as when
+you have an EC2 instance in a private subnet with a "public" (internet-valid) IP
+address. You can try to query that IP, but you will never reach the instance.
+</p>
+
+<p>
+If the ENI is in a private subnet, network traffic to the ENI's IP has no route
+into the subnet. So, when an ALB is associated with private subnets, querying
+the ALB from the internet will always hang.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-yaml">  <span style="color: #dcaeea;">ALB</span>:
+    <span style="color: #dcaeea;">Type</span>: AWS::ElasticLoadBalancingV2::LoadBalancer
+    <span style="color: #dcaeea;">Properties</span>:
+      <span style="color: #dcaeea;">IpAddressType</span>: ipv4
+      <span style="color: #dcaeea;">Scheme</span>: internet-facing
+      <span style="color: #dcaeea;">SecurityGroups</span>: [<span style="color: #ECBE7B;">!Ref</span> AlbSecurityGroup]
+      <span style="color: #dcaeea;">Subnets</span>:
+        - <span style="color: #dcaeea;">Fn::ImportValue</span>: <span style="color: #ECBE7B;">!Sub</span> <span style="color: #98be65;">"${DeploymentName}-PublicSubnet1"</span>
+        - <span style="color: #dcaeea;">Fn::ImportValue</span>: <span style="color: #ECBE7B;">!Sub</span> <span style="color: #98be65;">"${DeploymentName}-PublicSubnet2"</span>
+      <span style="color: #dcaeea;">Type</span>: application
+      <span style="color: #dcaeea;">Tags</span>:
+        - <span style="color: #dcaeea;">Key</span>: Name
+          <span style="color: #dcaeea;">Value</span>: <span style="color: #ECBE7B;">!Ref</span> AWS::StackName
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-yaml">  <span style="color: #dcaeea;">AlbSecurityGroup</span>:
+    <span style="color: #dcaeea;">Type</span>: AWS::EC2::SecurityGroup
+    <span style="color: #dcaeea;">Properties</span>:
+      <span style="color: #dcaeea;">GroupDescription</span>: Allow HTTP on port 80
+      <span style="color: #dcaeea;">VpcId</span>: {<span style="color: #dcaeea;">Fn::ImportValue</span>: <span style="color: #ECBE7B;">!Sub</span> <span style="color: #98be65;">"${DeploymentName}-VpcId"</span>}
+      <span style="color: #dcaeea;">SecurityGroupIngress</span>:
+        - <span style="color: #dcaeea;">IpProtocol</span>: tcp
+          <span style="color: #dcaeea;">FromPort</span>: 80
+          <span style="color: #dcaeea;">ToPort</span>: 80
+          <span style="color: #dcaeea;">CidrIp</span>: 0.0.0.0/0
+      <span style="color: #dcaeea;">Tags</span>:
+        - <span style="color: #dcaeea;">Key</span>: Name
+          <span style="color: #dcaeea;">Value</span>: <span style="color: #ECBE7B;">!Ref</span> AWS::StackName
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org965bfa6" class="outline-3">
+<h3 id="org965bfa6"><a href="#org965bfa6">ALB Routing</a></h3>
+<div class="outline-text-3" id="text-org965bfa6">
+<div class="org-src-container">
+<pre class="src src-yaml">  <span style="color: #dcaeea;">ALBListenerHTTP</span>:
+    <span style="color: #dcaeea;">Type</span>: AWS::ElasticLoadBalancingV2::Listener
+    <span style="color: #dcaeea;">Properties</span>:
+      <span style="color: #dcaeea;">DefaultActions</span>:
+        - <span style="color: #dcaeea;">Type</span>: forward
+          <span style="color: #dcaeea;">TargetGroupArn</span>: <span style="color: #ECBE7B;">!Ref</span> AlbTargetGroupLambda
+      <span style="color: #dcaeea;">LoadBalancerArn</span>: <span style="color: #ECBE7B;">!Ref</span> ALB
+      <span style="color: #dcaeea;">Port</span>: 80
+      <span style="color: #dcaeea;">Protocol</span>: HTTP
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-yaml">  <span style="color: #dcaeea;">AlbTargetGroupLambda</span>:
+    <span style="color: #dcaeea;">Type</span>: AWS::ElasticLoadBalancingV2::TargetGroup
+    <span style="color: #dcaeea;">DependsOn</span>: LambdaInvokePermissionElb
+    <span style="color: #dcaeea;">Properties</span>:
+      <span style="color: #dcaeea;">TargetType</span>: lambda
+      <span style="color: #dcaeea;">Targets</span>:
+        - <span style="color: #dcaeea;">Id</span>: <span style="color: #ECBE7B;">!GetAtt</span> HelloWorldFunction.Arn
+</pre>
+</div>
+
+<p>
+TODO: Restrict access from only the TargetGroup (using <code>SourceArn</code>). This is
+tricky. See: <a href="https://forums.aws.amazon.com/thread.jspa?threadID=307784">https://forums.aws.amazon.com/thread.jspa?threadID=307784</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-yaml">  <span style="color: #dcaeea;">LambdaInvokePermissionElb</span>:
+    <span style="color: #dcaeea;">Type</span>: AWS::Lambda::Permission
+    <span style="color: #dcaeea;">DependsOn</span>: HelloWorldFunction
+    <span style="color: #dcaeea;">Properties</span>:
+      <span style="color: #dcaeea;">FunctionName</span>: <span style="color: #ECBE7B;">!Ref</span> HelloWorldFunction
+      <span style="color: #dcaeea;">Action</span>: lambda:InvokeFunction
+      <span style="color: #dcaeea;">Principal</span>: elasticloadbalancing.amazonaws.com
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org030b5bd" class="outline-3">
+<h3 id="org030b5bd"><a href="#org030b5bd">Lambda Function</a></h3>
+<div class="outline-text-3" id="text-org030b5bd">
+<div class="org-src-container">
+<pre class="src src-yaml">  <span style="color: #dcaeea;">HelloWorldFunction</span>:
+    <span style="color: #dcaeea;">Type</span>: AWS::Serverless::Function
+    <span style="color: #dcaeea;">Properties</span>:
+      <span style="color: #dcaeea;">FunctionName</span>: <span style="color: #ECBE7B;">!Sub</span> <span style="color: #98be65;">"${DeploymentName}-Hello-World"</span>
+      <span style="color: #dcaeea;">InlineCode</span>: |
+        <span style="color: #98be65;">import json</span>
+<span style="color: #98be65;">        def handler(event, context) -&gt; dict:</span>
+            message = {<span style="color: #98be65;">"hello"</span>: <span style="color: #98be65;">"world"</span>}
+<span style="color: #98be65;">            response = {</span>
+                <span style="color: #98be65;">"statusCode"</span>: 200,
+                <span style="color: #98be65;">"statusDescription"</span>: <span style="color: #98be65;">"200 OK"</span>,
+                <span style="color: #98be65;">"headers"</span>: {<span style="color: #98be65;">"Content-Type"</span>: <span style="color: #98be65;">"application/json"</span>},
+                <span style="color: #98be65;">"body"</span>: json.dumps(message),
+<span style="color: #98be65;">            }</span>
+<span style="color: #98be65;">            return response</span>
+      <span style="color: #dcaeea;">Handler</span>: index.handler
+      <span style="color: #dcaeea;">Runtime</span>: python3.8
+      <span style="color: #dcaeea;">Timeout</span>: 3
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1d1b05c" class="outline-2">
+<h2 id="org1d1b05c"><a href="#org1d1b05c">Outputs</a></h2>
+<div class="outline-text-2" id="text-org1d1b05c">
+<div class="org-src-container">
+<pre class="src src-yaml"><span style="color: #dcaeea;">Outputs</span>:
+  <span style="color: #dcaeea;">ALB</span>:
+    <span style="color: #dcaeea;">Description</span>: DNS name for the ALB
+    <span style="color: #dcaeea;">Value</span>: <span style="color: #ECBE7B;">!GetAtt</span> ALB.DNSName
+    <span style="color: #dcaeea;">Export</span>:
+      <span style="color: #dcaeea;">Name</span>: <span style="color: #ECBE7B;">!Sub</span> <span style="color: #98be65;">"${DeploymentName}-ALB"</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org33e57cf" class="outline-2">
+<h2 id="org33e57cf"><a href="#org33e57cf">Testing</a></h2>
+<div class="outline-text-2" id="text-org33e57cf">
+<p>
+Send an HTTP GET request to the ALB.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">  <span style="color: #dcaeea;">ExportName</span>=${<span style="color: #dcaeea;">DeploymentName</span>}-ALB
+
+  <span style="color: #dcaeea;">alb</span>=$(aws cloudformation list-exports <span style="color: #98be65;">\</span>
+      --query <span style="color: #98be65;">"Exports[?Name=='${DeploymentName}-ALB'].Value"</span> <span style="color: #98be65;">\</span>
+      --output text)
+
+  curl http://$<span style="color: #dcaeea;">alb</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+{"hello": "world"}
+</pre>
+</div>
+</div>
+</div>
+</body>
+</html>

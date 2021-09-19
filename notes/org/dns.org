@@ -1,0 +1,42 @@
+#+TITLE: DNS
+#+SETUPFILE: ../setup.org
+#+PROPERTY: header-args+ :var DnsName=DnsName
+
+* Variables                                                        :noexport:
+
+  #+NAME: DnsName
+  : route-guide.cfc.ironnet.cloud
+
+* Get IP Address(es) for DNS Name
+
+  Get the IP address for a name. This won't work for a name that, say, only has
+  NS records associated with it, since that doesn't actually map a name to an
+  IP.
+
+  #+begin_src sh :results output
+    host $DnsName
+  #+end_src
+
+* Get NS records
+
+** host
+
+   #+begin_src sh :results output
+     host -t ns $DnsName
+   #+end_src
+
+** dig
+
+   #+begin_src sh :results output
+     dig ns $DnsName +short
+   #+end_src
+
+* Get the CNAME
+
+  #+begin_src sh
+    dig $DnsName CNAME +short
+  #+end_src
+
+* NS Delegation in AWS
+
+  See Projects/codenotes/aws/route53_dns_delegation.org

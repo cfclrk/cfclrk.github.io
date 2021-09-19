@@ -1,0 +1,65 @@
+#+TITLE: JMESPath
+#+SETUPFILE: ../setup.org
+
+These examples use [[https://github.com/jmespath/jp][jp]].
+
+* Period in Key
+
+  #+NAME: KubeSecret
+  #+begin_example
+    {
+        "apiVersion": "v1",
+        "data": {
+            "tls.crt": "Zm9vCg==",
+            "tls.key": "YmFyCg=="
+        },
+        "kind": "Secret",
+        "type": "kubernetes.io/tls"
+    }
+  #+end_example
+
+  Quote it. Sometimes you can escape the period with a =\= backslash.
+
+  #+begin_src bash :var KubeSecret=KubeSecret :results output
+    echo $KubeSecret | jp 'data."tls.crt"'
+  #+end_src
+
+  #+RESULTS:
+  : "Zm9vCg=="
+
+* Filters
+
+** starts_with
+
+   #+NAME: Exports
+   #+begin_example
+     {
+         "Exports": [
+             {
+                 "ExportingStackId": "arn1",
+                 "Name": "foo-cats",
+                 "Value": "foo1"
+             },
+             {
+                 "ExportingStackId": "arn2",
+                 "Name": "foo-dogs",
+                 "Value": "foo2"
+             },
+             {
+                 "ExportingStackId": "arn3",
+                 "Name": "bar-cats",
+                 "Value": "bar1"
+             }
+         ]
+     }
+   #+end_example
+
+   #+begin_src bash :var Exports=Exports :results output
+     echo $Exports | jp "Exports[?starts_with(Name, 'foo')].Name"
+   #+end_src
+
+   #+RESULTS:
+   : [
+   :   "foo-cats",
+   :   "foo-dogs"
+   : ]

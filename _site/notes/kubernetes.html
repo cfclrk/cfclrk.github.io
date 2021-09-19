@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kubernetes</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Kubernetes</h1>
+</header><nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org2956e32">What is Kubernetes?</a></li>
+<li><a href="#org6f53868">Operators</a></li>
+<li><a href="#org5891a9d">Describing a Cluster</a>
+<ul>
+<li><a href="#org5d525b7">Version</a></li>
+<li><a href="#org6d09ee9">Master node address</a></li>
+<li><a href="#orgd0f3c73">View all available resources</a></li>
+</ul>
+</li>
+<li><a href="#orgec45fd5">Completely Delete a Cluster</a></li>
+<li><a href="#org2d17c9c">Kubeconfig, Context and Namespace</a></li>
+<li><a href="#org8a13735">Nodes</a>
+<ul>
+<li><a href="#orgdd36830">Master Node IP</a></li>
+<li><a href="#org77c7423">Worker Nodes</a></li>
+<li><a href="#org5448354">Worker Node IPs</a></li>
+<li><a href="#org6716ecb">All Pods on a Node</a></li>
+<li><a href="#org21c0741">SSH to a Pod's Node</a></li>
+</ul>
+</li>
+<li><a href="#org9e5214d">Pods</a>
+<ul>
+<li><a href="#orgfa7a589">List Containers in a Pod</a></li>
+<li><a href="#org71e3947">What Node is this Pod on?</a></li>
+</ul>
+</li>
+<li><a href="#orge2932ab">Services</a>
+<ul>
+<li><a href="#orgb3845b0">Get all services of type NodePort/LoadBalancer/ClusterIP</a></li>
+</ul>
+</li>
+<li><a href="#orgf2076fa">Deployments</a>
+<ul>
+<li><a href="#org97204a7">Scaling a deployment</a></li>
+</ul>
+</li>
+<li><a href="#org15df7d8">Service Accounts</a></li>
+<li><a href="#orgd3aa23c">Affinity, Taints, and Tolerations</a>
+<ul>
+<li><a href="#org176842d">Affinity</a></li>
+<li><a href="#orgbb18e80">Taints</a></li>
+<li><a href="#orge2c7b98">Tolerations</a></li>
+</ul>
+</li>
+<li><a href="#orgfab689e">Cluster ID</a></li>
+<li><a href="#org5f09b03">Running Commands in Cluster</a>
+<ul>
+<li><a href="#org6e5a0d0">Create a temporary pod</a></li>
+<li><a href="#orgd583521">Exec in an existing pod</a></li>
+<li><a href="#org22594dc">Port forwarding with kubectl</a></li>
+</ul>
+</li>
+<li><a href="#org370fb42">Using the API directily</a></li>
+<li><a href="#org5fb2291">Debugging</a>
+<ul>
+<li><a href="#org033378b">Startig a busybox pod</a></li>
+</ul>
+</li>
+<li><a href="#orgb8bfcdb">etcd</a></li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-org2956e32" class="outline-2">
+<h2 id="org2956e32"><a href="#org2956e32">What is Kubernetes?</a></h2>
+<div class="outline-text-2" id="text-org2956e32">
+<p>
+According to kubernetes.com, Kubernetes is&#x2026;
+</p>
+
+<blockquote>
+<p>
+an open-source system for automating deployment, scaling, and management of
+containerized applications.
+</p>
+</blockquote>
+
+<p>
+Personally, I would define it more like: Kubernetes is a program for creating
+and managing a cluster of computers.
+</p>
+
+<p>
+Running programs on a cluster is different from running programs on a single
+computer, and Kubernetes provides some heavy abstractions that are useful for
+dealing with a cluster.
+</p>
+
+<p>
+People started trying to create "clusters" a long time ago. Some of the
+problems that need to be addressed are:
+</p>
+
+<ul class="org-ul">
+<li>What does it mean for a machine to be "in" the cluster vs "out" of the
+cluster?</li>
+<li>When you run a process on the cluster, which machine should that process run
+on?</li>
+<li>How does inter-process communication work when processes might be on
+different machines?</li>
+<li>How can processes shared data when they might running on different machines?</li>
+<li>Should the cluster have some kind of RBAC (authn/authz)?</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org6f53868" class="outline-2">
+<h2 id="org6f53868"><a href="#org6f53868">Operators</a></h2>
+<div class="outline-text-2" id="text-org6f53868">
+<p>
+An operator is just a controller that monitors a CRD instead of a resource
+defined by Kubernetes.
+</p>
+
+<p>
+A controller monitors a set of resources (where resources are just entries in
+a database, representing some kind of "desired state"), and reconciles those
+with the "actual state" of the system. Whenever the controller sees
+differences between the desired and actual states, it takes steps to reduce
+that difference.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5891a9d" class="outline-2">
+<h2 id="org5891a9d"><a href="#org5891a9d">Describing a Cluster</a></h2>
+<div class="outline-text-2" id="text-org5891a9d">
+</div>
+<div id="outline-container-org5d525b7" class="outline-3">
+<h3 id="org5d525b7"><a href="#org5d525b7">Version</a></h3>
+<div class="outline-text-3" id="text-org5d525b7">
+<div class="org-src-container">
+<pre class="src src-sh">kubectl version --short
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6d09ee9" class="outline-3">
+<h3 id="org6d09ee9"><a href="#org6d09ee9">Master node address</a></h3>
+<div class="outline-text-3" id="text-org6d09ee9">
+<p>
+Display address of master node
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">kubectl cluster-info
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd0f3c73" class="outline-3">
+<h3 id="orgd0f3c73"><a href="#orgd0f3c73">View all available resources</a></h3>
+<div class="outline-text-3" id="text-orgd0f3c73">
+<div class="org-src-container">
+<pre class="src src-sh">kubectl api-resources
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgec45fd5" class="outline-2">
+<h2 id="orgec45fd5"><a href="#orgec45fd5">Completely Delete a Cluster</a></h2>
+<div class="outline-text-2" id="text-orgec45fd5">
+<div class="org-src-container">
+<pre class="src src-sh">kubectl delete --all all
+kubectl delete secret --all
+kubectl delete serviceaccount --all
+kubectl delete pvc --all
+kubectl delete ingress --all
+kubectl delete crds --all
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2d17c9c" class="outline-2">
+<h2 id="org2d17c9c"><a href="#org2d17c9c">Kubeconfig, Context and Namespace</a></h2>
+<div class="outline-text-2" id="text-org2d17c9c">
+<p>
+Set namespace for the current context
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">kubectl config set-context <span style="color: #98be65;">\</span>
+        $(kubectl config current-context) <span style="color: #98be65;">\</span>
+        --namespace default
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8a13735" class="outline-2">
+<h2 id="org8a13735"><a href="#org8a13735">Nodes</a></h2>
+<div class="outline-text-2" id="text-org8a13735">
+</div>
+<div id="outline-container-orgdd36830" class="outline-3">
+<h3 id="orgdd36830"><a href="#orgdd36830">Master Node IP</a></h3>
+<div class="outline-text-3" id="text-orgdd36830">
+<p>
+Note you can also get the master node ip with <code>kubectl cluster-info</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh" id="org0f071aa">kubectl get node -lnode-role.kubernetes.io/master <span style="color: #98be65;">\</span>
+        -o <span style="color: #dcaeea;">jsonpath</span>=<span style="color: #98be65;">'{ $.items[*].status.addresses[?(@.type=="ExternalIP")].address }'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org77c7423" class="outline-3">
+<h3 id="org77c7423"><a href="#org77c7423">Worker Nodes</a></h3>
+<div class="outline-text-3" id="text-org77c7423">
+<div class="org-src-container">
+<pre class="src src-sh">kubectl get nodes -l <span style="color: #98be65;">"kubernetes.io/role = node"</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5448354" class="outline-3">
+<h3 id="org5448354"><a href="#org5448354">Worker Node IPs</a></h3>
+<div class="outline-text-3" id="text-org5448354">
+<div class="org-src-container">
+<pre class="src src-sh" id="org6074f69">kubectl get nodes -l <span style="color: #98be65;">"kubernetes.io/role = node"</span> <span style="color: #98be65;">\</span>
+        -o <span style="color: #dcaeea;">jsonpath</span>=<span style="color: #98be65;">'{range .items[*]}{.metadata.annotations.flannel\.alpha\.coreos\.com/public-ip}{"\n"}{end}'</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh">kubectl get nodes -l <span style="color: #98be65;">"kubernetes.io/role = node"</span> -o json <span style="color: #98be65;">\</span>
+    | jq -r <span style="color: #98be65;">'.items[].metadata.annotations["flannel.alpha.coreos.com/public-ip"]'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6716ecb" class="outline-3">
+<h3 id="org6716ecb"><a href="#org6716ecb">All Pods on a Node</a></h3>
+<div class="outline-text-3" id="text-org6716ecb">
+<div class="org-src-container">
+<pre class="src src-sh">kubectl describe node $<span style="color: #dcaeea;">NodeName</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh">kubectl get pods --all-namespaces <span style="color: #98be65;">\</span>
+        --field-selector spec.nodeName=$<span style="color: #dcaeea;">NodeName</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org21c0741" class="outline-3">
+<h3 id="org21c0741"><a href="#org21c0741">SSH to a Pod's Node</a></h3>
+<div class="outline-text-3" id="text-org21c0741">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #dcaeea;">node</span>=$(kubectl get pod <span style="color: #98be65;">\</span>
+               -o=custom-columns=NODE:.spec.nodeName $<span style="color: #dcaeea;">applianceConfigPod</span> <span style="color: #98be65;">\</span>
+           | sed -n 2p)
+<span style="color: #dcaeea;">ip</span>=$(kubectl get node $<span style="color: #dcaeea;">node</span> <span style="color: #98be65;">\</span>
+             -o <span style="color: #dcaeea;">jsonpath</span>=<span style="color: #98be65;">'{ $.status.addresses[?(@.type=="ExternalIP")].address }'</span>)
+</pre>
+</div>
+
+<p>
+Now, <code>ssh user@nodeIp</code>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9e5214d" class="outline-2">
+<h2 id="org9e5214d"><a href="#org9e5214d">Pods</a></h2>
+<div class="outline-text-2" id="text-org9e5214d">
+</div>
+<div id="outline-container-orgfa7a589" class="outline-3">
+<h3 id="orgfa7a589"><a href="#orgfa7a589">List Containers in a Pod</a></h3>
+<div class="outline-text-3" id="text-orgfa7a589">
+<div class="org-src-container">
+<pre class="src src-sh">kubectl get pod $<span style="color: #dcaeea;">pod</span> -o json | jq -r <span style="color: #98be65;">'.spec.containers[].name'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org71e3947" class="outline-3">
+<h3 id="org71e3947"><a href="#org71e3947">What Node is this Pod on?</a></h3>
+<div class="outline-text-3" id="text-org71e3947">
+<div class="org-src-container">
+<pre class="src src-sh">kubectl get pod <span style="color: #98be65;">\</span>
+        -o custom-columns=NODE:.spec.nodeName <span style="color: #98be65;">\</span>
+        $<span style="color: #dcaeea;">pod</span> <span style="color: #98be65;">\</span>
+    | sed -n 2p
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge2932ab" class="outline-2">
+<h2 id="orge2932ab"><a href="#orge2932ab">Services</a></h2>
+<div class="outline-text-2" id="text-orge2932ab">
+</div>
+<div id="outline-container-orgb3845b0" class="outline-3">
+<h3 id="orgb3845b0"><a href="#orgb3845b0">Get all services of type NodePort/LoadBalancer/ClusterIP</a></h3>
+<div class="outline-text-3" id="text-orgb3845b0">
+<div class="org-src-container">
+<pre class="src src-sh">kubectl get services --all-namespaces -o json <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.items[] | select(.spec.type == "LoadBalancer") | .metadata.name'</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf2076fa" class="outline-2">
+<h2 id="orgf2076fa"><a href="#orgf2076fa">Deployments</a></h2>
+<div class="outline-text-2" id="text-orgf2076fa">
+</div>
+<div id="outline-container-org97204a7" class="outline-3">
+<h3 id="org97204a7"><a href="#org97204a7">Scaling a deployment</a></h3>
+<div class="outline-text-3" id="text-org97204a7">
+<div class="org-src-container">
+<pre class="src src-sh">kubectl scale deployment &lt;deployment-name&gt; --replicas=1
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org15df7d8" class="outline-2">
+<h2 id="org15df7d8"><a href="#org15df7d8">Service Accounts</a></h2>
+<div class="outline-text-2" id="text-org15df7d8">
+<p>
+Get the default service account:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">kubectl get secret -o json <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.items[]</span>
+<span style="color: #98be65;">          | select(.metadata.annotations["kubernetes.io/service-account.name"] == "default")'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd3aa23c" class="outline-2">
+<h2 id="orgd3aa23c"><a href="#orgd3aa23c">Affinity, Taints, and Tolerations</a></h2>
+<div class="outline-text-2" id="text-orgd3aa23c">
+<p>
+Kubernetes supports a way to indicate that specific nodes have a certain
+quality. Pods must opt-in to using those nodes.
+</p>
+
+<p>
+That is, some nodes can say "hey, I'm a little bit different", and then some
+pods can say "I tolerate that difference".
+</p>
+
+<p>
+An example is Azure's serverless pods. You can have physical nodes and virtual
+(i.e. serverless) nodes. By default, your pods will get scheduled to your
+physical nodes, but you could mark some pods as "tolerating" the Azure
+serverless nodes.
+</p>
+</div>
+
+<div id="outline-container-org176842d" class="outline-3">
+<h3 id="org176842d"><a href="#org176842d">Affinity</a></h3>
+<div class="outline-text-3" id="text-org176842d">
+<p>
+A Pod can specify an affinity for certain nodes. Can either be a preference or a
+requirement.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgbb18e80" class="outline-3">
+<h3 id="orgbb18e80"><a href="#orgbb18e80">Taints</a></h3>
+<div class="outline-text-3" id="text-orgbb18e80">
+<p>
+A Node can have a taint that will not allow Pods to be scheduled to it unless
+the Pod can tolerate the taint.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge2c7b98" class="outline-3">
+<h3 id="orge2c7b98"><a href="#orge2c7b98">Tolerations</a></h3>
+<div class="outline-text-3" id="text-orge2c7b98">
+<p>
+A Pod can specify a toleration which allows it (but does not require it) to be
+scheduled to nodes with a matching taint.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfab689e" class="outline-2">
+<h2 id="orgfab689e"><a href="#orgfab689e">Cluster ID</a></h2>
+<div class="outline-text-2" id="text-orgfab689e">
+<p>
+Best idea I have come across is to use the kube-system namespace UID. For a
+discussion, see:
+<a href="https://groups.google.com/forum/#!msg/kubernetes-sig-architecture/mVGobfD4TpY/nkdbkX1iBwAJ">https://groups.google.com/forum/#!msg/kubernetes-sig-architecture/mVGobfD4TpY/nkdbkX1iBwAJ</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">kubectl get ns kube-system -o <span style="color: #dcaeea;">jsonpath</span>=<span style="color: #98be65;">'{.metadata.uid}'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5f09b03" class="outline-2">
+<h2 id="org5f09b03"><a href="#org5f09b03">Running Commands in Cluster</a></h2>
+<div class="outline-text-2" id="text-org5f09b03">
+</div>
+<div id="outline-container-org6e5a0d0" class="outline-3">
+<h3 id="org6e5a0d0"><a href="#org6e5a0d0">Create a temporary pod</a></h3>
+<div class="outline-text-3" id="text-org6e5a0d0">
+<p>
+Start a shell in a temporary pod in the namespace you want to test:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">kubectl run -it --rm --restart=Never alpine --image=alpine sh
+apk add curl
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd583521" class="outline-3">
+<h3 id="orgd583521"><a href="#orgd583521">Exec in an existing pod</a></h3>
+<div class="outline-text-3" id="text-orgd583521">
+<p>
+If the pod has multiple containers, use <code>-c $containerName</code> as well.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">kubectl exec $<span style="color: #dcaeea;">podName</span> -- &lt;COMMAND&gt;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org22594dc" class="outline-3">
+<h3 id="org22594dc"><a href="#org22594dc">Port forwarding with kubectl</a></h3>
+<div class="outline-text-3" id="text-org22594dc">
+<div class="org-src-container">
+<pre class="src src-sh">kubectl port-forward $<span style="color: #dcaeea;">podName</span> 8000:8000 -n $<span style="color: #dcaeea;">namespace</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org370fb42" class="outline-2">
+<h2 id="org370fb42"><a href="#org370fb42">Using the API directily</a></h2>
+<div class="outline-text-2" id="text-org370fb42">
+<p>
+<a href="https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-api/#without-kubectl-proxy">https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-api/#without-kubectl-proxy</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #dcaeea;">APISERVER</span>=$(kubectl config view <span style="color: #98be65;">\</span>
+                    --minify <span style="color: #98be65;">\</span>
+                    -o <span style="color: #dcaeea;">jsonpath</span>=<span style="color: #98be65;">'{.clusters[0].cluster.server}'</span>)
+
+<span style="color: #dcaeea;">SA</span>=$(kubectl get serviceaccount default -o <span style="color: #dcaeea;">jsonpath</span>=<span style="color: #98be65;">'{.secrets[0].name}'</span>)
+<span style="color: #dcaeea;">TOKEN</span>=$(kubectl get secret $<span style="color: #dcaeea;">SA</span> -o <span style="color: #dcaeea;">jsonpath</span>=<span style="color: #98be65;">'{.data.token}'</span> | base64 --decode )
+curl $<span style="color: #dcaeea;">APISERVER</span>/api --header <span style="color: #98be65;">"Authorization: Bearer $TOKEN"</span> --insecure
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5fb2291" class="outline-2">
+<h2 id="org5fb2291"><a href="#org5fb2291">Debugging</a></h2>
+<div class="outline-text-2" id="text-org5fb2291">
+</div>
+<div id="outline-container-org033378b" class="outline-3">
+<h3 id="org033378b"><a href="#org033378b">Startig a busybox pod</a></h3>
+<div class="outline-text-3" id="text-org033378b">
+<div class="org-src-container">
+<pre class="src src-sh">kubectl run -i -t busybox --image=busybox --restart=Never
+</pre>
+</div>
+
+<p>
+Get a shell on that pod
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">kubectl exec -it &lt;name-of-pod&gt; -n my-ns sh
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb8bfcdb" class="outline-2">
+<h2 id="orgb8bfcdb"><a href="#orgb8bfcdb">etcd</a></h2>
+<div class="outline-text-2" id="text-orgb8bfcdb">
+<p>
+Pod to help with connecting
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">curl -LO git.io/etcdclient.yaml
+</pre>
+</div>
+
+<p>
+Which gets:
+<a href="https://gist.githubusercontent.com/mauilion/2bab4b00eb7a0ab4fca7023ae251e8ee/raw/etcdclient.yaml">https://gist.githubusercontent.com/mauilion/2bab4b00eb7a0ab4fca7023ae251e8ee/raw/etcdclient.yaml</a>
+</p>
+
+<p>
+Or, just ssh to the master, and download etcdctl
+</p>
+
+<p>
+Try looking at a secret at /registry/secrets/default/mysecret
+</p>
+</div>
+</div>
+</div>
+</body>
+</html>

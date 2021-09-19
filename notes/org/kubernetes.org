@@ -1,0 +1,300 @@
+#+TITLE: Kubernetes
+#+SETUPFILE: ../setup.org
+
+* Variables                                                        :noexport:
+
+  #+NAME: Env
+  | Env Var      | Value                                  |
+  |--------------+----------------------------------------|
+  | CLUSTER_NAME | crafty-lynx                            |
+  | KUBECONFIG   | ~/.kube/ironnet_clusters/$CLUSTER_NAME |
+
+  #+begin_src emacs-lisp :var env=Env
+    (setenv-file-export-pairs env)
+  #+end_src
+
+* What is Kubernetes?
+
+  According to kubernetes.com, Kubernetes is...
+
+  #+begin_quote
+  an open-source system for automating deployment, scaling, and management of
+  containerized applications.
+  #+end_quote
+
+  Personally, I would define it more like: Kubernetes is a program for creating
+  and managing a cluster of computers.
+
+  Running programs on a cluster is different from running programs on a single
+  computer, and Kubernetes provides some heavy abstractions that are useful for
+  dealing with a cluster.
+
+  People started trying to create "clusters" a long time ago. Some of the
+  problems that need to be addressed are:
+
+  - What does it mean for a machine to be "in" the cluster vs "out" of the
+    cluster?
+  - When you run a process on the cluster, which machine should that process run
+    on?
+  - How does inter-process communication work when processes might be on
+    different machines?
+  - How can processes shared data when they might running on different machines?
+  - Should the cluster have some kind of RBAC (authn/authz)?
+
+* Operators
+
+  An operator is just a controller that monitors a CRD instead of a resource
+  defined by Kubernetes.
+
+  A controller monitors a set of resources (where resources are just entries in
+  a database, representing some kind of "desired state"), and reconciles those
+  with the "actual state" of the system. Whenever the controller sees
+  differences between the desired and actual states, it takes steps to reduce
+  that difference.
+
+* Describing a Cluster
+
+** Version
+
+   #+begin_src sh
+     kubectl version --short
+   #+end_src
+
+** Master node address
+
+   Display address of master node
+
+   #+begin_src sh :results output
+     kubectl cluster-info
+   #+end_src
+
+** View all available resources
+
+   #+begin_src sh
+     kubectl api-resources
+   #+end_src
+
+* Completely Delete a Cluster
+
+  #+begin_src sh
+    kubectl delete --all all
+    kubectl delete secret --all
+    kubectl delete serviceaccount --all
+    kubectl delete pvc --all
+    kubectl delete ingress --all
+    kubectl delete crds --all
+  #+end_src
+
+* Kubeconfig, Context and Namespace
+
+  Set namespace for the current context
+
+  #+begin_src sh
+    kubectl config set-context \
+            $(kubectl config current-context) \
+            --namespace default
+  #+end_src
+
+* Nodes
+
+** Master Node IP
+
+   Note you can also get the master node ip with =kubectl cluster-info=.
+
+   #+NAME: MasterNode
+   #+begin_src sh :cache yes
+     kubectl get node -lnode-role.kubernetes.io/master \
+             -o jsonpath='{ $.items[*].status.addresses[?(@.type=="ExternalIP")].address }'
+   #+end_src
+
+** Worker Nodes
+
+   #+begin_src sh
+     kubectl get nodes -l "kubernetes.io/role = node"
+   #+end_src
+
+** Worker Node IPs
+
+   #+NAME: NodeIps
+   #+begin_src sh
+     kubectl get nodes -l "kubernetes.io/role = node" \
+             -o jsonpath='{range .items[*]}{.metadata.annotations.flannel\.alpha\.coreos\.com/public-ip}{"\n"}{end}'
+   #+end_src
+
+   #+begin_src sh
+     kubectl get nodes -l "kubernetes.io/role = node" -o json \
+         | jq -r '.items[].metadata.annotations["flannel.alpha.coreos.com/public-ip"]'
+   #+end_src
+
+** All Pods on a Node
+
+   #+begin_src sh
+     kubectl describe node $NodeName
+   #+end_src
+
+   #+begin_src sh
+     kubectl get pods --all-namespaces \
+             --field-selector spec.nodeName=$NodeName
+   #+end_src
+
+** SSH to a Pod's Node
+
+   #+begin_src sh
+     node=$(kubectl get pod \
+                    -o=custom-columns=NODE:.spec.nodeName $applianceConfigPod \
+                | sed -n 2p)
+     ip=$(kubectl get node $node \
+                  -o jsonpath='{ $.status.addresses[?(@.type=="ExternalIP")].address }')
+   #+end_src
+
+   Now, =ssh user@nodeIp=
+
+* Pods
+
+** List Containers in a Pod
+
+   #+begin_src sh
+     kubectl get pod $pod -o json | jq -r '.spec.containers[].name'
+   #+end_src
+
+** What Node is this Pod on?
+
+   #+begin_src sh :var pod="citus-coordinator-0"
+     kubectl get pod \
+             -o custom-columns=NODE:.spec.nodeName \
+             $pod \
+         | sed -n 2p
+   #+end_src
+
+* Services
+
+** Get all services of type NodePort/LoadBalancer/ClusterIP
+
+   #+begin_src sh
+     kubectl get services --all-namespaces -o json \
+         | jq '.items[] | select(.spec.type == "LoadBalancer") | .metadata.name'
+   #+end_src
+
+* Deployments
+
+** Scaling a deployment
+
+   #+begin_src sh
+     kubectl scale deployment <deployment-name> --replicas=1
+   #+end_src
+
+* Service Accounts
+
+  Get the default service account:
+
+  #+begin_src sh
+    kubectl get secret -o json \
+        | jq '.items[]
+              | select(.metadata.annotations["kubernetes.io/service-account.name"] == "default")'
+  #+end_src
+
+* Affinity, Taints, and Tolerations
+
+  Kubernetes supports a way to indicate that specific nodes have a certain
+  quality. Pods must opt-in to using those nodes.
+
+  That is, some nodes can say "hey, I'm a little bit different", and then some
+  pods can say "I tolerate that difference".
+
+  An example is Azure's serverless pods. You can have physical nodes and virtual
+  (i.e. serverless) nodes. By default, your pods will get scheduled to your
+  physical nodes, but you could mark some pods as "tolerating" the Azure
+  serverless nodes.
+
+** Affinity
+
+   A Pod can specify an affinity for certain nodes. Can either be a preference or a
+   requirement.
+
+** Taints
+
+   A Node can have a taint that will not allow Pods to be scheduled to it unless
+   the Pod can tolerate the taint.
+
+** Tolerations
+
+   A Pod can specify a toleration which allows it (but does not require it) to be
+   scheduled to nodes with a matching taint.
+
+* Cluster ID
+
+  Best idea I have come across is to use the kube-system namespace UID. For a
+  discussion, see:
+  https://groups.google.com/forum/#!msg/kubernetes-sig-architecture/mVGobfD4TpY/nkdbkX1iBwAJ
+
+  #+begin_src sh
+    kubectl get ns kube-system -o jsonpath='{.metadata.uid}'
+  #+end_src
+
+* Running Commands in Cluster
+
+** Create a temporary pod
+
+   Start a shell in a temporary pod in the namespace you want to test:
+
+   #+begin_src sh
+     kubectl run -it --rm --restart=Never alpine --image=alpine sh
+     apk add curl
+   #+end_src
+
+** Exec in an existing pod
+
+   If the pod has multiple containers, use =-c $containerName= as well.
+
+   #+begin_src sh
+     kubectl exec $podName -- <COMMAND>
+   #+end_src
+
+** Port forwarding with kubectl
+
+   #+begin_src sh
+     kubectl port-forward $podName 8000:8000 -n $namespace
+   #+end_src
+
+* Using the API directily
+
+  https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-api/#without-kubectl-proxy
+
+  #+begin_src sh
+    APISERVER=$(kubectl config view \
+                        --minify \
+                        -o jsonpath='{.clusters[0].cluster.server}')
+
+    SA=$(kubectl get serviceaccount default -o jsonpath='{.secrets[0].name}')
+    TOKEN=$(kubectl get secret $SA -o jsonpath='{.data.token}' | base64 --decode )
+    curl $APISERVER/api --header "Authorization: Bearer $TOKEN" --insecure
+  #+end_src
+
+* Debugging
+
+** Startig a busybox pod
+
+   #+begin_src sh
+     kubectl run -i -t busybox --image=busybox --restart=Never
+   #+end_src
+
+   Get a shell on that pod
+
+   #+begin_src sh
+     kubectl exec -it <name-of-pod> -n my-ns sh
+   #+end_src
+
+* etcd
+
+  Pod to help with connecting
+
+  #+begin_src sh
+    curl -LO git.io/etcdclient.yaml
+  #+end_src
+
+  Which gets:
+  https://gist.githubusercontent.com/mauilion/2bab4b00eb7a0ab4fca7023ae251e8ee/raw/etcdclient.yaml
+
+  Or, just ssh to the master, and download etcdctl
+
+  Try looking at a secret at /registry/secrets/default/mysecret

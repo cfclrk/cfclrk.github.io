@@ -1,0 +1,10 @@
+#+TITLE: sed
+#+SETUPFILE: ../setup.org
+
+* Delete =/d=
+
+  Delete a block comment in a Go file.
+
+  #+begin_src sh
+    sed '/\/\*/,/\*\//d' cmd/root.go
+  #+end_src

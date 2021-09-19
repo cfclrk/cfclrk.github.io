@@ -1,0 +1,57 @@
+#+TITLE: Magit and Forge
+#+SETUPFILE: ../setup.org
+
+* Rebase and move branch pointers
+
+  Do the rebase. The same commits will have different SHAs. Old branches will
+  still be at previous SHAs.
+
+  - Go to logs buffer
+  - For each branch:
+    - check out branch
+    - move cursor to commit where branch should be moved to
+    - =x= to reset to this commit
+
+* View File History
+
+  - =M-x magit-log-buffer-file=
+
+* View File at Specific Commit
+
+  The function =magit-find-file= is to "View FILE from REV". Running =M-x
+  magit-find-file= will first prompt for a revision (completes with a list of
+  all refs), then prompts for a file.
+
+  From a specific file:
+
+  - =M-x magit-log-buffer-file=
+  - Move to the commit you want
+  - =M-x magit-find-file=
+
+* View PR Diff
+
+  Requires [[https://github.com/magit/forge][forge]].
+
+  - Check out the PR (=b= =y=)
+  - From main magit buffer, navigate to the PR and visit it with =<enter>=.
+  - With cursor at beginning of buffer, =d= to open the diff menu, then =d= to
+    "do what I mean". If this pops up a menu of branches, select the branch you
+    want to diff against (i.e. the branch the PR will be merged into, probably
+    =main=).
+
+* Visit File from Diff
+
+  Just press =<return>= on a chunk in the diff. Buuut, if you want it to use
+  another window:
+
+  #+begin_src emacs-lisp
+    (use-package magit
+      :bind
+      (:map magit-diff-mode-map
+            ("M-<return>" . magit-diff-visit-file-other-window)))
+  #+end_src
+
+* View Current and Previous File Version from Diff
+
+  - In diff, =<return>= to visit the file
+  - =M-x magit-find-file-other-window=, branch, =<RET>=

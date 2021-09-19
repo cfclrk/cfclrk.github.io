@@ -1,0 +1,25 @@
+#+TITLE: Terraform
+#+SETUPFILE: ../setup.org
+
+* State
+
+  After a =terraform apply=, Terraform refreshes the local =terraform.tfstate=
+  file.
+
+  =terraform plan= refreshes local state first, but only in-memory.
+
+  Kinds of terraform files:
+
+  - state files (terraform.tfstate)
+  - configs (.tf)
+  - plans (.tfplan)
+  - variables file (.tfvars)
+
+* Workspaces
+
+  A workspace has
+
+  - Terraform config (HCL files)
+  - Values for variables used by the config
+  - Terraform state
+  - Historical state and run logs

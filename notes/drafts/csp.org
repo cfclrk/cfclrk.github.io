@@ -1,0 +1,99 @@
+#+TITLE: Communicating Sequential Processes
+#+SETUPFILE: ../setup.org
+
+* Channels
+
+  From /A Tour of Go/:
+
+  #+begin_quote
+  Channels are a typed conduit through which you can send and receive values
+  #+end_quote
+
+  Channels are a FIFO asynchronous queue.
+
+  In the original CSP paper, you communicate with a process by name (no
+  channels). In Go, a channel is a first-class construct, and you communicate
+  with channels.
+
+** Reading and Writing to a Channel
+
+   In go, to send =v= to channel =ch=:
+
+   #+begin_src go
+     // Write to a channel
+     ch <- v
+
+     // Read from a channel
+     v <- ch
+   #+end_src
+
+   In this case, =<-= is a Go /operator/ that can read or write to a channel.
+   This operator goes in only one direction; there is no corresponding =->=
+   operator. One might read =<-= as "gets", as in: "=ch= gets =v=" or "=v= gets
+   the next item in =ch=".
+
+   Operators are special language constructs. This is the only Go operator for
+   reading and writing to channels; there is no corresponding =->= operator, so
+   all statements essentiall read from right to left if you follow the direction
+   the data is going.
+
+   Clojure does not have operators, only functions. We can write functions with
+   funny names so that they look like operators, so we can invent any syntax we
+   can imagine to specify how to read/write to channels. The =core.async=
+   library is the most common implementation of CSP in Clojure, and here is some
+   of the functionality they implemented:
+
+   #+begin_src clojure
+     ;; Write to a channel
+     (>!! ch 42)
+     (put! ch 42)
+
+     ;; Read from a channel
+     (<!! ch)
+     (take! ch (callback-fn))
+   #+end_src
+
+** Buffers
+
+*** Fixed
+
+   In Clojure core.async, creating a channel like =(chan)= with no arguments
+   creates a channel with no buffer. Sending an item to the channel will not
+   succeed until something takes the item from the channel.
+
+   Create a channel with a buffer size of 3 like =(chan 3)=. Now, three puts can
+   succeed before any takes happen.
+
+*** Dropping
+
+   Buffers can be designed to drop items when the buffer is full. A
+   =dropping-buffer= will drop any write that happens when the buffer is full.
+
+*** Sliding
+
+   A =sliding-buffer= accepts all writes and drops the oldest items when the
+   buffer is full.
+
+** Threads and Processes
+
+   In core.async, basic example uses the /same OS thread/. (s this an
+   event loop?)
+
+   To use JMV threads, use =core.async.thread=.
+
+   #+begin_src clojure
+     (<!! (thread 42))
+   #+end_src
+
+   This creates a thread and evaluates =42= in it. Then we read from the thread.
+
+   Channels themselves aren't threads. Rather, the idea is: create a channel,
+   then use =(thread)= to create JMV threads that read or write to the channel.
+
+   Memory needed by a JVM thread is around 1-2 MB.
+
+** Closing
+
+   core.async: channel stops recieving, delivers all remaining items in buffer,
+   then returns nil for any succesive takes from the channel. Takers can read
+   until they see a nil, which signifies the channel is closed and empty.

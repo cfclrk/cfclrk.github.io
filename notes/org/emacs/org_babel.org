@@ -1,0 +1,103 @@
+#+TITLE: Org Babel
+#+SETUPFILE: ../../setup.org
+
+* Print Error of Code Block
+
+  Relevant SO questions:
+
+  - [[https://emacs.stackexchange.com/questions/60649/show-compilation-errors-in-results-code-blocks][Show compilation errors in “#+RESULTS” code blocks]]
+  - [[https://emacs.stackexchange.com/questions/48835/help-me-avoid-true-in-org-babel-bash-statements/48842#48842][Help me avoid “|| true” in org babel bash statements]]
+
+** Shell
+
+  #+begin_src bash :results output :prologue "exec 2>&1" :epilogue "true"
+    ls --foo
+  #+end_src
+
+  #+RESULTS:
+  : ls: illegal option -- -
+  : usage: ls [-@ABCFGHLOPRSTUWabcdefghiklmnopqrstuwx1%] [file ...]
+
+  Doesn't work:
+
+  #+begin_src bash :results output :prologue "exec 2>&1"
+    echo "hi"
+    exit 1
+  #+end_src
+
+  #+begin_src bash :results output :prologue "exec 2>&1"
+    set -u
+    echo $foo
+  #+end_src
+
+** Python
+
+   #+begin_src sh :results output :prologue "exec 2>&1" :epilogue "true"
+     python -c 'bar=b"ОФИС"''
+   #+end_src
+
+   #+RESULTS:
+
+* Emacs Lisp
+
+  To print data structure, use =:results value pp=
+
+  #+NAME: Params
+  #+begin_src emacs-lisp
+    '(("DeploymentName" "webserver")
+      ("KeyName" "cfc"))
+  #+end_src
+
+  #+begin_src emacs-lisp :var Params=Params :results value pp
+    Params
+  #+end_src
+
+  #+RESULTS:
+  : (("DeploymentName" "webserver")
+  :  ("KeyName" "cfc"))
+
+* TRAMP
+
+** Single Hop
+
+  #+begin_example
+  :dir /ssh:ec2-user@1.2.3.4:/
+  #+end_example
+
+** Double-Hop (Use a Bastion)
+
+   #+begin_example
+   :dir /ssh:ec2-user@1.2.3.4|ssh:ec2-user@10.192.1.2:/
+   #+end_example
+
+* Copy File to Remote Machine
+
+  This leverages my =host= function.
+
+  #+begin_src elisp :var MyFile=""
+    (copy-file MyFile (host "ec2-user" "/tmp/my_file.txt" 'sudo) t)
+  #+end_src
+
+* IP Address Variable
+
+  Because you don't want to hard-code IP addresses in your source blocks like
+  some kind of animal!
+
+  #+begin_src emacs-lisp
+    (defun host (user ip path &optional sudo)
+      "Return a TRAMP string for SSHing to a remote host.
+    USER is a user name on the remote host IP. PATH is the path on
+    the remote host at which to execute the source block. If SUDO is
+    non-nil, use sudo on the remote host."
+      (if sudo
+          (s-lex-format "/ssh:${user}@${ip}|sudo:${ip}:${path}")
+        (s-lex-format "/ssh:${user}@${ip}:${path}")))
+  #+end_src
+
+  Then set variables at the top of a file, and use something like:
+
+  #+begin_example
+  #+begin_src bash :dir (host (getenv "HOST") (getenv "USER") "/home/ec2-user")
+    pwd
+  #+end_src
+  #+end_example

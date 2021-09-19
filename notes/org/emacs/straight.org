@@ -1,0 +1,42 @@
+#+TITLE: Straight
+#+SETUPFILE: ../../setup.org
+
+* Install Packages
+
+  Interactively: =M-x straight-use-package=
+
+  In code:
+
+  #+begin_src emacs-lisp
+    (straight-use-package 'el-patch)
+  #+end_src
+
+  Install a package with a custom recipe:
+
+  #+begin_src emacs-lisp
+    (straight-use-package '(el-patch :type git :host github :repo "raxod502/el-patch"))
+  #+end_src
+
+  Install a fork:
+
+  #+begin_src emacs-lisp
+    (straight-use-package
+     '(el-patch :type git :host github :repo "raxod502/el-patch"
+                :fork (:host github :repo "your-name/el-patch")))
+  #+end_src
+
+  Use a straight recipe with use-package:
+
+  #+begin_src emacs-lisp
+    (use-package el-patch
+      :straight (el-patch :type git :host github :repo "raxod502/el-patch"
+                          :fork (:host github :repo "your-name/el-patch")))
+  #+end_src
+
+* Get Package Info
+
+  Get the default recipe for any package: =M-x straight-get-recipe=.
+
+* Update Packages
+
+  =M-x straight-pull-all=

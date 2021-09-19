@@ -1,0 +1,32 @@
+#+TITLE: Getting Help
+
+* apropos
+
+  =M-x apropos=, then type the part of the function name you remember.
+
+* Info-mode Invocation
+
+  =C-h i= to get the top-level info
+
+  =M-x info-display-manual= to get a specific manual (TODO: bind to =C-h RET=)
+
+* Info-mode Navigation
+
+  =^= to go up
+
+  =n/p= next/previous node (not child node!)
+
+  I find this confusing because many modes (dired, magit) bind =n= and =p= to
+  move up and down. Although n/p does work from top-level node of a mode's help.
+  Hm.
+
+  =m= Pick menu item by name. Super useful.
+
+  =d= Go to top-level node.
+
+* About
+
+  Example of what an Info file looks like.
+
+  Discussion of other possible formats and proposals to change the Emacs help
+  system to use a different format.

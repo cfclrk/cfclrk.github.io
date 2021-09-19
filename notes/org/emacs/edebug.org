@@ -1,0 +1,27 @@
+#+TITLE: Debugging Elisp
+#+SETUPFILE: ../../setup.org
+
+To debug elisp programs, use [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Using-Edebug.html][Edebug]].
+
+* Steps
+
+1. Instrument the function to debug (i.e. add debugging symbols). =Cu C-M-x=
+   (prefix + =eval-defun=).
+
+   Now, any call to the function pauses the interpreter and Edubg at the start
+   of the function.
+
+2. Call the function.
+
+3. Pres =SPC= to step through forms.
+
+* Keys
+
+  - =b= Set a breakpoint
+  - =g= Execute until a breakpoint
+  - =q= Exit
+  - =?= Help
+
+* Backtrace Buffer
+
+  - =+/-= Expand/contract (over multiple lines) the frame at point

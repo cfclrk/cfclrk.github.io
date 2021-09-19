@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Keys and Certificates</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Keys and Certificates</h1>
+</header><nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgd35185c">Discover Public Certificates</a></li>
+<li><a href="#org4225a42">Create an SSH Key Pair</a>
+<ul>
+<li><a href="#org9209db8">No Passphrase</a></li>
+<li><a href="#org6b1d3f5">With Passphrase</a></li>
+</ul>
+</li>
+<li><a href="#org52fe577">Conversions</a></li>
+<li><a href="#org5e89131">Eliptic Curve Keys and Certs</a>
+<ul>
+<li><a href="#org0629e10">List Curves</a></li>
+</ul>
+</li>
+<li><a href="#orgc891c8a">Creating Certificates</a>
+<ul>
+<li><a href="#org8e862e2">Create Keypair</a></li>
+<li><a href="#org0273b80">CA Certificates</a>
+<ul>
+<li><a href="#org1e40fc5">Self-Issued Certificates</a></li>
+<li><a href="#orgb020686">Self-Signed Certificates</a></li>
+<li><a href="#org72f80b1">Cross-Certificate</a></li>
+</ul>
+</li>
+<li><a href="#org23489b7">Entity Certificates</a></li>
+</ul>
+</li>
+<li><a href="#org4429983">cfssl</a></li>
+<li><a href="#org6dcc06a">Fingerprint</a></li>
+<li><a href="#org4725b25">Checking and Viewing Certs</a>
+<ul>
+<li><a href="#org42cc808">View a Server's Certificate</a></li>
+<li><a href="#org6d5ba22">Check if a Private Key Matches a Certificate</a></li>
+<li><a href="#orgd07e565">CSR</a></li>
+<li><a href="#org8dca463">Verify Cert with CA</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-orgd35185c" class="outline-2">
+<h2 id="orgd35185c"><a href="#orgd35185c">Discover Public Certificates</a></h2>
+<div class="outline-text-2" id="text-orgd35185c">
+<p>
+Use <a href="https://cert.sh">cert.sh</a>. For example, to see all certs issued for <code>cats.com</code>:
+<a href="https://crt.sh/?q=%25.cats.com">https://crt.sh/?q=%25.cats.com</a>
+</p>
+
+<p>
+Advanced search page: <a href="https://crt.sh/?a=1">https://crt.sh/?a=1</a>
+</p>
+
+<p>
+The data is stored in a relational DB. Optionally show the SQL query a page
+makes using <code>&amp;showSQL=Y</code>, or by selecting "Show SQL?" on the advanced search
+page.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org4225a42" class="outline-2">
+<h2 id="org4225a42"><a href="#org4225a42">Create an SSH Key Pair</a></h2>
+<div class="outline-text-2" id="text-org4225a42">
+<p>
+<code>ssh-keygen</code> creates two files: <code>$keyname</code> and <code>$keyname.pub</code>.
+</p>
+</div>
+
+<div id="outline-container-org9209db8" class="outline-3">
+<h3 id="org9209db8"><a href="#org9209db8">No Passphrase</a></h3>
+<div class="outline-text-3" id="text-org9209db8">
+<div class="org-src-container">
+<pre class="src src-sh">ssh-keygen -t ed25519 -N <span style="color: #98be65;">""</span> -f ~/.ssh/$<span style="color: #dcaeea;">keyname</span> -C <span style="color: #98be65;">"$email"</span>
+</pre>
+</div>
+
+<p>
+The email address is optional:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">ssh-keygen -t ed25519 -f ~/.ssh/$<span style="color: #dcaeea;">keyname</span> -N <span style="color: #98be65;">""</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6b1d3f5" class="outline-3">
+<h3 id="org6b1d3f5"><a href="#org6b1d3f5">With Passphrase</a></h3>
+<div class="outline-text-3" id="text-org6b1d3f5">
+<div class="org-src-container">
+<pre class="src src-sh">ssh-keygen -t ed25519 -f ~/.ssh/$<span style="color: #dcaeea;">keyname</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org52fe577" class="outline-2">
+<h2 id="org52fe577"><a href="#org52fe577">Conversions</a></h2>
+<div class="outline-text-2" id="text-org52fe577">
+<p>
+Generate a public key from a private key:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">ssh-keygen -y -f ~/.ssh/${<span style="color: #dcaeea;">keyname</span>}.pem $<span style="color: #dcaeea;">HOME</span>/.ssh/${<span style="color: #dcaeea;">keyname</span>}.pub
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5e89131" class="outline-2">
+<h2 id="org5e89131"><a href="#org5e89131">Eliptic Curve Keys and Certs</a></h2>
+<div class="outline-text-2" id="text-org5e89131">
+</div>
+<div id="outline-container-org0629e10" class="outline-3">
+<h3 id="org0629e10"><a href="#org0629e10">List Curves</a></h3>
+<div class="outline-text-3" id="text-org0629e10">
+<p>
+<code>prime256v1</code> is suitable for JWT signing (<a href="https://www.scottbrady91.com/OpenSSL/Creating-Elliptical-Curve-Keys-using-OpenSSL">ref</a>).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">openssl ecparam -list_curves
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc891c8a" class="outline-2">
+<h2 id="orgc891c8a"><a href="#orgc891c8a">Creating Certificates</a></h2>
+<div class="outline-text-2" id="text-orgc891c8a">
+<p>
+Note: there is a golang tool to create self-signed certs at <code>$(go env
+  GOROOT)/src/crypto/tls/generate_cert.go</code>.
+</p>
+</div>
+
+<div id="outline-container-org8e862e2" class="outline-3">
+<h3 id="org8e862e2"><a href="#org8e862e2">Create Keypair</a></h3>
+<div class="outline-text-3" id="text-org8e862e2">
+<p>
+The <code>openssl genrsa</code> command creates a private key that includes a public
+key.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh" id="org1c6fc1d">openssl genrsa 1024
+</pre>
+</div>
+
+<p>
+Extract the public key from the private key:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"$keypair"</span> | openssl rsa -outform PEM -pubout
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0273b80" class="outline-3">
+<h3 id="org0273b80"><a href="#org0273b80">CA Certificates</a></h3>
+<div class="outline-text-3" id="text-org0273b80">
+<p>
+From <a href="https://datatracker.ietf.org/doc/html/rfc5280#section-3.2">RFC 5280</a>:
+</p>
+
+<blockquote>
+<p>
+CA certificates may be further divided into three classes:
+cross-certificates, self-issued certificates, and self-signed certificates.
+</p>
+</blockquote>
+
+<p>
+Every root CA certificate is a self-signed certificate. Intermediate CA
+certificates are not self-signed; they are signed by their parent CA.
+</p>
+
+<p>
+The following commands create a <code>ca.key</code> and a <code>ca.crt</code> file. Remember, the
+<code>ca.key</code> actually contains both the public and private key. The certificate
+has the public key, some metadata, and a signature (signed by some private
+key).
+</p>
+</div>
+
+<div id="outline-container-org1e40fc5" class="outline-4">
+<h4 id="org1e40fc5"><a href="#org1e40fc5">Self-Issued Certificates</a></h4>
+<div class="outline-text-4" id="text-org1e40fc5">
+<p>
+From <a href="https://datatracker.ietf.org/doc/html/rfc5280#section-3.2">RFC 5280</a>:
+</p>
+
+<blockquote>
+<p>
+Self-issued certificates are CA certificates in which the issuer and subject
+are the same entity. Self-issued certificates are generated to support
+changes in policy or operations.
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-orgb020686" class="outline-4">
+<h4 id="orgb020686"><a href="#orgb020686">Self-Signed Certificates</a></h4>
+<div class="outline-text-4" id="text-orgb020686">
+<p>
+From <a href="https://datatracker.ietf.org/doc/html/rfc5280#section-3.2">RFC 5280</a>:
+</p>
+
+<blockquote>
+<p>
+Self-signed certificates are self-issued certificates where the digital
+signature may be verified by the public key bound into the certificate.
+Self-signed certificates are used to convey a public key for use to begin
+certification paths.
+</p>
+</blockquote>
+
+<p>
+That is, self-signed certificates are either:
+</p>
+
+<ol class="org-ol">
+<li>Root CA certifaces</li>
+<li>You're a rogue renegade signing certs like a villian</li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-sh">openssl genrsa -out ca.key 2048
+openssl req -x509 -new -nodes <span style="color: #98be65;">\</span>
+        -key ca.key <span style="color: #98be65;">\</span>
+        -subj <span style="color: #98be65;">"/CN=${CommonName}"</span> <span style="color: #98be65;">\</span>
+        -days 3650 <span style="color: #98be65;">\</span>
+        -out ca.crt
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org72f80b1" class="outline-4">
+<h4 id="org72f80b1"><a href="#org72f80b1">Cross-Certificate</a></h4>
+<div class="outline-text-4" id="text-org72f80b1">
+<p>
+From <a href="https://datatracker.ietf.org/doc/html/rfc5280#section-3.2">RFC 5280</a>:
+</p>
+
+<blockquote>
+<p>
+Cross-certificates are CA certificates in which the issuer and subject are
+different entities. Cross-certificates describe a trust relationship between
+the two CAs.
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org23489b7" class="outline-3">
+<h3 id="org23489b7"><a href="#org23489b7">Entity Certificates</a></h3>
+<div class="outline-text-3" id="text-org23489b7">
+<blockquote>
+<p>
+End entity certificates are issued to subjects that are not authorized to
+issue certificates.
+</p>
+</blockquote>
+
+<p>
+Create a new keypair. This creates two file: <code>client.key</code> (which actually has
+both the public and private key in it).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">openssl genrsa -out client.key 2048
+</pre>
+</div>
+
+<p>
+Create a Certificate Signing Request (CSR), which is a document that
+associates some metadata with the key. This creates one file: <code>client.csr</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">openssl req -new <span style="color: #98be65;">\</span>
+        -key client.key <span style="color: #98be65;">\</span>
+        -subj <span style="color: #98be65;">"/CN=${CommonName}"</span> <span style="color: #98be65;">\</span>
+        -out client.csr
+</pre>
+</div>
+
+<p>
+Create a client certificate by signing the CSR with the CA's private key. I
+suppose the CA might first verify that the information in the CSR is
+consistent (does the requester actually own the Common Name?), but in
+practice I'm not sure of any examples where that actually happens.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">openssl x509 -req <span style="color: #98be65;">\</span>
+        -in client.csr <span style="color: #98be65;">\</span>
+        -CA $<span style="color: #dcaeea;">CACertFile</span> <span style="color: #98be65;">\</span>
+        -CAkey $<span style="color: #dcaeea;">CAKeyFile</span> <span style="color: #98be65;">\</span>
+        -CAcreateserial <span style="color: #98be65;">\</span>
+        -out client.crt <span style="color: #98be65;">\</span>
+        -days 3650 <span style="color: #98be65;">\</span>
+        -sha256
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4429983" class="outline-2">
+<h2 id="org4429983"><a href="#org4429983">cfssl</a></h2>
+<div class="outline-text-2" id="text-org4429983">
+<div class="org-src-container">
+<pre class="src src-sh">cfssl selfsign www.example.net acm-test.json <span style="color: #98be65;">\</span>
+    | cfssljson -bare acm-test
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6dcc06a" class="outline-2">
+<h2 id="org6dcc06a"><a href="#org6dcc06a">Fingerprint</a></h2>
+<div class="outline-text-2" id="text-org6dcc06a">
+<div class="org-src-container">
+<pre class="src src-sh">openssl x509 -noout -fingerprint -sha256 <span style="color: #98be65;">\</span>
+        -inform pem -in $<span style="color: #dcaeea;">file</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh">ssh-keygen -lf $<span style="color: #dcaeea;">file</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh">ssh-keygen -l -E md5 -f $<span style="color: #dcaeea;">file</span>
+</pre>
+</div>
+
+<p>
+AWS EC2 KeyPairs created by AWS are rather specific. This command is from the
+docs <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#verify-key-pair-fingerprints">here</a> about how to check their fingerprint.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">openssl pkcs8 -in $<span style="color: #dcaeea;">file</span> <span style="color: #98be65;">\</span>
+        -inform PEM -outform DER -topk8 -nocrypt <span style="color: #98be65;">\</span>
+    | openssl sha1 -c
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4725b25" class="outline-2">
+<h2 id="org4725b25"><a href="#org4725b25">Checking and Viewing Certs</a></h2>
+<div class="outline-text-2" id="text-org4725b25">
+</div>
+<div id="outline-container-org42cc808" class="outline-3">
+<h3 id="org42cc808"><a href="#org42cc808">View a Server's Certificate</a></h3>
+<div class="outline-text-3" id="text-org42cc808">
+<p>
+Show cert info for a local certificate file.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">openssl x509 -in $<span style="color: #dcaeea;">cert</span> -text -noout
+</pre>
+</div>
+
+<p>
+Show cert info for a website.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">openssl s_client -connect $<span style="color: #dcaeea;">domain</span>:443 -showcerts
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6d5ba22" class="outline-3">
+<h3 id="org6d5ba22"><a href="#org6d5ba22">Check if a Private Key Matches a Certificate</a></h3>
+<div class="outline-text-3" id="text-org6d5ba22">
+<p>
+On the private key:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">openssl rsa -modulus -noout -in $<span style="color: #dcaeea;">key</span>
+</pre>
+</div>
+
+<p>
+On the certificate:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">openssl x509 -modulus -noout -in $<span style="color: #dcaeea;">cert</span>
+</pre>
+</div>
+
+<p>
+If the output of those two are the same, then the keys go together. An easy
+way to compare them is to pipe them both to <code>openssl md5</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgd07e565" class="outline-3">
+<h3 id="orgd07e565"><a href="#orgd07e565">CSR</a></h3>
+<div class="outline-text-3" id="text-orgd07e565">
+<div class="org-src-container">
+<pre class="src src-sh">openssl req -text -noout -verify -in $<span style="color: #dcaeea;">file</span>.csr
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8dca463" class="outline-3">
+<h3 id="org8dca463"><a href="#org8dca463">Verify Cert with CA</a></h3>
+<div class="outline-text-3" id="text-org8dca463">
+<div class="org-src-container">
+<pre class="src src-sh">openssl verify -CAfile ca.crt entity.crt
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

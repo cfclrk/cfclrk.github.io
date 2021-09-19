@@ -1,0 +1,85 @@
+#+TITLE: Elisp
+#+SETUPFILE: ../../setup.org
+
+* Association Lists
+
+  #+begin_src emacs-lisp
+    (assoc "foo" '(("foo" . "bar") ("baz" . "qux")))
+  #+end_src
+
+  #+RESULTS:
+  : (foo . bar)
+
+  #+NAME: mylist
+  #+begin_src emacs-lisp
+    '(("cats" . "hats") ("dogs" . "hogs"))
+  #+end_src
+
+  #+RESULTS: mylist
+  : ((cats . hats) (dogs . hogs))
+
+  #+begin_src emacs-lisp :var mylist=mylist
+    (assoc "cats" mylist)
+  #+end_src
+
+  #+RESULTS:
+  : (cats . hats)
+
+* Pretty Printing Objects
+
+** cl-prettyprint
+
+   =cl-prettyprint= formats nicely, but weirdly, it's not a function that
+   returns a string. Instead it literally inserts text into the buffer at point.
+   That can be ok in the scratch buffer, but otherwise useless IMO.
+
+   #+begin_src emacs-lisp
+     (let ((my-string-alist '(("foo" . "bar")
+                              ("baz" . "qux"))))
+       (cl-prettyprint my-string-alist))
+(("foo" . "bar")
+ ("baz" . "qux"))
+
+   #+end_src
+
+   #+RESULTS:
+
+   We can wrap =cl-prettyprint= in a function to yank the string. Taken from
+   [[https://stackoverflow.com/a/3552347/340613][this SO answer]].
+
+   #+begin_src emacs-lisp
+     (defun pprint (form &optional output-stream)
+       (princ (with-temp-buffer
+                (cl-prettyprint form)
+                (buffer-string))
+              output-stream))
+   #+end_src
+
+   #+RESULTS:
+   : pprint
+
+    #+begin_src emacs-lisp
+     (let ((my-string-alist '(("foo" . "bar")
+                              ("baz" . "qux"))))
+       (pprint my-string-alist))
+   #+end_src
+
+   #+RESULTS:
+   :
+   : (("foo" . "bar")
+   :  ("baz" . "qux"))
+
+** pp
+
+   =pp= is great. But I noticed sometimes it doesn't format as vertically as
+   =cl-prettyprint= (example?).
+
+   #+begin_src emacs-lisp
+     (let ((my-string-alist '(("foo" . "bar")
+                              ("baz" . "qux"))))
+       (pp my-string-alist))
+   #+end_src
+
+   #+RESULTS:
+   : (("foo" . "bar")
+   :  ("baz" . "qux"))

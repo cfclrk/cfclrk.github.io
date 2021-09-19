@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Python</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Python</h1>
+</header><nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org1d6fd59">Pyenv</a>
+<ul>
+<li><a href="#org3057e46">Latest Version</a></li>
+</ul>
+</li>
+<li><a href="#org25798c0">Using a src directory</a></li>
+<li><a href="#org2224d8b">Packaging</a>
+<ul>
+<li><a href="#orgf85f550">Kinds of Packages</a>
+<ul>
+<li><a href="#org3cecf04">wheel (.whl)</a></li>
+<li><a href="#org37b1456">Source Tree (git)</a></li>
+<li><a href="#orgc3f6ffc">Source Distribution (sdist)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orga4b4bec">Package summary info</a>
+<ul>
+<li><a href="#orgdf8ce96">sys.path</a></li>
+<li><a href="#org79f9c87">site</a></li>
+</ul>
+</li>
+<li><a href="#org1ddd65f">Class attributes</a></li>
+<li><a href="#org9f79b09">Require zip of github repo</a></li>
+<li><a href="#org9eb6c36">Strings</a>
+<ul>
+<li><a href="#org51c7ac7">Unicode</a></li>
+<li><a href="#org456f784">Convert binary to utf8</a></li>
+</ul>
+</li>
+<li><a href="#org573bb60">Random String</a></li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-org1d6fd59" class="outline-2">
+<h2 id="org1d6fd59"><a href="#org1d6fd59">Pyenv</a></h2>
+<div class="outline-text-2" id="text-org1d6fd59">
+</div>
+<div id="outline-container-org3057e46" class="outline-3">
+<h3 id="org3057e46"><a href="#org3057e46">Latest Version</a></h3>
+<div class="outline-text-3" id="text-org3057e46">
+<div class="org-src-container">
+<pre class="src src-sh">pyenv install --list <span style="color: #98be65;">\</span>
+    | grep <span style="color: #98be65;">"^  3"</span> <span style="color: #98be65;">\</span>
+    | grep -v <span style="color: #98be65;">"src|dev"</span> <span style="color: #98be65;">\</span>
+    | tail -1 <span style="color: #98be65;">\</span>
+    | tr -d <span style="color: #98be65;">'[:space:]'</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org25798c0" class="outline-2">
+<h2 id="org25798c0"><a href="#org25798c0">Using a src directory</a></h2>
+<div class="outline-text-2" id="text-org25798c0">
+<p>
+<a href="https://blog.ionelmc.ro/2014/05/25/python-packaging/">Packaging a python library</a> (Ionel Cristian Mărieș)
+<a href="https://hynek.me/articles/testing-packaging/">Testing &amp; Packaging</a> (Hynek Schlawack)
+</p>
+
+<p>
+I am currently a fan of the <code>src</code> directory. The main reasons for this are:
+</p>
+
+<ul class="org-ul">
+<li>Ionel's first point about <i>import parity</i>; it is important that all your
+top-level repo cruft isn't on your <code>sys.path</code> during local development.</li>
+<li>A directory named <code>src</code> is explicit and says what it is.</li>
+<li>Different python projects can have a more similar top-level directory layout
+and a more similar <code>setup.cfg</code>.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org2224d8b" class="outline-2">
+<h2 id="org2224d8b"><a href="#org2224d8b">Packaging</a></h2>
+<div class="outline-text-2" id="text-org2224d8b">
+</div>
+<div id="outline-container-orgf85f550" class="outline-3">
+<h3 id="orgf85f550"><a href="#orgf85f550">Kinds of Packages</a></h3>
+<div class="outline-text-3" id="text-orgf85f550">
+<p>
+From: <a href="https://bernat.tech/posts/pep-517-and-python-packaging/">https://bernat.tech/posts/pep-517-and-python-packaging/</a>
+</p>
+</div>
+
+<div id="outline-container-org3cecf04" class="outline-4">
+<h4 id="org3cecf04"><a href="#org3cecf04">wheel (.whl)</a></h4>
+<div class="outline-text-4" id="text-org3cecf04">
+<p>
+The project is built and then zipped up. Building usually means executing
+setuptools, which in turn may call build scripts in the project.
+</p>
+
+<p>
+If the package includes native extensions, they are complied. This means a
+separate wheel must be created and published for each computer architecture.
+</p>
+
+<p>
+The zip includes the source code, the <code>.dist_info</code> directory, and potentiall
+compiled native extensions. During a <code>pip install</code>, pip only needs to
+extract the zip in the right location.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org37b1456" class="outline-4">
+<h4 id="org37b1456"><a href="#org37b1456">Source Tree (git)</a></h4>
+<div class="outline-text-4" id="text-org37b1456">
+<p>
+Every file in the project's VC repository.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc3f6ffc" class="outline-4">
+<h4 id="orgc3f6ffc"><a href="#orgc3f6ffc">Source Distribution (sdist)</a></h4>
+<div class="outline-text-4" id="text-orgc3f6ffc">
+<p>
+A zip of the project source code. It may not include <i>all</i> files in the
+repository, like the <code>.git/</code>, <code>.github/</code>, <code>Jenkinsfile</code>, and tests (but I
+think it can, right?). It must <i>at least</i> include the Python source code and
+files required to build the project (<code>setup.cfg</code>, etc).
+</p>
+
+<p>
+Does not include a <code>.dist_info/</code> or compiled extensions. During a <code>pip
+    install</code>, pip needs to build the package, which usually means executing
+<code>setuptools</code>, which in turn may call build scripts.
+</p>
+
+<p>
+The installing user must:
+</p>
+
+<ul class="org-ul">
+<li>Have an appropriate version of <code>setuptools</code></li>
+<li>Have the tools required by the project build scripts</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga4b4bec" class="outline-2">
+<h2 id="orga4b4bec"><a href="#orga4b4bec">Package summary info</a></h2>
+<div class="outline-text-2" id="text-orga4b4bec">
+</div>
+<div id="outline-container-orgdf8ce96" class="outline-3">
+<h3 id="orgdf8ce96"><a href="#orgdf8ce96">sys.path</a></h3>
+<div class="outline-text-3" id="text-orgdf8ce96">
+<p>
+As explained in the <a href="https://docs.python.org/3/library/sys.html#sys.path">docs</a>, the first element of <code>sys.path</code> is often the empty
+string.
+</p>
+
+<blockquote>
+<p>
+&#x2026; the first item of this list, <code>path[0]</code>, is the directory containing the
+script that was used to invoke the Python interpreter. If the script
+directory is not available (e.g. if the interpreter is invoked interactively
+or if the script is read from standard input), path[0] is the empty string,
+which directs Python to search modules in the current directory first.
+</p>
+</blockquote>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #51afef;">import</span> sys; <span style="color: #51afef;">return</span> sys.path
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org79f9c87" class="outline-3">
+<h3 id="org79f9c87"><a href="#org79f9c87">site</a></h3>
+<div class="outline-text-3" id="text-org79f9c87">
+<p>
+Print a summary including <code>sys.path</code> and some other stuff.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">python -m site
+</pre>
+</div>
+
+<p>
+Interactively, in a python interpreter, <code>site_script()</code> prints some nice
+stuff, but it causes the interpreter to exit! Ok for org-mode, not great for
+an interactive python session.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #51afef;">import</span> site
+site._script()
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1ddd65f" class="outline-2">
+<h2 id="org1ddd65f"><a href="#org1ddd65f">Class attributes</a></h2>
+<div class="outline-text-2" id="text-org1ddd65f">
+<p>
+Define a class:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Pizza</span>(<span style="color: #c678dd;">object</span>):
+    <span style="color: #51afef;">def</span> <span style="color: #c678dd;">__init__</span>(<span style="color: #51afef;">self</span>, size):
+        <span style="color: #51afef;">self</span>.<span style="color: #dcaeea;">size</span> = size
+    <span style="color: #51afef;">def</span> <span style="color: #c678dd;">get_size</span>(<span style="color: #51afef;">self</span>):
+        <span style="color: #51afef;">return</span> <span style="color: #51afef;">self</span>.size
+</pre>
+</div>
+
+<p>
+Create an instance:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #dcaeea;">p</span> = Pizza(8)
+</pre>
+</div>
+
+<p>
+From: <a href="https://blog.ionelmc.ro/2015/02/09/understanding-python-metaclasses/#object-attribute-lookup">https://blog.ionelmc.ro/2015/02/09/understanding-python-metaclasses/#object-attribute-lookup</a>
+</p>
+
+<p>
+Now, calling <code>p.get_size()</code> or <code>p.size</code> roughly equates to:
+</p>
+
+<ol class="org-ol">
+<li>Call the type slot for <code>Class.__getattribute__(attribute)</code>. The default
+does this:
+
+<ul class="org-ul">
+<li>Does <code>Pizza.__dict__</code> have a <code>size</code> (or <code>get_size</code>) that has a <code>__get__</code>
+method and is a data descriptor? (size: no, get<sub>size</sub>: no). Note:
+functions are not data descriptors. A data descriptor must have at least
+a <code>__set__</code> OR a <code>__delete__</code> attribute.</li>
+
+<li>Else, does <code>p.__dict__</code> have a <code>size</code> (or <code>get_size</code>) item in it? (size:
+yes, get<sub>size</sub>: no)</li>
+
+<li>Else, does <code>Pizza.__dict__</code> have a <code>size</code> (or <code>get_size</code>) item that is
+<b>not</b> a data descriptor?</li>
+</ul></li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-python">Pizza.<span style="color: #c678dd;">__dict__</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">Pizza.<span style="color: #c678dd;">__dict__</span>[<span style="color: #98be65;">"get_size"</span>].__get__(p, Pizza)()
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9f79b09" class="outline-2">
+<h2 id="org9f79b09"><a href="#org9f79b09">Require zip of github repo</a></h2>
+<div class="outline-text-2" id="text-org9f79b09">
+<p>
+You can get a tarball or zipball of a repo as documented here:
+<a href="https://developer.github.com/v3/repos/contents/#get-archive-link">https://developer.github.com/v3/repos/contents/#get-archive-link</a>
+</p>
+
+<p>
+In requirements.txt, you can do something like
+<a href="https://github.com/cfclrk/python-demo/zipball/master#egg=botocore">https://github.com/cfclrk/python-demo/zipball/master#egg=botocore</a>
+</p>
+
+<p>
+e.g. see:
+<a href="https://github.com/aws/aws-cli/blob/1973ca9709d41121b45c1a0d764ef6788028c708/requirements.txt#L6">https://github.com/aws/aws-cli/blob/1973ca9709d41121b45c1a0d764ef6788028c708/requirements.txt#L6</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org9eb6c36" class="outline-2">
+<h2 id="org9eb6c36"><a href="#org9eb6c36">Strings</a></h2>
+<div class="outline-text-2" id="text-org9eb6c36">
+</div>
+<div id="outline-container-org51c7ac7" class="outline-3">
+<h3 id="org51c7ac7"><a href="#org51c7ac7">Unicode</a></h3>
+<div class="outline-text-3" id="text-org51c7ac7">
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #51afef;">return</span> <span style="color: #c678dd;">len</span>(<span style="color: #98be65;">"&#128514;"</span>)
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+1
+</pre>
+
+
+<p>
+From: <a href="https://hsivonen.fi/string-length/">https://hsivonen.fi/string-length/</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #51afef;">return</span> <span style="color: #c678dd;">len</span>(<span style="color: #98be65;">"&#129318;&#127996;&#8205;&#9794;&#65039;"</span>)
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+5
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org456f784" class="outline-3">
+<h3 id="org456f784"><a href="#org456f784">Convert binary to utf8</a></h3>
+<div class="outline-text-3" id="text-org456f784">
+<p>
+Byte strings can only be ASCII. For example, this works:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #dcaeea;">foo</span>=b<span style="color: #98be65;">"foo"</span>
+</pre>
+</div>
+
+<p>
+But this does not:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #dcaeea;">bar</span>=b<span style="color: #98be65;">"&#1054;&#1060;&#1048;&#1057;"</span>
+</pre>
+</div>
+
+<p>
+ASCII and "binary" are really the same&#x2026; there isn't really any encoding or
+decoding going on.
+</p>
+
+<p>
+So what's going on here?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #dcaeea;">foo</span> = b<span style="color: #98be65;">"foo"</span>
+<span style="color: #51afef;">return</span> foo.decode(<span style="color: #98be65;">"ascii"</span>)
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+foo
+</pre>
+
+
+<p>
+I <b>think</b> what's going on is: We attempt to decode <code>foo</code> using the ASCII codec.
+The result is a sequence of ASCII numbers. Python then tries to show us the
+result, and it looks like a string, so Python interprets it as unicode code
+points (?)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #dcaeea;">bar</span>=<span style="color: #98be65;">"&#1054;&#1060;&#1048;&#1057;"</span>
+<span style="color: #51afef;">return</span> bar.encode(<span style="color: #98be65;">"utf-8"</span>)
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+b'\xd0\x9e\xd0\xa4\xd0\x98\xd0\xa1'
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org573bb60" class="outline-2">
+<h2 id="org573bb60"><a href="#org573bb60">Random String</a></h2>
+<div class="outline-text-2" id="text-org573bb60">
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #51afef;">import</span> random
+<span style="color: #51afef;">import</span> string
+<span style="color: #51afef;">return</span> <span style="color: #98be65;">""</span>.join(random.choice(string.ascii_letters) <span style="color: #51afef;">for</span> _ <span style="color: #51afef;">in</span> <span style="color: #c678dd;">range</span>(8))
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+knMyinMG
+</pre>
+</div>
+</div>
+</div>
+</body>
+</html>

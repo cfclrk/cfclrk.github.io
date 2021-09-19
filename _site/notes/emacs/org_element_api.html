@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Org Element Api</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Org Element Api</h1>
+</header><nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orge29f3c9">Local Parsing</a>
+<ul>
+<li><a href="#org7712838">org-element-at-point</a></li>
+<li><a href="#org213a0e2">org-element-context</a></li>
+<li><a href="#orgc81d51f">Examining Element</a></li>
+</ul>
+</li>
+<li><a href="#orgdcf6c60">Global Parsing</a>
+<ul>
+<li><a href="#orgf9ba903">Accessors</a></li>
+</ul>
+</li>
+<li><a href="#org92caf47">Foo</a></li>
+</ul>
+</div>
+</nav>
+<p>
+Good doc here: <a href="https://orgmode.org/worg/dev/org-element-api.html">https://orgmode.org/worg/dev/org-element-api.html</a>
+</p>
+
+<div id="outline-container-orge29f3c9" class="outline-2">
+<h2 id="orge29f3c9"><a href="#orge29f3c9">Local Parsing</a></h2>
+<div class="outline-text-2" id="text-orge29f3c9">
+<p>
+Local parsing gives information about the element at point. Local parsing
+gives you information, but you cannot alter the structure of the AST.
+</p>
+
+<p>
+Two functions you can use:
+</p>
+
+<ol class="org-ol">
+<li><code>org-element-at-point</code></li>
+<li><code>org-element-context</code></li>
+</ol>
+</div>
+
+<div id="outline-container-org7712838" class="outline-3">
+<h3 id="org7712838"><a href="#org7712838">org-element-at-point</a></h3>
+<div class="outline-text-3" id="text-org7712838">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>pp <span style="color: #c678dd;">(</span>org-element-at-point<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+(src-block
+ (:language "emacs-lisp" :switches nil :parameters nil :begin 399 :end 472 :number-lines nil :preserve-indent nil :retain-labels t :use-labels t :label-fmt nil :value "     (pp (org-element-at-point))\n" :post-blank 1 :post-affiliated 399 :parent nil))
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>pp <span style="color: #c678dd;">(</span><span style="color: #51afef;">save-excursion</span>
+   <span style="color: #98be65;">(</span>goto-char <span style="color: #a9a1e1;">(</span>point-min<span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
+   <span style="color: #98be65;">(</span>org-element-at-point<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+(keyword
+ (:key "TITLE" :value "Org Element Api" :begin 1 :end 26 :post-blank 0 :post-affiliated 1 :parent nil))
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org213a0e2" class="outline-3">
+<h3 id="org213a0e2"><a href="#org213a0e2">org-element-context</a></h3>
+<div class="outline-text-3" id="text-org213a0e2">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>org-element-context<span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">src-block</td>
+<td class="org-left">(:language emacs-lisp :switches nil :parameters nil :begin 958 :end 1025 :number-lines nil :preserve-indent nil :retain-labels t :use-labels t :label-fmt nil :value      (org-element-context)</td>
+</tr>
+</tbody>
+</table>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">save-excursion</span>
+  <span style="color: #c678dd;">(</span>goto-char <span style="color: #98be65;">(</span>point-min<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
+  <span style="color: #c678dd;">(</span>org-element-context<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">keyword</td>
+<td class="org-left">(:key TITLE :value Org Element Api :begin 1 :end 26 :post-blank 0 :post-affiliated 1 :parent nil)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orgc81d51f" class="outline-3">
+<h3 id="orgc81d51f"><a href="#orgc81d51f">Examining Element</a></h3>
+<div class="outline-text-3" id="text-orgc81d51f">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>org-element-type <span style="color: #c678dd;">(</span>org-element-at-point<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+src-block
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>org-element-property <span style="color: #c678dd;">:language</span> <span style="color: #c678dd;">(</span>org-element-at-point<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+emacs-lisp
+</pre>
+
+
+<p>
+Note: You can't use <code>org-element-contents</code> with local parsing.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>org-element-contents <span style="color: #c678dd;">(</span>org-element-at-point<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgdcf6c60" class="outline-2">
+<h2 id="orgdcf6c60"><a href="#orgdcf6c60">Global Parsing</a></h2>
+<div class="outline-text-2" id="text-orgdcf6c60">
+<p>
+Use <code>org-element-parse-buffer</code> to return a full AST of the buffer. You may
+modify this AST using setters.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>org-element-parse-buffer <span style="color: #c678dd;">(</span>current-buffer<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">org-data</td>
+<td class="org-left">nil</td>
+<td class="org-left">(section (:begin 1 :end 139 :contents-begin 1 :contents-end 138 :post-blank 1 :post-affiliated 1 :parent (org-data nil #0 (headline (:raw-value Local Parsing :begin 139 :end 2059 :pre-blank 1 :contents-begin 156 :contents-end 2058 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 139 :title Local Parsing :parent #2) (section (:begin 156 :end 391 :contents-begin 156 :contents-end 390 :post-blank 1 :post-affiliated 156 :parent #3)) (headline (:raw-value org-element-at-point :begin 391 :end 1046 :pre-blank 1 :contents-begin 416 :contents-end 1045 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 391 :title org-element-at-point :parent #3) (section (:begin 416 :end 1046 :contents-begin 416 :contents-end 1045 :post-blank 1 :post-affiliated 416 :parent #4))) (headline (:raw-value org-element-context :begin 1046 :end 1615 :pre-blank 1 :contents-begin 1070 :contents-end 1614 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1046 :title org-element-context :parent #3) (section (:begin 1070 :end 1615 :contents-begin 1070 :contents-end 1614 :post-blank 1 :post-affiliated 1070 :parent #4))) (headline (:raw-value Examining Element :begin 1615 :end 2058 :pre-blank 1 :contents-begin 1637 :contents-end 2058 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1615 :title Examining Element :parent #3) (section (:begin 1637 :end 2059 :contents-begin 1637 :contents-end 2058 :post-blank 1 :post-affiliated 1637 :parent #4)))) (headline (:raw-value Global Parsing :begin 2059 :end 64710 :pre-blank 1 :contents-begin 2077 :contents-end 64709 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 2059 :title Global Parsing :parent #2) (section (:begin 2077 :end 2274 :contents-begin 2077 :contents-end 2273 :post-blank 1 :post-affiliated 2077 :parent #3)) (headline (:raw-value Accessors :begin 2274 :end 64709 :pre-blank 1 :contents-begin 2288 :contents-end 64709 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 2274 :title Accessors :parent #3) (section (:begin 2288 :end 64710 :contents-begin 2288 :contents-end 64709 :post-blank 1 :post-affiliated 2288 :parent #4)))) (headline (:raw-value Foo :begin 64710 :end 64823 :pre-blank 1 :contents-begin 64717 :contents-end 64823 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 64710 :title Foo :parent #2) (section (:begin 64717 :end 64823 :contents-begin 64717 :contents-end 64823 :post-blank 0 :post-affiliated 64717 :parent #3))))))</td>
+<td class="org-left">(headline (:raw-value Local Parsing :begin 139 :end 2059 :pre-blank 1 :contents-begin 156 :contents-end 2058 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 139 :title Local Parsing :parent (org-data nil (section (:begin 1 :end 139 :contents-begin 1 :contents-end 138 :post-blank 1 :post-affiliated 1 :parent #2)) #0 (headline (:raw-value Global Parsing :begin 2059 :end 64710 :pre-blank 1 :contents-begin 2077 :contents-end 64709 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 2059 :title Global Parsing :parent #2) (section (:begin 2077 :end 2274 :contents-begin 2077 :contents-end 2273 :post-blank 1 :post-affiliated 2077 :parent #3)) (headline (:raw-value Accessors :begin 2274 :end 64709 :pre-blank 1 :contents-begin 2288 :contents-end 64709 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 2274 :title Accessors :parent #3) (section (:begin 2288 :end 64710 :contents-begin 2288 :contents-end 64709 :post-blank 1 :post-affiliated 2288 :parent #4)))) (headline (:raw-value Foo :begin 64710 :end 64823 :pre-blank 1 :contents-begin 64717 :contents-end 64823 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 64710 :title Foo :parent #2) (section (:begin 64717 :end 64823 :contents-begin 64717 :contents-end 64823 :post-blank 0 :post-affiliated 64717 :parent #3))))) (section (:begin 156 :end 391 :contents-begin 156 :contents-end 390 :post-blank 1 :post-affiliated 156 :parent #0)) (headline (:raw-value org-element-at-point :begin 391 :end 1046 :pre-blank 1 :contents-begin 416 :contents-end 1045 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 391 :title org-element-at-point :parent #0) (section (:begin 416 :end 1046 :contents-begin 416 :contents-end 1045 :post-blank 1 :post-affiliated 416 :parent #1))) (headline (:raw-value org-element-context :begin 1046 :end 1615 :pre-blank 1 :contents-begin 1070 :contents-end 1614 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1046 :title org-element-context :parent #0) (section (:begin 1070 :end 1615 :contents-begin 1070 :contents-end 1614 :post-blank 1 :post-affiliated 1070 :parent #1))) (headline (:raw-value Examining Element :begin 1615 :end 2058 :pre-blank 1 :contents-begin 1637 :contents-end 2058 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1615 :title Examining Element :parent #0) (section (:begin 1637 :end 2059 :contents-begin 1637 :contents-end 2058 :post-blank 1 :post-affiliated 1637 :parent #1))))</td>
+<td class="org-left">(headline (:raw-value Global Parsing :begin 2059 :end 64710 :pre-blank 1 :contents-begin 2077 :contents-end 64709 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 2059 :title Global Parsing :parent (org-data nil (section (:begin 1 :end 139 :contents-begin 1 :contents-end 138 :post-blank 1 :post-affiliated 1 :parent #2)) (headline (:raw-value Local Parsing :begin 139 :end 2059 :pre-blank 1 :contents-begin 156 :contents-end 2058 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 139 :title Local Parsing :parent #2) (section (:begin 156 :end 391 :contents-begin 156 :contents-end 390 :post-blank 1 :post-affiliated 156 :parent #3)) (headline (:raw-value org-element-at-point :begin 391 :end 1046 :pre-blank 1 :contents-begin 416 :contents-end 1045 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 391 :title org-element-at-point :parent #3) (section (:begin 416 :end 1046 :contents-begin 416 :contents-end 1045 :post-blank 1 :post-affiliated 416 :parent #4))) (headline (:raw-value org-element-context :begin 1046 :end 1615 :pre-blank 1 :contents-begin 1070 :contents-end 1614 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1046 :title org-element-context :parent #3) (section (:begin 1070 :end 1615 :contents-begin 1070 :contents-end 1614 :post-blank 1 :post-affiliated 1070 :parent #4))) (headline (:raw-value Examining Element :begin 1615 :end 2058 :pre-blank 1 :contents-begin 1637 :contents-end 2058 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1615 :title Examining Element :parent #3) (section (:begin 1637 :end 2059 :contents-begin 1637 :contents-end 2058 :post-blank 1 :post-affiliated 1637 :parent #4)))) #0 (headline (:raw-value Foo :begin 64710 :end 64823 :pre-blank 1 :contents-begin 64717 :contents-end 64823 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 64710 :title Foo :parent #2) (section (:begin 64717 :end 64823 :contents-begin 64717 :contents-end 64823 :post-blank 0 :post-affiliated 64717 :parent #3))))) (section (:begin 2077 :end 2274 :contents-begin 2077 :contents-end 2273 :post-blank 1 :post-affiliated 2077 :parent #0)) (headline (:raw-value Accessors :begin 2274 :end 64709 :pre-blank 1 :contents-begin 2288 :contents-end 64709 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 2274 :title Accessors :parent #0) (section (:begin 2288 :end 64710 :contents-begin 2288 :contents-end 64709 :post-blank 1 :post-affiliated 2288 :parent #1))))</td>
+<td class="org-left">(headline (:raw-value Foo :begin 64710 :end 64823 :pre-blank 1 :contents-begin 64717 :contents-end 64823 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 64710 :title Foo :parent (org-data nil (section (:begin 1 :end 139 :contents-begin 1 :contents-end 138 :post-blank 1 :post-affiliated 1 :parent #2)) (headline (:raw-value Local Parsing :begin 139 :end 2059 :pre-blank 1 :contents-begin 156 :contents-end 2058 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 139 :title Local Parsing :parent #2) (section (:begin 156 :end 391 :contents-begin 156 :contents-end 390 :post-blank 1 :post-affiliated 156 :parent #3)) (headline (:raw-value org-element-at-point :begin 391 :end 1046 :pre-blank 1 :contents-begin 416 :contents-end 1045 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 391 :title org-element-at-point :parent #3) (section (:begin 416 :end 1046 :contents-begin 416 :contents-end 1045 :post-blank 1 :post-affiliated 416 :parent #4))) (headline (:raw-value org-element-context :begin 1046 :end 1615 :pre-blank 1 :contents-begin 1070 :contents-end 1614 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1046 :title org-element-context :parent #3) (section (:begin 1070 :end 1615 :contents-begin 1070 :contents-end 1614 :post-blank 1 :post-affiliated 1070 :parent #4))) (headline (:raw-value Examining Element :begin 1615 :end 2058 :pre-blank 1 :contents-begin 1637 :contents-end 2058 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1615 :title Examining Element :parent #3) (section (:begin 1637 :end 2059 :contents-begin 1637 :contents-end 2058 :post-blank 1 :post-affiliated 1637 :parent #4)))) (headline (:raw-value Global Parsing :begin 2059 :end 64710 :pre-blank 1 :contents-begin 2077 :contents-end 64709 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 2059 :title Global Parsing :parent #2) (section (:begin 2077 :end 2274 :contents-begin 2077 :contents-end 2273 :post-blank 1 :post-affiliated 2077 :parent #3)) (headline (:raw-value Accessors :begin 2274 :end 64709 :pre-blank 1 :contents-begin 2288 :contents-end 64709 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 2274 :title Accessors :parent #3) (section (:begin 2288 :end 64710 :contents-begin 2288 :contents-end 64709 :post-blank 1 :post-affiliated 2288 :parent #4)))) #0)) (section (:begin 64717 :end 64823 :contents-begin 64717 :contents-end 64823 :post-blank 0 :post-affiliated 64717 :parent #0)))</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div id="outline-container-orgf9ba903" class="outline-3">
+<h3 id="orgf9ba903"><a href="#orgf9ba903">Accessors</a></h3>
+<div class="outline-text-3" id="text-orgf9ba903">
+<p>
+Three functions:
+</p>
+
+<ol class="org-ol">
+<li><code>org-element-type</code></li>
+<li><code>org-element-property</code></li>
+<li><code>org-element-contents</code></li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>org-element-contents
+ <span style="color: #c678dd;">(</span>org-element-parse-buffer <span style="color: #98be65;">(</span>current-buffer<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">section</td>
+<td class="org-left">(:begin 1 :end 122 :contents-begin 1 :contents-end 121 :post-blank 1 :post-affiliated 1 :parent (org-data nil (section #0) (headline (:raw-value Local Parsing :begin 122 :end 2042 :pre-blank 1 :contents-begin 139 :contents-end 2041 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 122 :title Local Parsing :parent #1) (section (:begin 139 :end 374 :contents-begin 139 :contents-end 373 :post-blank 1 :post-affiliated 139 :parent #2)) (headline (:raw-value org-element-at-point :begin 374 :end 1029 :pre-blank 1 :contents-begin 399 :contents-end 1028 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 374 :title org-element-at-point :parent #2) (section (:begin 399 :end 1029 :contents-begin 399 :contents-end 1028 :post-blank 1 :post-affiliated 399 :parent #3))) (headline (:raw-value org-element-context :begin 1029 :end 1598 :pre-blank 1 :contents-begin 1053 :contents-end 1597 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1029 :title org-element-context :parent #2) (section (:begin 1053 :end 1598 :contents-begin 1053 :contents-end 1597 :post-blank 1 :post-affiliated 1053 :parent #3))) (headline (:raw-value Examining Element :begin 1598 :end 2041 :pre-blank 1 :contents-begin 1620 :contents-end 2041 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1598 :title Examining Element :parent #2) (section (:begin 1620 :end 2042 :contents-begin 1620 :contents-end 2041 :post-blank 1 :post-affiliated 1620 :parent #3)))) (headline (:raw-value Global Parsing :begin 2042 :end 11322 :pre-blank 1 :contents-begin 2060 :contents-end 11321 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 2042 :title Global Parsing :parent #1) (section (:begin 2060 :end 11196 :contents-begin 2060 :contents-end 11195 :post-blank 1 :post-affiliated 2060 :parent #2)) (headline (:raw-value Accessors :begin 11196 :end 11321 :pre-blank 1 :contents-begin 11210 :contents-end 11321 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 11196 :title Accessors :parent #2) (section (:begin 11210 :end 11322 :contents-begin 11210 :contents-end 11321 :post-blank 1 :post-affiliated 11210 :parent #3)))) (headline (:raw-value Foo :begin 11322 :end 11435 :pre-blank 1 :contents-begin 11329 :contents-end 11435 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 11322 :title Foo :parent #1) (section (:begin 11329 :end 11435 :contents-begin 11329 :contents-end 11435 :post-blank 0 :post-affiliated 11329 :parent #2)))))</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">headline</td>
+<td class="org-left">(:raw-value Local Parsing :begin 122 :end 2042 :pre-blank 1 :contents-begin 139 :contents-end 2041 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 122 :title Local Parsing :parent (org-data nil (section (:begin 1 :end 122 :contents-begin 1 :contents-end 121 :post-blank 1 :post-affiliated 1 :parent #1)) (headline #0 (section (:begin 139 :end 374 :contents-begin 139 :contents-end 373 :post-blank 1 :post-affiliated 139 :parent #2)) (headline (:raw-value org-element-at-point :begin 374 :end 1029 :pre-blank 1 :contents-begin 399 :contents-end 1028 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 374 :title org-element-at-point :parent #2) (section (:begin 399 :end 1029 :contents-begin 399 :contents-end 1028 :post-blank 1 :post-affiliated 399 :parent #3))) (headline (:raw-value org-element-context :begin 1029 :end 1598 :pre-blank 1 :contents-begin 1053 :contents-end 1597 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1029 :title org-element-context :parent #2) (section (:begin 1053 :end 1598 :contents-begin 1053 :contents-end 1597 :post-blank 1 :post-affiliated 1053 :parent #3))) (headline (:raw-value Examining Element :begin 1598 :end 2041 :pre-blank 1 :contents-begin 1620 :contents-end 2041 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1598 :title Examining Element :parent #2) (section (:begin 1620 :end 2042 :contents-begin 1620 :contents-end 2041 :post-blank 1 :post-affiliated 1620 :parent #3)))) (headline (:raw-value Global Parsing :begin 2042 :end 11322 :pre-blank 1 :contents-begin 2060 :contents-end 11321 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 2042 :title Global Parsing :parent #1) (section (:begin 2060 :end 11196 :contents-begin 2060 :contents-end 11195 :post-blank 1 :post-affiliated 2060 :parent #2)) (headline (:raw-value Accessors :begin 11196 :end 11321 :pre-blank 1 :contents-begin 11210 :contents-end 11321 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 11196 :title Accessors :parent #2) (section (:begin 11210 :end 11322 :contents-begin 11210 :contents-end 11321 :post-blank 1 :post-affiliated 11210 :parent #3)))) (headline (:raw-value Foo :begin 11322 :end 11435 :pre-blank 1 :contents-begin 11329 :contents-end 11435 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 11322 :title Foo :parent #1) (section (:begin 11329 :end 11435 :contents-begin 11329 :contents-end 11435 :post-blank 0 :post-affiliated 11329 :parent #2)))))</td>
+<td class="org-left">(section (:begin 139 :end 374 :contents-begin 139 :contents-end 373 :post-blank 1 :post-affiliated 139 :parent (headline (:raw-value Local Parsing :begin 122 :end 2042 :pre-blank 1 :contents-begin 139 :contents-end 2041 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 122 :title Local Parsing :parent (org-data nil (section (:begin 1 :end 122 :contents-begin 1 :contents-end 121 :post-blank 1 :post-affiliated 1 :parent #4)) #2 (headline (:raw-value Global Parsing :begin 2042 :end 11322 :pre-blank 1 :contents-begin 2060 :contents-end 11321 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 2042 :title Global Parsing :parent #4) (section (:begin 2060 :end 11196 :contents-begin 2060 :contents-end 11195 :post-blank 1 :post-affiliated 2060 :parent #5)) (headline (:raw-value Accessors :begin 11196 :end 11321 :pre-blank 1 :contents-begin 11210 :contents-end 11321 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 11196 :title Accessors :parent #5) (section (:begin 11210 :end 11322 :contents-begin 11210 :contents-end 11321 :post-blank 1 :post-affiliated 11210 :parent #6)))) (headline (:raw-value Foo :begin 11322 :end 11435 :pre-blank 1 :contents-begin 11329 :contents-end 11435 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 11322 :title Foo :parent #4) (section (:begin 11329 :end 11435 :contents-begin 11329 :contents-end 11435 :post-blank 0 :post-affiliated 11329 :parent #5))))) #0 (headline (:raw-value org-element-at-point :begin 374 :end 1029 :pre-blank 1 :contents-begin 399 :contents-end 1028 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 374 :title org-element-at-point :parent #2) (section (:begin 399 :end 1029 :contents-begin 399 :contents-end 1028 :post-blank 1 :post-affiliated 399 :parent #3))) (headline (:raw-value org-element-context :begin 1029 :end 1598 :pre-blank 1 :contents-begin 1053 :contents-end 1597 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1029 :title org-element-context :parent #2) (section (:begin 1053 :end 1598 :contents-begin 1053 :contents-end 1597 :post-blank 1 :post-affiliated 1053 :parent #3))) (headline (:raw-value Examining Element :begin 1598 :end 2041 :pre-blank 1 :contents-begin 1620 :contents-end 2041 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1598 :title Examining Element :parent #2) (section (:begin 1620 :end 2042 :contents-begin 1620 :contents-end 2041 :post-blank 1 :post-affiliated 1620 :parent #3))))))</td>
+<td class="org-left">(headline (:raw-value org-element-at-point :begin 374 :end 1029 :pre-blank 1 :contents-begin 399 :contents-end 1028 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 374 :title org-element-at-point :parent (headline (:raw-value Local Parsing :begin 122 :end 2042 :pre-blank 1 :contents-begin 139 :contents-end 2041 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 122 :title Local Parsing :parent (org-data nil (section (:begin 1 :end 122 :contents-begin 1 :contents-end 121 :post-blank 1 :post-affiliated 1 :parent #4)) #2 (headline (:raw-value Global Parsing :begin 2042 :end 11322 :pre-blank 1 :contents-begin 2060 :contents-end 11321 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 2042 :title Global Parsing :parent #4) (section (:begin 2060 :end 11196 :contents-begin 2060 :contents-end 11195 :post-blank 1 :post-affiliated 2060 :parent #5)) (headline (:raw-value Accessors :begin 11196 :end 11321 :pre-blank 1 :contents-begin 11210 :contents-end 11321 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 11196 :title Accessors :parent #5) (section (:begin 11210 :end 11322 :contents-begin 11210 :contents-end 11321 :post-blank 1 :post-affiliated 11210 :parent #6)))) (headline (:raw-value Foo :begin 11322 :end 11435 :pre-blank 1 :contents-begin 11329 :contents-end 11435 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 11322 :title Foo :parent #4) (section (:begin 11329 :end 11435 :contents-begin 11329 :contents-end 11435 :post-blank 0 :post-affiliated 11329 :parent #5))))) (section (:begin 139 :end 374 :contents-begin 139 :contents-end 373 :post-blank 1 :post-affiliated 139 :parent #2)) #0 (headline (:raw-value org-element-context :begin 1029 :end 1598 :pre-blank 1 :contents-begin 1053 :contents-end 1597 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1029 :title org-element-context :parent #2) (section (:begin 1053 :end 1598 :contents-begin 1053 :contents-end 1597 :post-blank 1 :post-affiliated 1053 :parent #3))) (headline (:raw-value Examining Element :begin 1598 :end 2041 :pre-blank 1 :contents-begin 1620 :contents-end 2041 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1598 :title Examining Element :parent #2) (section (:begin 1620 :end 2042 :contents-begin 1620 :contents-end 2041 :post-blank 1 :post-affiliated 1620 :parent #3))))) (section (:begin 399 :end 1029 :contents-begin 399 :contents-end 1028 :post-blank 1 :post-affiliated 399 :parent #0)))</td>
+<td class="org-left">(headline (:raw-value org-element-context :begin 1029 :end 1598 :pre-blank 1 :contents-begin 1053 :contents-end 1597 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1029 :title org-element-context :parent (headline (:raw-value Local Parsing :begin 122 :end 2042 :pre-blank 1 :contents-begin 139 :contents-end 2041 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 122 :title Local Parsing :parent (org-data nil (section (:begin 1 :end 122 :contents-begin 1 :contents-end 121 :post-blank 1 :post-affiliated 1 :parent #4)) #2 (headline (:raw-value Global Parsing :begin 2042 :end 11322 :pre-blank 1 :contents-begin 2060 :contents-end 11321 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 2042 :title Global Parsing :parent #4) (section (:begin 2060 :end 11196 :contents-begin 2060 :contents-end 11195 :post-blank 1 :post-affiliated 2060 :parent #5)) (headline (:raw-value Accessors :begin 11196 :end 11321 :pre-blank 1 :contents-begin 11210 :contents-end 11321 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 11196 :title Accessors :parent #5) (section (:begin 11210 :end 11322 :contents-begin 11210 :contents-end 11321 :post-blank 1 :post-affiliated 11210 :parent #6)))) (headline (:raw-value Foo :begin 11322 :end 11435 :pre-blank 1 :contents-begin 11329 :contents-end 11435 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 11322 :title Foo :parent #4) (section (:begin 11329 :end 11435 :contents-begin 11329 :contents-end 11435 :post-blank 0 :post-affiliated 11329 :parent #5))))) (section (:begin 139 :end 374 :contents-begin 139 :contents-end 373 :post-blank 1 :post-affiliated 139 :parent #2)) (headline (:raw-value org-element-at-point :begin 374 :end 1029 :pre-blank 1 :contents-begin 399 :contents-end 1028 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 374 :title org-element-at-point :parent #2) (section (:begin 399 :end 1029 :contents-begin 399 :contents-end 1028 :post-blank 1 :post-affiliated 399 :parent #3))) #0 (headline (:raw-value Examining Element :begin 1598 :end 2041 :pre-blank 1 :contents-begin 1620 :contents-end 2041 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1598 :title Examining Element :parent #2) (section (:begin 1620 :end 2042 :contents-begin 1620 :contents-end 2041 :post-blank 1 :post-affiliated 1620 :parent #3))))) (section (:begin 1053 :end 1598 :contents-begin 1053 :contents-end 1597 :post-blank 1 :post-affiliated 1053 :parent #0)))</td>
+<td class="org-left">(headline (:raw-value Examining Element :begin 1598 :end 2041 :pre-blank 1 :contents-begin 1620 :contents-end 2041 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1598 :title Examining Element :parent (headline (:raw-value Local Parsing :begin 122 :end 2042 :pre-blank 1 :contents-begin 139 :contents-end 2041 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 122 :title Local Parsing :parent (org-data nil (section (:begin 1 :end 122 :contents-begin 1 :contents-end 121 :post-blank 1 :post-affiliated 1 :parent #4)) #2 (headline (:raw-value Global Parsing :begin 2042 :end 11322 :pre-blank 1 :contents-begin 2060 :contents-end 11321 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 2042 :title Global Parsing :parent #4) (section (:begin 2060 :end 11196 :contents-begin 2060 :contents-end 11195 :post-blank 1 :post-affiliated 2060 :parent #5)) (headline (:raw-value Accessors :begin 11196 :end 11321 :pre-blank 1 :contents-begin 11210 :contents-end 11321 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 11196 :title Accessors :parent #5) (section (:begin 11210 :end 11322 :contents-begin 11210 :contents-end 11321 :post-blank 1 :post-affiliated 11210 :parent #6)))) (headline (:raw-value Foo :begin 11322 :end 11435 :pre-blank 1 :contents-begin 11329 :contents-end 11435 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 11322 :title Foo :parent #4) (section (:begin 11329 :end 11435 :contents-begin 11329 :contents-end 11435 :post-blank 0 :post-affiliated 11329 :parent #5))))) (section (:begin 139 :end 374 :contents-begin 139 :contents-end 373 :post-blank 1 :post-affiliated 139 :parent #2)) (headline (:raw-value org-element-at-point :begin 374 :end 1029 :pre-blank 1 :contents-begin 399 :contents-end 1028 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 374 :title org-element-at-point :parent #2) (section (:begin 399 :end 1029 :contents-begin 399 :contents-end 1028 :post-blank 1 :post-affiliated 399 :parent #3))) (headline (:raw-value org-element-context :begin 1029 :end 1598 :pre-blank 1 :contents-begin 1053 :contents-end 1597 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1029 :title org-element-context :parent #2) (section (:begin 1053 :end 1598 :contents-begin 1053 :contents-end 1597 :post-blank 1 :post-affiliated 1053 :parent #3))) #0)) (section (:begin 1620 :end 2042 :contents-begin 1620 :contents-end 2041 :post-blank 1 :post-affiliated 1620 :parent #0)))</td>
+</tr>
+
+<tr>
+<td class="org-left">headline</td>
+<td class="org-left">(:raw-value Global Parsing :begin 2042 :end 11322 :pre-blank 1 :contents-begin 2060 :contents-end 11321 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 2042 :title Global Parsing :parent (org-data nil (section (:begin 1 :end 122 :contents-begin 1 :contents-end 121 :post-blank 1 :post-affiliated 1 :parent #1)) (headline (:raw-value Local Parsing :begin 122 :end 2042 :pre-blank 1 :contents-begin 139 :contents-end 2041 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 122 :title Local Parsing :parent #1) (section (:begin 139 :end 374 :contents-begin 139 :contents-end 373 :post-blank 1 :post-affiliated 139 :parent #2)) (headline (:raw-value org-element-at-point :begin 374 :end 1029 :pre-blank 1 :contents-begin 399 :contents-end 1028 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 374 :title org-element-at-point :parent #2) (section (:begin 399 :end 1029 :contents-begin 399 :contents-end 1028 :post-blank 1 :post-affiliated 399 :parent #3))) (headline (:raw-value org-element-context :begin 1029 :end 1598 :pre-blank 1 :contents-begin 1053 :contents-end 1597 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1029 :title org-element-context :parent #2) (section (:begin 1053 :end 1598 :contents-begin 1053 :contents-end 1597 :post-blank 1 :post-affiliated 1053 :parent #3))) (headline (:raw-value Examining Element :begin 1598 :end 2041 :pre-blank 1 :contents-begin 1620 :contents-end 2041 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1598 :title Examining Element :parent #2) (section (:begin 1620 :end 2042 :contents-begin 1620 :contents-end 2041 :post-blank 1 :post-affiliated 1620 :parent #3)))) (headline #0 (section (:begin 2060 :end 11196 :contents-begin 2060 :contents-end 11195 :post-blank 1 :post-affiliated 2060 :parent #2)) (headline (:raw-value Accessors :begin 11196 :end 11321 :pre-blank 1 :contents-begin 11210 :contents-end 11321 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 11196 :title Accessors :parent #2) (section (:begin 11210 :end 11322 :contents-begin 11210 :contents-end 11321 :post-blank 1 :post-affiliated 11210 :parent #3)))) (headline (:raw-value Foo :begin 11322 :end 11435 :pre-blank 1 :contents-begin 11329 :contents-end 11435 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 11322 :title Foo :parent #1) (section (:begin 11329 :end 11435 :contents-begin 11329 :contents-end 11435 :post-blank 0 :post-affiliated 11329 :parent #2)))))</td>
+<td class="org-left">(section (:begin 2060 :end 11196 :contents-begin 2060 :contents-end 11195 :post-blank 1 :post-affiliated 2060 :parent (headline (:raw-value Global Parsing :begin 2042 :end 11322 :pre-blank 1 :contents-begin 2060 :contents-end 11321 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 2042 :title Global Parsing :parent (org-data nil (section (:begin 1 :end 122 :contents-begin 1 :contents-end 121 :post-blank 1 :post-affiliated 1 :parent #4)) (headline (:raw-value Local Parsing :begin 122 :end 2042 :pre-blank 1 :contents-begin 139 :contents-end 2041 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 122 :title Local Parsing :parent #4) (section (:begin 139 :end 374 :contents-begin 139 :contents-end 373 :post-blank 1 :post-affiliated 139 :parent #5)) (headline (:raw-value org-element-at-point :begin 374 :end 1029 :pre-blank 1 :contents-begin 399 :contents-end 1028 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 374 :title org-element-at-point :parent #5) (section (:begin 399 :end 1029 :contents-begin 399 :contents-end 1028 :post-blank 1 :post-affiliated 399 :parent #6))) (headline (:raw-value org-element-context :begin 1029 :end 1598 :pre-blank 1 :contents-begin 1053 :contents-end 1597 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1029 :title org-element-context :parent #5) (section (:begin 1053 :end 1598 :contents-begin 1053 :contents-end 1597 :post-blank 1 :post-affiliated 1053 :parent #6))) (headline (:raw-value Examining Element :begin 1598 :end 2041 :pre-blank 1 :contents-begin 1620 :contents-end 2041 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1598 :title Examining Element :parent #5) (section (:begin 1620 :end 2042 :contents-begin 1620 :contents-end 2041 :post-blank 1 :post-affiliated 1620 :parent #6)))) #2 (headline (:raw-value Foo :begin 11322 :end 11435 :pre-blank 1 :contents-begin 11329 :contents-end 11435 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 11322 :title Foo :parent #4) (section (:begin 11329 :end 11435 :contents-begin 11329 :contents-end 11435 :post-blank 0 :post-affiliated 11329 :parent #5))))) #0 (headline (:raw-value Accessors :begin 11196 :end 11321 :pre-blank 1 :contents-begin 11210 :contents-end 11321 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 11196 :title Accessors :parent #2) (section (:begin 11210 :end 11322 :contents-begin 11210 :contents-end 11321 :post-blank 1 :post-affiliated 11210 :parent #3))))))</td>
+<td class="org-left">(headline (:raw-value Accessors :begin 11196 :end 11321 :pre-blank 1 :contents-begin 11210 :contents-end 11321 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 11196 :title Accessors :parent (headline (:raw-value Global Parsing :begin 2042 :end 11322 :pre-blank 1 :contents-begin 2060 :contents-end 11321 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 2042 :title Global Parsing :parent (org-data nil (section (:begin 1 :end 122 :contents-begin 1 :contents-end 121 :post-blank 1 :post-affiliated 1 :parent #4)) (headline (:raw-value Local Parsing :begin 122 :end 2042 :pre-blank 1 :contents-begin 139 :contents-end 2041 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 122 :title Local Parsing :parent #4) (section (:begin 139 :end 374 :contents-begin 139 :contents-end 373 :post-blank 1 :post-affiliated 139 :parent #5)) (headline (:raw-value org-element-at-point :begin 374 :end 1029 :pre-blank 1 :contents-begin 399 :contents-end 1028 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 374 :title org-element-at-point :parent #5) (section (:begin 399 :end 1029 :contents-begin 399 :contents-end 1028 :post-blank 1 :post-affiliated 399 :parent #6))) (headline (:raw-value org-element-context :begin 1029 :end 1598 :pre-blank 1 :contents-begin 1053 :contents-end 1597 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1029 :title org-element-context :parent #5) (section (:begin 1053 :end 1598 :contents-begin 1053 :contents-end 1597 :post-blank 1 :post-affiliated 1053 :parent #6))) (headline (:raw-value Examining Element :begin 1598 :end 2041 :pre-blank 1 :contents-begin 1620 :contents-end 2041 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1598 :title Examining Element :parent #5) (section (:begin 1620 :end 2042 :contents-begin 1620 :contents-end 2041 :post-blank 1 :post-affiliated 1620 :parent #6)))) #2 (headline (:raw-value Foo :begin 11322 :end 11435 :pre-blank 1 :contents-begin 11329 :contents-end 11435 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 11322 :title Foo :parent #4) (section (:begin 11329 :end 11435 :contents-begin 11329 :contents-end 11435 :post-blank 0 :post-affiliated 11329 :parent #5))))) (section (:begin 2060 :end 11196 :contents-begin 2060 :contents-end 11195 :post-blank 1 :post-affiliated 2060 :parent #2)) #0)) (section (:begin 11210 :end 11322 :contents-begin 11210 :contents-end 11321 :post-blank 1 :post-affiliated 11210 :parent #0)))</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">headline</td>
+<td class="org-left">(:raw-value Foo :begin 11322 :end 11435 :pre-blank 1 :contents-begin 11329 :contents-end 11435 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 11322 :title Foo :parent (org-data nil (section (:begin 1 :end 122 :contents-begin 1 :contents-end 121 :post-blank 1 :post-affiliated 1 :parent #1)) (headline (:raw-value Local Parsing :begin 122 :end 2042 :pre-blank 1 :contents-begin 139 :contents-end 2041 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 122 :title Local Parsing :parent #1) (section (:begin 139 :end 374 :contents-begin 139 :contents-end 373 :post-blank 1 :post-affiliated 139 :parent #2)) (headline (:raw-value org-element-at-point :begin 374 :end 1029 :pre-blank 1 :contents-begin 399 :contents-end 1028 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 374 :title org-element-at-point :parent #2) (section (:begin 399 :end 1029 :contents-begin 399 :contents-end 1028 :post-blank 1 :post-affiliated 399 :parent #3))) (headline (:raw-value org-element-context :begin 1029 :end 1598 :pre-blank 1 :contents-begin 1053 :contents-end 1597 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1029 :title org-element-context :parent #2) (section (:begin 1053 :end 1598 :contents-begin 1053 :contents-end 1597 :post-blank 1 :post-affiliated 1053 :parent #3))) (headline (:raw-value Examining Element :begin 1598 :end 2041 :pre-blank 1 :contents-begin 1620 :contents-end 2041 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1598 :title Examining Element :parent #2) (section (:begin 1620 :end 2042 :contents-begin 1620 :contents-end 2041 :post-blank 1 :post-affiliated 1620 :parent #3)))) (headline (:raw-value Global Parsing :begin 2042 :end 11322 :pre-blank 1 :contents-begin 2060 :contents-end 11321 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 2042 :title Global Parsing :parent #1) (section (:begin 2060 :end 11196 :contents-begin 2060 :contents-end 11195 :post-blank 1 :post-affiliated 2060 :parent #2)) (headline (:raw-value Accessors :begin 11196 :end 11321 :pre-blank 1 :contents-begin 11210 :contents-end 11321 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 11196 :title Accessors :parent #2) (section (:begin 11210 :end 11322 :contents-begin 11210 :contents-end 11321 :post-blank 1 :post-affiliated 11210 :parent #3)))) (headline #0 (section (:begin 11329 :end 11435 :contents-begin 11329 :contents-end 11435 :post-blank 0 :post-affiliated 11329 :parent #2)))))</td>
+<td class="org-left">(section (:begin 11329 :end 11435 :contents-begin 11329 :contents-end 11435 :post-blank 0 :post-affiliated 11329 :parent (headline (:raw-value Foo :begin 11322 :end 11435 :pre-blank 1 :contents-begin 11329 :contents-end 11435 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 11322 :title Foo :parent (org-data nil (section (:begin 1 :end 122 :contents-begin 1 :contents-end 121 :post-blank 1 :post-affiliated 1 :parent #4)) (headline (:raw-value Local Parsing :begin 122 :end 2042 :pre-blank 1 :contents-begin 139 :contents-end 2041 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 122 :title Local Parsing :parent #4) (section (:begin 139 :end 374 :contents-begin 139 :contents-end 373 :post-blank 1 :post-affiliated 139 :parent #5)) (headline (:raw-value org-element-at-point :begin 374 :end 1029 :pre-blank 1 :contents-begin 399 :contents-end 1028 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 374 :title org-element-at-point :parent #5) (section (:begin 399 :end 1029 :contents-begin 399 :contents-end 1028 :post-blank 1 :post-affiliated 399 :parent #6))) (headline (:raw-value org-element-context :begin 1029 :end 1598 :pre-blank 1 :contents-begin 1053 :contents-end 1597 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1029 :title org-element-context :parent #5) (section (:begin 1053 :end 1598 :contents-begin 1053 :contents-end 1597 :post-blank 1 :post-affiliated 1053 :parent #6))) (headline (:raw-value Examining Element :begin 1598 :end 2041 :pre-blank 1 :contents-begin 1620 :contents-end 2041 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 1598 :title Examining Element :parent #5) (section (:begin 1620 :end 2042 :contents-begin 1620 :contents-end 2041 :post-blank 1 :post-affiliated 1620 :parent #6)))) (headline (:raw-value Global Parsing :begin 2042 :end 11322 :pre-blank 1 :contents-begin 2060 :contents-end 11321 :level 1 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 1 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 2042 :title Global Parsing :parent #4) (section (:begin 2060 :end 11196 :contents-begin 2060 :contents-end 11195 :post-blank 1 :post-affiliated 2060 :parent #5)) (headline (:raw-value Accessors :begin 11196 :end 11321 :pre-blank 1 :contents-begin 11210 :contents-end 11321 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 11196 :title Accessors :parent #5) (section (:begin 11210 :end 11322 :contents-begin 11210 :contents-end 11321 :post-blank 1 :post-affiliated 11210 :parent #6)))) #2)) #0)))</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org92caf47" class="outline-2">
+<h2 id="org92caf47"><a href="#org92caf47">Foo</a></h2>
+<div class="outline-text-2" id="text-org92caf47">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">with-temp-buffer</span>
+  <span style="color: #c678dd;">(</span>insert-buffer <span style="color: #98be65;">(</span>current-buffer<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
+  <span style="color: #51afef;">)</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

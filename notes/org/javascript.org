@@ -1,0 +1,66 @@
+* yarn
+
+** Global Packages
+
+   Global packages are installed to =$(yarn global dir)/node_modules/= and
+   symlinks are placed in =$(yarn global bin)=.
+
+*** Install
+
+    #+begin_src sh :var package="markdownlint-cli" :results output
+      yarn global add $package
+    #+end_src
+
+*** List
+
+    #+begin_src sh :results output
+      yarn global list
+    #+end_src
+
+*** Upgrade
+
+    #+begin_src sh :var package="serve" :results output
+      yarn global upgrade $package --latest
+    #+end_src
+
+    Or to upgrade all global packages:
+
+    #+begin_src sh
+      yarn global upgrade
+    #+end_src
+
+    Without =--latest=, yarn will respect semver specs in =$(yarn global
+    dir)/package.json=.
+
+* npm
+
+** Global Packages
+
+*** List
+
+    #+begin_src sh
+      npm -g list --depth 0
+    #+end_src
+
+*** Delete Them All
+
+    #+begin_src sh
+      npm list -gp --depth=0 \
+          | awk -F/ '/node_modules/ && !/\/npm$/ {print $NF}' \
+          | xargs npm -g uninstall
+    #+end_src
+
+* Strings
+
+  #+begin_src js :results value
+    return "😂".length
+  #+end_src
+
+  #+RESULTS:
+  : 2
+
+  From: https://hsivonen.fi/string-length/
+
+  #+begin_src sh
+    return "🤦🏼‍♂️".length
+  #+end_src

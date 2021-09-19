@@ -1,0 +1,227 @@
+#+TITLE: Python
+#+SETUPFILE: ../setup.org
+
+* Pyenv
+
+** Latest Version
+
+   #+begin_src sh
+     pyenv install --list \
+         | grep "^  3" \
+         | grep -v "src|dev" \
+         | tail -1 \
+         | tr -d '[:space:]'
+   #+end_src
+
+* Using a src directory
+
+  [[https://blog.ionelmc.ro/2014/05/25/python-packaging/][Packaging a python library]] (Ionel Cristian Mărieș)
+  [[https://hynek.me/articles/testing-packaging/][Testing & Packaging]] (Hynek Schlawack)
+
+  I am currently a fan of the =src= directory. The main reasons for this are:
+
+  - Ionel's first point about /import parity/; it is important that all your
+    top-level repo cruft isn't on your =sys.path= during local development.
+  - A directory named =src= is explicit and says what it is.
+  - Different python projects can have a more similar top-level directory layout
+    and a more similar =setup.cfg=.
+
+* Packaging
+
+** Kinds of Packages
+
+   From: https://bernat.tech/posts/pep-517-and-python-packaging/
+
+*** wheel (.whl)
+
+    The project is built and then zipped up. Building usually means executing
+    setuptools, which in turn may call build scripts in the project.
+
+    If the package includes native extensions, they are complied. This means a
+    separate wheel must be created and published for each computer architecture.
+
+    The zip includes the source code, the =.dist_info= directory, and potentiall
+    compiled native extensions. During a =pip install=, pip only needs to
+    extract the zip in the right location.
+
+*** Source Tree (git)
+
+    Every file in the project's VC repository.
+
+*** Source Distribution (sdist)
+
+    A zip of the project source code. It may not include /all/ files in the
+    repository, like the =.git/=, =.github/=, =Jenkinsfile=, and tests (but I
+    think it can, right?). It must /at least/ include the Python source code and
+    files required to build the project (=setup.cfg=, etc).
+
+    Does not include a =.dist_info/= or compiled extensions. During a =pip
+    install=, pip needs to build the package, which usually means executing
+    =setuptools=, which in turn may call build scripts.
+
+    The installing user must:
+
+    - Have an appropriate version of =setuptools=
+    - Have the tools required by the project build scripts
+
+* Package summary info
+
+** sys.path
+
+   As explained in the [[https://docs.python.org/3/library/sys.html#sys.path][docs]], the first element of =sys.path= is often the empty
+   string.
+
+   #+begin_quote
+   ... the first item of this list, =path[0]=, is the directory containing the
+   script that was used to invoke the Python interpreter. If the script
+   directory is not available (e.g. if the interpreter is invoked interactively
+   or if the script is read from standard input), path[0] is the empty string,
+   which directs Python to search modules in the current directory first.
+   #+end_quote
+
+   #+begin_src python :results value pp
+     import sys; return sys.path
+   #+end_src
+
+** site
+
+   Print a summary including =sys.path= and some other stuff.
+
+   #+begin_src sh :results output
+     python -m site
+   #+end_src
+
+   Interactively, in a python interpreter, =site_script()= prints some nice
+   stuff, but it causes the interpreter to exit! Ok for org-mode, not great for
+   an interactive python session.
+
+   #+begin_src python :results output :dir /Users/chris.clark/Projects/cloned/git2dot
+     import site
+     site._script()
+   #+end_src
+
+* Class attributes
+
+  Define a class:
+
+  #+begin_src python
+    class Pizza(object):
+        def __init__(self, size):
+            self.size = size
+        def get_size(self):
+            return self.size
+  #+end_src
+
+  Create an instance:
+
+  #+begin_src python
+    p = Pizza(8)
+  #+end_src
+
+  From: https://blog.ionelmc.ro/2015/02/09/understanding-python-metaclasses/#object-attribute-lookup
+
+  Now, calling =p.get_size()= or =p.size= roughly equates to:
+
+  1. Call the type slot for =Class.__getattribute__(attribute)=. The default
+     does this:
+
+     - Does =Pizza.__dict__= have a =size= (or =get_size=) that has a =__get__=
+       method and is a data descriptor? (size: no, get_size: no). Note:
+       functions are not data descriptors. A data descriptor must have at least
+       a =__set__= OR a =__delete__= attribute.
+
+     - Else, does =p.__dict__= have a =size= (or =get_size=) item in it? (size:
+       yes, get_size: no)
+
+     - Else, does =Pizza.__dict__= have a =size= (or =get_size=) item that is
+       *not* a data descriptor?
+
+  #+begin_src python
+    Pizza.__dict__
+  #+end_src
+
+  #+begin_src python
+    Pizza.__dict__["get_size"].__get__(p, Pizza)()
+  #+end_src
+
+* Require zip of github repo
+
+  You can get a tarball or zipball of a repo as documented here:
+  https://developer.github.com/v3/repos/contents/#get-archive-link
+
+  In requirements.txt, you can do something like
+  https://github.com/cfclrk/python-demo/zipball/master#egg=botocore
+
+  e.g. see:
+  https://github.com/aws/aws-cli/blob/1973ca9709d41121b45c1a0d764ef6788028c708/requirements.txt#L6
+
+* Strings
+
+** Unicode
+
+   #+begin_src python
+     return len("😂")
+   #+end_src
+
+   #+RESULTS:
+   : 1
+
+   From: https://hsivonen.fi/string-length/
+
+   #+begin_src python
+     return len("🤦🏼‍♂️")
+   #+end_src
+
+   #+RESULTS:
+   : 5
+
+** Convert binary to utf8
+
+   Byte strings can only be ASCII. For example, this works:
+
+   #+begin_src python
+     foo=b"foo"
+   #+end_src
+
+   But this does not:
+
+   #+begin_src python
+     bar=b"ОФИС"
+   #+end_src
+
+   ASCII and "binary" are really the same... there isn't really any encoding or
+   decoding going on.
+
+   So what's going on here?
+
+   #+begin_src python
+     foo = b"foo"
+     return foo.decode("ascii")
+   #+end_src
+
+   #+RESULTS:
+   : foo
+
+   I *think* what's going on is: We attempt to decode =foo= using the ASCII codec.
+   The result is a sequence of ASCII numbers. Python then tries to show us the
+   result, and it looks like a string, so Python interprets it as unicode code
+   points (?)
+
+   #+begin_src python
+     bar="ОФИС"
+     return bar.encode("utf-8")
+   #+end_src
+
+   #+RESULTS:
+   : b'\xd0\x9e\xd0\xa4\xd0\x98\xd0\xa1'
+
+* Random String
+
+  #+begin_src python
+    import random
+    import string
+    return "".join(random.choice(string.ascii_letters) for _ in range(8))
+  #+end_src
+
+  #+RESULTS:
+  : knMyinMG

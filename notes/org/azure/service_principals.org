@@ -1,0 +1,193 @@
+#+TITLE: Service Principals
+#+SETUPFILE: ../../setup.org
+#+PROPERTY: header-args+ :results output
+
+* Variables                                                        :noexport:
+
+  #+NAME: env
+  | Env Var   | Value            |
+  |-----------+------------------|
+  | TENANT_ID | cloud-infra-prod |
+
+  #+begin_src emacs-lisp :var env=env
+    (setenv-file-export-pairs env)
+  #+end_src
+
+* Read
+
+  https://serverfault.com/questions/889976/how-to-give-azure-service-principal-the-same-rights-as-my-own-user?rq=1
+  https://github.com/Azure/azure-sdk-for-node/issues/2363#issuecomment-354897064
+
+* CLI Login with a Service Principal
+
+  The =appId= is the =AZURE_CLIENT_ID= and the =password= is the
+  =AZURE_CLIENT_SECRET=.
+
+  #+begin_src sh
+    az login --service-principal \
+       --username $AZURE_CLIENT_ID \
+       --password $AZURE_CLIENT_SECRET \
+       --tenant $AZURE_TENANT_ID
+  #+end_src
+
+* Create
+
+  Create a service principal called "foo" (the name will actually be
+  =http://foo=). Service principals are global to an Azure Tenant (not, as one
+  might think, to a Subscription). The subscriptions or resources that a Service
+  Principal can see are controlled by the Role Assignments attached to the
+  Service Principal.
+
+** Contributer Role (default?)
+
+   By default, the service principal will have the "owner" role (is this true
+   anymore?).
+
+   #+NAME: sp
+   #+begin_src sh
+     az ad sp create-for-rbac -n foo
+   #+end_src
+
+** Owner Role
+
+   Just pass a =--role owner=.
+
+** Grant more perms
+
+   By default, a service principal can't do as much as a User, even if the
+   service principal has the Owner role. This is because Azure is stupid.
+
+   To allow an Azure service principal to create new service principals:
+
+   1. Click on your service principal in Azure Active Directory -> App
+      registrations.
+   2. Go to Settings -> Required permissions.
+   3. Add four permissions for Windows Azure Active Directory:
+      - Read and write all applications
+      - Manage apps that this app creates or owns
+      - Read and write directory data
+      - Read directory data
+   4. Save.
+   5. Click “Grant permissions” and confirm. This step can only be performed by
+      a Global AD Admin, which you are now in both public and government
+      tenants.
+
+   More info: https://github.com/Azure/azure-sdk-for-node/issues/2363#issuecomment-354897064
+
+* List
+
+  #+begin_src sh
+    az ad sp list \
+       --query "[?appOwnerTenantId=='$AZURE_TENANT_ID'].displayName" \
+       --all
+  #+end_src
+
+  Or, by a more readable publisher name:
+
+  #+begin_src sh
+    az ad sp list --all --query "[?publisherName=="Fugue"].displayName"
+  #+end_src
+
+* Describe
+
+** Using service principal name
+
+   #+begin_src sh
+     az ad sp show --id "http://chrisc-owner"
+   #+end_src
+
+** Using service principal client id
+
+   #+begin_src sh
+     az ad sp show --id $AZURE_CLIENT_ID
+   #+end_src
+
+* Delete
+
+  #+begin_src sh
+    az ad sp delete --id http://foo
+  #+end_src
+
+* View Role Assignments
+
+  Every service principal has 0 or more *role assignments* which, taken
+  together, define what the service principal is allowed to do.
+
+  A Role Assignment assigns a /ROLE/ to an /ASSIGNEE/ for a given /SCOPE/. A
+  /ROLE/ is a set of permissions. Examples of some pre-defined named roles are
+  "Owner", "Contributor", and "KeyVault Reader". The /ASSIGNEE/ is, in this
+  case, the Service Principal. The /SCOPE/ limits permissions to a certain set
+  of cloud resources. Examples of scopes are a subsccription, a resource group,
+  or a particular cloud resource.
+
+  Apparently role assignments can only be viewed one subscription at a time?
+
+** Role Assignments Scoped to this Subscription
+
+   View a service principal's role assignments that are scoped to the currently
+   active subscription.
+
+   #+begin_src sh
+     az role assignment list \
+        --all \
+        --assignee $(az ad signed-in-user show | jq -r '.objectId')
+   #+end_src
+
+   #+begin_src sh
+     az role assignment list \
+        --assignee "http://chrisc-owner" \
+        --all \
+        --include-inherited \
+        --include-groups
+   #+end_src
+
+   #+begin_src sh
+     az ad user list --query "[?mailNickname=='chris.clark'].objectId"
+   #+end_src
+
+** Role Assignments Scoped to Another Subscription
+
+   #+begin_src sh
+     az role assignment list \
+        --assignee "http://chrisc-owner" \
+        --all \
+        --include-inherited \
+        --include-groups \
+        --subscription $SubscriptionId
+   #+end_src
+
+   *QUESTION*: Is there a way to see *all* role assignments for a service
+   principal at one time, accross all subsrcriptions? For example, what if I
+   want to see what subscriptions a service principal has "Contributor" access
+   to?
+
+* Grant Access to Another Subscription
+
+  To do this we create another role assignment for the service principal that
+  gives the service principal access to a particular subscription.
+
+** Create Role Assignment
+
+   In this case we will assign "Contributor" access (the /ROLE/) to the service
+   principal =http://chrisc-owner= (the /ASSIGNEE/) for subscription
+   =$SubscriptionId= (the /SCOPE/).
+
+   #+begin_src sh
+     az role assignment create \
+        --role "Contributor" \
+        --assignee "http://chrisc-owner" \
+        --scope "/subscriptions/a083ee74-78e4-4afc-9848-1336af393d20"
+   #+end_src
+
+** View the new role assignment
+
+   Now you should see one role assignment for the other subscription.
+
+   #+begin_src sh
+     az role assignment list \
+        --assignee "http://chrisc-owner" \
+        --all \
+        --include-inherited \
+        --include-groups \
+        --subscription $SubscriptionId
+   #+end_src

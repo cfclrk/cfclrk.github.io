@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Unicode in Emacs</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Unicode in Emacs</h1>
+</header><nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org956502a">Characters</a>
+<ul>
+<li><a href="#org037b90c">Characters are integers</a></li>
+<li><a href="#org06c0e6d">Converting between chars and integers</a></li>
+<li><a href="#org7bae2a8">Why have two representations?</a></li>
+</ul>
+</li>
+<li><a href="#org9138fd5">Unicode escape sequences</a></li>
+<li><a href="#org48d1c0a">Convert code point to character</a></li>
+<li><a href="#orgfffcf3c">Convert Unicode name to character</a></li>
+<li><a href="#org6acc358">Encode a string</a>
+<ul>
+<li><a href="#orgd5fb5d8">toggle-enable-multibyte-characters</a></li>
+</ul>
+</li>
+<li><a href="#orge63a84a">Decode</a></li>
+<li><a href="#org0522ead">Code Points</a>
+<ul>
+<li><a href="#orga2079f1">Unicode name</a></li>
+<li><a href="#org5e242a0">Unicode number</a></li>
+</ul>
+</li>
+<li><a href="#org312eb85">Normalize a string</a></li>
+<li><a href="#orgaf6f902">Elisp</a></li>
+<li><a href="#orgc8b1462">Unicode table</a></li>
+<li><a href="#orgb3bfa4d">Datasets</a></li>
+<li><a href="#org5a0b22a">Resources</a></li>
+<li><a href="#orga192310">TODO</a></li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-org956502a" class="outline-2">
+<h2 id="org956502a"><a href="#org956502a">Characters</a></h2>
+<div class="outline-text-2" id="text-org956502a">
+<p>
+Emacs lisp has a special read syntax for characters: the <code>?</code> question mark.
+Such syntax is necessary to distinguish the character like <code>à</code> from the symbol
+<code>à</code>.
+</p>
+</div>
+
+<div id="outline-container-org037b90c" class="outline-3">
+<h3 id="org037b90c"><a href="#org037b90c">Characters are integers</a></h3>
+<div class="outline-text-3" id="text-org037b90c">
+<p>
+Characters evaluate to integers:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">?&#224;
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+224
+</pre>
+
+
+<p>
+We can see that <code>?à</code> and <code>224</code> are equal in (almost?) every way:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>equal ?&#224; 224<span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+t
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>eq ?&#224; 224<span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+t
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>char-equal ?&#224; 224<span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+t
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org06c0e6d" class="outline-3">
+<h3 id="org06c0e6d"><a href="#org06c0e6d">Converting between chars and integers</a></h3>
+<div class="outline-text-3" id="text-org06c0e6d">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>string-to-char <span style="color: #98be65;">"&#224;"</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+224
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>char-to-string 224<span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+"à"
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org7bae2a8" class="outline-3">
+<h3 id="org7bae2a8"><a href="#org7bae2a8">Why have two representations?</a></h3>
+<div class="outline-text-3" id="text-org7bae2a8">
+<p>
+The reader syntax <code>?</code> simply allows you to express a number using a
+character. Sometimes that is very helpful and provides clarity (when you are
+dealing with characters) and sometims that would be silly (when dealing with
+numbers).
+</p>
+
+<p>
+The <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/String-Basics.html#String-Basics">elisp manual</a> notes:
+</p>
+
+<blockquote>
+<p>
+whether an integer is a character or not is determined only by how it is used
+</p>
+</blockquote>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>+ ?&#224; 2<span style="color: #51afef;">)</span> <span style="color: #5B6268;">; </span><span style="color: #5B6268;">Usually not helpful</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+226
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>make-string 5 ?&#224;<span style="color: #51afef;">)</span> <span style="color: #5B6268;">; </span><span style="color: #5B6268;">Helpful</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+"ààààà"
+</pre>
+
+
+<p>
+Which, by the way, could also be written as:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>make-string 5 224<span style="color: #51afef;">)</span> <span style="color: #5B6268;">; </span><span style="color: #5B6268;">Not helpful</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+ààààà
+</pre>
+
+
+<p>
+In Emacs, all characters are integers, but not all integers are characters. A
+character's corresponding integer is simply the Unicode number (i.e. the
+Unicode code point) of the character.
+</p>
+
+<p>
+Unicode code points are defined from the integers #x0 to
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>char-to-string <span style="color: #c678dd;">(</span>+ 1 #x10FFFF<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<p>
+The <code>?</code> read syntax for a character also allows for the character to be
+expressed as a hex number or an octal number. As before, the expression
+evaluates to a decimal number which represents the character's code point.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">?\xe0
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+224
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">?\340
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+224
+</pre>
+
+
+<p>
+TODO: wtf is this?
+</p>
+
+<p>
+The function <code>make-char</code> returns an integer representing the character at the
+given position in a&#x2026; what?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>make-char 'unicode 0 0 224 0<span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+224
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9138fd5" class="outline-2">
+<h2 id="org9138fd5"><a href="#org9138fd5">Unicode escape sequences</a></h2>
+<div class="outline-text-2" id="text-org9138fd5">
+<p>
+Both strings and characters can contain Unicode escape sequences. There are two
+forms of Unicode escape sequences:
+</p>
+
+<ol class="org-ol">
+<li><code>\uXXXX</code> (<code>\u</code> and four hex digits)</li>
+<li><code>\U00XXXXXX</code> (<code>\U00</code> and six hex digits)</li>
+</ol>
+
+<p>
+Evaluating a character with a Unicode escape sequence returns an integer:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">?\u00e0
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+224
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">?\U0001F638
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+128568
+</pre>
+
+
+<p>
+Evaluating a string with a Unicode escape sequence returns a string:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #98be65;">"\U0001F638"</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+😸
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org48d1c0a" class="outline-2">
+<h2 id="org48d1c0a"><a href="#org48d1c0a">Convert code point to character</a></h2>
+<div class="outline-text-2" id="text-org48d1c0a">
+<p>
+The function <code>(char-to-string CHAR)</code> returns the character at the Unicode code
+point <code>CHAR</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>char-to-string 224<span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+"à"
+</pre>
+
+
+<p>
+The argument to <code>char-to-string</code> must be a character, so it can either be given
+as:
+</p>
+
+<ol class="org-ol">
+<li>A character using <code>?</code> syntax</li>
+<li>An integer, using any of the ways to <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Integer-Basics.html">express an integer</a></li>
+</ol>
+
+<p>
+For example, as an integer using hex notation:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>char-to-string #xe0<span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+à
+</pre>
+
+
+<p>
+Or, as a character using hex notation:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>char-to-string ?\xe0<span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+à
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgfffcf3c" class="outline-2">
+<h2 id="orgfffcf3c"><a href="#orgfffcf3c">Convert Unicode name to character</a></h2>
+<div class="outline-text-2" id="text-orgfffcf3c">
+<p>
+In a string, the <code>"?\N{NAME}"</code> syntax allows you to specify a Unicode character
+by its name:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #98be65;">"?\N{LATIN SMALL LETTER A WITH GRAVE}"</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+"?à"
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org6acc358" class="outline-2">
+<h2 id="org6acc358"><a href="#org6acc358">Encode a string</a></h2>
+<div class="outline-text-2" id="text-org6acc358">
+<p>
+Encoding a string means translating a string of Unicode code points (integers)
+into new integers, according to some encoding scheme (like UTF-8). This is
+necessary in order to tell where one number ends and the next begins:
+</p>
+
+<pre class="example" id="org55fa182">
+1224
+</pre>
+
+<p>
+Is that the single character <code>1224</code>: "ӈ"? Or two characters <code>12</code> and <code>24</code>? Or..
+something else? UTF-8 encodes strings into a binary form that can be
+unambiguously reversed (decoded) back to Unicode code points.
+</p>
+
+<p>
+Viewing encoded strings is sometimes difficult, because the binary form of a
+string is automatically decoded in order to be displayed.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>encode-coding-string <span style="color: #98be65;">"nai&#776;ve"</span> 'utf-8 t<span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+"nai\314\210ve"
+</pre>
+
+
+<p>
+<code>encode-coding-string</code> returns a string where any characters outside of &lt;what
+range?&gt; are escaped (WHY?)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>encode-coding-string <span style="color: #98be65;">"\u0073"</span> 'utf-8<span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+s
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>encode-coding-string <span style="color: #98be65;">"\U0001F638"</span> 'utf-8<span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+"\360\237\230\270"
+</pre>
+</div>
+
+<div id="outline-container-orgd5fb5d8" class="outline-3">
+<h3 id="orgd5fb5d8"><a href="#orgd5fb5d8">toggle-enable-multibyte-characters</a></h3>
+<div class="outline-text-3" id="text-orgd5fb5d8">
+<p>
+Another way to see this is to write multibyte strings to a file, then run <code>M-x
+   toggle-enable-multibyte-characters</code>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge63a84a" class="outline-2">
+<h2 id="orge63a84a"><a href="#orge63a84a">Decode</a></h2>
+<div class="outline-text-2" id="text-orge63a84a">
+<p>
+Decoding a string returns the multibyte equivalent of the string.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>decode-coding-string <span style="color: #98be65;">"nai\314\210ve"</span> 'utf-8<span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+naïve
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>decode-coding-string <span style="color: #98be65;">"\360\237\230\270"</span> 'utf-8<span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+😸
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org0522ead" class="outline-2">
+<h2 id="org0522ead"><a href="#org0522ead">Code Points</a></h2>
+<div class="outline-text-2" id="text-org0522ead">
+<p>
+Range is 0 to #x10FFFF (hex).
+</p>
+
+<p>
+Emacs extends this with range #x110000 to #x3FFFF
+</p>
+
+<p>
+A character codepoint in Emacs is a 22-bit *.
+</p>
+
+<p>
+Decode integer a string
+</p>
+</div>
+
+<div id="outline-container-orga2079f1" class="outline-3">
+<h3 id="orga2079f1"><a href="#orga2079f1">Unicode name</a></h3>
+<div class="outline-text-3" id="text-orga2079f1">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>char-from-name <span style="color: #98be65;">"LATIN SMALL LETTER A WITH GRAVE"</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+224
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org5e242a0" class="outline-3">
+<h3 id="org5e242a0"><a href="#org5e242a0">Unicode number</a></h3>
+<div class="outline-text-3" id="text-org5e242a0">
+<p>
+Unicode number as decimal:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>char-to-string 128568<span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+😸
+</pre>
+
+
+<p>
+As hex
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>char-to-string ?\x1F638<span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+128568
+</pre>
+
+
+<p>
+As octal
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">?\340
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+224
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org312eb85" class="outline-2">
+<h2 id="org312eb85"><a href="#org312eb85">Normalize a string</a></h2>
+<div class="outline-text-2" id="text-org312eb85">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>ucs-normalize-NFD-string <span style="color: #98be65;">"nai\u0308ve"</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+"naïve"
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgaf6f902" class="outline-2">
+<h2 id="orgaf6f902"><a href="#orgaf6f902">Elisp</a></h2>
+<div class="outline-text-2" id="text-orgaf6f902">
+<p>
+A character in Emacs Lisp is nothing more than an integer:
+</p>
+
+<p>
+Characters in strings and buffers are currently limited to the range of 0 to
+4194303—twenty two bits
+</p>
+
+<p>
+<a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Character-Type.html">https://www.gnu.org/software/emacs/manual/html_node/elisp/Character-Type.html</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc8b1462" class="outline-2">
+<h2 id="orgc8b1462"><a href="#orgc8b1462">Unicode table</a></h2>
+<div class="outline-text-2" id="text-orgc8b1462">
+<p>
+The variable <code>ucs-names</code> (in <code>mule.el</code>) holds a hash table.
+</p>
+
+<p>
+The function <code>ucs-names</code> returns the fully expanded table of unicode data.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb3bfa4d" class="outline-2">
+<h2 id="orgb3bfa4d"><a href="#orgb3bfa4d">Datasets</a></h2>
+<div class="outline-text-2" id="text-orgb3bfa4d">
+<p>
+<a href="https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt">https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5a0b22a" class="outline-2">
+<h2 id="org5a0b22a"><a href="#org5a0b22a">Resources</a></h2>
+<div class="outline-text-2" id="text-org5a0b22a">
+<ul class="org-ul">
+<li><a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Character-Type.html">https://www.gnu.org/software/emacs/manual/html_node/elisp/Character-Type.html</a></li>
+<li><a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Non_002dASCII-Characters.html">https://www.gnu.org/software/emacs/manual/html_node/elisp/Non_002dASCII-Characters.html</a></li>
+<li><a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Strings-and-Characters.html">https://www.gnu.org/software/emacs/manual/html_node/elisp/Strings-and-Characters.html</a></li>
+<li><a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Describing-Characters.html#Describing-Characters">https://www.gnu.org/software/emacs/manual/html_node/elisp/Describing-Characters.html#Describing-Characters</a></li>
+<li><a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/String-Type.html">https://www.gnu.org/software/emacs/manual/html_node/elisp/String-Type.html</a></li>
+<li><a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/International.html">https://www.gnu.org/software/emacs/manual/html_node/emacs/International.html</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orga192310" class="outline-2">
+<h2 id="orga192310"><a href="#orga192310">TODO</a></h2>
+<div class="outline-text-2" id="text-orga192310">
+<p>
+Does a character evaluate to different numbers under different coding systems?
+</p>
+
+<p>
+Can Emacs interpret a byte array as characters? Example: an IPv4 address,
+which is often represented as 4 bytes.
+</p>
+</div>
+</div>
+</div>
+</body>
+</html>

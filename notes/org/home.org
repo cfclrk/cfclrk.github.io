@@ -1,0 +1,7 @@
+#+OPTIONS: toc:nil
+#+SETUPFILE: ../setup.org
+
+In which I try to help Future-Chris by recording -- and hopefully explaining --
+exemplary examples of things.
+
+#+INCLUDE: sitemap.org :only-contents t

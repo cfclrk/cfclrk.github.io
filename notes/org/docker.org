@@ -1,0 +1,118 @@
+#+TITLE: Docker
+#+SETUPFILE: ../setup.org
+
+* Clean Up
+
+** Remove Unused Images
+
+   #+begin_src sh
+     docker system prune
+   #+end_src
+
+   This removes:
+
+   - all stopped containers
+   - all networks not used by at least one container
+   - all dangling images
+   - all dangling build cache
+
+** Remove All Images
+
+   #+begin_src sh
+     docker image rm -f $(docker images -a -q)
+   #+end_src
+
+   or
+
+   #+begin_src sh
+     docker system prune --all
+   #+end_src
+
+* Start docker with SSH
+
+  On linux it should be possible to actually use SSH agent forwarding. See:
+  https://gist.github.com/d11wtq/8699521
+
+  However, this doesn't work on MacOS. See:
+  https://github.com/docker/for-mac/issues/410
+  https://github.com/docker/for-mac/issues/483
+
+  But, you can of course just share your .ssh folder and start ssh-agent in the
+  container.
+
+** Run Docker with .ssh
+
+   This uses a bind mount, which shares the files. Should probably use a volume
+   to copy the files.
+
+   #+BEGIN_SRC sh
+     docker run --rm -it \
+            --name sshtest \
+            --mount type=bind,source=/Users/chrisc/.ssh,target=/root/.ssh \
+            $ImageName \
+            /bin/bash
+   #+END_SRC
+
+** In container, start ssh-agent
+
+   #+BEGIN_SRC sh
+     eval $(ssh-agent -s)
+   #+END_SRC
+
+** Add your keys
+
+   #+BEGIN_SRC sh
+     ssh-add ~/.ssh/id_rsa
+   #+END_SRC
+
+* Run Simple Images
+
+  Images I sometimes run for debugging etc.
+
+** Python
+
+   Run and mount current dir.
+
+   #+begin_src sh
+     docker run -it --rm \
+            --name ${PROJECT_NAME} \
+            --mount type=bind,source=(pwd),target=/${PROJECT_NAME} \
+            python:3.6.5-slim-stretch /bin/bash
+   #+end_src
+
+** Golang
+
+   Run golang container for interactive use
+
+   #+begin_src sh
+     docker run -it --rm golang:1.14
+   #+end_src
+
+* Rate Limiting
+
+  #+NAME: token
+  #+begin_src sh
+    curl "https://auth.docker.io/token?service=registry.docker.io&scope=repository:ratelimitpreview/test:pull" \
+        | jq -r .token
+  #+end_src
+
+  #+begin_src sh :var TOKEN=token :results output
+    curl --head \
+         -H "Authorization: Bearer $TOKEN" \
+         https://registry-1.docker.io/v2/ratelimitpreview/test/manifests/latest
+  #+end_src
+
+  #+RESULTS:
+  #+begin_example
+  HTTP/1.1 200 OK
+  Content-Length: 2782
+  Content-Type: application/vnd.docker.distribution.manifest.v1+prettyjws
+  Docker-Content-Digest: sha256:767a3815c34823b355bed31760d5fa3daca0aec2ce15b217c9cd83229e0e2020
+  Docker-Distribution-Api-Version: registry/2.0
+  Etag: "sha256:767a3815c34823b355bed31760d5fa3daca0aec2ce15b217c9cd83229e0e2020"
+  Date: Mon, 07 Dec 2020 21:19:08 GMT
+  Strict-Transport-Security: max-age=31536000
+  RateLimit-Limit: 100;w=21600
+  RateLimit-Remaining: 100;w=21600
+  
+  #+end_example

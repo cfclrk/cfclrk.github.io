@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Maven</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Maven</h1>
+</header><nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgd5c4608">New Project</a></li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-orgd5c4608" class="outline-2">
+<h2 id="orgd5c4608"><a href="#orgd5c4608">New Project</a></h2>
+<div class="outline-text-2" id="text-orgd5c4608">
+<div class="org-src-container">
+<pre class="src src-sh">mvn archetype:generate <span style="color: #98be65;">\</span>
+    -DgroupId=com.cfclrk <span style="color: #98be65;">\</span>
+    -DartifactId=k8stest <span style="color: #98be65;">\</span>
+    -DarchetypeArtifactId=maven-archetype-quickstart <span style="color: #98be65;">\</span>
+    -DarchetypeVersion=1.4 <span style="color: #98be65;">\</span>
+    -DinteractiveMode=false
+</pre>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

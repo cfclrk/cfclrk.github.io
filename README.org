@@ -9,9 +9,9 @@
 
 * TODO
 
-  - [ ] Rename this dir to cfclrk.github.io
-  - [ ] Move cfclrk.com project to codenotes
+  - [ ] Move articles project into this project
+  - [ ] Consistent img location at _static/img
+  - [ ] Exclude README.org from HTML export (from site project?)
+  - [ ] Different layouts for index pages vs content pages
   - [ ] Point cfclrk.com domain to this website
   - [ ] Add google analytics
-  - [ ] Add documentatation to this README
-  - [ ] Exclude README.org from HTML export (from site project?)

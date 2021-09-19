@@ -1,0 +1,135 @@
+#+TITLE: WebAssembly
+#+SETUPFILE: ../setup.org
+
+* wat, wasm, and wast
+
+  - =wat=: is the textual format (lisp)
+  - =wasm=: the binary format
+  - =wast=: ??
+  - =wasi= - An API spec for talking to an OS. Much like POSIX. Needed/used only
+    when running outside of a browser, because browsers define their own
+    complete API for what is possible. See: [[https://wasi.dev/][wasi.dev]].
+
+  Also, "wasm" is sometimes used to abbreviate "WebAssembly", as in: "the wasm
+  text format and the wasm binary format".
+
+* Tooling
+
+  - [[https://github.com/webassembly/wabt][wabt]], the WebAssembly Binary Toolkit.
+
+     #+begin_src sh
+       brew install wabt
+     #+end_src
+
+  - Emscripten: LLVM backend for wasm
+
+* Runtimes
+
+  The [[https://webassembly.org/roadmap/][roadmap]] lists three non-browser runtimes:
+
+  - Node.js
+  - Wasmtime
+  - Wasmer
+
+* Convert wat (text) to wasm (binary)
+
+  Tangle this to =simple.wat=.
+
+  #+begin_src wat :tangle simple.wat
+    (module
+     (func $i (import "imports" "imported_func") (param i32))
+     (func (export "exported_func")
+           i32.const 42
+           call $i))
+  #+end_src
+
+  Now run =wat2wasm= to produce a binary file called =simple.wasm=.
+
+  #+begin_src sh
+    wat2wasm simple.wat -o simple.wasm
+  #+end_src
+
+  Why is this writing to stderr?
+
+  #+begin_src sh :results output :prologue "exec 2>&1"
+    wat2wasm simple.wat -v
+  #+end_src
+
+  #+RESULTS:
+  #+begin_example
+  0000000: 0061 736d                                 ; WASM_BINARY_MAGIC
+  0000004: 0100 0000                                 ; WASM_BINARY_VERSION
+  ; section "Type" (1)
+  0000008: 01                                        ; section code
+  0000009: 00                                        ; section size (guess)
+  000000a: 02                                        ; num types
+  ; func type 0
+  000000b: 60                                        ; func
+  000000c: 01                                        ; num params
+  000000d: 7f                                        ; i32
+  000000e: 00                                        ; num results
+  ; func type 1
+  000000f: 60                                        ; func
+  0000010: 00                                        ; num params
+  0000011: 00                                        ; num results
+  0000009: 08                                        ; FIXUP section size
+  ; section "Import" (2)
+  0000012: 02                                        ; section code
+  0000013: 00                                        ; section size (guess)
+  0000014: 01                                        ; num imports
+  ; import header 0
+  0000015: 07                                        ; string length
+  0000016: 696d 706f 7274 73                        imports  ; import module name
+  000001d: 0d                                        ; string length
+  000001e: 696d 706f 7274 6564 5f66 756e 63         imported_func  ; import field name
+  000002b: 00                                        ; import kind
+  000002c: 00                                        ; import signature index
+  0000013: 19                                        ; FIXUP section size
+  ; section "Function" (3)
+  000002d: 03                                        ; section code
+  000002e: 00                                        ; section size (guess)
+  000002f: 01                                        ; num functions
+  0000030: 01                                        ; function 0 signature index
+  000002e: 02                                        ; FIXUP section size
+  ; section "Export" (7)
+  0000031: 07                                        ; section code
+  0000032: 00                                        ; section size (guess)
+  0000033: 01                                        ; num exports
+  0000034: 0d                                        ; string length
+  0000035: 6578 706f 7274 6564 5f66 756e 63         exported_func  ; export name
+  0000042: 00                                        ; export kind
+  0000043: 01                                        ; export func index
+  0000032: 11                                        ; FIXUP section size
+  ; section "Code" (10)
+  0000044: 0a                                        ; section code
+  0000045: 00                                        ; section size (guess)
+  0000046: 01                                        ; num functions
+  ; function body 0
+  0000047: 00                                        ; func body size (guess)
+  0000048: 00                                        ; local decl count
+  0000049: 41                                        ; i32.const
+  000004a: 2a                                        ; i32 literal
+  000004b: 10                                        ; call
+  000004c: 00                                        ; function index
+  000004d: 0b                                        ; end
+  0000047: 06                                        ; FIXUP func body size
+  0000045: 08                                        ; FIXUP section size
+  #+end_example
+
+* Convert wasm to wat
+
+  We can disassemble! Ain't that peachy!
+
+  #+begin_src sh :results output
+    wasm2wat simple.wasm
+  #+end_src
+
+  #+RESULTS:
+  : (module
+  :   (type (;0;) (func (param i32)))
+  :   (type (;1;) (func))
+  :   (import "imports" "imported_func" (func (;0;) (type 0)))
+  :   (func (;1;) (type 1)
+  :     i32.const 42
+  :     call 0)
+  :   (export "exported_func" (func 1)))

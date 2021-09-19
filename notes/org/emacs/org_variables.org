@@ -1,0 +1,114 @@
+#+TITLE: Passing Variables to Source Blocks
+#+SETUPFILE: ../../setup.org
+
+In which I document ways to define variables in an org file, and use those
+variables in =SRC= blocks throughout the rest of the file.
+
+* Global header args
+
+#+PROPERTY: header-args  :var globalVar1="Global Var 1 Value"
+#+PROPERTY: header-args+ :var globalVar2=5
+#+PROPERTY: header-args+ :var globalVar3=(+ 2 2)
+
+Define variables globally in an org file using =#+PROPERTY=. Notice that the
+values can be elisp expressions. values.
+
+*NOTE*: when changing a variable defined with =#+PROPERTY=, the buffer needs to
+be reloaded to take effect. Use =M-x revert-buffer= to reload the buffer.
+
+#+BEGIN_SRC sh :results output
+echo $globalVar1
+echo $globalVar2
+echo $globalVar3
+#+END_SRC
+
+#+RESULTS:
+: Global Var 1 Value
+: 5
+: 4
+
+* Elisp association list
+
+Define an elisp association list (alist) that maps variable names to values, and
+a lookup function for looking up a variable's value by name.
+
+#+NAME: vars-alist
+#+BEGIN_SRC elisp
+'(("alistVar1" "Alist Var 1 Value", "Alist var 1 description")
+  ("alistVar2" 7 "Alist var 2 description"))
+#+END_SRC
+
+#+NAME: alist-lookup
+#+BEGIN_SRC elisp :var data=vars-alist :var v="aVarName"
+(nth 1 (assoc v data))
+#+END_SRC
+
+#+BEGIN_SRC sh :results output :var v1=alist-lookup(v="alistVar1") v2=alist-lookup(v="alistVar2")
+echo $v1
+echo $v2
+#+END_SRC
+
+#+RESULTS:
+: Alist Var 1 Value
+: 7
+
+* Org table
+
+Define an org table that maps variable names to values, and a lookup function for looking up a variable's
+value by name. Under the covers, the table is just an elisp alist.
+
+#+NAME: vars-table
+| Var Name  | Value             | Description             |
+|-----------+-------------------+-------------------------|
+| tableVar1 | Table Var 1 Value | Table var 1 description |
+| tableVar2 | 6                 | Table var 2 description |
+
+#+NAME: table-lookup
+#+BEGIN_SRC elisp :var data=vars-table :var v="aVarName"
+(nth 1 (assoc v data))
+#+END_SRC
+
+#+BEGIN_SRC sh :results output :var v1=table-lookup(v="tableVar1") v2=table-lookup(v="tableVar2")
+echo $v1
+echo $v2
+#+END_SRC
+
+#+RESULTS:
+: Table Var 1 Value
+: 6
+
+* Drawer header args
+:PROPERTIES:
+:header-args:  :var drawerVar1="Drawer Var 1"
+:header-args+: :var drawerVar2=8
+:END:
+
+These variables apply to all source blogs within this section.
+
+#+BEGIN_SRC sh :results output
+echo $drawerVar1
+echo $drawerVar2
+#+END_SRC
+
+#+RESULTS:
+: Drawer Var 1
+: 8
+
+* Drawer header args using table
+:PROPERTIES:
+:header-args:  :var drawerTable1=table-lookup(v="tableVar1")
+:header-args+: :var drawerTable2=table-lookup(v="tableVar2")
+:END:
+
+Same as above, but look up variable values from a table (specifically, the table in section =Org table=).
+
+*NOTE* Calling functions in header-args can be problematic because of a bug with org mode, described [[https://emacs.stackexchange.com/questions/41208/org-mode-elisp-in-var-in-header-args-causing-max-specpdl-size-error][here]].
+
+#+BEGIN_SRC sh :results output
+echo $drawerTable1
+echo $drawerTable2
+#+END_SRC
+
+#+RESULTS:
+: Table Var 1 Value
+: 6

@@ -1,0 +1,13 @@
+#+TITLE: Maven
+#+SETUPFILE: ../setup.org
+
+* New Project
+
+#+begin_src sh
+  mvn archetype:generate \
+      -DgroupId=com.cfclrk \
+      -DartifactId=k8stest \
+      -DarchetypeArtifactId=maven-archetype-quickstart \
+      -DarchetypeVersion=1.4 \
+      -DinteractiveMode=false
+#+end_src

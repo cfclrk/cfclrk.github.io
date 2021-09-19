@@ -1,0 +1,40 @@
+* Secrets Using Keychain
+
+** Add a secret
+
+   #+begin_src sh :var NAME="foo" VALUE="bar"
+     security add-generic-password \
+              -a ${USER} \
+              -s $NAME \
+              -w $VALUE
+   #+end_src
+
+** Delete Secret
+
+   #+begin_src sh
+     security delete-generic-password -a ${USER} -s $1 >/dev/null
+   #+end_src
+
+** Retrieve Secret
+
+   #+begin_src sh
+     security find-generic-password -a ${USER} -s $1 -w
+   #+end_src
+
+* Temp Files
+
+  #+begin_src sh
+    getconf DARWIN_USER_TEMP_DIR
+  #+end_src
+
+  #+RESULTS:
+  : /var/folders/qh/z7vjfvbs1r38h5nrkby45wx80000gp/T/
+
+* Cache Files
+
+  #+begin_src sh
+    getconf DARWIN_USER_CACHE_DIR
+  #+end_src
+
+  #+RESULTS:
+  : /var/folders/qh/z7vjfvbs1r38h5nrkby45wx80000gp/C/

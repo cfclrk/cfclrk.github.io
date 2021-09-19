@@ -1,0 +1,90 @@
+#+TITLE: Compilers and Intepreters
+
+* Overview
+
+  Frontend and backend
+
+  Frontend
+
+** Scanner
+
+   - Reads one character at a time
+   - Names: scanner, lexer
+   - DFA
+   - DFAs and regular expressions are equivalent! So, usually implemented with
+     regular expressions. (Example when it isn't?)
+
+   is this what the "reader" is in Clojure?
+
+   In realatiy: Python =string.split()=
+
+   "Lexical analysis"
+
+   Splits the program into tokens. Might be a completely invalid program, there
+   is no syntax checking here.
+
+   Creates the first internal representation: a list of tokens.
+
+** Parser
+
+   - NFA
+   - "Pushdown automata" aka stack machine
+   - Defined by a grammar
+
+   You can generate parsers from grammars. Or hand-write them. Hand-written ones
+   use
+
+   "Syntactical analysis"
+
+  Parsing only passes if it is a syntactically valid program. i.e. a program
+  that satisfies the grammar.
+
+  Creates the second, or maybe first "real" internal representation: an AST (can
+  it be anything else?).
+
+* Compiler vs Interpreter
+
+  A compiler translates code from one language to another. Presumably, the
+  compiler translates the source program into an equivalent program in the
+  target language.
+
+  Technically, compilers don't just operate on "programs"; they might translate
+  documents from one form to another. For example: pandoc.
+
+  An interpreter /executes/ code. Computer programs need to be interpreted
+  (executed) at some point, so /something/ has to interpret them. At the lowest
+  level, a CPU can interpret programs in the binary format for that CPU.
+
+* Kinds of Intepreters
+
+** AST
+
+
+** Bytecode
+
+   A bytecode interpreter is sometimes called a "virtual machine", as in: "the
+   Python virtual machine".
+
+   Advantage:
+
+   - Saves space
+   - More granular instructions, closer to a physical machine
+
+* Stack Machines vs Register Machines
+
+** Stack Machine
+
+   [[https://gist.github.com/rexim/a52f89e6500ac6328f017d0db1b518b8][Example in C]].
+
+   - "pushdown automata"
+   - Can interpret an NFA
+
+   The program is an array of instructions. Each instruction is an operation and
+   maybe some additinal data (e.g. "push 35").
+
+   The stack machine is another program that has a stack. It reads the program
+   array one item at a time.
+
+   Result is always on top of the stack
+
+** Register Machine

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2021-09-11 Sat 05:49 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>&lrm;</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org2652b6c">Secrets Using Keychain</a>
+<ul>
+<li><a href="#org139d9b5">Add a secret</a></li>
+<li><a href="#orga513d68">Delete Secret</a></li>
+<li><a href="#org6c6732c">Retrieve Secret</a></li>
+</ul>
+</li>
+<li><a href="#org5f5f8fa">Temp Files</a></li>
+<li><a href="#org2a7f44f">Cache Files</a></li>
+</ul>
+</div>
+</nav>
+<div id="outline-container-org2652b6c" class="outline-2">
+<h2 id="org2652b6c"><a href="#org2652b6c">Secrets Using Keychain</a></h2>
+<div class="outline-text-2" id="text-org2652b6c">
+</div>
+<div id="outline-container-org139d9b5" class="outline-3">
+<h3 id="org139d9b5"><a href="#org139d9b5">Add a secret</a></h3>
+<div class="outline-text-3" id="text-org139d9b5">
+<div class="org-src-container">
+<pre class="src src-sh">security add-generic-password <span style="color: #98be65;">\</span>
+         -a ${<span style="color: #dcaeea;">USER</span>} <span style="color: #98be65;">\</span>
+         -s $<span style="color: #dcaeea;">NAME</span> <span style="color: #98be65;">\</span>
+         -w $<span style="color: #dcaeea;">VALUE</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga513d68" class="outline-3">
+<h3 id="orga513d68"><a href="#orga513d68">Delete Secret</a></h3>
+<div class="outline-text-3" id="text-orga513d68">
+<div class="org-src-container">
+<pre class="src src-sh">security delete-generic-password -a ${<span style="color: #dcaeea;">USER</span>} -s $<span style="color: #dcaeea;">1</span> &gt;/dev/null
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6c6732c" class="outline-3">
+<h3 id="org6c6732c"><a href="#org6c6732c">Retrieve Secret</a></h3>
+<div class="outline-text-3" id="text-org6c6732c">
+<div class="org-src-container">
+<pre class="src src-sh">security find-generic-password -a ${<span style="color: #dcaeea;">USER</span>} -s $<span style="color: #dcaeea;">1</span> -w
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5f5f8fa" class="outline-2">
+<h2 id="org5f5f8fa"><a href="#org5f5f8fa">Temp Files</a></h2>
+<div class="outline-text-2" id="text-org5f5f8fa">
+<div class="org-src-container">
+<pre class="src src-sh">getconf DARWIN_USER_TEMP_DIR
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+/var/folders/qh/z7vjfvbs1r38h5nrkby45wx80000gp/T/
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org2a7f44f" class="outline-2">
+<h2 id="org2a7f44f"><a href="#org2a7f44f">Cache Files</a></h2>
+<div class="outline-text-2" id="text-org2a7f44f">
+<div class="org-src-container">
+<pre class="src src-sh">getconf DARWIN_USER_CACHE_DIR
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+/var/folders/qh/z7vjfvbs1r38h5nrkby45wx80000gp/C/
+</pre>
+</div>
+</div>
+</div>
+</body>
+</html>

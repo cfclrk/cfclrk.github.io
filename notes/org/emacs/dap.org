@@ -1,0 +1,28 @@
+#+TITLE: Dap Mode
+#+SETUPFILE: ../setup.org
+
+
+* Debug
+
+  In source file, move point somewhere you want a breakpoint, and run
+  =M-x dap-breakpoint-toggle=
+
+  Go to test file, move point to a test. Run =dap-debug=. Select option to run
+  the pytest test at point.
+
+** Jumping in the Stack
+
+   You can jump forward or backward in the stack. Use =M-x
+   dap-switch-stack-frame=, or click around in the "Debug Sessions" dap buffer.
+
+  - =dap-disconnect= Quit the debugging session
+
+** Rerun last
+
+   =dap=
+
+* Old Sessions
+
+  Saves output from old debug sessions
+
+  Delete them in the =dap-ui-sessions= buffer, =D=

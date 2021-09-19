@@ -1,0 +1,33 @@
+* Python Lambda Function
+
+** Requirements:
+
+- The source code should have unit tests.
+- It should be easy to run unit tests locally and in CI.
+- The source code should provide a mechanism for installing and configuring
+  development packages (packages only needed during development, like =pytest=,
+  =mypy=, =black=, etc).
+- The deployed Function should not include dev packages.
+- The deployed Function should not include unnecessary files (like tests, the
+  README.md, Makefile, etc)
+
+Bonus features:
+
+- Test the Function locally with the SAM CLI.
+- Deploy the function with the SAM CLI (in case you want to run/test it in
+  isolation).
+
+** aws_lambda Function
+
+** aws_lambda DockerImageFunction
+
+** aws_lambda_python PythonFunction
+
+The =aws_lambda_python.PythonFunction= is a high-level construct meant to
+simplify the deployment of Lambda Functions written in Python.
+
+This bundles the code as a zip file, which means the source code is nicely
+readable in the AWS Console.
+
+The =PythonFunction= construct documents
+[[https://docs.aws.amazon.com/cdk/api/latest/python/aws_cdk.aws_lambda_python/README.html#module-dependencies][three ways]] that it can automatically handle project dependencies.

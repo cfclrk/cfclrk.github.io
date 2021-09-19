@@ -1,0 +1,1062 @@
+#+TITLE: AWS Commands
+#+SETUPFILE: ../../setup.org
+#+PROPERTY: header-args+ :results output
+
+* Variables                                                        :noexport:
+
+  #+NAME: env
+  | Env Var            | Value            |
+  |--------------------+------------------|
+  | AWS_PROFILE        | cloud-infra-prod |
+  | AWS_DEFAULT_REGION | us-east-1        |
+
+  #+begin_src emacs-lisp :var env=env
+    (setenv-file-export-pairs env)
+  #+end_src
+
+* Account
+
+  Account number:
+
+  #+NAME: Account
+  #+begin_src sh
+    aws sts get-caller-identity --query 'Account' --output text
+  #+end_src
+
+* IP Address Ranges
+
+  AWS documentation is [[https://docs.aws.amazon.com/general/latest/gr/aws-ip-ranges.html][here]].
+
+  #+NAME: IpRanges
+  #+begin_src sh :results file :file ip_ranges.json
+    curl -s https://ip-ranges.amazonaws.com/ip-ranges.json
+  #+end_src
+
+  #+RESULTS: IpRanges
+  [[file:ip_ranges.json]]
+
+  #+begin_src sh :var IpRanges=IpRanges
+    cat "$IpRanges" \
+        | jq '.prefixes[]
+              | select(.region = "us-east-2")
+              | .ip_prefix'
+  #+end_src
+
+** Get Region of IP
+
+   (Would be cool).
+
+   Check IP address against each CIDR range. Would be cool to do this using bit
+   comparisons.
+
+   See: https://unix.stackexchange.com/questions/274330/check-ip-is-in-range-of-whitelist-array
+
+* All Regions
+
+** All Regions in Partition
+
+   #+NAME: AllRegions
+   #+begin_src sh :cache yes
+     aws ec2 describe-regions | jq -r ".Regions[].RegionName"
+   #+end_src
+
+   #+RESULTS[38daa3accfaed92cf15bd1e035de2f8ae9fde37b]: AllRegions
+   : af-south-1
+   : eu-north-1
+   : ap-south-1
+   : eu-west-3
+   : eu-west-2
+   : eu-west-1
+   : ap-northeast-3
+   : ap-northeast-2
+   : me-south-1
+   : ap-northeast-1
+   : sa-east-1
+   : ca-central-1
+   : ap-southeast-1
+   : ap-southeast-2
+   : eu-central-1
+   : us-east-1
+   : us-east-2
+   : us-west-1
+   : us-west-2
+
+   Number of regions:
+
+   #+begin_src sh :var AllRegions=AllRegions
+     echo $AllRegions | wc -w   # Using wc
+
+     regions=($AllRegions)      # Or use an array
+     echo ${#regions[*]}
+   #+end_src
+
+   #+RESULTS:
+   :       19
+   : 19
+
+** All Regions in All Partitions
+
+   Should be in the botocore data files. Also, we can pull them from the IpRanges
+   document. You have to decide whether "GLOBAL" is a "region" in your situation.
+
+   #+begin_src sh :var IpRanges=IpRanges
+     cat "$IpRanges" \
+         | jq -r '.prefixes[].region' \
+         | sort | uniq
+   #+end_src
+
+   #+RESULTS:
+   : GLOBAL
+   : af-south-1
+   : ap-east-1
+   : ap-northeast-1
+   : ap-northeast-2
+   : ap-northeast-3
+   : ap-south-1
+   : ap-south-2
+   : ap-southeast-1
+   : ap-southeast-2
+   : ap-southeast-3
+   : ap-southeast-4
+   : ca-central-1
+   : cn-north-1
+   : cn-northwest-1
+   : eu-central-1
+   : eu-central-2
+   : eu-north-1
+   : eu-south-1
+   : eu-south-2
+   : eu-west-1
+   : eu-west-2
+   : eu-west-3
+   : me-central-1
+   : me-south-1
+   : sa-east-1
+   : us-east-1
+   : us-east-2
+   : us-gov-east-1
+   : us-gov-west-1
+   : us-west-1
+   : us-west-2
+
+** Run a Command in All Regions
+
+   Get the number of VPCs in each region the slow and simple way.
+
+   #+begin_src sh :var AllRegions=AllRegions
+     for region in $AllRegions; do
+         vpcs=($(aws --region $region ec2 describe-vpcs | jq '.Vpcs[].VpcId'))
+         echo "$region: ${#vpcs[*]}"
+     done
+   #+end_src
+
+   #+RESULTS:
+   #+begin_example
+   eu-north-1: 0
+   ap-south-1: 0
+   eu-west-3: 0
+   eu-west-2: 0
+   eu-west-1: 0
+   ap-northeast-3: 1
+   ap-northeast-2: 0
+   ap-northeast-1: 0
+   sa-east-1: 0
+   ca-central-1: 0
+   ap-southeast-1: 1
+   ap-southeast-2: 0
+   eu-central-1: 0
+   us-east-1: 2
+   us-east-2: 2
+   us-west-1: 0
+   us-west-2: 0
+   #+end_example
+
+   Get the number of VPCs in each region the 🚀 and 😎 (and 🤮) way by starting a
+   subprocess for each region in parallel. Note that =${#regions[*]}= is bash
+   syntax for th length of the =$regions= array.
+
+   #+begin_src sh :var AllRegions=AllRegions
+     script=$(cat <<-"EOF"
+     vpcs=($(aws --region {} ec2 describe-vpcs | jq '.Vpcs[].VpcId'))
+     echo "{}: ${#vpcs[*]}"
+     EOF
+     )
+     regions=($AllRegions)
+     echo ${regions[*]} | xargs -n 1 -P ${#regions[*]} -I {} bash -c "$script"
+   #+end_src
+
+   #+RESULTS:
+   #+begin_example
+   us-east-1: 2
+   ca-central-1: 0
+   us-east-2: 2
+   us-west-1: 0
+   eu-west-3: 0
+   eu-west-2: 0
+   eu-west-1: 0
+   us-west-2: 0
+   eu-central-1: 0
+   eu-north-1: 0
+   sa-east-1: 0
+   ap-northeast-3: 1
+   ap-northeast-1: 0
+   ap-northeast-2: 0
+   ap-southeast-2: 0
+   ap-south-1: 0
+   ap-southeast-1: 1
+   #+end_example
+
+* ACM
+
+** List
+
+   #+begin_src sh
+     aws acm list-certificates --includes "keyUsage=ANY" | jq '.CertificateSummaryList[]'
+   #+end_src
+
+** Describe
+
+   #+begin_src sh :var CertArn=""
+     aws acm describe-certificate --certificate-arn $CertArn
+   #+end_src
+
+** Get Certificate
+
+   #+begin_src sh :var CertificateArn="" :results output
+     aws acm get-certificate --certificate-arn $CertificateArn
+   #+end_src
+
+** Get Certificate PEM File
+
+   #+begin_src sh :var CertificateArn="" :results output
+     aws acm get-certificate --certificate-arn $CertificateArn \
+         | jq -r '.Certificate' > route_guide_cert.pem
+   #+end_src
+
+   #+begin_src sh
+     cat appliance_cert.pem
+   #+end_src
+
+* API Gateway V2
+
+** List APIs
+
+   #+begin_src sh
+     aws apigatewayv2 get-apis | jq '.Items[]'
+   #+end_src
+
+* CloudFormation
+
+  For create/deploy/update, see my [[https://github.com/cfclrk/cloudformation/blob/main/README.org][cloudformation/README.org]].
+
+** View Stack Log
+
+   #+begin_src sh
+     aws cloudformation list-stacks \
+         | jq -M '.StackSummaries[0].StackId' \
+         | xargs aws cloudformation describe-stack-events --stack-name
+   #+end_src
+
+** List Stacks
+
+   List only the created stacks
+
+   #+begin_src sh
+     aws cloudformation list-stacks \
+         --stack-status-filter CREATE_IN_PROGRESS CREATE_COMPLETE
+   #+end_src
+
+** Stack Outputs
+
+   #+begin_src sh :var StackName="test-network-public"
+     aws cloudformation describe-stacks \
+         --stack-name $StackName \
+        | jq '.Stacks[].Outputs[]'
+   #+end_src
+
+   Get the value of a single output:
+
+   #+begin_src sh :var StackName="test-network-public" OutputKey="PublicSubnet1"
+     aws cloudformation describe-stacks \
+         --stack-name $StackName \
+         --query "Stacks[0].Outputs[?OutputKey=='$OutputKey'].OutputValue" \
+         --output text
+   #+end_src
+
+** Get Stack Parameters
+
+   Get all parameters used to create a particular stack:
+
+   #+begin_src sh :var StackName="test-ec2-instance"
+     aws cloudformation describe-stacks \
+         --stack-name $StackName \
+         | jq '.Stacks[].Parameters[]'
+   #+end_src
+
+   Get the value of a single parameter:
+
+   #+begin_src sh :var StackName="test-ec2-instance" Parameter="DeploymentName"
+     aws cloudformation describe-stacks \
+         --stack-name $StackName \
+         --query "Stacks[0].Parameters[?ParameterKey=='$Parameter'].ParameterValue" \
+         --output text
+   #+end_src
+
+** Exports
+
+   Get value of the exported field with name =$ExportName=:
+
+   #+begin_src sh :var ExportName="test-PublicSubnet1"
+     aws cloudformation list-exports \
+         --query "Exports[?Name=='$ExportName'].Value" \
+         --output text
+   #+end_src
+
+   List exports that start with a string:
+
+   #+begin_src sh
+     aws cloudformation list-exports \
+         --query "Exports[?starts_with(Name, 'foo-')].[Name, Value]" \
+         --output text
+   #+end_src
+
+** Spec Files
+
+   Spec files are documented [[https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html][here]].
+
+   #+begin_src sh
+     curl https://dnwj8swjjbsbt.cloudfront.net/latest/CloudFormationResourceSpecification.zip \
+          -o us_east_2.zip
+   #+end_src
+
+* CloudWatch
+
+** Delete All Alarms
+
+   #+begin_src sh
+     alarms=$(aws cloudwatch describe-alarms \
+                  | jq -r '.MetricAlarms[].AlarmName')
+     for alarm in $alarms; do
+         aws cloudwatch delete-alarms --alarm-names $alarm;
+     done
+   #+end_src
+
+** Create Alarm Targeting ASG policy
+
+   #+begin_src sh
+     aws cloudwatch put-metric-alarm \
+         --alarm-name AddCapacity \
+         --metric-name CPUUtilization \
+         --namespace AWS/EC2 \
+         --statistic Average \
+         --period 120 \
+         --threshold 80 \
+         --comparison-operator GreaterThanOrEqualToThreshold \
+         --dimensions "Name=AutoScalingGroupName,Value=my-asg" \
+         --evaluation-periods 2 \
+         --alarm-actions $ScalingPolicyArn
+   #+end_src
+
+* DynamoDB
+
+  The paper: [[https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf][Dynamo: Amazon’s Highly Available Key-value Store]]. This describes a
+  distributed database with a leaderless replication model.
+
+  From [[https://shop.aer.io/oreilly/p/designing-data-intensive-applications/9781449373320-9149][Designing Data-Intensive Applications]] by Martin Kleppmann:
+
+  #+begin_quote
+  Dynamo is not available to users outside of Amazon. Confusingly, AWS offers a
+  hosted database product called DynamoDB, which uses a completely different
+  architecture: it is based on single-leader replication.
+  #+end_quote
+
+** Create table with local secondary index
+
+   #+begin_src sh
+     aws dynamodb create-table \
+         --table-name MusicCollection2 \
+         --attribute-definitions AttributeName=Artist,AttributeType=S AttributeName=SongTitle,AttributeType=S AttributeName=Score,AttributeType=S \
+         --key-schema AttributeName=Artist,KeyType=HASH AttributeName=SongTitle,KeyType=RANGE \
+         --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 \
+         --local-secondary-indexes "IndexName=SuperCat,KeySchema=[{AttributeName=Artist,KeyType=HASH},{AttributeName=Score,KeyType=RANGE}],Projection={ProjectionType=KEYS_ONLY}"
+   #+end_src
+
+** List Tables
+
+   #+begin_src sh
+     aws dynamodb  list-tables | jq '.TableNames[]'
+   #+end_src
+
+** Delete Tables Like a Maniac
+
+   #+begin_src sh
+     echo ${tables[*]} \
+         | xargs -n 1 -P 10 -I {} sh -c \
+                 'aws dynamodb delete-table --table-name {} && aws dynamodb wait table-not-exists --table-name {}'
+   #+end_src
+
+   TODO: When I originally wrote this, I remember needing to add a =tr " " "\n"=
+   or something for portability with Linux. Test this out again.
+
+* EC2 AMIs
+
+** List AMIs
+
+   All of this account's AMIs:
+
+   #+begin_src sh :var Account=Account
+     aws ec2 describe-images --owners $Account
+   #+end_src
+
+   All of this account's AMIs with a particular Name tag:
+
+   #+begin_src sh
+     aws ec2 describe-images \
+         --owners $account \
+         --filters "Name=tag:Name,Values=My AMI"
+   #+end_src
+
+** Get Latest Image
+
+   #+begin_src sh :var Account=Account
+     aws ec2 describe-images \
+         --owners $Account \
+         --filters "Name=state,Values=available" \
+         | jq -r '.Images | sort_by(.CreationDate) | last | .ImageId'
+   #+end_src
+
+** Delete AMIs and EBS Snapshots
+
+   List AMIs to delete and set to variable =AmisToDelete=. Then:
+
+   #+begin_src sh :var AMIs=""
+     jq -c '.Images
+            | sort_by(.CreationDate)
+            | .[]
+            | {name: .Name, snap: .BlockDeviceMappings[]
+            | select(.Ebs != null)
+            | .Ebs.SnapshotId}' < $AmisToDelete > images.txt
+   #+end_src
+
+   And then... what did I do?
+
+   #+begin_src sh
+     for i in (cat images.txt | jq); do
+         # deregister image
+         # delete the snapshot
+     done
+   #+end_src
+
+** List Accounts That Can Access AMI
+
+   #+begin_src sh
+     aws ec2 describe-image-attribute \
+         --image-id $ImageID \
+         --attribute launchPermission
+   #+end_src
+
+* EC2 KeyPairs
+
+** Create
+
+   #+NAME: KeyPair
+   #+begin_src sh :var KeyName="ixiactl" :cache yes
+     aws ec2 create-key-pair --key-name $KeyName
+   #+end_src
+
+   Copy private key to =~/.ssh=
+
+   #+begin_src bash :var KeyPair=KeyPair dir="ironnet"
+     KeyName=$(echo $KeyPair | jq -r '.KeyName')
+     KeyFile=~/.ssh/$dir/$KeyName
+     echo $KeyPair | jq -r '.KeyMaterial' > $KeyFile
+     chmod 0600 $KeyFile
+     echo $KeyFile
+   #+end_src
+
+** Describe
+
+   #+begin_src sh
+     aws ec2 describe-key-pairs | jq '.KeyPairs[]'
+   #+end_src
+
+   #+RESULTS:
+   #+begin_example
+   {
+     "KeyPairId": "key-086cc980cd005be07",
+     "KeyFingerprint": "d2:51:6b:bd:8a:af:cd:91:23:7f:12:b8:c9:a9:ed:87",
+     "KeyName": "chrisclark",
+     "Tags": []
+   }
+   {
+     "KeyPairId": "key-0e4a6a6133dcfbff4",
+     "KeyFingerprint": "47:b3:fa:a0:72:c7:78:d2:6c:52:88:83:e1:b9:e1:59:79:2d:86:5c",
+     "KeyName": "test",
+     "Tags": []
+   }
+   #+end_example
+
+** Delete
+
+   #+begin_src sh :var KeyName="test"
+     aws ec2 delete-key-pair --key-name $KeyName
+   #+end_src
+
+   #+RESULTS:
+
+* EC2 Instance
+
+** Get Running Instances
+
+   #+begin_src sh
+     aws ec2 describe-instances \
+         --query "Reservations[].Instances[?State.name=="running"]"
+   #+end_src
+
+** Get All Instance Tags
+
+   #+begin_src sh
+     aws ec2 describe-instances \
+         | jq -c '.Reservations[] | .Instances[] | .Tags[]'
+   #+end_src
+
+** Get Instances with Tag Key
+
+   With just a specific Tag key, disregarding value:
+
+   #+begin_src sh :var TagName=""
+     aws ec2 describe-instances \
+         --filter "Name=tag-key,Values=k8s.io/role/node" \
+         | jq '.Reservations[].Instances[]'
+   #+end_src
+
+** Get Instances with Tag Key/Value
+
+   With just a specific Tag key:
+
+   #+begin_src sh :var TagName="Project" TagValue="bps-ve-cloud"
+     aws ec2 describe-instances \
+         --filter "Name=tag:$TagName,Values=$TagValue" \
+         | jq -r '.Reservations[].Instances[].Tags[] | select(.Key == "Name") | .Value'
+   #+end_src
+
+   With a specific tag key and value
+
+* EC2 Transit Gateway
+
+** List Routes in a TG Route Table
+
+   #+begin_src sh :results output :var TGWRouteTableId=""
+     aws --profile shared-services --region us-east-1 \
+         ec2 search-transit-gateway-routes \
+         --transit-gateway-route-table-id $TGWRouteTableId \
+         --filters "Name=type,Values=propagated" \
+         | jq -r '.Routes[].DestinationCidrBlock'
+   #+end_src
+
+* EC2 VPCs
+
+** VPCs
+
+   #+begin_src bash
+     aws ec2 describe-vpcs | jq '.Vpcs[]'
+   #+end_src
+
+** Subnets
+
+   #+begin_src sh
+     aws ec2 describe-subnets  | jq '.Subnets'
+   #+end_src
+
+** SecurityGroups
+
+   #+begin_src sh
+     aws ec2 describe-security-groups  | jq '.SecurityGroups'
+   #+end_src
+
+** Private ALB IPs
+
+   #+begin_src sh
+     aws ec2 describe-network-interfaces \
+         | jq -r '.NetworkInterfaces[]
+               | select(.Attachment.InstanceOwnerId == "amazon-elb")
+               | .PrivateIpAddress'
+   #+end_src
+
+** Managed Prefix Lists
+
+   #+begin_src sh
+     aws ec2 describe-managed-prefix-lists | jq '.PrefixLists[]'
+   #+end_src
+
+   #+begin_src sh :var plid=""
+     aws ec2 get-managed-prefix-list-entries \
+         --prefix-list-id $plid | jq '.Entries[]'
+   #+end_src
+
+* ECR
+
+** Log in
+
+   #+begin_src sh :var Account=Account
+     PW=$(aws ecr get-login-password)
+     docker login \
+            --username AWS \
+            --password "$PW" \
+            "https://$Account.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com"
+   #+end_src
+
+* ECS
+
+  Fix a CloudFormation deployment where an ECS service fails to stabilize. Taken
+  from [[https://aws.amazon.com/premiumsupport/knowledge-center/cloudformation-ecs-service-stabilize/][this]] AWS blog post. Just updates the number of ECS service tasks to 0.
+
+  #+begin_src sh
+    aws ecs update-service \
+        --cluster $ECS_CLUSTER_NAME \
+        --service $ECS_SERVICE_NAME \
+        --desired-count 0
+  #+end_src
+
+* EKS
+
+** List Clusters
+
+   #+begin_src sh
+     aws eks list-clusters | jq '.clusters[]'
+   #+end_src
+
+** Get Kube Config
+
+   #+begin_src sh :var CLUSTER_NAME="harbor-prod"
+     aws eks update-kubeconfig --name $CLUSTER_NAME --kubeconfig $KUBECONFIG
+   #+end_src
+
+* Elasticache
+
+** List CasheClusters
+
+   #+begin_src sh
+     aws elasticache describe-cache-clusters \
+         --show-cache-node-info | jq '.CacheClusters'
+   #+end_src
+
+** List ReplicationGroups
+
+   #+begin_src sh
+     aws elasticache describe-replication-groups | jq '.ReplicationGroups'
+   #+end_src
+
+* ElasticBeanstalk
+
+** Config Options for Nampespace
+
+   #+begin_src sh
+     aws elasticbeanstalk describe-configuration-options \
+         | jq '.Options[]
+              | if .Namespace == "aws:autoscaling:launchconfiguration" then . else null end'
+   #+end_src
+
+* ElasticLoadBalancingV2
+
+** Describe ALBs
+
+   #+begin_src sh
+     aws elbv2 describe-load-balancers \
+         | jq '.LoadBalancers[] | select(.Type == "application")'
+   #+end_src
+
+** Get DNS Name
+
+   #+begin_src sh
+     aws elbv2 describe-load-balancers \
+         | jq -r --arg DEPLOYMENT_NAME "$DEPLOYMENT_NAME" \
+              '.LoadBalancers[]
+               | select(.Type == "application")
+               | select(.LoadBalancerName | startswith($DEPLOYMENT_NAME))
+               | .DNSName'
+   #+end_src
+
+* GlobalAccelerator
+
+  GlobalAccelerator is only in =us-west-2=, so set the region explicitly.
+
+** List Accelerators
+
+   #+begin_src sh
+     aws --region us-west-2 globalaccelerator \
+         list-accelerators | jq '.Accelerators[]'
+   #+end_src
+
+** List Listeners
+
+   #+begin_src sh :var AcceleratorArn=""
+     aws --region us-west-2 globalaccelerator \
+         list-listeners --accelerator-arn $AcceleratorArn
+   #+end_src
+
+** IPs
+
+   #+begin_src sh
+     aws --region us-west-2 globalaccelerator list-accelerators \
+         | jq -r '.Accelerators[].IpSets[].IpAddresses[]'
+   #+end_src
+
+* IAM
+
+** Create Policy
+
+   #+begin_src sh
+     aws iam create-policy \
+         --policy-name $PolicyName \
+         --policy-document '{
+       "Version": "2012-10-17",
+       "Statement": [{
+         "Effect": "Allow",
+         "Action": ["secretsmanager:GetSecretValue", "secretsmanager:DescribeSecret"],
+         "Resource": ["arn:*:secretsmanager:*:*:secret:MySecret-??????"]
+       }]
+     }'
+   #+end_src
+
+** Assume Role
+
+   #+begin_src sh
+     creds=$(aws sts assume-role --role-session-name foo --role-arn $RoleArn)
+     export AWS_ACCESS_KEY_ID=$(echo $creds | jq -r '.Credentials.AccessKeyId')
+     export AWS_SECRET_ACCESS_KEY=$(echo $creds | jq -r '.Credentials.SecretAccessKey')
+     export AWS_SESSION_TOKEN=$(echo $creds | jq -r '.Credentials.SessionToken')
+   #+end_src
+
+** List Instance Profiles
+
+   #+begin_src sh
+     aws iam list-instance-profiles \
+         | jq '.InstanceProfiles[].InstanceProfileName'
+   #+end_src
+
+** Delete Instance Profile
+
+   #+begin_src sh :var Name=""
+     aws iam delete-instance-profile \
+         --instance-profile-name $Name
+   #+end_src
+
+* IMDS
+
+  http://169.254.169.254/latest/meta-data/
+
+* Kinesis
+
+** Delete all Kinesis Streams
+
+   #+begin_src fish
+     for region in $regions
+         set streams (aws --region $region kinesis list-streams | jq -r ".StreamNames[]")
+         for stream in $streams
+             echo $region $stream
+             aws --region $region kinesis delete-stream --stream-name $stream
+         end
+     end
+   #+end_src
+
+* Kinesis Firehose
+
+** Describe Stream
+
+   #+begin_src sh :var StreamName=""
+     aws firehose describe-delivery-stream \
+         --delivery-stream-name $StreamName | jq '.DeliveryStreamDescription'
+   #+end_src
+
+** Update Stream S3 Destination Bucket
+
+   #+begin_src sh :var StreamName="" BucketName="example"
+     aws firehose update-destination \
+         --delivery-stream-name $StreamName \
+         --current-delivery-stream-version-id 1 \
+         --destination-id destinationId-000000000001 \
+         --extended-s3-destination-update BucketARN=arn:aws:s3:::$BucketName
+   #+end_src
+
+   THEN:
+   - Update the Stream's IAM policy to allow it to write to the new location
+   - Update the S3 Bucket Policy to allow the Stream's IAM Role to write to it
+
+** Update Stream S3 Destination Prefix
+
+   #+begin_src sh :var StreamName="" Prefix="firehose/example/"
+     aws firehose update-destination \
+         --delivery-stream-name $StreamName \
+         --current-delivery-stream-version-id 1 \
+         --destination-id destinationId-000000000001 \
+         --extended-s3-destination-update Prefix=$Prefix
+   #+end_src
+
+   Also may need to update the IAM Policy and the S3 Bucket policy, as above.
+
+* Lambda
+
+** Invoke function
+
+   #+begin_src bash
+     aws lambda invoke \
+         --cli-binary-format raw-in-base64-out \
+         --function-name cf-Hello-World \
+         /tmp/cats.json
+   #+end_src
+
+   Invoke from a bastion host:
+
+   #+begin_src bash :results output :dir /ssh:ec2-user@13.59.90.58|ssh:ec2-user@10.192.20.15:/
+     /usr/local/bin/aws lambda invoke \
+      --cli-binary-format raw-in-base64-out \
+      --function-name cf-Hello-World \
+      /tmp/cats.json
+   #+end_src
+
+   #+begin_src sh
+     cat /tmp/out.json | jq -r '.body' | jq
+   #+end_src
+
+   With payload file:
+
+   #+begin_src bash
+     aws lambda invoke \
+         --cli-binary-format raw-in-base64-out \
+         --function-name hello-world \
+         --payload file://tests/resources/event_alb.json \
+         /tmp/out.json
+   #+end_src
+
+** Create Function with Zip File
+
+   #+begin_src sh
+     aws lambda create-function \
+         --function-name artifacttool \
+         --runtime python2.7 \
+         --role $RoleArn \
+         --handler lambda_function.lambda_handler \
+         --zip-file fileb://$ZipFileName
+   #+end_src
+
+** Update Function code with Zip File
+
+   #+begin_src sh
+     aws lambda update-function-code \
+         --function-name artifacttool \
+         --zip-file fileb://$ZipFileName
+   #+end_src
+
+** Container Image: Run Interactively
+
+   #+begin_src sh
+     docker run -it --rm --entrypoint bash public.ecr.aws/lambda/python:3.8
+   #+end_src
+
+* Organizations
+
+  #+NAME: OrgRoot
+  #+begin_src sh
+    aws organizations list-roots | jq -r '.Roots[].Id'
+  #+end_src
+
+* Polly
+
+  #+begin_src sh
+    aws polly synthesize-speech \
+        --engine standard \
+        --output-format mp3 \
+        --voice-id Amy \
+        --text "All these cats wear hats." \
+        /tmp/speech_standard.mp3 \
+        && afplay /tmp/speech_standard.mp3
+  #+end_src
+
+** Say something from insultgenerator.org
+
+   Doesn't work anymore. Get a new insult.
+
+   #+begin_src sh
+     aws polly synthesize-speech \
+         --output-format mp3 \
+         --text "$(curl insultgenerator.org | sed -n '/wrap/,/div/ { s/<[^>]*>//g; p; } ')" \
+         --voice-id Justin \
+         /tmp/speech.mp3 \
+         && afplay /tmp/speech.mp3
+   #+end_src
+
+* Reosurce Access Manager (RAM)
+
+  This needs to be run against the AWS account that actually owns the shared
+  resources. E.g. in a LandingZone environment, probably the shared-services
+  account.
+
+  #+begin_src sh
+    aws ram list-resources --resource-owner SELF
+  #+end_src
+
+* Route53
+
+** Get HostedZoneId from Name
+
+   #+NAME: HostedZoneId
+   #+begin_src sh :var HostedZoneName="irondev.io" :cache yes
+     aws route53 list-hosted-zones \
+         | jq -r --arg name $HostedZoneName \
+              '.HostedZones[] | select(.Name == $name + ".") | .Id'
+   #+end_src
+
+** List Records for a HostedZone
+
+   Records containing a certain string:
+
+   #+begin_src sh :var HostedZoneId=HostedZoneId
+     aws route53 list-resource-record-sets \
+         --hosted-zone-id $HostedZoneId \
+         | jq '.ResourceRecordSets[]
+               | select(.Name | contains("daily"))
+               | .Name'
+   #+end_src
+
+* SecretsManager
+
+** List Secrets
+
+   #+begin_src sh
+     aws secretsmanager list-secrets
+   #+end_src
+
+** Get Secret
+
+   #+begin_src sh :var SecretName="/ixiactl/BP_PASSWORD"
+     aws secretsmanager get-secret-value \
+         --secret-id $SecretName \
+         | jq -r '.SecretString'
+   #+end_src
+
+** Create Secret
+
+   #+begin_src sh :var SecretName="/ixiactl/BP_PASSWORD" SecretValue=""
+     aws secretsmanager create-secret \
+         --name $SecretName \
+         --secret-string $SecretValue
+   #+end_src
+
+* ServiceCatalog
+
+** Get Product IDs
+
+   #+begin_src sh
+     aws --profile main servicecatalog search-products-as-admin
+   #+end_src
+
+** Launch Product
+
+   Note that user, even Admin user, must be added to the Portfolio users/groups.
+   You can do this with =aws servicecatalog associate-principal-with-portfolio=
+
+* Service Quotas
+
+** Get Quota
+
+   #+begin_src sh :results output
+     aws service-quotas list-service-quotas \
+         --service-code firehose \
+         | jq '.Quotas[] | {QuotaName, Value}'
+   #+end_src
+
+** Get Default Quota
+
+   #+begin_src sh :var QuotaCode="L-14BB0BE7"
+     aws service-quotas get-aws-default-service-quota \
+         --service-code firehose \
+         --quota-code $QuotaCode
+   #+end_src
+
+* S3
+
+** Canonical ID
+
+   #+begin_src sh :var BucketName=""
+     aws s3api get-bucket-acl --bucket $BucketName
+   #+end_src
+
+** List objects in bucket
+
+   All objects
+
+   #+begin_src sh :var BucketName=""
+     aws s3api list-objects-v2 \
+         --bucket $BucketName \
+         | jq '.Contents[]'
+   #+end_src
+
+   10 most recent objects. AWS has no way of doing this filtering server-side,
+   so you need to request all objects and then sort them.
+
+   #+begin_src sh :var BucketName="" :results output
+     aws s3api list-objects-v2 \
+         --bucket $BucketName \
+         | jq -r '.Contents | sort_by(.LastModified) | reverse | first | .Key'
+   #+end_src
+
+** Get Object
+
+   #+begin_src sh :var BucketName="" Key=""
+     aws s3api get-object \
+         --bucket $BucketName \
+         --key $Key ./foo
+   #+end_src
+
+** Get bucket policy
+
+   #+begin_src sh :var BucketName="" :results output
+     aws s3api get-bucket-policy --bucket $BucketName \
+         | jq -r '.Policy' | jq
+   #+end_src
+
+** Delete Buckets with Name
+
+   #+begin_src sh :var Name="foo"
+     buckets=$(aws s3api list-buckets | jq -r .Buckets[].Name  | grep $Name)
+     for bucket in $buckets; do
+         aws s3 rb s3://$bucket
+     done
+   #+end_src
+
+* SNS
+
+** SNS topics
+
+   #+begin_src sh
+     aws sns list-topics | jq '.Topics[] | .TopicArn'
+   #+end_src
+
+* SQS
+
+** List Queues
+
+   #+begin_src sh
+     aws sqs list-queues | jq '.QueueUrls[]'
+   #+end_src
+
+* SSO
+
+** Token
+
+   TODO: Look up token file programatically
+
+   #+NAME: SsoToken
+   #+begin_src sh :var tokenFile="/Users/chris.clark/.aws/sso/cache/b9d131856200283be9603e59dc49f1dc50aa7c62.json"
+     token=$(cat $tokenFile | jq -r '.accessToken')
+     echo $token
+   #+end_src
+
+** List Accounts I Can Access
+
+   #+begin_src sh :var SsoToken=""
+     aws  sso list-accounts \
+          --access-token $SsoToken \
+         | jq -c '.accountList[] | {accountName, accountId}'
+   #+end_src

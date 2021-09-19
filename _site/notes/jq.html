@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>jq</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">jq</h1>
+</header><nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org2febaae">Period in Key</a></li>
+<li><a href="#org01b7437">Multiline</a></li>
+<li><a href="#orgabe20c8">Variable as Argument</a></li>
+<li><a href="#orgc9aa045">Select</a>
+<ul>
+<li><a href="#org4f9a6a6">Name Contains</a></li>
+<li><a href="#orgaa5b02b">Name Starts With</a></li>
+</ul>
+</li>
+<li><a href="#org24bcc9b">AWS Resources with Tag</a>
+<ul>
+<li><a href="#orgd1ece9c">Use <code>aws --filter</code></a></li>
+</ul>
+</li>
+<li><a href="#org7fdeb98">Sorting</a></li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-org2febaae" class="outline-2">
+<h2 id="org2febaae"><a href="#org2febaae">Period in Key</a></h2>
+<div class="outline-text-2" id="text-org2febaae">
+<pre class="example" id="orgf63c555">
+{
+    "apiVersion": "v1",
+    "data": {
+        "tls.crt": "Zm9vCg==",
+        "tls.key": "YmFyCg=="
+    },
+    "kind": "Secret",
+    "type": "kubernetes.io/tls"
+}
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">KubeSecret</span> | jq -r <span style="color: #98be65;">'.data["tls.crt"]'</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+Zm9vCg==
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org01b7437" class="outline-2">
+<h2 id="org01b7437"><a href="#org01b7437">Multiline</a></h2>
+<div class="outline-text-2" id="text-org01b7437">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">GithubRelease</span> <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.assets[]</span>
+<span style="color: #98be65;">          | select(.name == "py-demo-Darwin-x86_64")</span>
+<span style="color: #98be65;">          | .name'</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+py-demo-Darwin-x86_64
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgabe20c8" class="outline-2">
+<h2 id="orgabe20c8"><a href="#orgabe20c8">Variable as Argument</a></h2>
+<div class="outline-text-2" id="text-orgabe20c8">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">GithubRelease</span> <span style="color: #98be65;">\</span>
+    | jq --arg name <span style="color: #98be65;">"py-demo-Darwin"</span> <span style="color: #98be65;">\</span>
+         <span style="color: #98be65;">'.assets[]</span>
+<span style="color: #98be65;">          | select(.name | startswith($name))</span>
+<span style="color: #98be65;">          | .name'</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+py-demo-Darwin-x86_64
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgc9aa045" class="outline-2">
+<h2 id="orgc9aa045"><a href="#orgc9aa045">Select</a></h2>
+<div class="outline-text-2" id="text-orgc9aa045">
+</div>
+<div id="outline-container-org4f9a6a6" class="outline-3">
+<h3 id="org4f9a6a6"><a href="#org4f9a6a6">Name Contains</a></h3>
+<div class="outline-text-3" id="text-org4f9a6a6">
+<pre class="example" id="org67b57dd">
+[
+  {"name": "This is item1"},
+  {"name": "This is item2"},
+  {"name": "item3"}
+]
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">Items</span> <span style="color: #98be65;">\</span>
+    | jq -c <span style="color: #98be65;">'.[] | select(.name | contains("item2"))'</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+{"name":"This is item2"}
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgaa5b02b" class="outline-3">
+<h3 id="orgaa5b02b"><a href="#orgaa5b02b">Name Starts With</a></h3>
+<div class="outline-text-3" id="text-orgaa5b02b">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">Items</span> <span style="color: #98be65;">\</span>
+    | jq -c <span style="color: #98be65;">'.[] | select(.name | startswith("This is"))'</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+{"name":"This is item1"}
+{"name":"This is item2"}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org24bcc9b" class="outline-2">
+<h2 id="org24bcc9b"><a href="#org24bcc9b">AWS Resources with Tag</a></h2>
+<div class="outline-text-2" id="text-org24bcc9b">
+</div>
+<div id="outline-container-orgd1ece9c" class="outline-3">
+<h3 id="orgd1ece9c"><a href="#orgd1ece9c">Use <code>aws --filter</code></a></h3>
+<div class="outline-text-3" id="text-orgd1ece9c">
+<p>
+Some AWS commands provide a <code>--filter</code> option that allows filtering by tag.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">aws ec2 describe-addresses <span style="color: #98be65;">\</span>
+    --filters <span style="color: #98be65;">"Name=tag:Name,Values=cfclrk"</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7fdeb98" class="outline-2">
+<h2 id="org7fdeb98"><a href="#org7fdeb98">Sorting</a></h2>
+<div class="outline-text-2" id="text-org7fdeb98">
+<div class="org-src-container">
+<pre class="src src-sh">aws s3api list-objects-v2 <span style="color: #98be65;">\</span>
+    --bucket $<span style="color: #dcaeea;">BUCKET</span> <span style="color: #98be65;">\</span>
+    --prefix <span style="color: #98be65;">"foo/bar"</span> <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.Contents | sort_by(.LastModified)'</span>
+</pre>
+</div>
+
+<p>
+If you see an error like <code>Cannot index string with string</code>, it's probably
+because you are not piping a proper list to it. For example:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">cat $<span style="color: #dcaeea;">data</span> | jq <span style="color: #98be65;">'.Stuff[] | sort_by(.Time)'</span>  <span style="color: #5B6268;"># </span><span style="color: #5B6268;">Bad</span>
+
+cat $<span style="color: #dcaeea;">data</span> | jq <span style="color: #98be65;">'.Stuff | sort_by(.Time)'</span>    <span style="color: #5B6268;"># </span><span style="color: #5B6268;">Good</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

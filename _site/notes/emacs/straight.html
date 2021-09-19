@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Straight</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Straight</h1>
+</header><nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org5670bb0">Install Packages</a></li>
+<li><a href="#org0bc49f7">Get Package Info</a></li>
+<li><a href="#orgeb94b7f">Update Packages</a></li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-org5670bb0" class="outline-2">
+<h2 id="org5670bb0"><a href="#org5670bb0">Install Packages</a></h2>
+<div class="outline-text-2" id="text-org5670bb0">
+<p>
+Interactively: <code>M-x straight-use-package</code>
+</p>
+
+<p>
+In code:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>straight-use-package 'el-patch<span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<p>
+Install a package with a custom recipe:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>straight-use-package '<span style="color: #c678dd;">(</span>el-patch <span style="color: #c678dd;">:type</span> git <span style="color: #c678dd;">:host</span> github <span style="color: #c678dd;">:repo</span> <span style="color: #98be65;">"raxod502/el-patch"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<p>
+Install a fork:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>straight-use-package
+ '<span style="color: #c678dd;">(</span>el-patch <span style="color: #c678dd;">:type</span> git <span style="color: #c678dd;">:host</span> github <span style="color: #c678dd;">:repo</span> <span style="color: #98be65;">"raxod502/el-patch"</span>
+            <span style="color: #c678dd;">:fork</span> <span style="color: #98be65;">(</span><span style="color: #c678dd;">:host</span> github <span style="color: #c678dd;">:repo</span> <span style="color: #98be65;">"your-name/el-patch"</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<p>
+Use a straight recipe with use-package:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">use-package</span> <span style="color: #a9a1e1;">el-patch</span>
+  <span style="color: #c678dd;">:straight</span> <span style="color: #c678dd;">(</span>el-patch <span style="color: #c678dd;">:type</span> git <span style="color: #c678dd;">:host</span> github <span style="color: #c678dd;">:repo</span> <span style="color: #98be65;">"raxod502/el-patch"</span>
+                      <span style="color: #c678dd;">:fork</span> <span style="color: #98be65;">(</span><span style="color: #c678dd;">:host</span> github <span style="color: #c678dd;">:repo</span> <span style="color: #98be65;">"your-name/el-patch"</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0bc49f7" class="outline-2">
+<h2 id="org0bc49f7"><a href="#org0bc49f7">Get Package Info</a></h2>
+<div class="outline-text-2" id="text-org0bc49f7">
+<p>
+Get the default recipe for any package: <code>M-x straight-get-recipe</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgeb94b7f" class="outline-2">
+<h2 id="orgeb94b7f"><a href="#orgeb94b7f">Update Packages</a></h2>
+<div class="outline-text-2" id="text-orgeb94b7f">
+<p>
+<code>M-x straight-pull-all</code>
+</p>
+</div>
+</div>
+</div>
+</body>
+</html>

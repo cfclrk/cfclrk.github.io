@@ -1,0 +1,229 @@
+#+TITLE: jq
+#+SETUPFILE: ../setup.org
+
+* Variables                                                        :noexport:
+
+  #+NAME: GithubRelease
+  #+begin_src sh :results output
+    curl https://api.github.com/repos/cfclrk/py-demo/releases/latest
+  #+end_src
+
+  #+RESULTS: GithubRelease
+  #+begin_example
+  {
+    "url": "https://api.github.com/repos/cfclrk/py-demo/releases/24736680",
+    "assets_url": "https://api.github.com/repos/cfclrk/py-demo/releases/24736680/assets",
+    "upload_url": "https://uploads.github.com/repos/cfclrk/py-demo/releases/24736680/assets{?name,label}",
+    "html_url": "https://github.com/cfclrk/py-demo/releases/tag/v0.0.2",
+    "id": 24736680,
+    "author": {
+      "login": "github-actions[bot]",
+      "id": 41898282,
+      "node_id": "MDM6Qm90NDE4OTgyODI=",
+      "avatar_url": "https://avatars.githubusercontent.com/in/15368?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/github-actions%5Bbot%5D",
+      "html_url": "https://github.com/apps/github-actions",
+      "followers_url": "https://api.github.com/users/github-actions%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/github-actions%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/github-actions%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/github-actions%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/github-actions%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/github-actions%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/github-actions%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/github-actions%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/github-actions%5Bbot%5D/received_events",
+      "type": "Bot",
+      "site_admin": false
+    },
+    "node_id": "MDc6UmVsZWFzZTI0NzM2Njgw",
+    "tag_name": "v0.0.2",
+    "target_commitish": "main",
+    "name": "Release v0.0.2",
+    "draft": false,
+    "prerelease": false,
+    "created_at": "2020-03-21T15:53:50Z",
+    "published_at": "2020-03-21T16:00:23Z",
+    "assets": [
+      {
+        "url": "https://api.github.com/repos/cfclrk/py-demo/releases/assets/18877187",
+        "id": 18877187,
+        "node_id": "MDEyOlJlbGVhc2VBc3NldDE4ODc3MTg3",
+        "name": "py-demo-Darwin-x86_64",
+        "label": "",
+        "uploader": {
+          "login": "github-actions[bot]",
+          "id": 41898282,
+          "node_id": "MDM6Qm90NDE4OTgyODI=",
+          "avatar_url": "https://avatars.githubusercontent.com/in/15368?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/github-actions%5Bbot%5D",
+          "html_url": "https://github.com/apps/github-actions",
+          "followers_url": "https://api.github.com/users/github-actions%5Bbot%5D/followers",
+          "following_url": "https://api.github.com/users/github-actions%5Bbot%5D/following{/other_user}",
+          "gists_url": "https://api.github.com/users/github-actions%5Bbot%5D/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/github-actions%5Bbot%5D/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/github-actions%5Bbot%5D/subscriptions",
+          "organizations_url": "https://api.github.com/users/github-actions%5Bbot%5D/orgs",
+          "repos_url": "https://api.github.com/users/github-actions%5Bbot%5D/repos",
+          "events_url": "https://api.github.com/users/github-actions%5Bbot%5D/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/github-actions%5Bbot%5D/received_events",
+          "type": "Bot",
+          "site_admin": false
+        },
+        "content_type": "application/x-mach-binary",
+        "state": "uploaded",
+        "size": 7188600,
+        "download_count": 3,
+        "created_at": "2020-03-21T16:00:24Z",
+        "updated_at": "2020-03-21T16:00:25Z",
+        "browser_download_url": "https://github.com/cfclrk/py-demo/releases/download/v0.0.2/py-demo-Darwin-x86_64"
+      },
+      {
+        "url": "https://api.github.com/repos/cfclrk/py-demo/releases/assets/18877186",
+        "id": 18877186,
+        "node_id": "MDEyOlJlbGVhc2VBc3NldDE4ODc3MTg2",
+        "name": "py-demo-Linux-x86_64",
+        "label": "",
+        "uploader": {
+          "login": "github-actions[bot]",
+          "id": 41898282,
+          "node_id": "MDM6Qm90NDE4OTgyODI=",
+          "avatar_url": "https://avatars.githubusercontent.com/in/15368?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/github-actions%5Bbot%5D",
+          "html_url": "https://github.com/apps/github-actions",
+          "followers_url": "https://api.github.com/users/github-actions%5Bbot%5D/followers",
+          "following_url": "https://api.github.com/users/github-actions%5Bbot%5D/following{/other_user}",
+          "gists_url": "https://api.github.com/users/github-actions%5Bbot%5D/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/github-actions%5Bbot%5D/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/github-actions%5Bbot%5D/subscriptions",
+          "organizations_url": "https://api.github.com/users/github-actions%5Bbot%5D/orgs",
+          "repos_url": "https://api.github.com/users/github-actions%5Bbot%5D/repos",
+          "events_url": "https://api.github.com/users/github-actions%5Bbot%5D/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/github-actions%5Bbot%5D/received_events",
+          "type": "Bot",
+          "site_admin": false
+        },
+        "content_type": "application/x-executable",
+        "state": "uploaded",
+        "size": 18248592,
+        "download_count": 2,
+        "created_at": "2020-03-21T16:00:23Z",
+        "updated_at": "2020-03-21T16:00:24Z",
+        "browser_download_url": "https://github.com/cfclrk/py-demo/releases/download/v0.0.2/py-demo-Linux-x86_64"
+      }
+    ],
+    "tarball_url": "https://api.github.com/repos/cfclrk/py-demo/tarball/v0.0.2",
+    "zipball_url": "https://api.github.com/repos/cfclrk/py-demo/zipball/v0.0.2",
+    "body": ""
+  }
+  #+end_example
+
+* Period in Key
+
+  #+NAME: KubeSecret
+  #+begin_example
+    {
+        "apiVersion": "v1",
+        "data": {
+            "tls.crt": "Zm9vCg==",
+            "tls.key": "YmFyCg=="
+        },
+        "kind": "Secret",
+        "type": "kubernetes.io/tls"
+    }
+  #+end_example
+
+  #+begin_src bash :var KubeSecret=KubeSecret
+    echo $KubeSecret | jq -r '.data["tls.crt"]'
+  #+end_src
+
+  #+RESULTS:
+  : Zm9vCg==
+
+* Multiline
+
+  #+begin_src sh :var GithubRelease=GithubRelease
+    echo $GithubRelease \
+        | jq '.assets[]
+              | select(.name == "py-demo-Darwin-x86_64")
+              | .name'
+  #+end_src
+
+  #+RESULTS:
+  : py-demo-Darwin-x86_64
+
+* Variable as Argument
+
+  #+begin_src sh :var GithubRelease=GithubRelease
+    echo $GithubRelease \
+        | jq --arg name "py-demo-Darwin" \
+             '.assets[]
+              | select(.name | startswith($name))
+              | .name'
+  #+end_src
+
+  #+RESULTS:
+  : py-demo-Darwin-x86_64
+
+* Select
+
+** Name Contains
+
+   #+NAME: Items
+   #+begin_example
+     [
+       {"name": "This is item1"},
+       {"name": "This is item2"},
+       {"name": "item3"}
+     ]
+   #+end_example
+
+   #+begin_src sh :var Items=Items :results output
+     echo $Items \
+         | jq -c '.[] | select(.name | contains("item2"))'
+   #+end_src
+
+   #+RESULTS:
+   : {"name":"This is item2"}
+
+** Name Starts With
+
+   #+begin_src sh :var Items=Items :results output
+     echo $Items \
+         | jq -c '.[] | select(.name | startswith("This is"))'
+   #+end_src
+
+   #+RESULTS:
+   : {"name":"This is item1"}
+   : {"name":"This is item2"}
+
+* AWS Resources with Tag
+
+** Use =aws --filter=
+
+   Some AWS commands provide a =--filter= option that allows filtering by tag.
+
+   #+begin_src sh
+     aws ec2 describe-addresses \
+         --filters "Name=tag:Name,Values=cfclrk"
+   #+end_src
+
+* Sorting
+
+  #+begin_src sh :results output
+    aws s3api list-objects-v2 \
+        --bucket $BUCKET \
+        --prefix "foo/bar" \
+        | jq '.Contents | sort_by(.LastModified)'
+  #+end_src
+
+  If you see an error like =Cannot index string with string=, it's probably
+  because you are not piping a proper list to it. For example:
+
+  #+begin_src sh
+    cat $data | jq '.Stuff[] | sort_by(.Time)'  # Bad
+
+    cat $data | jq '.Stuff | sort_by(.Time)'    # Good
+  #+end_src

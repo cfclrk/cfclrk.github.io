@@ -1,0 +1,2 @@
+#+OPTIONS: timestamp:nil
+#+PROPERTY: header-args+ :tangle yes

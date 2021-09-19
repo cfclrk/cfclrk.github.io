@@ -1,0 +1,371 @@
+#+TITLE: Unicode in Emacs
+#+SETUPFILE: ../../setup.org
+
+* Characters
+
+  Emacs lisp has a special read syntax for characters: the =?= question mark.
+  Such syntax is necessary to distinguish the character like =à= from the symbol
+  =à=.
+
+** Characters are integers
+
+   Characters evaluate to integers:
+
+   #+begin_src emacs-lisp
+     ?à
+   #+end_src
+
+   #+RESULTS:
+   : 224
+
+   We can see that =?à= and =224= are equal in (almost?) every way:
+
+   #+begin_src emacs-lisp
+     (equal ?à 224)
+   #+end_src
+
+   #+RESULTS:
+   : t
+
+   #+begin_src emacs-lisp
+     (eq ?à 224)
+   #+end_src
+
+   #+RESULTS:
+   : t
+
+   #+begin_src emacs-lisp
+     (char-equal ?à 224)
+   #+end_src
+
+   #+RESULTS:
+   : t
+
+** Converting between chars and integers
+
+   #+begin_src emacs-lisp
+     (string-to-char "à")
+   #+end_src
+
+   #+RESULTS:
+   : 224
+
+  #+begin_src emacs-lisp :results verbatim
+    (char-to-string 224)
+  #+end_src
+
+  #+RESULTS:
+  : "à"
+
+** Why have two representations?
+
+   The reader syntax =?= simply allows you to express a number using a
+   character. Sometimes that is very helpful and provides clarity (when you are
+   dealing with characters) and sometims that would be silly (when dealing with
+   numbers).
+
+   The [[https://www.gnu.org/software/emacs/manual/html_node/elisp/String-Basics.html#String-Basics][elisp manual]] notes:
+
+   #+begin_quote
+   whether an integer is a character or not is determined only by how it is used
+   #+end_quote
+
+   #+begin_src emacs-lisp
+     (+ ?à 2) ; Usually not helpful
+   #+end_src
+
+   #+RESULTS:
+   : 226
+
+   #+begin_src emacs-lisp  :results verbatim
+     (make-string 5 ?à) ; Helpful
+   #+end_src
+
+   #+RESULTS:
+   : "ààààà"
+
+   Which, by the way, could also be written as:
+
+   #+begin_src emacs-lisp
+     (make-string 5 224) ; Not helpful
+   #+end_src
+
+   #+RESULTS:
+   : ààààà
+
+   In Emacs, all characters are integers, but not all integers are characters. A
+   character's corresponding integer is simply the Unicode number (i.e. the
+   Unicode code point) of the character.
+
+   Unicode code points are defined from the integers #x0 to
+
+   #+begin_src emacs-lisp
+     (char-to-string (+ 1 #x10FFFF))
+   #+end_src
+
+   The =?= read syntax for a character also allows for the character to be
+   expressed as a hex number or an octal number. As before, the expression
+   evaluates to a decimal number which represents the character's code point.
+
+   #+begin_src emacs-lisp
+     ?\xe0
+   #+end_src
+
+   #+RESULTS:
+   : 224
+
+   #+begin_src emacs-lisp
+     ?\340
+   #+end_src
+
+   #+RESULTS:
+   : 224
+
+   TODO: wtf is this?
+
+   The function =make-char= returns an integer representing the character at the
+   given position in a... what?
+
+   #+begin_src emacs-lisp
+     (make-char 'unicode 0 0 224 0)
+   #+end_src
+
+   #+RESULTS:
+   : 224
+
+* Unicode escape sequences
+
+  Both strings and characters can contain Unicode escape sequences. There are two
+  forms of Unicode escape sequences:
+
+  1. =\uXXXX= (=\u= and four hex digits)
+  2. =\U00XXXXXX= (=\U00= and six hex digits)
+
+  Evaluating a character with a Unicode escape sequence returns an integer:
+
+  #+begin_src emacs-lisp
+    ?\u00e0
+  #+end_src
+
+  #+RESULTS:
+  : 224
+
+  #+begin_src emacs-lisp
+    ?\U0001F638
+  #+end_src
+
+  #+RESULTS:
+  : 128568
+
+  Evaluating a string with a Unicode escape sequence returns a string:
+
+  #+begin_src emacs-lisp
+    "\U0001F638"
+  #+end_src
+
+  #+RESULTS:
+  : 😸
+
+* Convert code point to character
+
+  The function =(char-to-string CHAR)= returns the character at the Unicode code
+  point =CHAR=:
+
+  #+begin_src emacs-lisp :results verbatim
+    (char-to-string 224)
+  #+end_src
+
+  #+RESULTS:
+  : "à"
+
+  The argument to =char-to-string= must be a character, so it can either be given
+  as:
+
+  1. A character using =?= syntax
+  2. An integer, using any of the ways to [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Integer-Basics.html][express an integer]]
+
+  For example, as an integer using hex notation:
+
+  #+begin_src emacs-lisp
+    (char-to-string #xe0)
+  #+end_src
+
+  #+RESULTS:
+  : à
+
+  Or, as a character using hex notation:
+
+  #+begin_src emacs-lisp
+    (char-to-string ?\xe0)
+  #+end_src
+
+  #+RESULTS:
+  : à
+
+* Convert Unicode name to character
+
+  In a string, the ="?\N{NAME}"= syntax allows you to specify a Unicode character
+  by its name:
+
+  #+begin_src emacs-lisp :results verbatim
+    "?\N{LATIN SMALL LETTER A WITH GRAVE}"
+  #+end_src
+
+  #+RESULTS:
+  : "?à"
+
+* Encode a string
+
+  Encoding a string means translating a string of Unicode code points (integers)
+  into new integers, according to some encoding scheme (like UTF-8). This is
+  necessary in order to tell where one number ends and the next begins:
+
+  #+begin_example
+    1224
+  #+end_example
+
+  Is that the single character =1224=: "ӈ"? Or two characters =12= and =24=? Or..
+  something else? UTF-8 encodes strings into a binary form that can be
+  unambiguously reversed (decoded) back to Unicode code points.
+
+  Viewing encoded strings is sometimes difficult, because the binary form of a
+  string is automatically decoded in order to be displayed.
+
+  #+begin_src emacs-lisp :results verbatim
+    (encode-coding-string "naïve" 'utf-8 t)
+  #+end_src
+
+  #+RESULTS:
+  : "nai\314\210ve"
+
+  =encode-coding-string= returns a string where any characters outside of <what
+  range?> are escaped (WHY?)
+
+  #+begin_src emacs-lisp
+    (encode-coding-string "\u0073" 'utf-8)
+  #+end_src
+
+  #+RESULTS:
+  : s
+
+  #+begin_src emacs-lisp :results verbatim
+    (encode-coding-string "\U0001F638" 'utf-8)
+  #+end_src
+
+  #+RESULTS:
+  : "\360\237\230\270"
+
+** toggle-enable-multibyte-characters
+
+   Another way to see this is to write multibyte strings to a file, then run =M-x
+   toggle-enable-multibyte-characters=.
+
+* Decode
+
+  Decoding a string returns the multibyte equivalent of the string.
+
+  #+begin_src emacs-lisp
+    (decode-coding-string "nai\314\210ve" 'utf-8)
+  #+end_src
+
+  #+RESULTS:
+  : naïve
+
+  #+begin_src emacs-lisp
+    (decode-coding-string "\360\237\230\270" 'utf-8)
+  #+end_src
+
+  #+RESULTS:
+  : 😸
+
+* Code Points
+
+  Range is 0 to #x10FFFF (hex).
+
+  Emacs extends this with range #x110000 to #x3FFFF
+
+  A character codepoint in Emacs is a 22-bit *.
+
+  Decode integer a string
+
+** Unicode name
+
+   #+begin_src emacs-lisp
+     (char-from-name "LATIN SMALL LETTER A WITH GRAVE")
+   #+end_src
+
+   #+RESULTS:
+   : 224
+
+** Unicode number
+
+   Unicode number as decimal:
+
+   #+begin_src emacs-lisp
+     (char-to-string 128568)
+   #+end_src
+
+   #+RESULTS:
+   : 😸
+
+   As hex
+
+   #+begin_src emacs-lisp
+     (char-to-string ?\x1F638)
+   #+end_src
+
+   #+RESULTS:
+   : 128568
+
+   As octal
+
+   #+begin_src emacs-lisp
+     ?\340
+   #+end_src
+
+   #+RESULTS:
+   : 224
+
+* Normalize a string
+
+  #+begin_src emacs-lisp :results verbatim
+    (ucs-normalize-NFD-string "nai\u0308ve")
+  #+end_src
+
+  #+RESULTS:
+  : "naïve"
+
+* Elisp
+
+  A character in Emacs Lisp is nothing more than an integer:
+
+  Characters in strings and buffers are currently limited to the range of 0 to
+  4194303—twenty two bits
+
+  https://www.gnu.org/software/emacs/manual/html_node/elisp/Character-Type.html
+
+* Unicode table
+
+  The variable =ucs-names= (in =mule.el=) holds a hash table.
+
+  The function =ucs-names= returns the fully expanded table of unicode data.
+
+* Datasets
+
+  https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt
+
+* Resources
+
+  - https://www.gnu.org/software/emacs/manual/html_node/elisp/Character-Type.html
+  - https://www.gnu.org/software/emacs/manual/html_node/elisp/Non_002dASCII-Characters.html
+  - https://www.gnu.org/software/emacs/manual/html_node/elisp/Strings-and-Characters.html
+  - https://www.gnu.org/software/emacs/manual/html_node/elisp/Describing-Characters.html#Describing-Characters
+  - https://www.gnu.org/software/emacs/manual/html_node/elisp/String-Type.html
+  - https://www.gnu.org/software/emacs/manual/html_node/emacs/International.html
+
+* TODO
+
+  Does a character evaluate to different numbers under different coding systems?
+
+  Can Emacs interpret a byte array as characters? Example: an IPv4 address,
+  which is often represented as 4 bytes.

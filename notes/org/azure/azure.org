@@ -1,0 +1,339 @@
+#+TITLE: Random Notes
+#+SETUPFILE: ../../setup.org
+
+* Managed Service Identities
+
+  No need to have credentials or service principal.
+
+  Docs - Part of the Active Directory docs
+  https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/
+
+* Resource Providers
+
+  That is, "cloud services".
+
+  For example, there is a resource provider that provides virtual machines. It's
+  called Microsoft.Compute.
+
+  Every resource provider exposes a set of actions. That is, the service has an
+  API.
+
+* RBAC
+
+  Fine-grained control to the Azure "control plane".
+
+  When you assign a role to a certain scope, resources within that scope inherit
+  the role assignment.
+
+  A *Role* is a collection of actions (i.e. a collection of API operations). A
+  *Role Assignment* gives a _security principal_ the ability to perform that set
+  of _actions_ on that _scope_.
+
+  There are 3 top level roles in Azure:
+
+  1. Owner
+  2. Contributor
+  3. Reader
+
+** Security Principal
+
+   - User
+   - Group
+   - Service Principal
+
+** Role
+
+   - Built-in
+   - Custom
+
+** Scope
+
+   - Subscription
+   - Resource Group
+   - Resource
+
+* Subscription Model
+
+  Scope heirarchy:
+  Tenant -> Management Group -> Subscription -> Resource Group -> Resource
+
+** Tenant
+
+   Azure Active Directory entity that encompasses a whole organization. A tenant
+   has at least one subscription and user. You use it to manage subscriptions
+   and users in the organization.
+
+   This is kind of like an AWS Organization that is used to manage all the AWS
+   accounts in a company.
+
+** User
+
+   An individual and is associated with only one tenant, the organization that
+   they belong to. May have access to multiple subscriptions.
+
+   A user is a "User" in the Active Directory. That means users are tenant-level
+   entities. Each user can have multiple subscriptions.
+
+** Subscription
+
+   The agreements with Microsoft to use cloud services, including Azure.
+
+   Sometimes a "subscription" is referred to as an "account" i.e. "az account
+   set" command. I think a subscription is the most similar thing to an AWS
+   account.
+
+   The fact that Azure has resource groups adds a layer of isolation within
+   subscriptions that's harder to attain in AWS accounts, so in Azure you are
+   likely to have less subscriptions that you'd have accounts in AWS.
+
+** Account
+
+   Can mean a few things:
+
+   1. The Microsoft Account that was used when signing up for Azure. A Microsoft
+      Account is the account you use to access Office 365, XBox Live, etc.
+
+     - When you sign up for an Azure subscription with a personal Microsoft
+       Account, an Azure AD Tenant is created for you.
+
+     - Or, you can create an Azure subscription associated with an existing
+       Azure AD Tenant.
+
+   2. An Azure subscription. This is what `azure account list` and `azure account
+      set` do
+
+   3. A Service Principal, which is sometimes referred to as using a "service
+      account". "Service principals are accounts not tied to any particular user" -
+      https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest#sign-in-with-a-service-principal
+
+** Management Group
+
+   A level of management above subscriptions (but still within a single
+   tenant). Management Groups allow you to associate certain settings with many
+   subscriptions.
+
+** Storage Account
+
+   How is this different from account or resource group?
+
+** Role
+
+   Controls access to resources. Can be assigned to users, groups, or services.
+
+** Resource
+
+   Associated with a subscription
+
+** Application
+
+   Something in Azure that outsources authentication to Azure AD. AD uses Oauth
+   2.0 to authenticate to the application, which mean the application must have
+   a URL.
+
+   Sometimes "Application" refers to the entity requesting an auth token in an
+   Oauth2 authentication flow. I think OAuth2 refers to this entity as the
+   "client application". See:
+   https://docs.microsoft.com/en-us/azure/active-directory/develop/developer-glossary#client-application
+
+   Sometimes "Application" refers to a VM. For example when adding an access
+   policy to keyvault; if you add a VM, it is labelled as an "application". In
+   this case I suppose "application" refers to "code on the VM that needs
+   keyvault creds".
+
+* IMDS
+
+  Available to all vms created with ARM.
+
+  Get Token
+  #+BEGIN_SRC sh
+    curl -H Metadata:true \
+         "http://169.254.169.254/metadata/identity/oauth2/token?resource=https://management.azure.com&api-version=2018-04-02"
+  #+END_SRC
+
+* VM
+
+** List VM offers in region
+
+   #+begin_src sh
+     az vm image list --all -l eastus
+   #+end_src
+
+* VM Extensions
+
+  VM Extensions are run using a vm agent. The agent is installed by default in
+  Azure Marketplace images.
+
+* API
+
+  List vms
+
+  #+begin_src sh
+    r=$(curl -H Metadata:true "http://169.254.169.254/metadata/identity/oauth2/token?resource=https://management.azure.com&api-version=2018-04-02")
+    access_token=$(echo $r | jq -r '.access_token')
+    url="https://management.azure.com/subscriptions/10f9b671-4896-4336-ba3d-82e9d4ab0b52/providers/Microsoft.Compute/virtualMachines?api-version=2018-06-01"
+    curl $url -H "Authorization: Bearer $access_token" | jq
+  #+end_src
+
+* All Locations
+
+** List
+
+   #+begin_src sh
+     az account list-locations --query "[].name"
+   #+end_src
+
+** Loop
+
+   Create a Public IP in each location
+
+   #+begin_src sh
+     locations=($(az account list-locations | jq -r '.[].name'))
+     for i in "${!locations[@]}"; do
+         location=${locations[$i]}
+         echo ip-$i $$location
+         az network public-ip create \
+            -g PublicIpPool \
+            -n ip-$i \
+            --allocation-method Static
+     done
+   #+end_src
+
+* Load Balancers
+
+** Create LB Rule
+
+   #+begin_src sh
+     az network lb rule create -g $CLUSTER_NAME \
+        --lb-name fixed-ip-lb \
+        -n fixed-ip-ssh-rule \
+        --protocol Tcp \
+        --frontend-port 443 \
+        --backend-pool-name fixed-ip-lbbepool \
+        --backend-port 443
+   #+end_src
+
+** Create Load Balancer
+
+   #+begin_src sh
+     az network lb create \
+        -n mylb \
+        -g $ResourceGroup \
+        -l westus2 \
+        --public-ip-address "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/PublicIpPool/providers/Microsoft.Network/publicIPAddresses/$IP_NAME"
+   #+end_src
+
+* Providers
+
+** All provides and registration state
+
+   az provider list --query "[].{Provider:namespace, Status:registrationState}"
+   --out table
+
+** Registerd namespaces
+
+   az provider list --query "[?registrationState == 'Registered'].namespace"
+   --out table
+
+* Subscription Quotas
+
+  #+begin_src fish
+    function getLimit --description "Get a quota limit in the given region"
+        set location $argv[1]
+        set limit (az vm list-usage \
+            --location $location \
+            -o json \
+            | jq -r '.[] | select(.localName == "Total Regional vCPUs") | .limit')
+        echo "$location: $limit"
+    end
+
+    function getAllLimits --description "Get all Total Region vCPU limits"
+        set locations (az account list-locations | jq -r '.[].name')
+        echo $locations | xargs -n 1 -P (count $locations) -I {} fish -c 'getLimit {}'
+    end
+  #+end_src
+
+  #+begin_src sh
+    allLocations=$(az account list-locations | jq -r '.[].name')
+
+    echo $allLocations | xargs
+    for location in ; do
+        limit=$(az vm list-usage \
+                   --location $location \
+                   -o json \
+                    | jq -r '.[] | select(.localName == "Total Regional vCPUs") | .limit')
+        echo "$location: $limit"
+    done
+  #+end_src
+
+* Create Public Static Ip
+
+  #+begin_src sh
+    location="westus2"
+    az network public-ip create \
+       -g PublicIpPool \
+       -n ip-$location-1 \
+       -l $location \
+       --allocation-method Static
+  #+end_src
+
+* ACR
+
+** List registries
+
+   #+begin_src sh :results output
+     az acr list | jq -c '.[] | {name, loginServer, location}'
+   #+end_src
+
+** List repositories
+
+   #+begin_src sh :var name=""
+     az acr repository list -n $name
+   #+end_src
+
+** List repository versions
+
+   #+begin_src sh :var name=""
+     az acr repository show-manifests \
+        -n $name \
+        --repository quay.io/kubernetes-ingress-controller/nginx-ingress-controller
+   #+end_src
+
+* Api Versions
+
+  Get the latest Api Version for something
+
+  #+begin_src sh
+    az provider list --query "[?namespace=='Microsoft.ClassicNetwork']" > ~/cats/resource_provider.json
+    jq '.[].resourceTypes[] | select(.resourceType == "reservedIps").apiVersions | first' <~/cats/resource_provider.json
+  #+end_src
+
+** Python
+
+   #+begin_src python
+     from msrestazure.tools import parse_resource_id
+
+     def _get_ip_address(self, resource_id: str) -> str:
+         # Determine the latest API version for this resource type
+         parsed_id = parse_resource_id(resource_id)
+         provider = self.resource_client.providers.get(parsed_id["namespace"])
+         resource_type_def = next(
+             i
+             for i in provider.resource_types
+             if i.resource_type.lower() == parsed_id["resource_type"].lower()
+         )
+
+         # Supported API versions are ordered from newest to oldest
+         api_version = resource_type_def.api_versions[0]
+
+         # Fetch the IP resource and return its IP address
+         resource = self.resource_client.resources.get_by_id(resource_id, api_version)
+         return resource.properties["ipAddress"]
+   #+end_src
+
+* Users
+
+** Get My User
+
+   #+begin_src sh
+     az ad user list --query "[?mailNickname=='chris.clark']"
+   #+end_src

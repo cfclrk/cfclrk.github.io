@@ -1,0 +1,20 @@
+#+TITLE: Date
+#+SETUPFILE: ../setup.org
+
+* Since epoch
+
+#+begin_src sh
+  gdate +%s
+#+end_src
+
+#+RESULTS:
+: 1589548609
+
+* UTC
+
+#+begin_src sh
+  gdate -u
+#+end_src
+
+#+RESULTS:
+: Fri May 15 13:16:51 UTC 2020

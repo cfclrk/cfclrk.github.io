@@ -1,0 +1,82 @@
+#+TITLE: Diagrams in Org Files
+#+SETUPFILE: ../../setup.org
+
+* Dot
+
+  #+NAME: A
+  #+begin_src dot :file A.png
+    digraph G {
+        graph[rankdir="RL"]
+        bgcolor="#FFFFFF00";
+        node[shape="circle"];
+
+        A [color="bisque"];
+        B [color="bisque"];
+        C [color="bisque"];
+        D [color="bisque"];
+
+        D -> C -> B -> A;
+    }
+  #+end_src
+
+  #+RESULTS: A
+  [[file:A.png]]
+
+  #+NAME: Records
+  #+begin_src dot :file Records.svg
+    digraph structs {
+        node [shape=record];
+        struct1 [shape=record,label="<f0> left|<f1> mid\ dle|<f2> right"];
+        struct2 [shape=record,label="<f0> one|<f1> two"];
+        struct3 [shape=record,label="hello\nworld |{ b |{c|<here> d|e}| f}| g | h"];
+        struct1 -> struct2;
+        struct1 -> struct3;
+    }
+  #+end_src
+
+  #+RESULTS: Records
+  [[file:Records.svg]]
+
+* LaTeX
+
+** tikz
+
+   Required installing:
+
+   #+begin_src sh
+     tlmgr install standalone
+     tlmgr install preview
+     tlmgr install wrapfig
+     tlmgr install capt-of
+   #+end_src
+
+   - Why isn't the result a proper link?
+   - Why is the picture so small?
+   - When exporting to HTML, file is not included.
+
+   #+header: :imagemagick yes :iminoptions -density 800 :imoutoptions -geometry 1200
+   #+header: :results file :file mytikz.png
+   #+begin_src latex :headers '("\\usepackage{tikz}")
+     \begin{tikzpicture}[>=stealth,node distance=2cm, auto]
+       \node [state,initial]  (q_0) at (0,0) {$q_0$};
+       \node [state]          (q_1) at (2,0) {$q_1$};
+       \node [state]          (q_2) at (4,0) {$q_2$};
+       \node [state,accepting](q_3) at (6,0) {$q_3$};
+
+       \path [->] (q_0) edge              node {1}   (q_1)
+       edge [loop above] node {0}   ()
+       (q_1) edge              node {1}   (q_2)
+       edge [loop above] node {0}   ()
+       (q_2) edge              node {1}   (q_3)
+       edge [loop above] node {0}   ()
+       (q_3) edge [loop above] node {0,1} ();
+     \end{tikzpicture}
+   #+end_src
+
+   #+RESULTS:
+   #+begin_export latex
+   [[file:mytikz.png]]
+   #+end_export
+
+   #+NAME: mytikz
+   [[./mytikz.png]]

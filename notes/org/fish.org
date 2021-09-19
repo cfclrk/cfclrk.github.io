@@ -1,0 +1,14 @@
+#+TITLE: Fish
+#+SETUPFILE: ../setup.org
+
+* Validate Function Argument
+
+  #+begin_src fish
+    test -z "$argv[1]"; and echo "Error: arg1 must be a string"; and return 1
+  #+end_src
+
+* Verify Variable is Defined
+
+  #+begin_src fish
+    test -z "$FOO"; and echo "FOO is empty"; and return
+  #+end_src
