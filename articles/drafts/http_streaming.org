@@ -1,0 +1,47 @@
+#+TITLE: Streaming
+
+* HTTP Polling
+
+** Short Polling
+
+   Using HTTP/1.1, this keeps a single TCP connection open. The major difference
+   between HTTP/1 and HTTP/1.1 was to allow successive requests to use the same
+   TCP connection as the last request. So, I think short polling would satisfy
+   most definitions of "streaming".
+
+   The server can only send one response per request. The server must queue
+   responses and wait for the client to make a request for sending the next
+   response.
+
+   There is a lot of unnecessary chatter. Each time the client makes a request,
+   it re-sends all headers.
+
+** Long Polling
+
+   I guess this is just a setting on the HTTP server for how long to hold on to
+   a TCP connection before sending a response?
+
+   Some unnecessary chatter. Client needs to re-send requests whenever the
+   server sends a response.
+
+   Still only one response per requests. Responses must be queued.
+
+   Does the server send dummy responses before time expires? I guess it must,
+   otherwise TCP connection would be closed, no?
+
+* HTTP Server Chunked Response
+
+  Server sets the header =Transfer-Encoding: chunked=.
+
+  This is sort like the opposite of an S3 multipart upload.
+
+* WebSockets
+
+  Not HTTP.
+
+* HTTP/2
+
+  HTTP/2 has a "server push" feature which allows the server to send multiple
+  responses to a single request.
+
+  This is what allows GRPC to have bidirectional streams.

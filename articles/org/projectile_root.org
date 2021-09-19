@@ -1,0 +1,153 @@
+#+TITLE: Emacs Projectile in a Monorepo
+#+SETUPFILE: ../setup.org
+
+[[https://docs.projectile.mx/projectile/index.html][Projectile]] is an awesome part of Emacs -- /foundational/ even. For example, when
+lsp-mode tries to determine which directory an LSP server should be associated
+with, it uses projectile.
+
+<include image here of lsp prompt>
+
+A minor annoyance (the bane of any Emacs user) has been nagging me (plaguing my
+nightmares). Here was the problem:
+
+* The Problem
+
+  Projectile doesn't determine project roots correctly in a monorepo (ok, that's
+  quite subjective, but I stand by it), and I'm /usually/ in monorepo. This
+  means I'm /usually/ not using projectile 😱, and lsp-mode /usually/ prompts me
+  with an incorrect directory to create a workspace.
+
+* Example
+
+  For example: let's try the following directory layout:
+
+  #+NAME: NotesProject
+  : /private/tmp/notes
+
+  #+begin_src sh :var NotesProject=NotesProject :exports none
+    mkdir -p $NotesProject
+    touch $NotesProject/.git
+
+    mkdir -p $NotesProject/go
+    mkdir -p $NotesProject/go/projectA
+    touch $NotesProject/go/projectA/go.mod
+    mkdir -p $NotesProject/go/projectB
+    touch $NotesProject/go/projectB/go.mod
+
+    mkdir -p $NotesProject/python
+    mkdir -p $NotesProject/python/projectC
+    touch $NotesProject/python/projectC/setup.py
+    mkdir -p $NotesProject/python/projectD
+    touch $NotesProject/python/projectD/setup.py
+  #+end_src
+
+  #+RESULTS:
+
+  #+begin_src sh :var NotesProject=NotesProject :results output
+    tree -a $NotesProject
+  #+end_src
+
+  #+RESULTS:
+  : /private/tmp/notes
+  : ├── .git
+  : ├── go
+  : │   ├── projectA
+  : │   │   └── go.mod
+  : │   └── projectB
+  : │       └── go.mod
+  : └── python
+  :     ├── projectC
+  :     │   └── setup.py
+  :     └── projectD
+  :         └── setup.py
+  :
+  : 6 directories, 5 files
+
+  Say I open a file in =ProjectA=. I would like projectile to recognize that the
+  project root directory is =/private/tmp/notes/go/projectA=.
+
+  #+begin_quote
+  Resonable people disagree. "The /project/ is the directory with the =.git=,
+  those subdirectories are /subprojects/!" Maybe projectile needs some a way of
+  having projects and uber-projects (and uber-uber-projects...). But these days,
+  especially with LSP, I'd guess most people want the concept of a "project" to
+  be a single
+  #+end_quote
+
+  By default, however, projectile says that the project root is:
+
+  #+begin_src emacs-lisp :var NotesProject=NotesProject
+    (let ((default-directory
+            (f-join NotesProject "go/ProjectA")))
+      (projectile-project-root))
+  #+end_src
+
+  #+RESULTS:
+  : /private/tmp/notes/
+
+  Ok, let's see if we can make it say the project root is
+  =/private/tmp/notes/go/projectA=.
+
+* Project Detection
+
+  A quick perusal of the excellent projectile documentation leads us to a
+  relevant section: [[https://docs.projectile.mx/projectile/projects.html#customizing-project-detection][Customizing Project Detection]]. The important function here
+  seems to be: =projectile-root-bottom-up=.
+
+  #+begin_src emacs-lisp
+    (defun projectile-root-bottom-up (dir &optional list)
+      "Identify a project root in DIR by bottom-up search for files in LIST.
+    If LIST is nil, use `projectile-project-root-files-bottom-up' instead.
+    Return the first (bottommost) matched directory or nil if not found."
+      (cl-some (lambda (name) (projectile-locate-dominating-file dir name))
+               (or list projectile-project-root-files-bottom-up)))
+  #+end_src
+
+  This is saying:
+
+  - Let's start =".projectile"=.
+    - Is there a =.projectile= in this directory? No? In the parent directory?
+      No? In the parent-parent directory? No? Ok fine.
+  - Let's try =.git=.
+    - Is there a =.get= in this directory? No? In the parent directory? No? In
+      the parent-parent directory? YES! That's the project root!
+
+  It never tries looking for =setup.py= or =go.mod=. It looks for:
+
+  #+begin_src emacs-lisp
+    projectile-project-root-files-bottom-up
+  #+end_src
+
+  #+RESULTS:
+  | .projectile | .git | .hg | .fslckout | _FOSSIL_ | .bzr | _darcs | dune-project | pubspec.yaml | info.rkt | Cargo.toml | stack.yaml | DESCRIPTION | Eldev | Cask | shard.yml | Gemfile | .bloop | deps.edn | build.boot | project.clj | build.sc | build.sbt | application.properties | gradlew | build.gradle | pom.xml | poetry.lock | Pipfile | tox.ini | setup.py | requirements.txt | manage.py | angular.json | package.json | gulpfile.js | Gruntfile.js | mix.exs | rebar.config | composer.json | CMakeLists.txt | Makefile | debian/control | WORKSPACE | default.nix | meson.build | SConstruct | GTAGS | TAGS | configure.ac | configure.in | cscope.out |
+
+  Ok! I guess we just need to add =setup.py= and =go.mod= to that! But doesn't
+  projectile already know about those kinds of files? A little more reading, and
+  we find this variable:
+
+  #+begin_src emacs-lisp
+    projectile-project-root-files
+  #+end_src
+
+  #+RESULTS:
+  | dune-project | pubspec.yaml | info.rkt | Cargo.toml | stack.yaml | DESCRIPTION | Eldev | Cask | shard.yml | Gemfile | .bloop | deps.edn | build.boot | project.clj | build.sc | build.sbt | application.properties | gradlew | build.gradle | pom.xml | poetry.lock | Pipfile | tox.ini | setup.py | requirements.txt | manage.py | angular.json | package.json | gulpfile.js | Gruntfile.js | mix.exs | rebar.config | composer.json | CMakeLists.txt | Makefile | debian/control | WORKSPACE | default.nix | meson.build | SConstruct | GTAGS | TAGS | configure.ac | configure.in | cscope.out |
+
+  That's the ticket! /That's/ how projects should be identified! So:
+
+  #+begin_src emacs-lisp
+    (setq projectile-project-root-files-bottom-up
+		(-union projectile-project-root-files-bottom-up
+				projectile-project-root-files))
+  #+end_src
+
+  Projectile /identifies/ projects differently than how it /characterizes/
+  projects.
+
+  #+begin_src emacs-lisp
+    (let ((default-directory "~/Projects/codenotes/python/git-dot/")
+          (projectile-project-root-functions '(cfc/projectile-root-bottom-up)))
+      (projectile-project-root))
+  #+end_src
+
+  #+RESULTS:
+  : /Users/chris.clark/Projects/codenotes/python/git-dot/

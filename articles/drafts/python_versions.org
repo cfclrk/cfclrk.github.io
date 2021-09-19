@@ -1,0 +1,86 @@
+#+TITLE: Python Development Setup (Emacs and MacOS)
+#+SETUPFILE: ../setup.org
+
+* Problem
+
+  You want to have several versions of Python installed and easily switch
+  between them.
+
+  In my personal opinion, the best solution for managing python virtual
+  environments on Linux/MacOS is =pyenv=, both for installing Python versions
+  and for creating Python virtual environments.
+
+* Solution: =pyenv=
+
+  =pyenv= lets you download many versions of Python, and provides a way to
+  switch between them.
+
+** Installation
+
+   #+begin_src sh
+     brew update
+     brew install pyenv
+     brew install pyenv-virtualenv
+   #+end_src
+
+   Then add the following to your =~/.profile=:
+
+   #+begin_src sh
+     eval "$(pyenv init -)"
+     eval "$(pyenv virtualenv-init -)"
+   #+end_src
+
+   Remember to source your =~/.profile= (or log out and log back in) for the
+   changes to take effect.
+
+** Try out =pyenv=
+
+   Now you've got =pyenv=; run these commands to get a feel for it:
+
+   #+begin_example
+     pyenv install --list   # look at all the Python versions you can download!
+     pyenv install 2.7.11   # download python 2.7.11
+     pyenv install 3.5.0    # download python 3.5.0
+     pyenv versions         # see all the Pythons you have downloaded
+     pyenv version          # print the current python version
+     pyenv root             # that's where all those python's got downloaded
+   #+end_example
+
+   None of these commands change the version of Python that your computer uses.
+   To start /using/ one of the Pythons you've downloaded, pick one of two
+   popular workflows.
+
+** Project Workflow
+
+   The Pythonista makes a habit of using a separate Python virtual environment
+   for every project. This helps to ensure that you specify your dependencies
+   correctly in every project. If you have two projects, "fooproject" and
+   "barproject", and each uses python 3.5.0, you can set up a virtual
+   environment for each one like this:
+
+   $ cd /path/to/fooproject
+   $ pyenv virtualenv 3.5.0 fooproj
+   $ pyenv local fooproj
+
+   $ cd /path/to/barproject
+   $ pyenv virtualenv 3.5.0 barproj
+   $ pyenv local barproj
+
+   Each time you =cd= into one of those projects, =pyenv= activates the correct
+   virtual environment (there's no magic to this, =pyenv= just notices there's a
+   =.python-version= file in the project and activates whatever is specified in
+   that file). Each virtual environment only starts off with 2 packages, =pip= and
+   =setuptools=.
+
+* Other Solutions
+
+** venv
+
+   venv is part of the standard library. It is the lowest common denominator for
+   creating virtual environments.
+
+   Problems:
+
+   - The virtual environment cannot be tied to a particular python version
+   - You need a version of python that has venv, which means you already need
+     some way of installing and managing multiple versions of python.

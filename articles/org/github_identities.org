@@ -1,0 +1,249 @@
+#+TITLE: Using Multiple GitHub Accounts
+#+SETUPFILE: ../setup.org
+
+* Problem
+
+  You have multiple GitHub accounts, and you want git to automatically push/pull
+  to the correct account.
+
+** Solution
+
+   In this article I set things up so that:
+
+   - Projects in =~/work/= use your *work* GitHub account
+   - Projects elsewhere use your *home* GitHub account
+
+** Limitations
+
+   While there is a concise solution for GitHub /repos/, GitHub /gists/ are
+   harder to handle. In this article I also show how to use Gists with multiple
+   GitHub accounts.
+
+   Long story short: one of your GitHub accounts will "just work" with Gists.
+   For other GitHub accounts, each gist URL will need to be individually added
+   to a git config file.
+
+* The git config
+
+  First, tell git to use different git configurations depending on the directory
+  a project is in. Git supports this with the [[https://git-scm.com/docs/git-config#_conditional_includes][includeIf]] directive. Do this by
+  creating the following three files.
+
+  1. =~/.config/git/config=
+
+     #+begin_src gitconfig
+       [includeIf "gitdir:~/"]
+           path = home.gitconfig
+       [includeIf "gitdir:~/work/"]
+           path = work.gitconfig
+     #+end_src
+
+  2. =~/.config/git/work.gitconfig=
+
+     #+begin_src gitconfig
+       [user]
+           email = cfclrk@work.com
+       [url "git@github-work"]
+           insteadOf = git@github.com
+       [url "git@gist-work"]
+           insteadOf = git@gist.github.com
+     #+end_src
+
+  3. =~/.config/git/home.gitconfig=
+
+     #+begin_src gitconfig
+       [user]
+           email = cfclrk@home.com
+       [url "git@github-home"]
+           insteadOf = git@github.com
+       [url "git@gist-home"]
+           insteadOf = git@gist.github.com
+     #+end_src
+
+  That's it for the git config! Move on to [[#the-ssh-config]]. The next two
+  subsections explain the above, if you are interested.
+
+** About Git URL Rewriting
+   :PROPERTIES:
+   :CUSTOM_ID: url-rewriting
+   :END:
+
+   #+begin_src gitconfig
+     [url "git@github-home"]
+         insteadOf = git@github.com
+   #+end_src
+
+   Here we've said: "Mr. Git, any time you see a URL that starts with
+   =git@github.com=, please just pretend like the URL actually starts with
+   =git@github-home=".
+
+   For example, let's see what git thinks about the [[https://github.com/cfclrk/articles][git repository]] where I'm
+   writing this article. If I just =cat= the git config file in my local
+   =articles= repository, I see the /real/ remote URL:
+
+   #+begin_src bash :results output :dir ~/Projects/articles
+     cat .git/config | grep "\[remote" -A 2
+   #+end_src
+
+   #+RESULTS:
+   : [remote "origin"]
+   : 	url = git@github.com:cfclrk/articles.git
+   : 	fetch = +refs/heads/*:refs/remotes/origin/*
+
+   But when I use a =git= command (like =git remote=) to view that same value, I
+   see the /rewritten/ URL:
+
+   #+begin_src bash :results output :dir ~/Projects/articles
+     git remote -v
+   #+end_src
+
+   #+RESULTS:
+   : origin	git@github-home:cfclrk/articles.git (fetch)
+   : origin	git@github-home:cfclrk/articles.git (push)
+
+   All git commands will see this rewritten form. The rewritten form is
+   determined by the git config file that was loaded when the =git= command was
+   run. If we were to move this project out of the =~/projects/= directory, a
+   different git config file would be loaded, different URL-rewriting rules
+   would apply, and =git remote -v= would show a different URL.
+
+   The value I chose -- in this case "github-home" -- could have been any string
+   (well, anything without spaces, etc). It doesn't matter so much /what/ the
+   value is, it just matters that you use also use the /same/ value in your SSH
+   config (as explained in the section [[#the-ssh-config]]).
+
+** About Git Config Loading
+   :PROPERTIES:
+   :CUSTOM_ID: config-loading
+   :END:
+
+   Git loads /all/ applicable config files. If a single option is set multiple
+   times (potentially form differnt files), the last value wins.
+
+   We might try to use this fact to attempt to create a configuration heirarchy
+   that says:
+
+   1. Load my *home* config.
+   2. If in the =~/work/= directory, load my *work* config, which will overwrite
+      setting loaded from the *home* config.
+
+   For example: a =~/.config/git/config= like this:
+
+   #+begin_src gitconfig
+     [includeIf "gitdir:/"]
+         path = home.gitconfig
+     [includeIf "gitdir:~/work/"]
+         path = work.gitconfig
+   #+end_src
+
+   Now, when you run a git command in a project located at =~/work/projectA/=,
+   git does something like:
+
+   - Does =[includeIf "gitdir:/"]= apply?
+     - *Yes!* Load the home.gitconfig file
+     - Set =user.email= to =cfclrk@home.com=
+   - Does =[includeIf "gitdir:~/work/"]= apply?
+     - *Yes!* Load the work.gitconfig file
+     - Set =user.email= to =cfclrk@work.com=
+
+   In this case, it works! *Both* the /work/ and /home/ config files get loaded.
+   The email address ends up being =cfclrk@work.com= since that was the *last*
+   value loaded for the =user.email= option. The determining factor is the
+   /order in which the configuration is defined/, and the /last value wins/.
+
+   So, if you define multiple =includeIf= directives that overwrite each other,
+   you should specify the directives in order from /most general/ to /most
+   specific/.
+
+   🛑 *Problem* The above configuration heirarchy works for the =user.email=
+   option. However, it does not seem to work for URL-rewriting rules. For
+   example, if the =home.gitconfig= performs URL-rewriting, it seems like the
+   =work.gitconfig= cannot overwrite those same URLs (at least, I haven't found
+   a way). For this reason, I haven't been able to create a git configuration
+   that uses my work account in my =~/work= directory and my home account in all
+   other directories.
+
+   /Aside/: The value of =user.email= is the only piece of information GitHub
+   uses when determining what profile picture to display next to a commit. You
+   can set that email address to anything! E.g. set it to
+   =torvalds@linux-foundation.org=, and GitHub will happily put Linus Torvalds'
+   picture next to your git commits. And to be sure, [[https://news.ycombinator.com/item?id=10005577][that happens]]. You can
+   /partially/ mitigate this problem of attribution by using [[https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work][signed commits]], as
+   discussed in the section [[#signed-commits]].
+
+* The SSH Config
+  :PROPERTIES:
+  :CUSTOM_ID: the-ssh-config
+  :END:
+
+  Assuming you use the =git= protocol to clone repositories (not =https= like
+  some kind of animal), you have at least two SSH keys for GitHub -- one for
+  each GitHub account (GitHub will not allow you to use the same SSH key for
+  both accounts). Assuming you've [[https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh][created]] those, your =~/.ssh= directory looks
+  something like:
+
+  #+begin_example
+    $ tree ~/.ssh/
+    /Users/cfclrk/.ssh/
+    ├── config
+    ├── github-home
+    ├── github-home.pub
+    ├── github-work
+    └── github-work.pub
+  #+end_example
+
+  The =~/.ssh/config= file allows you to associate SSH keys with DNS domains.
+  And /this/ is where all the URL-rewriting stuff comes in to play! We can tell
+  SSH to use one SSH key for =github-home=, and another SSH key for
+  =github-work=. Without the URL-rewriting, we would have two SSH keys for
+  =github.com=, and that confuses SSH.
+
+  File: =~/.ssh/config=
+
+  #+begin_src conf
+    Host github-home
+    HostName       github.com
+    User           git
+    IdentityFile   ~/.ssh/github-home
+    IdentitiesOnly yes
+
+    Host github-work
+    HostName       github.com
+    User           git
+    IdentityFile   ~/.ssh/github-work
+    IdentitiesOnly yes
+
+    Host gist-home
+    HostName       gist.github.com
+    User           git
+    IdentityFile   ~/.ssh/github-home
+    IdentitiesOnly yes
+
+    Host gist-work
+    HostName       gist.github.com
+    User           git
+    IdentityFile   ~/.ssh/github-work
+    IdentitiesOnly yes
+  #+end_src
+
+* Signed Commits
+  :PROPERTIES:
+  :CUSTOM_ID: signed-commits
+  :END:
+
+  In [[#config-loading]], I mentioned how to make git commits appear to be
+  associated with someone else's GitHub account. To (somewhat) mitigate that
+  situation, GitHub allows you to upload a PGP key to your GitHub account, and
+  GitHub displays a "Verified" badge on commits that are signed with a PGP key
+  that matches the email address associated with the commit.
+
+  You can configure git to automatically [[https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work][sign commits with a PGP key]].
+
+  TODO: I haven't actually set this up with one (let alone two!) accounts.
+
+  If you have a setup to automatically sign commits when using multiple GitHub
+  accounts (with different email addresses) let me know!
+
+* Resources
+
+  https://yayimorphology.org/ssh-identities-made-easy.html

@@ -1,0 +1,6 @@
+#+SETUPFILE: ../setup.org
+#+OPTIONS: toc:nil
+
+In which I write nonsense.
+
+#+INCLUDE: sitemap.org :only-contents t
