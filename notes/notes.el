@@ -10,6 +10,7 @@
 (require 'ox-html)
 
 (defconst notes/project-directory
+  ;; Return "this" directory, i.e. the directory containing this file
   (file-name-directory (or load-file-name buffer-file-name)))
 
 (defconst notes/org-project-alist

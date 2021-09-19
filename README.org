@@ -1,3 +1,9 @@
+The =notes= and =articles= directories contain org documents.
+
+The =docs= directory contains generated HTML. The directory is called =docs=
+because GitHub pages can only be configured to serve from a subdirectory if it
+is called "=docs=".
+
 * Local Server
 
   Use a program like [[https://www.npmjs.com/package/serve][serve]] or =python -m http.server= for viewing locally (which
@@ -9,8 +15,7 @@
 
 * TODO
 
-  - [ ] Update GitHub Pages to use _site dir
-  - [ ] Move articles project into this project
+  - [ ] Move site project into this project
   - [ ] Consistent img location at _static/img
   - [ ] Exclude README.org from HTML export (from site project?)
   - [ ] Different layouts for index pages vs content pages
