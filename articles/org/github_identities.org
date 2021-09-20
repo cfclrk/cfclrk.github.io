@@ -20,25 +20,29 @@
    GitHub accounts.
 
    Long story short: one of your GitHub accounts will "just work" with Gists.
-   For other GitHub accounts, each gist URL will need to be individually added
+   For other GitHub account, each gist URL will need to be individually added
    to a git config file.
 
 * The git config
 
   First, tell git to use different git configurations depending on the directory
   a project is in. Git supports this with the [[https://git-scm.com/docs/git-config#_conditional_includes][includeIf]] directive. Do this by
-  creating the following three files.
+  creating the following files.
 
   1. =~/.config/git/config=
 
+     The "global" git config file. Git will always load this config.
+
+     #+header: :tangle ~/Projects/dotfiles/xdg_config/git/config
      #+begin_src gitconfig
-       [includeIf "gitdir:~/"]
-           path = home.gitconfig
        [includeIf "gitdir:~/work/"]
            path = work.gitconfig
      #+end_src
 
   2. =~/.config/git/work.gitconfig=
+
+     The "work" git config. This overrides some values in the global git config.
+     Git only loads this file if it is executed from specific directories.
 
      #+begin_src gitconfig
        [user]
@@ -46,17 +50,6 @@
        [url "git@github-work"]
            insteadOf = git@github.com
        [url "git@gist-work"]
-           insteadOf = git@gist.github.com
-     #+end_src
-
-  3. =~/.config/git/home.gitconfig=
-
-     #+begin_src gitconfig
-       [user]
-           email = cfclrk@home.com
-       [url "git@github-home"]
-           insteadOf = git@github.com
-       [url "git@gist-home"]
            insteadOf = git@gist.github.com
      #+end_src
 
