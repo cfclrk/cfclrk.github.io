@@ -460,7 +460,7 @@
 ** Create
 
    #+NAME: KeyPair
-   #+begin_src sh :var KeyName="ixiactl" :cache yes
+   #+begin_src sh :var KeyName="test" :cache yes
      aws ec2 create-key-pair --key-name $KeyName
    #+end_src
 
@@ -628,8 +628,11 @@
 
 ** Get Kube Config
 
-   #+begin_src sh :var CLUSTER_NAME="harbor-prod"
-     aws eks update-kubeconfig --name $CLUSTER_NAME --kubeconfig $KUBECONFIG
+   #+begin_src sh :var CLUSTER_NAME="eks-ka"
+     KUBECONFIG=~/.kube/ironnet_clusters/$CLUSTER_NAME
+     aws eks update-kubeconfig \
+         --name $CLUSTER_NAME \
+         --kubeconfig $KUBECONFIG
    #+end_src
 
 * Elasticache
@@ -1048,15 +1051,17 @@
    TODO: Look up token file programatically
 
    #+NAME: SsoToken
-   #+begin_src sh :var tokenFile="/Users/chris.clark/.aws/sso/cache/b9d131856200283be9603e59dc49f1dc50aa7c62.json"
-     token=$(cat $tokenFile | jq -r '.accessToken')
-     echo $token
+   #+headers: :var tokenFile="/Users/chris.clark/.aws/sso/cache/b9d131856200283be9603e59dc49f1dc50aa7c62.json"
+   #+begin_src sh
+     cat $tokenFile | jq -r '.accessToken'
    #+end_src
 
 ** List Accounts I Can Access
 
-   #+begin_src sh :var SsoToken=""
-     aws  sso list-accounts \
-          --access-token $SsoToken \
+   #+begin_src sh :var SsoToken=SsoToken
+     aws sso list-accounts \
+         --access-token "$SsoToken" \
          | jq -c '.accountList[] | {accountName, accountId}'
    #+end_src
+
+   #+RESULTS:

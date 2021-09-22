@@ -5,18 +5,19 @@
 
 ** Latest Version
 
+   #+NAME: LatestPython
    #+begin_src sh
      pyenv install --list \
          | grep "^  3" \
-         | grep -v "src|dev" \
+         | grep -v "dev\|rc" \
          | tail -1 \
          | tr -d '[:space:]'
    #+end_src
 
 * Using a src directory
 
-  [[https://blog.ionelmc.ro/2014/05/25/python-packaging/][Packaging a python library]] (Ionel Cristian Mărieș)
-  [[https://hynek.me/articles/testing-packaging/][Testing & Packaging]] (Hynek Schlawack)
+  - [[https://blog.ionelmc.ro/2014/05/25/python-packaging/][Packaging a python library]] (Ionel Cristian Mărieș)
+  - [[https://hynek.me/articles/testing-packaging/][Testing & Packaging]] (Hynek Schlawack)
 
   I am currently a fan of the =src= directory. The main reasons for this are:
 
@@ -225,3 +226,43 @@
 
   #+RESULTS:
   : knMyinMG
+
+* How I Set Up Python
+
+  Use =pyenv= to install python versions, and =pyenv-virtualenv= to create
+  virtual environments per project.
+
+  First, install a couple versions of python.
+
+  #+header: :var LatestPython=LatestPython
+  #+begin_src bash
+    pyenv install $LatestPython
+    pyenv install 3.6.8
+  #+end_src
+
+  I set =pyenv global= to the latest python I have installed. This is so that
+  one-off python commands on the CLI use a tolerable version of python
+  regardless of what directory the CLI is in.
+
+  I actually set =pyenv global= to a virtual environment based on the latest
+  python I have installed. This way, whenever the global python environment gets
+  too cluttered with pip packages, I just blow it away and recreate it.
+
+  Global virtual environment name:
+
+  #+NAME: GlobalVenv
+  #+header: :var LatestPython=LatestPython
+  #+begin_src sh
+    echo $LatestPython | sed s/\\.//g
+  #+end_src
+
+  #+RESULTS:
+  : 397
+
+  Create a virtual environment for the global python, and set =pyenv global= to
+  it.
+
+  #+begin_src bash :var LatestPython=LatestPython GlobalVenv=GlobalVenv
+    pyenv virtualenv $LatestPython $GlobalVenv
+    pyenv global $GlobalVenv
+  #+end_src
