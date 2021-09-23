@@ -9,14 +9,14 @@
 ** Scanner
 
    - Reads one character at a time
-   - Names: scanner, lexer
+   - Names: scanner, lexer, tokenizer
    - DFA
    - DFAs and regular expressions are equivalent! So, usually implemented with
      regular expressions. (Example when it isn't?)
 
    is this what the "reader" is in Clojure?
 
-   In realatiy: Python =string.split()=
+   Can sometimes be as simple Python =string.split()=
 
    "Lexical analysis"
 
@@ -29,18 +29,23 @@
 
    - NFA
    - "Pushdown automata" aka stack machine
-   - Defined by a grammar
+   - Defined by a grammar (e.g. in BNF. What are other forms?)
 
    You can generate parsers from grammars. Or hand-write them. Hand-written ones
-   use
+   are typically recursive descent I think? Generated parsers are I think
+   usually/always table-driven?
 
    "Syntactical analysis"
 
-  Parsing only passes if it is a syntactically valid program. i.e. a program
-  that satisfies the grammar.
+   Parsing only passes if it is a syntactically valid program. i.e. a program
+   that satisfies the grammar.
 
-  Creates the second, or maybe first "real" internal representation: an AST (can
-  it be anything else?).
+   Creates the second, or maybe first "real" internal representation: an AST.
+
+   I've seen it said that the primary goal of parsing is to determine program
+   validity. But I feel like the main point of parsing is to create an internal
+   representation that a program can work with. Incidentally parsing fails on
+   invalid input, as do all programs to some extent.
 
 * Compiler vs Interpreter
 
@@ -48,12 +53,21 @@
   compiler translates the source program into an equivalent program in the
   target language.
 
-  Technically, compilers don't just operate on "programs"; they might translate
-  documents from one form to another. For example: pandoc.
+  Compilers need not only operate on "programs"; they might translate documents
+  from one form to another. For example: pandoc.
 
-  An interpreter /executes/ code. Computer programs need to be interpreted
-  (executed) at some point, so /something/ has to interpret them. At the lowest
-  level, a CPU can interpret programs in the binary format for that CPU.
+  An interpreter /executes/ code.
+
+  I've heard it said that the CPU is just the "lowest level interpreter". Not
+  sure I agree with that yet: "intepret" connotes some kind of translation
+  taking place. A binary specifically built for a certain CPU still needs a
+  bunch of stuff to actually execute on that CPU (fetched from disk,
+  instructions properly loaded to the right places one at a time, step through
+  executing ops with the registers). That's definitely a hard problem, but I
+  don't think that's what people mean when they talk about interpreters. That's
+  really more about CPU and OS implementation. Implementing an intepreter
+  doesn't include such things. We need to use different words for different
+  things.
 
 * Kinds of Intepreters
 

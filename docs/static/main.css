@@ -71,15 +71,15 @@ h1 {
   line-height: 1;
   margin-top: 3rem;
   margin-bottom: 1.5rem;
+  border-bottom: 1px solid #73797e;
+  padding-bottom: 1rem;
 }
 
 h2 {
   font-size: 2.4rem;
-  font-weight: bold;
-  padding-bottom: 0.6rem;
   line-height: 1;
-  border-bottom: 1px solid #73797e;
   color: #51afef;
+  font-style: italic;
 }
 h2 a {
   color: inherit;
@@ -92,6 +92,7 @@ h3 {
   margin-bottom: 1.4rem;
   line-height: 1;
   color: #c678dd;
+  font-style: italic;
 }
 h3 a {
   color: inherit;

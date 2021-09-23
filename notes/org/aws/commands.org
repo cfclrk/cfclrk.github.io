@@ -1044,6 +1044,27 @@
      aws sqs list-queues | jq '.QueueUrls[]'
    #+end_src
 
+* SSM
+
+  #+begin_src sh :var name="/aws/service/eks/optimized-ami/1.19/amazon-linux-2/recommended/image_id"
+    aws ssm get-parameter \
+        --with-decryption \
+        --name $name
+  #+end_src
+
+  #+RESULTS:
+  : {
+  :     "Parameter": {
+  :         "Name": "/aws/service/eks/optimized-ami/1.19/amazon-linux-2/recommended/image_id",
+  :         "Type": "String",
+  :         "Value": "ami-060e387c4a24f2434",
+  :         "Version": 21,
+  :         "LastModifiedDate": "2021-09-20T15:30:15.219000-04:00",
+  :         "ARN": "arn:aws:ssm:us-east-2::parameter/aws/service/eks/optimized-ami/1.19/amazon-linux-2/recommended/image_id",
+  :         "DataType": "text"
+  :     }
+  : }
+
 * SSO
 
 ** Token
