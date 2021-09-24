@@ -33,44 +33,73 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org076fa0e">Refs</a></li>
-<li><a href="#orgb2b1d50">I Accidentally&#x2026;</a>
+<li><a href="#org91b1060">Refs</a>
 <ul>
-<li><a href="#org797719a">Commited to the Wrong Branch</a></li>
-<li><a href="#org7ebbd03">Rebased Remote Branch</a></li>
-<li><a href="#orge184bce">Ammended Remote Commit</a></li>
-<li><a href="#orgc12778c">Committed Locally Before Pulling Remote</a></li>
+<li><a href="#org2c89a04">HEAD</a></li>
+<li><a href="#orgd52d56f">Branches</a></li>
 </ul>
 </li>
-<li><a href="#orgb043ee6">Rebase</a>
+<li><a href="#orgbcdeafa">I Accidentally&#x2026;</a>
 <ul>
-<li><a href="#orgb592a6b">Rebase to Ancestor</a></li>
-<li><a href="#orgdf62907">Rebase to Commit on Another Branch</a></li>
+<li><a href="#org7a7383d">Commited to the Wrong Branch</a></li>
+<li><a href="#org6eb9e5a">Rebased Remote Branch</a></li>
+<li><a href="#org2f20f04">Ammended Remote Commit</a></li>
+<li><a href="#org16b67e9">Committed Locally Before Pulling Remote</a></li>
 </ul>
 </li>
-<li><a href="#org6919338">Fixup</a></li>
-<li><a href="#org7f87217">First Commit</a></li>
-<li><a href="#org3f30e3a">Tags</a>
+<li><a href="#orgd06b233">Rebasing</a>
 <ul>
-<li><a href="#org8029d66">Get Project Version From Tag</a></li>
-<li><a href="#org49e70a3">Is HEAD a tag?</a></li>
+<li><a href="#org1d6e0d1">Rebase to Ancestor</a></li>
+<li><a href="#org72822f1">Rebase to Commit on Another Branch</a></li>
 </ul>
 </li>
-<li><a href="#orge11a1a9">Project Root Dir</a></li>
-<li><a href="#orge66a33e">Tools and Resources</a>
+<li><a href="#org8e7c2e5">List Tags Matching Pattern</a></li>
+<li><a href="#org568b1b4">Fixup</a></li>
+<li><a href="#org2ca21d4">First Commit</a></li>
+<li><a href="#org925ca90">Tags</a>
 <ul>
-<li><a href="#org9d4a1bc">git-quick-stats</a></li>
+<li><a href="#orgc4f5a7e">Get Project Version From Tag</a></li>
+<li><a href="#orgecc97d2">Is HEAD a tag?</a></li>
+</ul>
+</li>
+<li><a href="#orga560843">Project Root Dir</a></li>
+<li><a href="#org72f87c1">Tools and Resources</a>
+<ul>
+<li><a href="#org74075c8">git-quick-stats</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-org076fa0e" class="outline-2">
-<h2 id="org076fa0e"><a href="#org076fa0e">Refs</a></h2>
-<div class="outline-text-2" id="text-org076fa0e">
+<div id="outline-container-org91b1060" class="outline-2">
+<h2 id="org91b1060"><a href="#org91b1060">Refs</a></h2>
+<div class="outline-text-2" id="text-org91b1060">
+</div>
+<div id="outline-container-org2c89a04" class="outline-3">
+<h3 id="org2c89a04"><a href="#org2c89a04">HEAD</a></h3>
+<div class="outline-text-3" id="text-org2c89a04">
 <p>
-The SHA of the HEAD ref:
+HEAD is usually a symbolic ref, meaning it points to another ref.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">git symbolic-ref HEAD
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+refs/heads/main
+</pre>
+
+
+<p>
+Unless you are in a detached HEAD state, in which case HEAD points directly
+to a commit.
+</p>
+
+<p>
+Some ways to print the SHA of the HEAD ref:
 </p>
 
 <div class="org-src-container">
@@ -78,29 +107,48 @@ The SHA of the HEAD ref:
 </pre>
 </div>
 
+<div class="results">#+RESULTS:</div><pre class="example">
+30946349acf16c90c4e892403fefa9e8ed04ee75
+</pre>
+
+
 <div class="org-src-container">
 <pre class="src src-sh">git log -1 --format=<span style="color: #98be65;">'%H'</span>
 </pre>
 </div>
 
+<div class="results">#+RESULTS:</div><pre class="example">
+30946349acf16c90c4e892403fefa9e8ed04ee75
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgd52d56f" class="outline-3">
+<h3 id="orgd52d56f"><a href="#orgd52d56f">Branches</a></h3>
+<div class="outline-text-3" id="text-orgd52d56f">
 <p>
-Current branch
+Current branch name:
 </p>
 
 <div class="org-src-container">
 <pre class="src src-sh">git rev-parse --abbrev-ref HEAD
 </pre>
 </div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+main
+</pre>
+</div>
 </div>
 </div>
 
-<div id="outline-container-orgb2b1d50" class="outline-2">
-<h2 id="orgb2b1d50"><a href="#orgb2b1d50">I Accidentally&#x2026;</a></h2>
-<div class="outline-text-2" id="text-orgb2b1d50">
+<div id="outline-container-orgbcdeafa" class="outline-2">
+<h2 id="orgbcdeafa"><a href="#orgbcdeafa">I Accidentally&#x2026;</a></h2>
+<div class="outline-text-2" id="text-orgbcdeafa">
 </div>
-<div id="outline-container-org797719a" class="outline-3">
-<h3 id="org797719a"><a href="#org797719a">Commited to the Wrong Branch</a></h3>
-<div class="outline-text-3" id="text-org797719a">
+<div id="outline-container-org7a7383d" class="outline-3">
+<h3 id="org7a7383d"><a href="#org7a7383d">Commited to the Wrong Branch</a></h3>
+<div class="outline-text-3" id="text-org7a7383d">
 <p>
 You locally committed to <code>main</code> instead of <code>develop</code>, but you haven't pushed
 the commit yet.
@@ -120,9 +168,9 @@ the commit yet.
 </div>
 </div>
 
-<div id="outline-container-org7ebbd03" class="outline-3">
-<h3 id="org7ebbd03"><a href="#org7ebbd03">Rebased Remote Branch</a></h3>
-<div class="outline-text-3" id="text-org7ebbd03">
+<div id="outline-container-org6eb9e5a" class="outline-3">
+<h3 id="org6eb9e5a"><a href="#org6eb9e5a">Rebased Remote Branch</a></h3>
+<div class="outline-text-3" id="text-org6eb9e5a">
 <p>
 You rebased, and then remembered that the branch you were on has already been
 pushed to a remote repo. You shouldn't push this rebase!
@@ -134,9 +182,9 @@ pushed to a remote repo. You shouldn't push this rebase!
 </div>
 </div>
 
-<div id="outline-container-orge184bce" class="outline-3">
-<h3 id="orge184bce"><a href="#orge184bce">Ammended Remote Commit</a></h3>
-<div class="outline-text-3" id="text-orge184bce">
+<div id="outline-container-org2f20f04" class="outline-3">
+<h3 id="org2f20f04"><a href="#org2f20f04">Ammended Remote Commit</a></h3>
+<div class="outline-text-3" id="text-org2f20f04">
 <p>
 You ran a <code>git commit --ammend</code>, then realized you've already pushed the
 commit you were ammending! You can't push the ammended commit! (You <i>can</i>,
@@ -150,9 +198,9 @@ will be staged. Now you can commit again as a new commit.</li>
 </div>
 </div>
 
-<div id="outline-container-orgc12778c" class="outline-3">
-<h3 id="orgc12778c"><a href="#orgc12778c">Committed Locally Before Pulling Remote</a></h3>
-<div class="outline-text-3" id="text-orgc12778c">
+<div id="outline-container-org16b67e9" class="outline-3">
+<h3 id="org16b67e9"><a href="#org16b67e9">Committed Locally Before Pulling Remote</a></h3>
+<div class="outline-text-3" id="text-org16b67e9">
 <p>
 Somebody pushed changes to your branch while you were still committing
 locally. Now your branch and the remote branch have diverged.
@@ -166,13 +214,13 @@ remote/branch-name.</li>
 </div>
 </div>
 
-<div id="outline-container-orgb043ee6" class="outline-2">
-<h2 id="orgb043ee6"><a href="#orgb043ee6">Rebase</a></h2>
-<div class="outline-text-2" id="text-orgb043ee6">
+<div id="outline-container-orgd06b233" class="outline-2">
+<h2 id="orgd06b233"><a href="#orgd06b233">Rebasing</a></h2>
+<div class="outline-text-2" id="text-orgd06b233">
 </div>
-<div id="outline-container-orgb592a6b" class="outline-3">
-<h3 id="orgb592a6b"><a href="#orgb592a6b">Rebase to Ancestor</a></h3>
-<div class="outline-text-3" id="text-orgb592a6b">
+<div id="outline-container-org1d6e0d1" class="outline-3">
+<h3 id="org1d6e0d1"><a href="#org1d6e0d1">Rebase to Ancestor</a></h3>
+<div class="outline-text-3" id="text-org1d6e0d1">
 <p>
 Adapted from <a href="https://stackoverflow.com/a/55049181/340613">this SO answer</a>.
 </p>
@@ -194,7 +242,7 @@ git commit -m <span style="color: #98be65;">"Add D"</span>
 </div>
 
 
-<figure id="org63bcfd2">
+<figure id="orgcebdb8b">
 <img src="../img/ABCD.png" alt="ABCD.png">
 
 </figure>
@@ -204,7 +252,7 @@ And I want to rebase <code>D</code> to an ancestor <code>B</code> (I want <code>
 siblings):
 </p>
 
-<pre class="example" id="org1308d96">
+<pre class="example" id="orgc52eb81">
 A --- B --- C         main
       \
        \-- D          feature
@@ -242,7 +290,7 @@ git rebase --onto 81d13ca 081fb12
 
 
 
-<figure id="org02e81d9">
+<figure id="org4d5fdc1">
 <img src="../img/RebaseAncestor.png" alt="RebaseAncestor.png">
 
 </figure>
@@ -260,14 +308,14 @@ point</i>. We take everything after <code>C</code> and stick it on to <code>B</c
 </div>
 </div>
 
-<div id="outline-container-orgdf62907" class="outline-3">
-<h3 id="orgdf62907"><a href="#orgdf62907">Rebase to Commit on Another Branch</a></h3>
-<div class="outline-text-3" id="text-orgdf62907">
+<div id="outline-container-org72822f1" class="outline-3">
+<h3 id="org72822f1"><a href="#org72822f1">Rebase to Commit on Another Branch</a></h3>
+<div class="outline-text-3" id="text-org72822f1">
 <p>
 Given
 </p>
 
-<pre class="example" id="org7c3e2ba">
+<pre class="example" id="orgebba1b0">
 A --- B --- C          main
  \
   \-- D                topic
@@ -277,7 +325,7 @@ A --- B --- C          main
 And you want to rebase <code>topic</code> to <code>B</code> like so:
 </p>
 
-<pre class="example" id="org8bf7904">
+<pre class="example" id="org31431eb">
 A --- B --- C          main
        \
         \-- D          topic
@@ -292,9 +340,19 @@ git rebase --onto B
 </div>
 </div>
 
-<div id="outline-container-org6919338" class="outline-2">
-<h2 id="org6919338"><a href="#org6919338">Fixup</a></h2>
-<div class="outline-text-2" id="text-org6919338">
+<div id="outline-container-org8e7c2e5" class="outline-2">
+<h2 id="org8e7c2e5"><a href="#org8e7c2e5">List Tags Matching Pattern</a></h2>
+<div class="outline-text-2" id="text-org8e7c2e5">
+<div class="org-src-container">
+<pre class="src src-sh">git tag --list <span style="color: #98be65;">"v*"</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org568b1b4" class="outline-2">
+<h2 id="org568b1b4"><a href="#org568b1b4">Fixup</a></h2>
+<div class="outline-text-2" id="text-org568b1b4">
 <p>
 You make a change that ought to have been part of a previous commit, but that
 previous commit is not the last commit (so you can't just <code>--amend</code> the last
@@ -323,9 +381,9 @@ the rebase is started from.
 </div>
 </div>
 
-<div id="outline-container-org7f87217" class="outline-2">
-<h2 id="org7f87217"><a href="#org7f87217">First Commit</a></h2>
-<div class="outline-text-2" id="text-org7f87217">
+<div id="outline-container-org2ca21d4" class="outline-2">
+<h2 id="org2ca21d4"><a href="#org2ca21d4">First Commit</a></h2>
+<div class="outline-text-2" id="text-org2ca21d4">
 <p>
 Some ways to find the first commit in a Git repository:
 </p>
@@ -342,13 +400,13 @@ Some ways to find the first commit in a Git repository:
 </div>
 </div>
 
-<div id="outline-container-org3f30e3a" class="outline-2">
-<h2 id="org3f30e3a"><a href="#org3f30e3a">Tags</a></h2>
-<div class="outline-text-2" id="text-org3f30e3a">
+<div id="outline-container-org925ca90" class="outline-2">
+<h2 id="org925ca90"><a href="#org925ca90">Tags</a></h2>
+<div class="outline-text-2" id="text-org925ca90">
 </div>
-<div id="outline-container-org8029d66" class="outline-3">
-<h3 id="org8029d66"><a href="#org8029d66">Get Project Version From Tag</a></h3>
-<div class="outline-text-3" id="text-org8029d66">
+<div id="outline-container-orgc4f5a7e" class="outline-3">
+<h3 id="orgc4f5a7e"><a href="#orgc4f5a7e">Get Project Version From Tag</a></h3>
+<div class="outline-text-3" id="text-orgc4f5a7e">
 <p>
 I got this from cider <a href="https://github.com/clojure-emacs/cider/blob/18bb5e12bfff4196de4102b5abce226dcd7d4b9a/Makefile#L4">here</a>.
 </p>
@@ -360,9 +418,9 @@ I got this from cider <a href="https://github.com/clojure-emacs/cider/blob/18bb5
 </div>
 </div>
 
-<div id="outline-container-org49e70a3" class="outline-3">
-<h3 id="org49e70a3"><a href="#org49e70a3">Is HEAD a tag?</a></h3>
-<div class="outline-text-3" id="text-org49e70a3">
+<div id="outline-container-orgecc97d2" class="outline-3">
+<h3 id="orgecc97d2"><a href="#orgecc97d2">Is HEAD a tag?</a></h3>
+<div class="outline-text-3" id="text-orgecc97d2">
 <p>
 If HEAD is a tag, this will print the tag name. If not, it prints nothing.
 </p>
@@ -375,9 +433,9 @@ If HEAD is a tag, this will print the tag name. If not, it prints nothing.
 </div>
 </div>
 
-<div id="outline-container-orge11a1a9" class="outline-2">
-<h2 id="orge11a1a9"><a href="#orge11a1a9">Project Root Dir</a></h2>
-<div class="outline-text-2" id="text-orge11a1a9">
+<div id="outline-container-orga560843" class="outline-2">
+<h2 id="orga560843"><a href="#orga560843">Project Root Dir</a></h2>
+<div class="outline-text-2" id="text-orga560843">
 <div class="org-src-container">
 <pre class="src src-sh">git rev-parse --show-toplevel
 </pre>
@@ -385,13 +443,13 @@ If HEAD is a tag, this will print the tag name. If not, it prints nothing.
 </div>
 </div>
 
-<div id="outline-container-orge66a33e" class="outline-2">
-<h2 id="orge66a33e"><a href="#orge66a33e">Tools and Resources</a></h2>
-<div class="outline-text-2" id="text-orge66a33e">
+<div id="outline-container-org72f87c1" class="outline-2">
+<h2 id="org72f87c1"><a href="#org72f87c1">Tools and Resources</a></h2>
+<div class="outline-text-2" id="text-org72f87c1">
 </div>
-<div id="outline-container-org9d4a1bc" class="outline-3">
-<h3 id="org9d4a1bc"><a href="#org9d4a1bc">git-quick-stats</a></h3>
-<div class="outline-text-3" id="text-org9d4a1bc">
+<div id="outline-container-org74075c8" class="outline-3">
+<h3 id="org74075c8"><a href="#org74075c8">git-quick-stats</a></h3>
+<div class="outline-text-3" id="text-org74075c8">
 <p>
 Bash script that shows cool stats of git repos.
 <a href="https://github.com/arzzen/git-quick-stats/blob/master/git-quick-stats">https://github.com/arzzen/git-quick-stats/blob/master/git-quick-stats</a>

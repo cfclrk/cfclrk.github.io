@@ -4,10 +4,9 @@
 * Characters
 
   Emacs lisp has a special read syntax for characters: the =?= question mark.
-  Such syntax is necessary to distinguish the character like =à= from the symbol
-  =à=.
+  Such syntax is necessary to distinguish the character =à= from the symbol =à=.
 
-** Characters are integers
+** Characters are Integers
 
    Characters evaluate to integers:
 
@@ -41,7 +40,7 @@
    #+RESULTS:
    : t
 
-** Converting between chars and integers
+** Converting Between Chars and Integers
 
    #+begin_src emacs-lisp
      (string-to-char "à")
@@ -50,14 +49,38 @@
    #+RESULTS:
    : 224
 
-  #+begin_src emacs-lisp :results verbatim
-    (char-to-string 224)
-  #+end_src
+   #+begin_src emacs-lisp
+     (char-to-string 224)
+   #+end_src
 
-  #+RESULTS:
-  : "à"
+   #+RESULTS:
+   : à
 
-** Why have two representations?
+   The argument to =char-to-string= must be a character, so it can either be given
+   as:
+
+   1. A character using =?= syntax
+   2. An integer, using any of the ways to [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Integer-Basics.html][express an integer]]
+
+   For example, as an integer using hex notation:
+
+   #+begin_src emacs-lisp
+     (char-to-string #xe0)
+   #+end_src
+
+   #+RESULTS:
+   : à
+
+   Or, as a character using hex notation:
+
+   #+begin_src emacs-lisp
+     (char-to-string ?\xe0)
+   #+end_src
+
+   #+RESULTS:
+   : à
+
+** Why Have Two Representations?
 
    The reader syntax =?= simply allows you to express a number using a
    character. Sometimes that is very helpful and provides clarity (when you are
@@ -77,12 +100,12 @@
    #+RESULTS:
    : 226
 
-   #+begin_src emacs-lisp  :results verbatim
+   #+begin_src emacs-lisp
      (make-string 5 ?à) ; Helpful
    #+end_src
 
    #+RESULTS:
-   : "ààààà"
+   : ààààà
 
    Which, by the way, could also be written as:
 
@@ -133,10 +156,10 @@
    #+RESULTS:
    : 224
 
-* Unicode escape sequences
+* Unicode Escape Sequences
 
-  Both strings and characters can contain Unicode escape sequences. There are two
-  forms of Unicode escape sequences:
+  A character can be defined using a unicode escape sequence. There are two
+  forms for Unicode escape sequences:
 
   1. =\uXXXX= (=\u= and four hex digits)
   2. =\U00XXXXXX= (=\U00= and six hex digits)
@@ -157,7 +180,16 @@
   #+RESULTS:
   : 128568
 
-  Evaluating a string with a Unicode escape sequence returns a string:
+  Render the character using =char-to-string=:
+
+  #+begin_src emacs-lisp
+    (char-to-string ?\u00e0)
+  #+end_src
+
+  #+RESULTS:
+  : à
+
+  Also, evaluating a string with a Unicode escape sequence returns a string:
 
   #+begin_src emacs-lisp
     "\U0001F638"
@@ -166,41 +198,41 @@
   #+RESULTS:
   : 😸
 
-* Convert code point to character
+* Convert Unicode Code Point to Character
 
-  The function =(char-to-string CHAR)= returns the character at the Unicode code
-  point =CHAR=:
+  The function =(char-to-string CHAR)= returns the character at the decimal code
+  point =CHAR=. Unicode code points in the "U+2388" format are hex, so they must
+  first be converted to decimal.
 
-  #+begin_src emacs-lisp :results verbatim
-    (char-to-string 224)
-  #+end_src
-
-  #+RESULTS:
-  : "à"
-
-  The argument to =char-to-string= must be a character, so it can either be given
-  as:
-
-  1. A character using =?= syntax
-  2. An integer, using any of the ways to [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Integer-Basics.html][express an integer]]
-
-  For example, as an integer using hex notation:
+  Examples using [[https://www.compart.com/en/unicode/U+2388][Unicode Character "⎈" (U+2388)]]:
 
   #+begin_src emacs-lisp
-    (char-to-string #xe0)
+    (char-to-string ?\u2388)
   #+end_src
 
   #+RESULTS:
-  : à
-
-  Or, as a character using hex notation:
+  : ⎈
 
   #+begin_src emacs-lisp
-    (char-to-string ?\xe0)
+    (char-to-string ?\x2388)
   #+end_src
 
   #+RESULTS:
-  : à
+  : ⎈
+
+  #+begin_src emacs-lisp
+    "?\u2388"
+  #+end_src
+
+  #+RESULTS:
+  : ?⎈
+
+  #+begin_src emacs-lisp
+    "?\N{HELM SYMBOL}"
+  #+end_src
+
+  #+RESULTS:
+  : ?⎈
 
 * Convert Unicode name to character
 

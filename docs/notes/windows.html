@@ -33,24 +33,24 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org929180c">Environment Variables</a>
+<li><a href="#orgbf8922b">Environment Variables</a>
 <ul>
-<li><a href="#org8d49cd8">List all env vars</a></li>
-<li><a href="#orga935985">Function to update env variable</a></li>
-<li><a href="#orgd4ba14b">setx</a></li>
+<li><a href="#org2db55ef">List all env vars</a></li>
+<li><a href="#org535323a">Function to update env variable</a></li>
+<li><a href="#org553852c">setx</a></li>
 </ul>
 </li>
-<li><a href="#org23927b7">Background Process</a>
+<li><a href="#org85be127">Background Process</a>
 <ul>
-<li><a href="#org6f166a6">Start-Process</a></li>
-<li><a href="#org52c4f74">Start-Job</a></li>
-<li><a href="#orgc464a67">Scheduled Task</a></li>
-<li><a href="#orgff8559a">Subshell with -NoExit</a></li>
+<li><a href="#orgd0b4980">Start-Process</a></li>
+<li><a href="#orgd3c2240">Start-Job</a></li>
+<li><a href="#org5b3e365">Scheduled Task</a></li>
+<li><a href="#org0045f40">Subshell with -NoExit</a></li>
 </ul>
 </li>
-<li><a href="#org1eb2b0b">Kill a Process</a></li>
-<li><a href="#orgd106ec1">Install Python</a></li>
-<li><a href="#org2b342ee">Upgrade Powershell</a></li>
+<li><a href="#org1767627">Kill a Process</a></li>
+<li><a href="#orgb3d1b98">Install Python</a></li>
+<li><a href="#org8465bd6">Upgrade Powershell</a></li>
 </ul>
 </div>
 </nav>
@@ -60,13 +60,13 @@ wrote here doesn't look like it makes much sens. But I guess if I wrote it down,
 it must have been useful at the time!
 </p>
 
-<div id="outline-container-org929180c" class="outline-2">
-<h2 id="org929180c"><a href="#org929180c">Environment Variables</a></h2>
-<div class="outline-text-2" id="text-org929180c">
+<div id="outline-container-orgbf8922b" class="outline-2">
+<h2 id="orgbf8922b"><a href="#orgbf8922b">Environment Variables</a></h2>
+<div class="outline-text-2" id="text-orgbf8922b">
 </div>
-<div id="outline-container-org8d49cd8" class="outline-3">
-<h3 id="org8d49cd8"><a href="#org8d49cd8">List all env vars</a></h3>
-<div class="outline-text-3" id="text-org8d49cd8">
+<div id="outline-container-org2db55ef" class="outline-3">
+<h3 id="org2db55ef"><a href="#org2db55ef">List all env vars</a></h3>
+<div class="outline-text-3" id="text-org2db55ef">
 <div class="org-src-container">
 <pre class="src src-powershell">gci env: | sort name
 </pre>
@@ -74,9 +74,9 @@ it must have been useful at the time!
 </div>
 </div>
 
-<div id="outline-container-orga935985" class="outline-3">
-<h3 id="orga935985"><a href="#orga935985">Function to update env variable</a></h3>
-<div class="outline-text-3" id="text-orga935985">
+<div id="outline-container-org535323a" class="outline-3">
+<h3 id="org535323a"><a href="#org535323a">Function to update env variable</a></h3>
+<div class="outline-text-3" id="text-org535323a">
 <p>
 This is an attempt at a function to update environment variables permanently.
 It correctly sets a registry key, but it only takes effect after a reboot.
@@ -115,9 +115,9 @@ used.
 </div>
 </div>
 
-<div id="outline-container-orgd4ba14b" class="outline-3">
-<h3 id="orgd4ba14b"><a href="#orgd4ba14b">setx</a></h3>
-<div class="outline-text-3" id="text-orgd4ba14b">
+<div id="outline-container-org553852c" class="outline-3">
+<h3 id="org553852c"><a href="#org553852c">setx</a></h3>
+<div class="outline-text-3" id="text-org553852c">
 <p>
 <code>setx</code> can set an environment variable and persist it, but it will only be
 available to new processes.
@@ -141,13 +141,13 @@ Start-Service sshd
 </div>
 </div>
 
-<div id="outline-container-org23927b7" class="outline-2">
-<h2 id="org23927b7"><a href="#org23927b7">Background Process</a></h2>
-<div class="outline-text-2" id="text-org23927b7">
+<div id="outline-container-org85be127" class="outline-2">
+<h2 id="org85be127"><a href="#org85be127">Background Process</a></h2>
+<div class="outline-text-2" id="text-org85be127">
 </div>
-<div id="outline-container-org6f166a6" class="outline-3">
-<h3 id="org6f166a6"><a href="#org6f166a6">Start-Process</a></h3>
-<div class="outline-text-3" id="text-org6f166a6">
+<div id="outline-container-orgd0b4980" class="outline-3">
+<h3 id="orgd0b4980"><a href="#orgd0b4980">Start-Process</a></h3>
+<div class="outline-text-3" id="text-orgd0b4980">
 <div class="org-src-container">
 <pre class="src src-powershell">Start-Process `
   -FilePath go.exe `
@@ -159,26 +159,26 @@ Start-Service sshd
 </div>
 </div>
 
-<div id="outline-container-org52c4f74" class="outline-3">
-<h3 id="org52c4f74"><a href="#org52c4f74">Start-Job</a></h3>
+<div id="outline-container-orgd3c2240" class="outline-3">
+<h3 id="orgd3c2240"><a href="#orgd3c2240">Start-Job</a></h3>
 </div>
 
-<div id="outline-container-orgc464a67" class="outline-3">
-<h3 id="orgc464a67"><a href="#orgc464a67">Scheduled Task</a></h3>
+<div id="outline-container-org5b3e365" class="outline-3">
+<h3 id="org5b3e365"><a href="#org5b3e365">Scheduled Task</a></h3>
 </div>
 
-<div id="outline-container-orgff8559a" class="outline-3">
-<h3 id="orgff8559a"><a href="#orgff8559a">Subshell with -NoExit</a></h3>
+<div id="outline-container-org0045f40" class="outline-3">
+<h3 id="org0045f40"><a href="#org0045f40">Subshell with -NoExit</a></h3>
 </div>
 </div>
 
-<div id="outline-container-org1eb2b0b" class="outline-2">
-<h2 id="org1eb2b0b"><a href="#org1eb2b0b">Kill a Process</a></h2>
+<div id="outline-container-org1767627" class="outline-2">
+<h2 id="org1767627"><a href="#org1767627">Kill a Process</a></h2>
 </div>
 
-<div id="outline-container-orgd106ec1" class="outline-2">
-<h2 id="orgd106ec1"><a href="#orgd106ec1">Install Python</a></h2>
-<div class="outline-text-2" id="text-orgd106ec1">
+<div id="outline-container-orgb3d1b98" class="outline-2">
+<h2 id="orgb3d1b98"><a href="#orgb3d1b98">Install Python</a></h2>
+<div class="outline-text-2" id="text-orgb3d1b98">
 <div class="org-src-container">
 <pre class="src src-powershell">$url = https://www.python.org/ftp/python/3.6.3/python-3.6.3-amd64.exe
 Invoke-WebRequest -Uri $url -OutFile pythoninstaller.exe
@@ -194,9 +194,9 @@ Invoke-WebRequest -Uri $url -OutFile pythoninstaller.exe
 </div>
 </div>
 
-<div id="outline-container-org2b342ee" class="outline-2">
-<h2 id="org2b342ee"><a href="#org2b342ee">Upgrade Powershell</a></h2>
-<div class="outline-text-2" id="text-org2b342ee">
+<div id="outline-container-org8465bd6" class="outline-2">
+<h2 id="org8465bd6"><a href="#org8465bd6">Upgrade Powershell</a></h2>
+<div class="outline-text-2" id="text-org8465bd6">
 <div class="org-src-container">
 <pre class="src src-powershell">$scriptUri = https://raw.githubusercontent.com/jborean93/ansible-windows/master/scripts/Upgrade-PowerShell.ps1
 Invoke-WebRequest -Uri $scriptUri

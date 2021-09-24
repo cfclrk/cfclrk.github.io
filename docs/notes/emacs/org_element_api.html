@@ -33,19 +33,19 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orge29f3c9">Local Parsing</a>
+<li><a href="#org8e1634c">Local Parsing</a>
 <ul>
-<li><a href="#org7712838">org-element-at-point</a></li>
-<li><a href="#org213a0e2">org-element-context</a></li>
-<li><a href="#orgc81d51f">Examining Element</a></li>
+<li><a href="#org2d248a3">org-element-at-point</a></li>
+<li><a href="#org6f892db">org-element-context</a></li>
+<li><a href="#org3953ad4">Examining Element</a></li>
 </ul>
 </li>
-<li><a href="#orgdcf6c60">Global Parsing</a>
+<li><a href="#org08e3cc3">Global Parsing</a>
 <ul>
-<li><a href="#orgf9ba903">Accessors</a></li>
+<li><a href="#org4ff16ac">Accessors</a></li>
 </ul>
 </li>
-<li><a href="#org92caf47">Foo</a></li>
+<li><a href="#org6a25075">Foo</a></li>
 </ul>
 </div>
 </nav>
@@ -53,9 +53,9 @@
 Good doc here: <a href="https://orgmode.org/worg/dev/org-element-api.html">https://orgmode.org/worg/dev/org-element-api.html</a>
 </p>
 
-<div id="outline-container-orge29f3c9" class="outline-2">
-<h2 id="orge29f3c9"><a href="#orge29f3c9">Local Parsing</a></h2>
-<div class="outline-text-2" id="text-orge29f3c9">
+<div id="outline-container-org8e1634c" class="outline-2">
+<h2 id="org8e1634c"><a href="#org8e1634c">Local Parsing</a></h2>
+<div class="outline-text-2" id="text-org8e1634c">
 <p>
 Local parsing gives information about the element at point. Local parsing
 gives you information, but you cannot alter the structure of the AST.
@@ -71,9 +71,9 @@ Two functions you can use:
 </ol>
 </div>
 
-<div id="outline-container-org7712838" class="outline-3">
-<h3 id="org7712838"><a href="#org7712838">org-element-at-point</a></h3>
-<div class="outline-text-3" id="text-org7712838">
+<div id="outline-container-org2d248a3" class="outline-3">
+<h3 id="org2d248a3"><a href="#org2d248a3">org-element-at-point</a></h3>
+<div class="outline-text-3" id="text-org2d248a3">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>pp <span style="color: #c678dd;">(</span>org-element-at-point<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
@@ -99,9 +99,9 @@ Two functions you can use:
 </div>
 </div>
 
-<div id="outline-container-org213a0e2" class="outline-3">
-<h3 id="org213a0e2"><a href="#org213a0e2">org-element-context</a></h3>
-<div class="outline-text-3" id="text-org213a0e2">
+<div id="outline-container-org6f892db" class="outline-3">
+<h3 id="org6f892db"><a href="#org6f892db">org-element-context</a></h3>
+<div class="outline-text-3" id="text-org6f892db">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>org-element-context<span style="color: #51afef;">)</span>
 </pre>
@@ -148,9 +148,9 @@ Two functions you can use:
 </div>
 </div>
 
-<div id="outline-container-orgc81d51f" class="outline-3">
-<h3 id="orgc81d51f"><a href="#orgc81d51f">Examining Element</a></h3>
-<div class="outline-text-3" id="text-orgc81d51f">
+<div id="outline-container-org3953ad4" class="outline-3">
+<h3 id="org3953ad4"><a href="#org3953ad4">Examining Element</a></h3>
+<div class="outline-text-3" id="text-org3953ad4">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>org-element-type <span style="color: #c678dd;">(</span>org-element-at-point<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
@@ -183,9 +183,9 @@ Note: You can't use <code>org-element-contents</code> with local parsing.
 </div>
 </div>
 
-<div id="outline-container-orgdcf6c60" class="outline-2">
-<h2 id="orgdcf6c60"><a href="#orgdcf6c60">Global Parsing</a></h2>
-<div class="outline-text-2" id="text-orgdcf6c60">
+<div id="outline-container-org08e3cc3" class="outline-2">
+<h2 id="org08e3cc3"><a href="#org08e3cc3">Global Parsing</a></h2>
+<div class="outline-text-2" id="text-org08e3cc3">
 <p>
 Use <code>org-element-parse-buffer</code> to return a full AST of the buffer. You may
 modify this AST using setters.
@@ -225,9 +225,9 @@ modify this AST using setters.
 </table>
 </div>
 
-<div id="outline-container-orgf9ba903" class="outline-3">
-<h3 id="orgf9ba903"><a href="#orgf9ba903">Accessors</a></h3>
-<div class="outline-text-3" id="text-orgf9ba903">
+<div id="outline-container-org4ff16ac" class="outline-3">
+<h3 id="org4ff16ac"><a href="#org4ff16ac">Accessors</a></h3>
+<div class="outline-text-3" id="text-org4ff16ac">
 <p>
 Three functions:
 </p>
@@ -302,9 +302,9 @@ Three functions:
 </div>
 </div>
 
-<div id="outline-container-org92caf47" class="outline-2">
-<h2 id="org92caf47"><a href="#org92caf47">Foo</a></h2>
-<div class="outline-text-2" id="text-org92caf47">
+<div id="outline-container-org6a25075" class="outline-2">
+<h2 id="org6a25075"><a href="#org6a25075">Foo</a></h2>
+<div class="outline-text-2" id="text-org6a25075">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">with-temp-buffer</span>
   <span style="color: #c678dd;">(</span>insert-buffer <span style="color: #98be65;">(</span>current-buffer<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>

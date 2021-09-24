@@ -33,18 +33,18 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orge3ea50a">wat, wasm, and wast</a></li>
-<li><a href="#org9889c01">Tooling</a></li>
-<li><a href="#orge18aa55">Runtimes</a></li>
-<li><a href="#orge5bf54e">Convert wat (text) to wasm (binary)</a></li>
-<li><a href="#org7e667b0">Convert wasm to wat</a></li>
+<li><a href="#org2a1a2d3">wat, wasm, and wast</a></li>
+<li><a href="#org4a77ae6">Tooling</a></li>
+<li><a href="#org8a548c5">Runtimes</a></li>
+<li><a href="#orge87741c">Convert wat (text) to wasm (binary)</a></li>
+<li><a href="#org1d33868">Convert wasm to wat</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-orge3ea50a" class="outline-2">
-<h2 id="orge3ea50a"><a href="#orge3ea50a">wat, wasm, and wast</a></h2>
-<div class="outline-text-2" id="text-orge3ea50a">
+<div id="outline-container-org2a1a2d3" class="outline-2">
+<h2 id="org2a1a2d3"><a href="#org2a1a2d3">wat, wasm, and wast</a></h2>
+<div class="outline-text-2" id="text-org2a1a2d3">
 <ul class="org-ul">
 <li><code>wat</code>: is the textual format (lisp)</li>
 <li><code>wasm</code>: the binary format</li>
@@ -61,9 +61,9 @@ text format and the wasm binary format".
 </div>
 </div>
 
-<div id="outline-container-org9889c01" class="outline-2">
-<h2 id="org9889c01"><a href="#org9889c01">Tooling</a></h2>
-<div class="outline-text-2" id="text-org9889c01">
+<div id="outline-container-org4a77ae6" class="outline-2">
+<h2 id="org4a77ae6"><a href="#org4a77ae6">Tooling</a></h2>
+<div class="outline-text-2" id="text-org4a77ae6">
 <ul class="org-ul">
 <li><p>
 <a href="https://github.com/webassembly/wabt">wabt</a>, the WebAssembly Binary Toolkit.
@@ -79,9 +79,9 @@ text format and the wasm binary format".
 </div>
 </div>
 
-<div id="outline-container-orge18aa55" class="outline-2">
-<h2 id="orge18aa55"><a href="#orge18aa55">Runtimes</a></h2>
-<div class="outline-text-2" id="text-orge18aa55">
+<div id="outline-container-org8a548c5" class="outline-2">
+<h2 id="org8a548c5"><a href="#org8a548c5">Runtimes</a></h2>
+<div class="outline-text-2" id="text-org8a548c5">
 <p>
 The <a href="https://webassembly.org/roadmap/">roadmap</a> lists three non-browser runtimes:
 </p>
@@ -94,9 +94,9 @@ The <a href="https://webassembly.org/roadmap/">roadmap</a> lists three non-brows
 </div>
 </div>
 
-<div id="outline-container-orge5bf54e" class="outline-2">
-<h2 id="orge5bf54e"><a href="#orge5bf54e">Convert wat (text) to wasm (binary)</a></h2>
-<div class="outline-text-2" id="text-orge5bf54e">
+<div id="outline-container-orge87741c" class="outline-2">
+<h2 id="orge87741c"><a href="#orge87741c">Convert wat (text) to wasm (binary)</a></h2>
+<div class="outline-text-2" id="text-orge87741c">
 <p>
 Tangle this to <code>simple.wat</code>.
 </p>
@@ -128,7 +128,7 @@ Why is this writing to stderr?
 </pre>
 </div>
 
-<pre class="example" id="orgdcb77e5">
+<pre class="example" id="orgf9f71a2">
 0000000: 0061 736d                                 ; WASM_BINARY_MAGIC
 0000004: 0100 0000                                 ; WASM_BINARY_VERSION
 ; section "Type" (1)
@@ -190,9 +190,9 @@ Why is this writing to stderr?
 </div>
 </div>
 
-<div id="outline-container-org7e667b0" class="outline-2">
-<h2 id="org7e667b0"><a href="#org7e667b0">Convert wasm to wat</a></h2>
-<div class="outline-text-2" id="text-org7e667b0">
+<div id="outline-container-org1d33868" class="outline-2">
+<h2 id="org1d33868"><a href="#org1d33868">Convert wasm to wat</a></h2>
+<div class="outline-text-2" id="text-org1d33868">
 <p>
 We can disassemble! Ain't that peachy!
 </p>

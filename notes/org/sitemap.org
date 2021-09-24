@@ -39,5 +39,6 @@
   - [[file:emacs/org_element_api.org][Org Element Api]]
   - [[file:emacs/org_variables.org][Passing Variables to Source Blocks]]
   - [[file:emacs/languages.org][Programming Languages]]
+  - [[file:emacs/projectile.org][Projectile]]
   - [[file:emacs/straight.org][Straight]]
   - [[file:emacs/unicode.org][Unicode in Emacs]]

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Emacs Projectile in a Monorepo</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Emacs Projectile in a Monorepo</h1>
+</header><nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgd27d485">The Problem</a></li>
+<li><a href="#org5cc0960">Example of the Problem</a></li>
+<li><a href="#org86839b3">Project Detection</a></li>
+<li><a href="#orgddd5dc0">Project Detection Issues</a>
+<ul>
+<li><a href="#org6b9e820">Marker Files</a></li>
+<li><a href="#org8e5ebe0">Lookup Order</a></li>
+</ul>
+</li>
+<li><a href="#solution">Solution</a></li>
+<li><a href="#org79672a4">Test</a>
+<ul>
+<li><a href="#org458e1d8">Go</a></li>
+<li><a href="#org99a870f">Python</a></li>
+<li><a href="#org7f33777">Use .projectile</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+<p>
+<a href="https://docs.projectile.mx/projectile/index.html">Projectile</a> is an awesome part of Emacs &#x2013; <i>foundational</i> even. For example, when
+lsp-mode tries to determine which directory an LSP server should be associated
+with, it uses projectile.
+</p>
+
+<p>
+A minor annoyance (the bane of any Emacs user) has been nagging me (plaguing my
+nightmares). Here was the problem:
+</p>
+
+<div id="outline-container-orgd27d485" class="outline-2">
+<h2 id="orgd27d485"><a href="#orgd27d485">The Problem</a></h2>
+<div class="outline-text-2" id="text-orgd27d485">
+<p>
+By default when you're in a monorepo, projectile determines the project root
+to be the root of the <i>monorepo</i>, not the root of the subproject that you're
+in.
+</p>
+
+<p>
+100% of the time, this is not what I want. When I'm in a python project that
+happens to be part of a larger monorepo, I want projectile to operate on the
+python project. I should still be able to operate on the monorepo by opening a
+file or dired buffer at the root of the monorepo.
+</p>
+
+<p>
+To jump to the solution, go to <a href="#solution">Solution</a>, or see the generated elisp file
+<a href="https://github.com/cfclrk/dotfiles/emacs/blob/master/projectile-discovery.el">here</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5cc0960" class="outline-2">
+<h2 id="org5cc0960"><a href="#org5cc0960">Example of the Problem</a></h2>
+<div class="outline-text-2" id="text-org5cc0960">
+<p>
+Consider the following directory layout:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">tree -a $<span style="color: #dcaeea;">NotesProject</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+/private/tmp/notes
+├── .git
+├── go
+│   ├── projectA
+│   │   └── go.mod
+│   └── projectB
+│       └── go.mod
+└── python
+    ├── projectC
+    │   └── setup.py
+    └── projectD
+        └── setup.py
+
+6 directories, 5 files
+</pre>
+
+
+<p>
+Now, when I open a file in <code>go/projectA</code>, Projectile says that the project
+root is:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>default-directory
+        <span style="color: #a9a1e1;">(</span>f-join NotesProject <span style="color: #98be65;">"go/projectA"</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
+  <span style="color: #c678dd;">(</span>projectile-project-root<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+/private/tmp/notes/
+</pre>
+
+
+<p>
+I <i>want</i> projectile to say that the project root is
+<code>/private/tmp/notes/go/projectA</code>. By default, however, projectile determines
+the monorepo root directory is the project root.
+</p>
+
+<p>
+To understand how to customize projectile to say the project root is
+<code>/private/tmp/notes/go/projectA</code>, we first need to understand how projectile
+detects projects.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org86839b3" class="outline-2">
+<h2 id="org86839b3"><a href="#org86839b3">Project Detection</a></h2>
+<div class="outline-text-2" id="text-org86839b3">
+<p>
+The projectile documentation has a relevant section here: <a href="https://docs.projectile.mx/projectile/projects.html#customizing-project-detection">Customizing Project
+Detection</a>. The important function is <code>projectile-root-bottom-up</code>, reproduced
+here:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">projectile-root-bottom-up</span> <span style="color: #c678dd;">(</span>dir <span style="color: #ECBE7B;">&amp;optional</span> list<span style="color: #c678dd;">)</span>
+  <span style="color: #83898d;">"Identify a project root in DIR by bottom-up search for files in LIST.</span>
+<span style="color: #83898d;">If LIST is nil, use `</span><span style="color: #a9a1e1;">projectile-project-root-files-bottom-up</span><span style="color: #83898d;">' instead.</span>
+<span style="color: #83898d;">Return the first (bottommost) matched directory or nil if not found."</span>
+  <span style="color: #c678dd;">(</span>cl-some <span style="color: #98be65;">(</span><span style="color: #51afef;">lambda</span> <span style="color: #a9a1e1;">(</span>name<span style="color: #a9a1e1;">)</span> <span style="color: #a9a1e1;">(</span>projectile-locate-dominating-file dir name<span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
+           <span style="color: #98be65;">(</span><span style="color: #51afef;">or</span> list projectile-project-root-files-bottom-up<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<p>
+This function is saying:
+</p>
+
+<ul class="org-ul">
+<li>For each marker file in <code>projectile-project-root-files-bottom-up</code>:
+<ul class="org-ul">
+<li>Is the marker file in this directory? No?</li>
+<li>Is the marker file in the parent directory? No?</li>
+<li>Is the marker file in the parent-parent directory? No?</li>
+<li>&#x2026; etc up to <code>/</code></li>
+</ul></li>
+</ul>
+
+<p>
+Two important takeawyas from that function:
+</p>
+
+<ol class="org-ol">
+<li><code>projectile-project-root-files-bottom-up</code> is the variable that holds the
+list of marker files that signify a project root.</li>
+<li>The function looks for one file <b><i>all the way up to root</i></b> before looking
+for the next file.</li>
+</ol>
+
+<p>
+And what are the marker files by default?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">projectile-project-root-files-bottom-up
+</pre>
+</div>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">.projectile</td>
+<td class="org-left">.git</td>
+<td class="org-left">.hg</td>
+<td class="org-left">.fslckout</td>
+<td class="org-left"><span class="underline">FOSSIL</span></td>
+<td class="org-left">.bzr</td>
+<td class="org-left">_darcs</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+To illustrate the above two points, say we append <code>go.mod</code> to that list of
+marker files:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> projectile-project-root-files-bottom-up
+      '<span style="color: #c678dd;">(</span><span style="color: #98be65;">".projectile"</span> <span style="color: #98be65;">".git"</span> <span style="color: #98be65;">".hg"</span> <span style="color: #98be65;">".fslckout"</span>
+        <span style="color: #98be65;">"_FOSSIL_"</span> <span style="color: #98be65;">".bzr"</span> <span style="color: #98be65;">"_darcs"</span> <span style="color: #98be65;">"go.mod"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">.projectile</td>
+<td class="org-left">.git</td>
+<td class="org-left">.hg</td>
+<td class="org-left">.fslckout</td>
+<td class="org-left"><span class="underline">FOSSIL</span></td>
+<td class="org-left">.bzr</td>
+<td class="org-left">_darcs</td>
+<td class="org-left">go.mod</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Projectile still won't find our Go subproject, because <code>.git</code> comes earlier in
+the list.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>default-directory
+        <span style="color: #a9a1e1;">(</span>f-join NotesProject <span style="color: #98be65;">"go/projectA"</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
+  <span style="color: #c678dd;">(</span>projectile-project-root<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+/private/tmp/notes/
+</pre>
+
+
+<p>
+Projectile found a <code>.git</code> two directories up before looking for a <code>go.mod</code>.
+Obviously, we could rectify that by <i>prepending</i> <code>go.mod</code> instead of appending
+it, but the general problem would still be there.
+</p>
+
+<p>
+This behavior is perhaps useful in one situation: if you want to force a
+project root to a higher level by creating a <code>.projectile</code> file. For example,
+if we wanted <code>/private/tmp/</code> to be the project root for some reason, we could
+just put a <code>.projectile</code> there.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">touch /private/tmp/.projectile
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>default-directory
+        <span style="color: #a9a1e1;">(</span>f-join NotesProject <span style="color: #98be65;">"go/projectA"</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
+  <span style="color: #c678dd;">(</span>projectile-project-root<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+/private/tmp/
+</pre>
+
+
+<p>
+That works! We should probably try to keep that behavior.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgddd5dc0" class="outline-2">
+<h2 id="orgddd5dc0"><a href="#orgddd5dc0">Project Detection Issues</a></h2>
+<div class="outline-text-2" id="text-orgddd5dc0">
+<p>
+We found two issues preventing projectile from identifying subprojects as
+project roots in our test directory:
+</p>
+
+<ol class="org-ol">
+<li><b>Marker Files</b>: The variable <code>projectile-project-root-files-bottom-up</code>
+doesn't have <code>go.mod</code> or <code>setup.py</code> in it.</li>
+<li><b>Lookup Order</b>: Even if projectile <i>were</i> looking for <code>setup.py</code> and
+<code>go.mod</code>, the ordering of the list matters. Projectile might find another
+marker file at a higher level before looking for <code>go.mod</code> or <code>setup.py</code>.</li>
+</ol>
+
+<p>
+Let's examine each problem.
+</p>
+</div>
+
+<div id="outline-container-org6b9e820" class="outline-3">
+<h3 id="org6b9e820"><a href="#org6b9e820">Marker Files</a></h3>
+<div class="outline-text-3" id="text-org6b9e820">
+<p>
+The problem was:
+</p>
+
+<blockquote>
+<p>
+The variable <code>projectile-project-root-files-bottom-up</code> doesn't have <code>go.mod</code>
+or <code>setup.py</code> in it.
+</p>
+</blockquote>
+
+<p>
+So, we just need to add <code>setup.py</code> and <code>go.mod</code> to
+<code>projectile-project-root-files-bottom-up</code>. But doesn't projectile already know
+about those kinds of files somewhere? A little more reading, and we find this
+variable:
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8e5ebe0" class="outline-3">
+<h3 id="org8e5ebe0"><a href="#org8e5ebe0">Lookup Order</a></h3>
+<div class="outline-text-3" id="text-org8e5ebe0">
+<p>
+The problem was:
+</p>
+
+<blockquote>
+<p>
+Even if projectile <i>were</i> looking for <code>setup.py</code> and <code>go.mod</code>, the ordering
+of the list matters. Projectile might find another marker file at a higher
+level before looking for <code>go.mod</code> or <code>setup.py</code>.
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+
+<div id="outline-container-solution" class="outline-2">
+<h2 id="solution"><a href="#solution">Solution</a></h2>
+<div class="outline-text-2" id="text-solution">
+<p>
+Define a new strategy for discovering projects.
+</p>
+
+<ol class="org-ol">
+<li><p>
+Define a new variable with all of the marker files that indicate a project
+root.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> my-project-root-files
+      <span style="color: #c678dd;">(</span>-concat '<span style="color: #98be65;">(</span><span style="color: #98be65;">"go.mod"</span><span style="color: #98be65;">)</span>
+               projectile-project-root-files-bottom-up
+               projectile-project-root-files<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div></li>
+
+<li><p>
+Define a new function for discovering projects. This functin looks for all
+files in <code>my-project-root-files</code> at one level before moving up to the next
+level.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">any-file-in-dir?</span> <span style="color: #c678dd;">(</span>file-list dir<span style="color: #c678dd;">)</span>
+  <span style="color: #83898d;">"True if any of the files in FILE-LIST is in the directory DIR.</span>
+<span style="color: #83898d;">Otherwise false."</span>
+  <span style="color: #c678dd;">(</span><span style="color: #51afef;">--any</span> <span style="color: #98be65;">(</span>f-exists? <span style="color: #a9a1e1;">(</span>f-expand <span style="color: #dcaeea;">it</span> dir<span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span> file-list<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+
+<span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">my-project-root</span> <span style="color: #c678dd;">(</span>dir <span style="color: #ECBE7B;">&amp;optional</span> list<span style="color: #c678dd;">)</span>
+  <span style="color: #83898d;">"Identify a project root in DIR by bottom-up search for files in LIST.</span>
+<span style="color: #83898d;">If LIST is nil, use `</span><span style="color: #a9a1e1;">my-project-root-files</span><span style="color: #83898d;">' instead.</span>
+<span style="color: #83898d;">Return the first (bottommost) matched directory or nil if not found."</span>
+  <span style="color: #c678dd;">(</span><span style="color: #51afef;">let</span> <span style="color: #98be65;">(</span><span style="color: #a9a1e1;">(</span>marker-files <span style="color: #4db5bd;">(</span><span style="color: #51afef;">or</span> list my-project-root-files<span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
+    <span style="color: #98be65;">(</span><span style="color: #51afef;">f--traverse-upwards</span>
+     <span style="color: #a9a1e1;">(</span>any-file-in-dir? marker-files <span style="color: #dcaeea;">it</span><span style="color: #a9a1e1;">)</span>
+     dir<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div></li>
+
+<li><p>
+Insert our new lookup function into <code>projectile-project-root-functions</code> so
+that it is called before <code>projectile-root-bottom-up</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> projectile-project-root-functions
+      '<span style="color: #c678dd;">(</span>projectile-root-local
+        my-project-root  <span style="color: #5B6268;">;;  </span><span style="color: #5B6268;">Insert our new function</span>
+        projectile-root-bottom-up
+        projectile-root-top-down
+        projectile-root-top-down-recurring<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org79672a4" class="outline-2">
+<h2 id="org79672a4"><a href="#org79672a4">Test</a></h2>
+<div class="outline-text-2" id="text-org79672a4">
+<p>
+After applying the functions above, let's see what projectile says the project
+roots are for our monorepo.
+</p>
+</div>
+
+<div id="outline-container-org458e1d8" class="outline-3">
+<h3 id="org458e1d8"><a href="#org458e1d8">Go</a></h3>
+<div class="outline-text-3" id="text-org458e1d8">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>default-directory
+        <span style="color: #a9a1e1;">(</span>f-join NotesProject <span style="color: #98be65;">"go/projectA"</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
+  <span style="color: #c678dd;">(</span>projectile-project-root<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+/private/tmp/notes/go/projectA
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org99a870f" class="outline-3">
+<h3 id="org99a870f"><a href="#org99a870f">Python</a></h3>
+<div class="outline-text-3" id="text-org99a870f">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>default-directory
+        <span style="color: #a9a1e1;">(</span>f-join NotesProject <span style="color: #98be65;">"python/projectC"</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
+  <span style="color: #c678dd;">(</span>projectile-project-root<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+/private/tmp/notes/python/projectC
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org7f33777" class="outline-3">
+<h3 id="org7f33777"><a href="#org7f33777">Use .projectile</a></h3>
+<div class="outline-text-3" id="text-org7f33777">
+<div class="org-src-container">
+<pre class="src src-sh">touch /private/tmp/.projectile
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>default-directory
+        <span style="color: #a9a1e1;">(</span>f-join NotesProject <span style="color: #98be65;">"go/projectA"</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
+  <span style="color: #c678dd;">(</span>projectile-project-root<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

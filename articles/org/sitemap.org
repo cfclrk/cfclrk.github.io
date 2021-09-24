@@ -1,4 +1,5 @@
 #+TITLE: Articles
 
+- [[file:projectile_root.org][Emacs Projectile in a Monorepo]]
 - [[file:github_identities.org][Using Multiple GitHub Accounts]]
 - [[file:home.org][home]]

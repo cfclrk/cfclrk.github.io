@@ -33,20 +33,20 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org5ea681a">Association Lists</a></li>
-<li><a href="#orgb5a26eb">Pretty Printing Objects</a>
+<li><a href="#orgc534b9c">Association Lists</a></li>
+<li><a href="#org474348f">Pretty Printing Objects</a>
 <ul>
-<li><a href="#org9669e1d">cl-prettyprint</a></li>
-<li><a href="#orgdc12be1">pp</a></li>
+<li><a href="#orga6d2fd4">cl-prettyprint</a></li>
+<li><a href="#orgb35f086">pp</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-org5ea681a" class="outline-2">
-<h2 id="org5ea681a"><a href="#org5ea681a">Association Lists</a></h2>
-<div class="outline-text-2" id="text-org5ea681a">
+<div id="outline-container-orgc534b9c" class="outline-2">
+<h2 id="orgc534b9c"><a href="#orgc534b9c">Association Lists</a></h2>
+<div class="outline-text-2" id="text-orgc534b9c">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>assoc <span style="color: #98be65;">"foo"</span> '<span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span><span style="color: #98be65;">"foo"</span> . <span style="color: #98be65;">"bar"</span><span style="color: #98be65;">)</span> <span style="color: #98be65;">(</span><span style="color: #98be65;">"baz"</span> . <span style="color: #98be65;">"qux"</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
@@ -58,7 +58,7 @@
 
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="orge335a71">'<span style="color: #51afef;">(</span><span style="color: #c678dd;">(</span><span style="color: #98be65;">"cats"</span> . <span style="color: #98be65;">"hats"</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">"dogs"</span> . <span style="color: #98be65;">"hogs"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp" id="orgfebf28b">'<span style="color: #51afef;">(</span><span style="color: #c678dd;">(</span><span style="color: #98be65;">"cats"</span> . <span style="color: #98be65;">"hats"</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">"dogs"</span> . <span style="color: #98be65;">"hogs"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
 
@@ -78,13 +78,13 @@
 </div>
 </div>
 
-<div id="outline-container-orgb5a26eb" class="outline-2">
-<h2 id="orgb5a26eb"><a href="#orgb5a26eb">Pretty Printing Objects</a></h2>
-<div class="outline-text-2" id="text-orgb5a26eb">
+<div id="outline-container-org474348f" class="outline-2">
+<h2 id="org474348f"><a href="#org474348f">Pretty Printing Objects</a></h2>
+<div class="outline-text-2" id="text-org474348f">
 </div>
-<div id="outline-container-org9669e1d" class="outline-3">
-<h3 id="org9669e1d"><a href="#org9669e1d">cl-prettyprint</a></h3>
-<div class="outline-text-3" id="text-org9669e1d">
+<div id="outline-container-orga6d2fd4" class="outline-3">
+<h3 id="orga6d2fd4"><a href="#orga6d2fd4">cl-prettyprint</a></h3>
+<div class="outline-text-3" id="text-orga6d2fd4">
 <p>
 <code>cl-prettyprint</code> formats nicely, but weirdly, it's not a function that
 returns a string. Instead it literally inserts text into the buffer at point.
@@ -135,9 +135,9 @@ pprint
 </div>
 </div>
 
-<div id="outline-container-orgdc12be1" class="outline-3">
-<h3 id="orgdc12be1"><a href="#orgdc12be1">pp</a></h3>
-<div class="outline-text-3" id="text-orgdc12be1">
+<div id="outline-container-orgb35f086" class="outline-3">
+<h3 id="orgb35f086"><a href="#orgb35f086">pp</a></h3>
+<div class="outline-text-3" id="text-orgb35f086">
 <p>
 <code>pp</code> is great. But I noticed sometimes it doesn't format as vertically as
 <code>cl-prettyprint</code> (example?).

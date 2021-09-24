@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Projectile</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Projectile</h1>
+</header><nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org740a7dd">Project Root</a></li>
+<li><a href="#orgc062982">Project Type</a></li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-org740a7dd" class="outline-2">
+<h2 id="org740a7dd"><a href="#org740a7dd">Project Root</a></h2>
+<div class="outline-text-2" id="text-org740a7dd">
+<p>
+In a buffer, do a <code>C-m-:</code> (<code>eval-expression</code>) and run
+<code>(projectile-project-root)</code>. Or:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>default-directory
+        <span style="color: #a9a1e1;">(</span>expand-file-name <span style="color: #98be65;">"~/Projects/py-demo"</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
+  <span style="color: #c678dd;">(</span>projectile-project-root<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+/Users/chris.clark/Projects/py-demo
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgc062982" class="outline-2">
+<h2 id="orgc062982"><a href="#orgc062982">Project Type</a></h2>
+<div class="outline-text-2" id="text-orgc062982">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>projectile-project-type<span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+generic
+</pre>
+</div>
+</div>
+</div>
+</body>
+</html>

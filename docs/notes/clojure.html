@@ -33,31 +33,31 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org76304d5">clj vs clojure</a></li>
-<li><a href="#orgaecf8bf">Cmd Execution and REPL</a></li>
-<li><a href="#orga4b55f9">Project Creation</a>
+<li><a href="#orgd703106">clj vs clojure</a></li>
+<li><a href="#org70c1485">Cmd Execution and REPL</a></li>
+<li><a href="#orgc264fe2">Project Creation</a>
 <ul>
-<li><a href="#org60eb74f">Minimal command line</a></li>
-<li><a href="#orgd512c18">Using clj-new</a></li>
+<li><a href="#org91a6315">Minimal command line</a></li>
+<li><a href="#org044385b">Using clj-new</a></li>
 </ul>
 </li>
-<li><a href="#org87f6320">Emacs Cider</a></li>
-<li><a href="#orgdcf51dd">Testing</a>
+<li><a href="#orgf048057">Emacs Cider</a></li>
+<li><a href="#orge6a1db3">Testing</a>
 <ul>
-<li><a href="#org8a817d9">Run all tests in namespace</a></li>
-<li><a href="#org0921272">Run a single test</a></li>
+<li><a href="#org2e14185">Run all tests in namespace</a></li>
+<li><a href="#org829c15b">Run a single test</a></li>
 </ul>
 </li>
-<li><a href="#org2ad312b">Symbols vs Keywords</a></li>
-<li><a href="#orgd26a138">How to (+ 1 2)</a></li>
-<li><a href="#org89baf34">core.async</a></li>
+<li><a href="#org288a348">Symbols vs Keywords</a></li>
+<li><a href="#org71a8376">How to (+ 1 2)</a></li>
+<li><a href="#orgcfa36c4">core.async</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-org76304d5" class="outline-2">
-<h2 id="org76304d5"><a href="#org76304d5">clj vs clojure</a></h2>
-<div class="outline-text-2" id="text-org76304d5">
+<div id="outline-container-orgd703106" class="outline-2">
+<h2 id="orgd703106"><a href="#orgd703106">clj vs clojure</a></h2>
+<div class="outline-text-2" id="text-orgd703106">
 <p>
 <code>clj</code> is just a program that wraps <code>clojure</code> with <code>readline</code> support.
 </p>
@@ -85,9 +85,9 @@ might as well just use <code>clj</code> for everything.
 </div>
 </div>
 
-<div id="outline-container-orgaecf8bf" class="outline-2">
-<h2 id="orgaecf8bf"><a href="#orgaecf8bf">Cmd Execution and REPL</a></h2>
-<div class="outline-text-2" id="text-orgaecf8bf">
+<div id="outline-container-org70c1485" class="outline-2">
+<h2 id="org70c1485"><a href="#org70c1485">Cmd Execution and REPL</a></h2>
+<div class="outline-text-2" id="text-org70c1485">
 <p>
 Call a function
 </p>
@@ -115,13 +115,13 @@ Start a REPL that I can attach to from Emacs.
 </div>
 </div>
 
-<div id="outline-container-orga4b55f9" class="outline-2">
-<h2 id="orga4b55f9"><a href="#orga4b55f9">Project Creation</a></h2>
-<div class="outline-text-2" id="text-orga4b55f9">
+<div id="outline-container-orgc264fe2" class="outline-2">
+<h2 id="orgc264fe2"><a href="#orgc264fe2">Project Creation</a></h2>
+<div class="outline-text-2" id="text-orgc264fe2">
 </div>
-<div id="outline-container-org60eb74f" class="outline-3">
-<h3 id="org60eb74f"><a href="#org60eb74f">Minimal command line</a></h3>
-<div class="outline-text-3" id="text-org60eb74f">
+<div id="outline-container-org91a6315" class="outline-3">
+<h3 id="org91a6315"><a href="#org91a6315">Minimal command line</a></h3>
+<div class="outline-text-3" id="text-org91a6315">
 <p>
 All you need is a project directory with a
 </p>
@@ -145,9 +145,9 @@ clj -m core
 </div>
 </div>
 
-<div id="outline-container-orgd512c18" class="outline-3">
-<h3 id="orgd512c18"><a href="#orgd512c18">Using clj-new</a></h3>
-<div class="outline-text-3" id="text-orgd512c18">
+<div id="outline-container-org044385b" class="outline-3">
+<h3 id="org044385b"><a href="#org044385b">Using clj-new</a></h3>
+<div class="outline-text-3" id="text-org044385b">
 <p>
 The following makes use of an alias defined in <code>~/.clojure/deps.edn</code>.
 </p>
@@ -160,9 +160,9 @@ The following makes use of an alias defined in <code>~/.clojure/deps.edn</code>.
 </div>
 </div>
 
-<div id="outline-container-org87f6320" class="outline-2">
-<h2 id="org87f6320"><a href="#org87f6320">Emacs Cider</a></h2>
-<div class="outline-text-2" id="text-org87f6320">
+<div id="outline-container-orgf048057" class="outline-2">
+<h2 id="orgf048057"><a href="#orgf048057">Emacs Cider</a></h2>
+<div class="outline-text-2" id="text-orgf048057">
 <p>
 Basic workflow is described <a href="https://docs.cider.mx/cider/usage/cider_mode.html#basic-workflow">in the cider docs here</a>.
 </p>
@@ -179,18 +179,18 @@ namespace qualification.</li>
 </div>
 </div>
 
-<div id="outline-container-orgdcf51dd" class="outline-2">
-<h2 id="orgdcf51dd"><a href="#orgdcf51dd">Testing</a></h2>
-<div class="outline-text-2" id="text-orgdcf51dd">
+<div id="outline-container-orge6a1db3" class="outline-2">
+<h2 id="orge6a1db3"><a href="#orge6a1db3">Testing</a></h2>
+<div class="outline-text-2" id="text-orge6a1db3">
 <p>
 Use test-runner, which handles test discovery and running tests.
 <a href="https://github.com/cognitect-labs/test-runner">https://github.com/cognitect-labs/test-runner</a>
 </p>
 </div>
 
-<div id="outline-container-org8a817d9" class="outline-3">
-<h3 id="org8a817d9"><a href="#org8a817d9">Run all tests in namespace</a></h3>
-<div class="outline-text-3" id="text-org8a817d9">
+<div id="outline-container-org2e14185" class="outline-3">
+<h3 id="org2e14185"><a href="#org2e14185">Run all tests in namespace</a></h3>
+<div class="outline-text-3" id="text-org2e14185">
 <div class="org-src-container">
 <pre class="src src-sh">clj -A:test -n cfclrk.sicp-test
 </pre>
@@ -198,9 +198,9 @@ Use test-runner, which handles test discovery and running tests.
 </div>
 </div>
 
-<div id="outline-container-org0921272" class="outline-3">
-<h3 id="org0921272"><a href="#org0921272">Run a single test</a></h3>
-<div class="outline-text-3" id="text-org0921272">
+<div id="outline-container-org829c15b" class="outline-3">
+<h3 id="org829c15b"><a href="#org829c15b">Run a single test</a></h3>
+<div class="outline-text-3" id="text-org829c15b">
 <div class="org-src-container">
 <pre class="src src-sh">clj -A:test -v cfclrk.sicp-test/a-test
 </pre>
@@ -209,9 +209,9 @@ Use test-runner, which handles test discovery and running tests.
 </div>
 </div>
 
-<div id="outline-container-org2ad312b" class="outline-2">
-<h2 id="org2ad312b"><a href="#org2ad312b">Symbols vs Keywords</a></h2>
-<div class="outline-text-2" id="text-org2ad312b">
+<div id="outline-container-org288a348" class="outline-2">
+<h2 id="org288a348"><a href="#org288a348">Symbols vs Keywords</a></h2>
+<div class="outline-text-2" id="text-org288a348">
 <p>
 What's the difference between a symbol and a keyword?
 </p>
@@ -235,9 +235,9 @@ colon.
 </div>
 </div>
 
-<div id="outline-container-orgd26a138" class="outline-2">
-<h2 id="orgd26a138"><a href="#orgd26a138">How to (+ 1 2)</a></h2>
-<div class="outline-text-2" id="text-orgd26a138">
+<div id="outline-container-org71a8376" class="outline-2">
+<h2 id="org71a8376"><a href="#org71a8376">How to (+ 1 2)</a></h2>
+<div class="outline-text-2" id="text-org71a8376">
 <p>
 A few ways to add 1 and 2, in increasing complexity.
 </p>
@@ -283,9 +283,9 @@ A few ways to add 1 and 2, in increasing complexity.
 </div>
 </div>
 
-<div id="outline-container-org89baf34" class="outline-2">
-<h2 id="org89baf34"><a href="#org89baf34">core.async</a></h2>
-<div class="outline-text-2" id="text-org89baf34">
+<div id="outline-container-orgcfa36c4" class="outline-2">
+<h2 id="orgcfa36c4"><a href="#orgcfa36c4">core.async</a></h2>
+<div class="outline-text-2" id="text-orgcfa36c4">
 <p>
 There are some great examples from O'Reilly <a href="https://resources.oreilly.com/examples/0636920041474/">here</a>, which is supplemental
 content for their excellent video course <a href="https://learning.oreilly.com/videos/communicating-sequential-processes/9781771374293/">Communicating Sequential Processes

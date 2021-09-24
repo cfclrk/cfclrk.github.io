@@ -33,27 +33,27 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org2ec0b96">Git Clone</a></li>
-<li><a href="#org5b6d4ec">Install Prerequisites</a></li>
-<li><a href="#org90dac38">Provide path to libxml headers</a></li>
-<li><a href="#org9af1ccd">Autogen</a></li>
-<li><a href="#org1783628">Native Compilation</a>
+<li><a href="#org44a7a30">Git Clone</a></li>
+<li><a href="#orgff38ba2">Install Prerequisites</a></li>
+<li><a href="#org2557317">Provide path to libxml headers</a></li>
+<li><a href="#org6581c18">Autogen</a></li>
+<li><a href="#orgb50cf74">Native Compilation</a>
 <ul>
-<li><a href="#org322bee8">Notes/Questions</a></li>
+<li><a href="#org032b6c0">Notes/Questions</a></li>
 </ul>
 </li>
-<li><a href="#orgf5e1ad1">Compile</a></li>
-<li><a href="#orgb24d62e">Add Icon to Dock</a></li>
-<li><a href="#org9c96a87">Verify Features</a></li>
-<li><a href="#org482a735">Debugging</a></li>
-<li><a href="#orgc297836">Resources</a></li>
+<li><a href="#org4777628">Compile</a></li>
+<li><a href="#org504eabb">Add Icon to Dock</a></li>
+<li><a href="#org802afce">Verify Features</a></li>
+<li><a href="#orgfb01276">Debugging</a></li>
+<li><a href="#org084eac0">Resources</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-org2ec0b96" class="outline-2">
-<h2 id="org2ec0b96"><a href="#org2ec0b96">Git Clone</a></h2>
-<div class="outline-text-2" id="text-org2ec0b96">
+<div id="outline-container-org44a7a30" class="outline-2">
+<h2 id="org44a7a30"><a href="#org44a7a30">Git Clone</a></h2>
+<div class="outline-text-2" id="text-org44a7a30">
 <div class="org-src-container">
 <pre class="src src-sh">git clone git://git.sv.gnu.org/emacs.git
 <span style="color: #c678dd;">cd</span> emacs
@@ -62,9 +62,9 @@
 </div>
 </div>
 
-<div id="outline-container-org5b6d4ec" class="outline-2">
-<h2 id="org5b6d4ec"><a href="#org5b6d4ec">Install Prerequisites</a></h2>
-<div class="outline-text-2" id="text-org5b6d4ec">
+<div id="outline-container-orgff38ba2" class="outline-2">
+<h2 id="orgff38ba2"><a href="#orgff38ba2">Install Prerequisites</a></h2>
+<div class="outline-text-2" id="text-orgff38ba2">
 <div class="org-src-container">
 <pre class="src src-sh">brew install libxml2
 brew install librsvg
@@ -74,9 +74,9 @@ brew install imagemagick
 </div>
 </div>
 
-<div id="outline-container-org90dac38" class="outline-2">
-<h2 id="org90dac38"><a href="#org90dac38">Provide path to libxml headers</a></h2>
-<div class="outline-text-2" id="text-org90dac38">
+<div id="outline-container-org2557317" class="outline-2">
+<h2 id="org2557317"><a href="#org2557317">Provide path to libxml headers</a></h2>
+<div class="outline-text-2" id="text-org2557317">
 <p>
 Assuming you have already run <code>brew install libxml2</code> from above:
 </p>
@@ -89,9 +89,9 @@ Assuming you have already run <code>brew install libxml2</code> from above:
 </div>
 </div>
 
-<div id="outline-container-org9af1ccd" class="outline-2">
-<h2 id="org9af1ccd"><a href="#org9af1ccd">Autogen</a></h2>
-<div class="outline-text-2" id="text-org9af1ccd">
+<div id="outline-container-org6581c18" class="outline-2">
+<h2 id="org6581c18"><a href="#org6581c18">Autogen</a></h2>
+<div class="outline-text-2" id="text-org6581c18">
 <div class="org-src-container">
 <pre class="src src-sh">./autogen.sh
 </pre>
@@ -99,9 +99,9 @@ Assuming you have already run <code>brew install libxml2</code> from above:
 </div>
 </div>
 
-<div id="outline-container-org1783628" class="outline-2">
-<h2 id="org1783628"><a href="#org1783628">Native Compilation</a></h2>
-<div class="outline-text-2" id="text-org1783628">
+<div id="outline-container-orgb50cf74" class="outline-2">
+<h2 id="orgb50cf74"><a href="#orgb50cf74">Native Compilation</a></h2>
+<div class="outline-text-2" id="text-orgb50cf74">
 <blockquote>
 <p>
 NOTE 1: After a lot of struggle, I got this sort of working, but eventually gave
@@ -155,7 +155,7 @@ Do <b>NOT</b> manually create that link (say, by doing something like <code>ln -
 following error during the <code>./configure</code> step of building Emacs:
 </p>
 
-<pre class="example" id="org0e16bbd">
+<pre class="example" id="orgb783cd8">
 checking for AppKit/AppKit.h... no
 configure: error: The include files (AppKit/AppKit.h etc) that
 are required for a Nextstep build are missing or cannot be compiled.
@@ -194,15 +194,15 @@ Emacs from a pinned Dock icon, Emacs won't have <code>LIBRARY_PATH</code> set, a
 see an error like:
 </p>
 
-<pre class="example" id="orgd44db8f">
+<pre class="example" id="orgb1ffc34">
 ld: library not found for -lgcc_ext.10.5
 libgccjit.so: error: error invoking gcc driver
 </pre>
 </div>
 
-<div id="outline-container-org322bee8" class="outline-3">
-<h3 id="org322bee8"><a href="#org322bee8">Notes/Questions</a></h3>
-<div class="outline-text-3" id="text-org322bee8">
+<div id="outline-container-org032b6c0" class="outline-3">
+<h3 id="org032b6c0"><a href="#org032b6c0">Notes/Questions</a></h3>
+<div class="outline-text-3" id="text-org032b6c0">
 <p>
 I think the <code>LIBRARY_PATH</code> env var only needs to be set in Emacs the first
 time it starts (?). Try pulling new packages and see if they are properly
@@ -221,9 +221,9 @@ Does this stuff have to happen before running the <code>./autogen.sh</code> scri
 </div>
 </div>
 
-<div id="outline-container-orgf5e1ad1" class="outline-2">
-<h2 id="orgf5e1ad1"><a href="#orgf5e1ad1">Compile</a></h2>
-<div class="outline-text-2" id="text-orgf5e1ad1">
+<div id="outline-container-org4777628" class="outline-2">
+<h2 id="org4777628"><a href="#org4777628">Compile</a></h2>
+<div class="outline-text-2" id="text-org4777628">
 <p>
 The <code>configure</code> script provides many options (run <code>./configure --help</code> to see
 them all). You can just run <code>./configure</code> and it will choose sensible
@@ -284,9 +284,9 @@ from the Finder, you can just double-click that directory to launch Emacs.
 </div>
 </div>
 
-<div id="outline-container-orgb24d62e" class="outline-2">
-<h2 id="orgb24d62e"><a href="#orgb24d62e">Add Icon to Dock</a></h2>
-<div class="outline-text-2" id="text-orgb24d62e">
+<div id="outline-container-org504eabb" class="outline-2">
+<h2 id="org504eabb"><a href="#org504eabb">Add Icon to Dock</a></h2>
+<div class="outline-text-2" id="text-org504eabb">
 <p>
 Just open Emacs.app (by double-clicking on the <code>./nextstep/Emacs.app/</code>
 directory in Finder), and that will put an icon in the dock. Then, pin the
@@ -295,9 +295,9 @@ icon in the dock.
 </div>
 </div>
 
-<div id="outline-container-org9c96a87" class="outline-2">
-<h2 id="org9c96a87"><a href="#org9c96a87">Verify Features</a></h2>
-<div class="outline-text-2" id="text-org9c96a87">
+<div id="outline-container-org802afce" class="outline-2">
+<h2 id="org802afce"><a href="#org802afce">Verify Features</a></h2>
+<div class="outline-text-2" id="text-org802afce">
 <p>
 Once Emacs is running, check whether these features were properly enabled.
 </p>
@@ -333,10 +333,10 @@ t
 </div>
 </div>
 
-<div id="outline-container-org482a735" class="outline-2">
-<h2 id="org482a735"><a href="#org482a735">Debugging</a></h2>
-<div class="outline-text-2" id="text-org482a735">
-<pre class="example" id="orga55d1a0">
+<div id="outline-container-orgfb01276" class="outline-2">
+<h2 id="orgfb01276"><a href="#orgfb01276">Debugging</a></h2>
+<div class="outline-text-2" id="text-orgfb01276">
+<pre class="example" id="org48afed9">
 $ lldb
 (lldb) target create "nextstep/Emacs.app/Contents/MacOS/Emacs"
 Current executable set to '/Users/chris.clark/Projects/emacs/nextstep/Emacs.app/Contents/MacOS/Emacs' (x86_64).
@@ -349,9 +349,9 @@ To debug problems during running the <code>init.el</code> file, run <code>$EMACS
 </div>
 </div>
 
-<div id="outline-container-orgc297836" class="outline-2">
-<h2 id="orgc297836"><a href="#orgc297836">Resources</a></h2>
-<div class="outline-text-2" id="text-orgc297836">
+<div id="outline-container-org084eac0" class="outline-2">
+<h2 id="org084eac0"><a href="#org084eac0">Resources</a></h2>
+<div class="outline-text-2" id="text-org084eac0">
 <p>
 Emacs for OSX
 <a href="https://github.com/caldwell/build-emacs">https://github.com/caldwell/build-emacs</a>

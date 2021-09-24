@@ -90,18 +90,15 @@
 
    Adapted from [[https://stackoverflow.com/a/55049181/340613][this SO answer]].
 
-   Given
+   Given a repo like this:
 
-   #+header: :prologue "mkdir -p z && cd z && git init"
-   #+begin_src sh :results none
-     touch A && git add A
-     git commit -m "Add A"
-     touch B && git add B
-     git commit -m "Add B"
-     touch C && git add C
-     git commit -m "Add C"
-     touch D && git add D
-     git commit -m "Add D"
+   #+header: :dir (gitdot-tempdir "readme1") :mkdirp yes
+   #+begin_src bash :results output
+     git init
+     touch A && git add A && git commit -m "A"
+     touch B && git add B && git commit -m "B"
+     touch C && git add C && git commit -m "C"
+     touch D && git add D && git commit -m "D"
    #+end_src
 
    #+NAME: ABCD
