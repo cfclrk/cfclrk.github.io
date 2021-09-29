@@ -95,27 +95,9 @@ Consider the following directory layout:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">tree -a $<span style="color: #dcaeea;">NotesProject</span>
+<pre class="src src-sh">tree -a /tmp/notes
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-/private/tmp/notes
-├── .git
-├── go
-│   ├── projectA
-│   │   └── go.mod
-│   └── projectB
-│       └── go.mod
-└── python
-    ├── projectC
-    │   └── setup.py
-    └── projectD
-        └── setup.py
-
-6 directories, 5 files
-</pre>
-
 
 <p>
 Now, when I open a file in <code>go/projectA</code>, Projectile says that the project
@@ -123,8 +105,7 @@ root is:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>default-directory
-        <span style="color: #a9a1e1;">(</span>f-join NotesProject <span style="color: #98be65;">"go/projectA"</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>default-directory <span style="color: #98be65;">"/tmp/notes/go/projectA"</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
   <span style="color: #c678dd;">(</span>projectile-project-root<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
@@ -135,15 +116,14 @@ root is:
 
 
 <p>
-I <i>want</i> projectile to say that the project root is
-<code>/private/tmp/notes/go/projectA</code>. By default, however, projectile determines
-the monorepo root directory is the project root.
+I <i>want</i> projectile to say that the project root is <code>/tmp/notes/go/projectA</code>.
+By default, however, projectile finds the root of the monorepo.
 </p>
 
 <p>
 To understand how to customize projectile to say the project root is
-<code>/private/tmp/notes/go/projectA</code>, we first need to understand how projectile
-detects projects.
+<code>/tmp/notes/go/projectA</code>, we first need to understand how projectile detects
+projects.
 </p>
 </div>
 </div>
@@ -284,8 +264,7 @@ the list.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>default-directory
-        <span style="color: #a9a1e1;">(</span>f-join NotesProject <span style="color: #98be65;">"go/projectA"</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>default-directory <span style="color: #98be65;">"/tmp/notes/go/projectA"</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
   <span style="color: #c678dd;">(</span>projectile-project-root<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
@@ -304,18 +283,17 @@ it, but the general problem would still be there.
 <p>
 This behavior is perhaps useful in one situation: if you want to force a
 project root to a higher level by creating a <code>.projectile</code> file. For example,
-if we wanted <code>/private/tmp/</code> to be the project root for some reason, we could
-just put a <code>.projectile</code> there.
+if we wanted <code>/tmp/</code> to be the project root for some reason, we could just put
+a <code>.projectile</code> there.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">touch /private/tmp/.projectile
+<pre class="src src-sh">touch /tmp/.projectile
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>default-directory
-        <span style="color: #a9a1e1;">(</span>f-join NotesProject <span style="color: #98be65;">"go/projectA"</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>default-directory <span style="color: #98be65;">"/tmp/notes/go/projectA"</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
   <span style="color: #c678dd;">(</span>projectile-project-root<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
@@ -328,6 +306,11 @@ just put a <code>.projectile</code> there.
 <p>
 That works! We should probably try to keep that behavior.
 </p>
+
+<div class="org-src-container">
+<pre class="src src-sh">rm /tmp/.projectile
+</pre>
+</div>
 </div>
 </div>
 
@@ -367,10 +350,126 @@ or <code>setup.py</code> in it.
 </blockquote>
 
 <p>
-So, we just need to add <code>setup.py</code> and <code>go.mod</code> to
-<code>projectile-project-root-files-bottom-up</code>. But doesn't projectile already know
-about those kinds of files somewhere? A little more reading, and we find this
-variable:
+We just need to add <code>setup.py</code> and <code>go.mod</code> to the list of marker files that
+projectile looks for. While we're at it, we can also add every other filename
+that might indicate a project root. Projectile already has a variable for
+this, documented in <a href="https://docs.projectile.mx/projectile/projects.html#file-markers">File markers</a>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">projectile-project-root-files
+</pre>
+</div>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">dune-project</td>
+<td class="org-left">pubspec.yaml</td>
+<td class="org-left">info.rkt</td>
+<td class="org-left">Cargo.toml</td>
+</tr>
+
+<tr>
+<td class="org-left">stack.yaml</td>
+<td class="org-left">DESCRIPTION</td>
+<td class="org-left">Eldev</td>
+<td class="org-left">Cask</td>
+</tr>
+
+<tr>
+<td class="org-left">shard.yml</td>
+<td class="org-left">Gemfile</td>
+<td class="org-left">.bloop</td>
+<td class="org-left">deps.edn</td>
+</tr>
+
+<tr>
+<td class="org-left">build.boot</td>
+<td class="org-left">project.clj</td>
+<td class="org-left">build.sc</td>
+<td class="org-left">build.sbt</td>
+</tr>
+
+<tr>
+<td class="org-left">application.properties</td>
+<td class="org-left">gradlew</td>
+<td class="org-left">build.gradle</td>
+<td class="org-left">pom.xml</td>
+</tr>
+
+<tr>
+<td class="org-left">poetry.lock</td>
+<td class="org-left">Pipfile</td>
+<td class="org-left">tox.ini</td>
+<td class="org-left">setup.py</td>
+</tr>
+
+<tr>
+<td class="org-left">requirements.txt</td>
+<td class="org-left">manage.py</td>
+<td class="org-left">angular.json</td>
+<td class="org-left">package.json</td>
+</tr>
+
+<tr>
+<td class="org-left">gulpfile.js</td>
+<td class="org-left">Gruntfile.js</td>
+<td class="org-left">mix.exs</td>
+<td class="org-left">rebar.config</td>
+</tr>
+
+<tr>
+<td class="org-left">composer.json</td>
+<td class="org-left">CMakeLists.txt</td>
+<td class="org-left">Makefile</td>
+<td class="org-left">debian/control</td>
+</tr>
+
+<tr>
+<td class="org-left">WORKSPACE</td>
+<td class="org-left">flake.nix</td>
+<td class="org-left">default.nix</td>
+<td class="org-left">meson.build</td>
+</tr>
+
+<tr>
+<td class="org-left">SConstruct</td>
+<td class="org-left">GTAGS</td>
+<td class="org-left">TAGS</td>
+<td class="org-left">configure.ac</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+It doesn't have <code>go.mod</code> by default, so we should add that, and we might as
+well also add all the files in <code>projectile-project-root-files-bottom-up</code>
+(which has <code>.git</code>, etc).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> my-project-root-files
+      <span style="color: #c678dd;">(</span>-concat '<span style="color: #98be65;">(</span><span style="color: #98be65;">"go.mod"</span><span style="color: #98be65;">)</span>
+               projectile-project-root-files-bottom-up
+               projectile-project-root-files<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<p>
+That creates a pretty complete list of marker files that can indicate project
+roots.
 </p>
 </div>
 </div>
@@ -468,15 +567,10 @@ roots are for our monorepo.
 <h3 id="org458e1d8"><a href="#org458e1d8">Go</a></h3>
 <div class="outline-text-3" id="text-org458e1d8">
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>default-directory
-        <span style="color: #a9a1e1;">(</span>f-join NotesProject <span style="color: #98be65;">"go/projectA"</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>default-directory <span style="color: #98be65;">"/tmp/notes/go/projectA"</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
   <span style="color: #c678dd;">(</span>projectile-project-root<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-/private/tmp/notes/go/projectA
-</pre>
 </div>
 </div>
 
@@ -484,15 +578,10 @@ roots are for our monorepo.
 <h3 id="org99a870f"><a href="#org99a870f">Python</a></h3>
 <div class="outline-text-3" id="text-org99a870f">
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>default-directory
-        <span style="color: #a9a1e1;">(</span>f-join NotesProject <span style="color: #98be65;">"python/projectC"</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>default-directory <span style="color: #98be65;">"/tmp/notes/python/projectC"</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
   <span style="color: #c678dd;">(</span>projectile-project-root<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-/private/tmp/notes/python/projectC
-</pre>
 </div>
 </div>
 
@@ -505,8 +594,7 @@ roots are for our monorepo.
 </div>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>default-directory
-        <span style="color: #a9a1e1;">(</span>f-join NotesProject <span style="color: #98be65;">"go/projectA"</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>default-directory <span style="color: #98be65;">"/tmp/notes/go/projectA"</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
   <span style="color: #c678dd;">(</span>projectile-project-root<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
 </div>

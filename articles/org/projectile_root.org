@@ -8,11 +8,6 @@ with, it uses projectile.
 A minor annoyance (the bane of any Emacs user) has been nagging me (plaguing my
 nightmares). Here was the problem:
 
-* Variables                                                        :noexport:
-
-  #+NAME: NotesProject
-  : /private/tmp/notes
-
 * The Problem
 
   By default when you're in a monorepo, projectile determines the project root
@@ -31,16 +26,19 @@ nightmares). Here was the problem:
 
   Consider the following directory layout:
 
-  #+begin_src sh :var NotesProject=NotesProject :exports none
+  #+begin_src sh :exports none
+    NotesProject=/tmp/notes
     mkdir -p $NotesProject
     touch $NotesProject/.git
 
+    # Go
     mkdir -p $NotesProject/go
     mkdir -p $NotesProject/go/projectA
     touch $NotesProject/go/projectA/go.mod
     mkdir -p $NotesProject/go/projectB
     touch $NotesProject/go/projectB/go.mod
 
+    # Python
     mkdir -p $NotesProject/python
     mkdir -p $NotesProject/python/projectC
     touch $NotesProject/python/projectC/setup.py
@@ -48,49 +46,28 @@ nightmares). Here was the problem:
     touch $NotesProject/python/projectD/setup.py
   #+end_src
 
-  #+RESULTS:
-
-  #+header: :var NotesProject=NotesProject
   #+begin_src sh :results output
-    tree -a $NotesProject
+    tree -a /tmp/notes
   #+end_src
-
-  #+RESULTS:
-  : /private/tmp/notes
-  : ├── .git
-  : ├── go
-  : │   ├── projectA
-  : │   │   └── go.mod
-  : │   └── projectB
-  : │       └── go.mod
-  : └── python
-  :     ├── projectC
-  :     │   └── setup.py
-  :     └── projectD
-  :         └── setup.py
-  :
-  : 6 directories, 5 files
 
   Now, when I open a file in =go/projectA=, Projectile says that the project
   root is:
 
   #+header: :prologue (projectile-invalidate-cache nil)
-  #+begin_src emacs-lisp :var NotesProject=NotesProject
-    (let ((default-directory
-            (f-join NotesProject "go/projectA")))
+  #+begin_src emacs-lisp
+    (let ((default-directory "/tmp/notes/go/projectA"))
       (projectile-project-root))
   #+end_src
 
   #+RESULTS:
   : /private/tmp/notes/
 
-  I /want/ projectile to say that the project root is
-  =/private/tmp/notes/go/projectA=. By default, however, projectile determines
-  the monorepo root directory is the project root.
+  I /want/ projectile to say that the project root is =/tmp/notes/go/projectA=.
+  By default, however, projectile finds the root of the monorepo.
 
   To understand how to customize projectile to say the project root is
-  =/private/tmp/notes/go/projectA=, we first need to understand how projectile
-  detects projects.
+  =/tmp/notes/go/projectA=, we first need to understand how projectile detects
+  projects.
 
 * Project Detection
 
@@ -147,9 +124,8 @@ nightmares). Here was the problem:
   the list.
 
   #+header: :prologue (projectile-invalidate-cache nil)
-  #+begin_src emacs-lisp :var NotesProject=NotesProject
-    (let ((default-directory
-            (f-join NotesProject "go/projectA")))
+  #+begin_src emacs-lisp
+    (let ((default-directory "/tmp/notes/go/projectA"))
       (projectile-project-root))
   #+end_src
 
@@ -162,17 +138,16 @@ nightmares). Here was the problem:
 
   This behavior is perhaps useful in one situation: if you want to force a
   project root to a higher level by creating a =.projectile= file. For example,
-  if we wanted =/private/tmp/= to be the project root for some reason, we could
-  just put a =.projectile= there.
+  if we wanted =/tmp/= to be the project root for some reason, we could just put
+  a =.projectile= there.
 
   #+begin_src sh :results silent
-    touch /private/tmp/.projectile
+    touch /tmp/.projectile
   #+end_src
 
   #+header: :prologue (projectile-invalidate-cache nil)
-  #+begin_src emacs-lisp :var NotesProject=NotesProject
-    (let ((default-directory
-            (f-join NotesProject "go/projectA")))
+  #+begin_src emacs-lisp
+    (let ((default-directory "/tmp/notes/go/projectA"))
       (projectile-project-root))
   #+end_src
 
@@ -180,6 +155,10 @@ nightmares). Here was the problem:
   : /private/tmp/
 
   That works! We should probably try to keep that behavior.
+
+  #+begin_src sh :results silent
+    rm /tmp/.projectile
+  #+end_src
 
 * Project Detection Issues
 
@@ -203,10 +182,47 @@ nightmares). Here was the problem:
    or =setup.py= in it.
    #+end_quote
 
-   So, we just need to add =setup.py= and =go.mod= to
-   =projectile-project-root-files-bottom-up=. But doesn't projectile already know
-   about those kinds of files somewhere? A little more reading, and we find this
-   variable:
+   We just need to add =setup.py= and =go.mod= to the list of marker files that
+   projectile looks for. While we're at it, we can also add every other filename
+   that might indicate a project root. Projectile already has a variable for
+   this, documented in [[https://docs.projectile.mx/projectile/projects.html#file-markers][File markers]]:
+
+   #+NAME: partition
+   #+begin_src emacs-lisp :var in=0 :exports none
+     (-partition 4 in)
+   #+end_src
+
+   #+header: :post partition(*this*)
+   #+begin_src emacs-lisp
+     projectile-project-root-files
+   #+end_src
+
+   #+RESULTS:
+   | dune-project           | pubspec.yaml   | info.rkt     | Cargo.toml     |
+   | stack.yaml             | DESCRIPTION    | Eldev        | Cask           |
+   | shard.yml              | Gemfile        | .bloop       | deps.edn       |
+   | build.boot             | project.clj    | build.sc     | build.sbt      |
+   | application.properties | gradlew        | build.gradle | pom.xml        |
+   | poetry.lock            | Pipfile        | tox.ini      | setup.py       |
+   | requirements.txt       | manage.py      | angular.json | package.json   |
+   | gulpfile.js            | Gruntfile.js   | mix.exs      | rebar.config   |
+   | composer.json          | CMakeLists.txt | Makefile     | debian/control |
+   | WORKSPACE              | flake.nix      | default.nix  | meson.build    |
+   | SConstruct             | GTAGS          | TAGS         | configure.ac   |
+
+   It doesn't have =go.mod= by default, so we should add that, and we might as
+   well also add all the files in =projectile-project-root-files-bottom-up=
+   (which has =.git=, etc).
+
+   #+begin_src emacs-lisp :results silent
+     (setq my-project-root-files
+           (-concat '("go.mod")
+                    projectile-project-root-files-bottom-up
+                    projectile-project-root-files))
+   #+end_src
+
+   That creates a pretty complete list of marker files that can indicate project
+   roots.
 
 ** Lookup Order
 
@@ -294,25 +310,19 @@ nightmares). Here was the problem:
 
 ** Go
 
-   #+begin_src emacs-lisp :var NotesProject=NotesProject
-     (let ((default-directory
-             (f-join NotesProject "go/projectA")))
+   #+header: :prologue (projectile-invalidate-cache nil)
+   #+begin_src emacs-lisp
+     (let ((default-directory "/tmp/notes/go/projectA"))
        (projectile-project-root))
    #+end_src
-
-   #+RESULTS:
-   : /private/tmp/notes/go/projectA
 
 ** Python
 
-   #+begin_src emacs-lisp :var NotesProject=NotesProject
-     (let ((default-directory
-             (f-join NotesProject "python/projectC")))
+   #+header: :prologue (projectile-invalidate-cache nil)
+   #+begin_src emacs-lisp
+     (let ((default-directory "/tmp/notes/python/projectC"))
        (projectile-project-root))
    #+end_src
-
-   #+RESULTS:
-   : /private/tmp/notes/python/projectC
 
 ** Use .projectile
 
@@ -321,9 +331,8 @@ nightmares). Here was the problem:
    #+end_src
 
    #+header: :prologue (projectile-invalidate-cache nil)
-   #+begin_src emacs-lisp :var NotesProject=NotesProject
-     (let ((default-directory
-             (f-join NotesProject "go/projectA")))
+   #+begin_src emacs-lisp
+     (let ((default-directory "/tmp/notes/go/projectA"))
        (projectile-project-root))
    #+end_src
 
