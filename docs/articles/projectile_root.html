@@ -99,6 +99,24 @@ Consider the following directory layout:
 </pre>
 </div>
 
+<div class="results">#+RESULTS:</div><pre class="example">
+/tmp/notes
+├── .git
+├── go
+│   ├── projectA
+│   │   └── go.mod
+│   └── projectB
+│       └── go.mod
+└── python
+    ├── projectC
+    │   └── setup.py
+    └── projectD
+        └── setup.py
+
+6 directories, 5 files
+</pre>
+
+
 <p>
 Now, when I open a file in <code>go/projectA</code>, Projectile says that the project
 root is:
@@ -133,8 +151,26 @@ projects.
 <div class="outline-text-2" id="text-org86839b3">
 <p>
 The projectile documentation has a relevant section here: <a href="https://docs.projectile.mx/projectile/projects.html#customizing-project-detection">Customizing Project
-Detection</a>. The important function is <code>projectile-root-bottom-up</code>, reproduced
-here:
+Detection</a>. The specific relevant function is <code>projectile-root-bottom-up</code>; that
+is what is determining the monorepo to be the project root directory.
+</p>
+
+<p>
+We can see it in action:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>projectile-root-bottom-up <span style="color: #98be65;">"/tmp/notes/go/projectA"</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+/tmp/notes/
+</pre>
+
+
+<p>
+The source of that function is:
 </p>
 
 <div class="org-src-container">
@@ -198,6 +234,8 @@ And what are the marker files by default?
 <col  class="org-left">
 
 <col  class="org-left">
+
+<col  class="org-left">
 </colgroup>
 <tbody>
 <tr>
@@ -208,6 +246,7 @@ And what are the marker files by default?
 <td class="org-left"><span class="underline">FOSSIL</span></td>
 <td class="org-left">.bzr</td>
 <td class="org-left">_darcs</td>
+<td class="org-left">go.mod</td>
 </tr>
 </tbody>
 </table>

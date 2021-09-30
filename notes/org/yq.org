@@ -1,0 +1,6 @@
+* Example
+
+   #+NAME: PublicKey
+   #+begin_src sh :results output
+     yq eval '.spec.keys[0].publicMaterial' keyset.yaml | base64 --decode
+   #+end_src

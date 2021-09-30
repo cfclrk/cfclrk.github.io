@@ -15,8 +15,8 @@ is called "=docs=".
 
 * TODO
 
+  - [ ] Live reload HTML if I start an Emacs web server
   - [ ] Move site project into this project
-  - [ ] Consistent img location at _static/img
   - [ ] Exclude README.org from HTML export (from site project?)
   - [ ] Different layouts for index pages vs content pages
   - [ ] Point cfclrk.com domain to this website

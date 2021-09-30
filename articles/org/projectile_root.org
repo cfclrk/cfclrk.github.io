@@ -50,6 +50,22 @@ nightmares). Here was the problem:
     tree -a /tmp/notes
   #+end_src
 
+  #+RESULTS:
+  : /tmp/notes
+  : ├── .git
+  : ├── go
+  : │   ├── projectA
+  : │   │   └── go.mod
+  : │   └── projectB
+  : │       └── go.mod
+  : └── python
+  :     ├── projectC
+  :     │   └── setup.py
+  :     └── projectD
+  :         └── setup.py
+  :
+  : 6 directories, 5 files
+
   Now, when I open a file in =go/projectA=, Projectile says that the project
   root is:
 
@@ -72,8 +88,20 @@ nightmares). Here was the problem:
 * Project Detection
 
   The projectile documentation has a relevant section here: [[https://docs.projectile.mx/projectile/projects.html#customizing-project-detection][Customizing Project
-  Detection]]. The important function is =projectile-root-bottom-up=, reproduced
-  here:
+  Detection]]. The specific relevant function is =projectile-root-bottom-up=; that
+  is what is determining the monorepo to be the project root directory.
+
+  We can see it in action:
+
+#+header: :prologue rm /tmp/.projectile
+  #+begin_src emacs-lisp
+    (projectile-root-bottom-up "/tmp/notes/go/projectA")
+  #+end_src
+
+  #+RESULTS:
+  : /tmp/notes/
+
+  The source of that function is:
 
   #+begin_src emacs-lisp
     (defun projectile-root-bottom-up (dir &optional list)
@@ -106,7 +134,7 @@ nightmares). Here was the problem:
   #+end_src
 
   #+RESULTS:
-  | .projectile | .git | .hg | .fslckout | _FOSSIL_ | .bzr | _darcs |
+  | .projectile | .git | .hg | .fslckout | _FOSSIL_ | .bzr | _darcs | go.mod |
 
   To illustrate the above two points, say we append =go.mod= to that list of
   marker files:
