@@ -593,9 +593,7 @@ Define a variable with the marker files that indicate a project root.
 </div></li>
 
 <li><p>
-Define a new function for discovering projects. This functin looks for all
-files in <code>my-project-root-files</code> at one level before moving up to the next
-level.
+Define a new function for discovering projects.
 </p>
 
 <div class="org-src-container">
@@ -611,7 +609,7 @@ level.
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">my-project-root</span> <span style="color: #c678dd;">(</span>dir <span style="color: #ECBE7B;">&amp;optional</span> list<span style="color: #c678dd;">)</span>
   <span style="color: #83898d;">"Identify a project root.</span>
-<span style="color: #83898d;">Performs a bottom-up search for files in LIST starting from DIR.</span>
+<span style="color: #83898d;">Perform a bottom-up search for files in LIST starting from DIR.</span>
 <span style="color: #83898d;">Files in lower directories have higher precedence. If LIST is</span>
 <span style="color: #83898d;">nil, use `</span><span style="color: #a9a1e1;">my-project-root-files</span><span style="color: #83898d;">' instead. Return the</span>
 <span style="color: #83898d;">first (bottommost) matched directory or nil."</span>
@@ -623,8 +621,7 @@ level.
 </div></li>
 
 <li><p>
-Insert our new lookup function into <code>projectile-project-root-functions</code> so
-that it is called before <code>projectile-root-bottom-up</code>.
+Insert our new lookup function into <code>projectile-project-root-functions</code>.
 </p>
 
 <div class="org-src-container">

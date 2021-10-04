@@ -318,9 +318,7 @@ nightmares). Here was the problem:
                       projectile-project-root-files))
      #+end_src
 
-  2. Define a new function for discovering projects. This functin looks for all
-     files in =my-project-root-files= at one level before moving up to the next
-     level.
+  2. Define a new function for discovering projects.
 
      #+header: :tangle (expand-file-name "~/emacs/projectile-discovery.el")
      #+begin_src emacs-lisp :results silent
@@ -336,7 +334,7 @@ nightmares). Here was the problem:
      #+begin_src emacs-lisp :results silent
        (defun my-project-root (dir &optional list)
          "Identify a project root.
-       Performs a bottom-up search for files in LIST starting from DIR.
+       Perform a bottom-up search for files in LIST starting from DIR.
        Files in lower directories have higher precedence. If LIST is
        nil, use `my-project-root-files' instead. Return the
        first (bottommost) matched directory or nil."
@@ -346,8 +344,7 @@ nightmares). Here was the problem:
             dir)))
      #+end_src
 
-  3. Insert our new lookup function into =projectile-project-root-functions= so
-     that it is called before =projectile-root-bottom-up=.
+  3. Insert our new lookup function into =projectile-project-root-functions=.
 
      #+header: :tangle (expand-file-name "~/emacs/projectile-discovery.el")
      #+begin_src emacs-lisp :results silent
