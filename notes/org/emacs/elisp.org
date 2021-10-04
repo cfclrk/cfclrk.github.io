@@ -1,6 +1,16 @@
 #+TITLE: Elisp
 #+SETUPFILE: ../../setup.org
 
+* Execute In Another Buffer
+
+  #+begin_src emacs-lisp
+    (with-current-buffer (get-buffer "elisp.org")
+      (buffer-file-name))
+  #+end_src
+
+  #+RESULTS:
+  : /Users/chris.clark/Projects/cfclrk.com/notes/org/emacs/elisp.org
+
 * Association Lists
 
   #+begin_src emacs-lisp

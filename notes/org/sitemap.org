@@ -23,6 +23,7 @@
 - [[file:jq.org][jq]]
 - [[file:macos.org][macos]]
 - [[file:sed.org][sed]]
+- [[file:yq.org][yq]]
 - aws
   - [[file:aws/commands.org][AWS Commands]]
 - azure

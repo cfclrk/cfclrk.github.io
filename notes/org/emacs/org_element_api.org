@@ -112,6 +112,10 @@
   :            (headline
   :             (:raw-value "This Heading" :begin 10036 :end 10183 :pre-blank 1 :contents-begin 10053 :contents-end 10183 :level 2 :priority nil :tags nil :todo-keyword nil :todo-type nil :post-blank 0 :footnote-section-p nil :archivedp nil :commentedp nil :post-affiliated 10036 :title "This Heading" :parent #1))))
 
+  #+begin_src emacs-lisp
+    (org-element-parse-buffer 'title)
+  #+end_src
+
 ** Accessors
 
    Three functions:
@@ -133,3 +137,19 @@
 
    #+RESULTS:
    | 2 | 2 | nil | nil | This Heading | nil |
+
+* Get Title
+
+  #+begin_src emacs-lisp :results pp
+    (cadar (org-collect-keywords '("TITLE")))
+  #+end_src
+
+  #+RESULTS:
+  : "Org Element Api"
+
+  #+begin_src emacs-lisp :results pp
+    (cdr (assoc "TITLE" (org-collect-keywords '("TITLE"))))
+  #+end_src
+
+  #+RESULTS:
+  : ("Org Element Api")
