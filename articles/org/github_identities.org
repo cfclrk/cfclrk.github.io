@@ -26,52 +26,50 @@
 
   1. =~/.config/git/config=
 
-    - Update the =[user]= info as appropriate.
-    - Ignore the =[github]= part, that's for [[https://github.com/magit/forge][Emacs forge]].
+     Ignore the =[github]= part, that's for [[https://github.com/magit/forge][Emacs forge]].
 
-    #+begin_src gitconfig :tangle ~/.config/git/config
-      [user]
-          name = Chris Clark
-          email = cfclrk@gmail.com
-      [github]
-          user = cfclrk
-      [init]
-          defaultBranch = main
-      [url "git@github-home"]
-          insteadOf = git@github.com
-      [url "git@gist-home"]
-          insteadOf = git@gist.github.com
-      [includeIf "gitdir:~/Work/"]
-          path = work.gitconfig
-      [includeIf "gitdir:~/go/"]
-          path = work.gitconfig
-    #+end_src
+     #+begin_src gitconfig :tangle ~/.config/git/config
+       [user]
+           name = Chris Clark
+           email = cfclrk@gmail.com
+       [github]
+           user = cfclrk
+       [init]
+           defaultBranch = main
+       [url "git@github-home"]
+           insteadOf = git@github.com
+       [url "git@gist-home"]
+           insteadOf = git@gist.github.com
+       [includeIf "gitdir:~/Work/"]
+           path = work.gitconfig
+       [includeIf "gitdir:~/go/"]
+           path = work.gitconfig
+     #+end_src
 
   2. =~/.config/git/work.gitconfig=
 
-    - Update the =[user]= info as appropriate.
-    - Ignore the =[github]= part, that's for [[https://github.com/magit/forge][Emacs forge]].
-    - In the two url-rewriting rules (the =[url]= entries):
-      - Update =IronNetCybersecurity= to be you work's GitHub org name
-      - Update =chrisc-ironnet= to be your work GitHub user name
+     Ignore the =[github]= part, that's for [[https://github.com/magit/forge][Emacs forge]].
 
-      #+begin_src gitconfig :tangle ~/.config/git/work.gitconfig
-        [user]
-            email = chris.clark@ironnet.com
-        [github]
-            user = chrisc-ironnet
+     #+begin_src gitconfig :tangle ~/.config/git/work.gitconfig
+       [user]
+           email = chris.clark@ironnet.com
+       [github]
+           user = chrisc-ironnet
 
-        # These "insteadOf = ..." parts must be more specific than
-        # the insteadOf rules for the github-home account.
-        [url "git@github-work:IronNetCybersecurity"]
-            insteadOf = git@github.com:IronNetCybersecurity
-        [url "git@github-work:chrisc-ironnet"]
-            insteadOf = git@github.com:chrisc-ironnet
+       # These "insteadOf = ..." parts must be more specific than
+       # the insteadOf rules for the github-home account.
+       [url "git@github-work:IronNetCybersecurity"]
+           insteadOf = git@github.com:IronNetCybersecurity
+       [url "git@github-work:chrisc-ironnet"]
+           insteadOf = git@github.com:chrisc-ironnet
 
-        # Each of your gists must be individually enumerated.
-        [url "git@gist-work:a9e0dc9676cab129bc7b37a352257524.git"]
-            insteadOf = git@gist.github.com:a9e0dc9676cab129bc7b37a352257524
-      #+end_src
+       # Each of your gists must be individually enumerated.
+       [url "git@gist-work:a9e0dc9676cab129bc7b37a352257524.git"]
+           insteadOf = git@gist.github.com:a9e0dc9676cab129bc7b37a352257524
+     #+end_src
+
+  Obviously, update values for your name, email address, your work's GitHub
+  organization name, and your work Gist URLs.
 
   That's it for the git config! Move on to [[#the-ssh-config]]. The next two
   subsections explain the above, if you are interested.

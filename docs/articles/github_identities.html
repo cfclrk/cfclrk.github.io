@@ -89,10 +89,9 @@ creating the following two files.
 <code>~/.config/git/config</code>
 </p>
 
-<ul class="org-ul">
-<li>Update the <code>[user]</code> info as appropriate.</li>
-<li>Ignore the <code>[github]</code> part, that's for <a href="https://github.com/magit/forge">Emacs forge</a>.</li>
-</ul>
+<p>
+Ignore the <code>[github]</code> part, that's for <a href="https://github.com/magit/forge">Emacs forge</a>.
+</p>
 
 <div class="org-src-container">
 <pre class="src src-gitconfig">[<span style="color: #ECBE7B;">user</span>]
@@ -113,18 +112,13 @@ creating the following two files.
 </pre>
 </div></li>
 
-<li><code>~/.config/git/work.gitconfig</code>
-
-<ul class="org-ul">
-<li>Update the <code>[user]</code> info as appropriate.</li>
-<li>Ignore the <code>[github]</code> part, that's for <a href="https://github.com/magit/forge">Emacs forge</a>.</li>
 <li><p>
-In the two url-rewriting rules (the <code>[url]</code> entries):
+<code>~/.config/git/work.gitconfig</code>
 </p>
-<ul class="org-ul">
-<li>Update <code>IronNetCybersecurity</code> to be you work's GitHub org name</li>
-<li>Update <code>chrisc-ironnet</code> to be your work GitHub user name</li>
-</ul>
+
+<p>
+Ignore the <code>[github]</code> part, that's for <a href="https://github.com/magit/forge">Emacs forge</a>.
+</p>
 
 <div class="org-src-container">
 <pre class="src src-gitconfig">[<span style="color: #ECBE7B;">user</span>]
@@ -144,8 +138,12 @@ In the two url-rewriting rules (the <code>[url]</code> entries):
     <span style="color: #dcaeea;">insteadOf</span> = git@gist.github.com:a9e0dc9676cab129bc7b37a352257524
 </pre>
 </div></li>
-</ul></li>
 </ol>
+
+<p>
+Obviously, update values for your name, email address, your work's GitHub
+organization name, and your work Gist URLs.
+</p>
 
 <p>
 That's it for the git config! Move on to <a href="#the-ssh-config">The SSH Config</a>. The next two
@@ -300,7 +298,7 @@ both accounts). Assuming you've <a href="https://docs.github.com/en/github/authe
 something like:
 </p>
 
-<pre class="example" id="org086b647">
+<pre class="example" id="org4aef3ea">
 $ tree ~/.ssh/
 /Users/cfclrk/.ssh/
 ├── config
