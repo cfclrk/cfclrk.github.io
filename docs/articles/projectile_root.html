@@ -203,7 +203,8 @@ determining the monorepo to be the "project". See it in action:
 
 
 <p>
-To understand why this is, we can look at the source of that function.
+Yup &#x2013; it found the monorepo, not the subproject. To understand why this is,
+let's look at the source!
 </p>
 
 <div class="org-src-container">
@@ -282,8 +283,13 @@ And what are the marker files by default?
 </table>
 
 <p>
-To illustrate the two takeaways above, say we append <code>go.mod</code> to that list of
-marker files:
+So, projectile starts by looking for a <code>.projectile</code> between here and <code>/</code>,
+then looks for a <code>.git</code> between here and <code>/</code>, finds a <code>.git</code> at
+<code>/tmp/repo/.git</code>, and returns <code>/tmp/repo</code>.
+</p>
+
+<p>
+To illustrate this, say we append <code>go.mod</code> to that list of marker files:
 </p>
 
 <div class="org-src-container">
@@ -554,13 +560,13 @@ level before looking for <code>go.mod</code> or <code>setup.py</code>.
 </blockquote>
 
 <p>
-Instead, we want to look for for <i>every</i> marker file in that directory before
+Instead, we want to look for for <i>every</i> marker file in one directory before
 continuing to the parent directory.
 </p>
 
 <p>
 Instead of looping over the marker files and running <code>locate-dominating-file</code>
-on each marker file, we should loop over the <i>directories</i> and run a function
+on each filename, we should loop over the <i>directories</i> and run a function
 that checks whether any maker file is in that directory.
 </p>
 
@@ -593,13 +599,13 @@ Define a variable with the marker files that indicate a project root.
 </div></li>
 
 <li><p>
-Define a new function for discovering projects.
+Define a new discovery function.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">any-file-in-dir?</span> <span style="color: #c678dd;">(</span>files dir<span style="color: #c678dd;">)</span>
-  <span style="color: #83898d;">"True if any of FILES are in DIR.</span>
-<span style="color: #83898d;">FILES is a list of file names. DIR is a directory name."</span>
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">any-file-exists?</span> <span style="color: #c678dd;">(</span>files dir<span style="color: #c678dd;">)</span>
+  <span style="color: #83898d;">"True if any of the filenames in FILES is in DIR.</span>
+<span style="color: #83898d;">FILES is a list of filenames. DIR is a path to a directory."</span>
   <span style="color: #c678dd;">(</span>cl-some
    <span style="color: #98be65;">(</span><span style="color: #51afef;">lambda</span> <span style="color: #a9a1e1;">(</span>filename<span style="color: #a9a1e1;">)</span> <span style="color: #a9a1e1;">(</span>f-exists? <span style="color: #4db5bd;">(</span>f-expand filename dir<span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
    files<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
@@ -610,13 +616,12 @@ Define a new function for discovering projects.
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">my-project-root</span> <span style="color: #c678dd;">(</span>dir <span style="color: #ECBE7B;">&amp;optional</span> list<span style="color: #c678dd;">)</span>
   <span style="color: #83898d;">"Identify a project root.</span>
 <span style="color: #83898d;">Perform a bottom-up search for files in LIST starting from DIR.</span>
-<span style="color: #83898d;">Files in lower directories have higher precedence. If LIST is</span>
-<span style="color: #83898d;">nil, use `</span><span style="color: #a9a1e1;">my-project-root-files</span><span style="color: #83898d;">' instead. Return the</span>
+<span style="color: #83898d;">Always return the lowest directory that has any file in LIST. If</span>
+<span style="color: #83898d;">LIST is nil, use `</span><span style="color: #a9a1e1;">my-project-root-files</span><span style="color: #83898d;">' instead. Return the</span>
 <span style="color: #83898d;">first (bottommost) matched directory or nil."</span>
   <span style="color: #c678dd;">(</span><span style="color: #51afef;">let</span> <span style="color: #98be65;">(</span><span style="color: #a9a1e1;">(</span>marker-files <span style="color: #4db5bd;">(</span><span style="color: #51afef;">or</span> list my-project-root-files<span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
-    <span style="color: #98be65;">(</span><span style="color: #51afef;">f--traverse-upwards</span>
-     <span style="color: #a9a1e1;">(</span>any-file-in-dir? marker-files <span style="color: #dcaeea;">it</span><span style="color: #a9a1e1;">)</span>
-     dir<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+    <span style="color: #98be65;">(</span><span style="color: #51afef;">f--traverse-upwards</span> <span style="color: #a9a1e1;">(</span>any-file-exists? marker-files <span style="color: #dcaeea;">it</span><span style="color: #a9a1e1;">)</span>
+                         dir<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
 </div></li>
 
@@ -699,7 +704,8 @@ Can we correctly identify a Python project?
 <h3 id="org9236176"><a href="#org9236176">Force Root Higher</a></h3>
 <div class="outline-text-3" id="text-org9236176">
 <p>
-Can we force projectile to discover the monorepo instead of a subproject?
+Can we force the project root to a higher level by creating a <code>.projectile</code>
+file?
 </p>
 
 <div class="org-src-container">

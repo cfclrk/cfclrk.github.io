@@ -119,7 +119,8 @@ nightmares). Here was the problem:
   #+RESULTS:
   : /tmp/notes/
 
-  To understand why this is, we can look at the source of that function.
+  Yup -- it found the monorepo, not the subproject. To understand why this is,
+  let's look at the source!
 
   #+begin_src emacs-lisp
     (defun projectile-root-bottom-up (dir &optional list)
@@ -154,8 +155,11 @@ nightmares). Here was the problem:
   #+RESULTS:
   | .projectile | .git | .hg | .fslckout | _FOSSIL_ | .bzr | _darcs |
 
-  To illustrate the two takeaways above, say we append =go.mod= to that list of
-  marker files:
+  So, projectile starts by looking for a =.projectile= between here and =/=,
+  then looks for a =.git= between here and =/=, finds a =.git= at
+  =/tmp/repo/.git=, and returns =/tmp/repo=.
+
+  To illustrate this, say we append =go.mod= to that list of marker files:
 
   #+begin_src emacs-lisp
     (setq projectile-project-root-files-bottom-up
@@ -275,11 +279,11 @@ nightmares). Here was the problem:
    level before looking for =go.mod= or =setup.py=.
    #+end_quote
 
-   Instead, we want to look for for /every/ marker file in that directory before
+   Instead, we want to look for for /every/ marker file in one directory before
    continuing to the parent directory.
 
    Instead of looping over the marker files and running =locate-dominating-file=
-   on each marker file, we should loop over the /directories/ and run a function
+   on each filename, we should loop over the /directories/ and run a function
    that checks whether any maker file is in that directory.
 
    Luckily, the [[https://github.com/rejeep/f.el][f]] library already has a perfect function for that already:
@@ -287,7 +291,7 @@ nightmares). Here was the problem:
 
 * File Header                                                      :noexport:
 
-  #+header: :tangle (expand-file-name "~/emacs/projectile-discovery.el")
+  #+header: :tangle (expand-file-name "~/Projects/dotfiles/emacs/projectile-discovery.el")
   #+begin_src emacs-lisp :exports none
     ;;; projectile-discovery.el -- My project discovery config  -*- lexical-binding: t; -*-
 
@@ -310,7 +314,7 @@ nightmares). Here was the problem:
 
   1. Define a variable with the marker files that indicate a project root.
 
-     #+header: :tangle (expand-file-name "~/emacs/projectile-discovery.el")
+     #+header: :tangle (expand-file-name "~/Projects/dotfiles/emacs/projectile-discovery.el")
      #+begin_src emacs-lisp :results silent
        (setq my-project-root-files
              (-concat '("go.mod")
@@ -318,35 +322,34 @@ nightmares). Here was the problem:
                       projectile-project-root-files))
      #+end_src
 
-  2. Define a new function for discovering projects.
+  2. Define a new discovery function.
 
-     #+header: :tangle (expand-file-name "~/emacs/projectile-discovery.el")
+     #+header: :tangle (expand-file-name "~/Projects/dotfiles/emacs/projectile-discovery.el")
      #+begin_src emacs-lisp :results silent
-       (defun any-file-in-dir? (files dir)
-         "True if any of FILES are in DIR.
-       FILES is a list of file names. DIR is a directory name."
+       (defun any-file-exists? (files dir)
+         "True if any of the filenames in FILES is in DIR.
+       FILES is a list of filenames. DIR is a path to a directory."
          (cl-some
           (lambda (filename) (f-exists? (f-expand filename dir)))
           files))
      #+end_src
 
-     #+header: :tangle (expand-file-name "~/emacs/projectile-discovery.el")
+     #+header: :tangle (expand-file-name "~/Projects/dotfiles/emacs/projectile-discovery.el")
      #+begin_src emacs-lisp :results silent
        (defun my-project-root (dir &optional list)
          "Identify a project root.
        Perform a bottom-up search for files in LIST starting from DIR.
-       Files in lower directories have higher precedence. If LIST is
-       nil, use `my-project-root-files' instead. Return the
+       Always return the lowest directory that has any file in LIST. If
+       LIST is nil, use `my-project-root-files' instead. Return the
        first (bottommost) matched directory or nil."
          (let ((marker-files (or list my-project-root-files)))
-           (f--traverse-upwards
-            (any-file-in-dir? marker-files it)
-            dir)))
+           (f--traverse-upwards (any-file-exists? marker-files it)
+                                dir)))
      #+end_src
 
   3. Insert our new lookup function into =projectile-project-root-functions=.
 
-     #+header: :tangle (expand-file-name "~/emacs/projectile-discovery.el")
+     #+header: :tangle (expand-file-name "~/Projects/dotfiles/emacs/projectile-discovery.el")
      #+begin_src emacs-lisp :results silent
        (setq projectile-project-root-functions
              '(projectile-root-local
@@ -359,7 +362,7 @@ nightmares). Here was the problem:
   4. Restrict projectile's original bottom-up discovery to only work for
      =.projectile= files.
 
-     #+header: :tangle (expand-file-name "~/emacs/projectile-discovery.el")
+     #+header: :tangle (expand-file-name "~/Projects/dotfiles/emacs/projectile-discovery.el")
      #+begin_src emacs-lisp :results silent
        (setq projectile-project-root-files-bottom-up
              '(".projectile"))
@@ -398,7 +401,8 @@ nightmares). Here was the problem:
 
 ** Force Root Higher
 
-   Can we force projectile to discover the monorepo instead of a subproject?
+   Can we force the project root to a higher level by creating a =.projectile=
+   file?
 
    #+begin_src sh :results silent
      touch /tmp/repo/.projectile
@@ -419,7 +423,7 @@ nightmares). Here was the problem:
 
 * File Footer                                                      :noexport:
 
-  #+header: :tangle (expand-file-name "~/emacs/projectile-discovery.el")
+  #+header: :tangle (expand-file-name "~/Projects/dotfiles/emacs/projectile-discovery.el")
   #+begin_src emacs-lisp :exports none
     ;;; projectile-discovery.el ends here
   #+end_src
