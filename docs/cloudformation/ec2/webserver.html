@@ -67,7 +67,7 @@
 </div>
 </nav>
 <ul class="org-ul">
-<li>CloudFormation template: <a href="https://cfclrk.github.io/cloudformation/ec2/webserver.yaml">yaml</a></li>
+<li>CloudFormation template: <a href="https://cfclrk.com/cloudformation/ec2/webserver.yaml">yaml</a></li>
 </ul>
 <div class="org-src-container">
 <pre class="src src-yaml"><span style="color: #dcaeea;">AWSTemplateFormatVersion</span>: 2010-09-09
@@ -128,7 +128,7 @@ Updates <code>$BuildArtifactKey</code> in <code>AWS::CloudFormation::Init</code>
 TODO: export but do not tangle
 </p>
 
-<pre class="example" id="org8bfd2b2">
+<pre class="example" id="org57bfed0">
     config:
       files:
         /home/ec2-user/go-webserver:
@@ -226,8 +226,8 @@ logical deployment a stack belongs to.
 
 <p>
 If a deployment is completely specified by exactly one CloudFormation template,
-the <code>DeploymentName</code> and the <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/pseudo-parameter-reference.html#cfn-pseudo-param-stackname">AWS::StackName</a> would refer to the same things. In
-that case, consider not using a <code>DeploymentName</code> parameter.
+the <code>DeploymentName</code> and the <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/pseudo-parameter-reference.html#cfn-pseudo-param-stackname">AWS::StackName</a> refer to the same things. In that
+case, consider not using a <code>DeploymentName</code> parameter.
 </p>
 </div>
 </div>
