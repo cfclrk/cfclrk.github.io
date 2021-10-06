@@ -1,0 +1,30 @@
+#+TITLE: cfclrk
+#+PROPERTY: header-args+ :eval never-export
+#+OPTIONS: timestamp:nil
+#+OPTIONS: toc:nil
+
+* Hello
+
+  I am Chris! I like family time, hugging my baby, tinkering with Emacs,
+  drinking beer, and playing sports -- simultaneously.
+
+  Find me on:
+
+  - [[https://github.com/cfclrk][GitHub]]
+  - [[https://www.linkedin.com/in/cfclrk/][LinkedIn]]
+  - [[https://twitter.com/cfclrk][Twitter]]
+
+  And here is [[https://github.com/cfclrk/resume/blob/master/resume.pdf][my résumé]].
+
+  To contact me, email me at =cfclrk@gmail.com=, especially if you have comments
+  or advice about anything on this site!
+
+* About this Site
+
+  This site is an HTML export of some of my [[https://orgmode.org/][org-mode]] notes. Org-mode is a
+  [[https://en.wikipedia.org/wiki/Literate_programming][literate-programming]] environment; within Emacs I can execute the code blocks
+  on this site interactively.
+
+  The source code is spread out among a couple personal repos: [[https://github.com/cfclrk/articles][articles]],
+  [[https://github.com/cfclrk/cloudformation][cloudformation]], [[https://github.com/cfclrk/site][site]], [[https://github.com/cfclrk/cfclrk.github.io][cfclrk.github.io]], and some org-mode configuration in
+  [[https://github.com/cfclrk/dotfiles/blob/master/emacs_cfclrk/cfclrk_org.el][dotfiles]].

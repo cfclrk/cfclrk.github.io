@@ -1,0 +1,310 @@
+* {
+  box-sizing: border-box;
+}
+
+// Colors from the doom-one theme
+$bg: #282c34;
+$base0: #1B2229;
+$base1: #1c1f24;
+$base2: #202328;
+$base3: #23272e;
+$base4: #3f444a;
+$base5: #5B6268;
+$base6: #73797e;
+$base7: #9ca0a4;
+$base8: #DFDFDF;
+$fg: #bbc2cf;
+$red: #ff6c6b;
+$orange: #da8548;
+$green: #98be65;
+$teal: #4db5bd;
+$yellow: #ECBE7B;
+$blue: #51afef;
+$dark-blue: #2257A0;
+$magenta: #c678dd;
+$violet: #a9a1e1;
+$cyan: #46D9FF;
+$dark-cyan: #5699AF;
+
+// Font Sizes
+$body-size: 1.4rem;
+$code-size: 1.2rem;
+
+// Utilities
+.org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+.org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+.org-center { margin-left: auto; margin-right: auto; text-align: center; }
+.underline { text-decoration: underline; }
+
+// Tachyons clearfix
+.cf:before, .cf:after { content: " "; display: table; }
+.cf:after { clear: both; }
+.cf { *zoom: 1; }
+
+// Tachyons float
+.fl { float: left; _display: inline; }
+.fr { float: right; _display: inline; }
+
+html {
+  // Prevent font scaling in mobile landscape while allowing user zoom
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-size: $body-size;
+  line-height: 2rem;
+  background-color: $bg;
+  color: $fg;
+}
+
+// Headings
+
+h1, h2, h3, h4, h5, h6 {
+  text-decoration: none;
+}
+
+.title {
+  color: $base6;
+}
+
+h1 {
+  font-size: 2.8rem;
+  font-weight: 400;
+  line-height: 1;
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+}
+
+h2 {
+  font-size: 2.4rem;
+  line-height: 1;
+  color: $blue;
+  font-weight: 400;
+  font-style: italic;
+  border-bottom: 1px solid $base5;
+  padding-bottom: 1rem;
+
+  a {
+    color: inherit;
+  }
+}
+
+h3 {
+  font-size: 2rem;
+  font-weight: 400;
+  margin-top: 2.1rem;
+  margin-bottom: 1.4rem;
+  line-height: 1;
+  color: $magenta;
+  font-style: italic;
+
+  a {
+    color: inherit;
+  }
+}
+
+h4 {
+  color: $violet;
+  font-style: italic;
+
+  a {
+    color: inherit;
+  }
+}
+
+// Elements
+
+a {
+  color: $blue;
+  text-decoration: none;
+}
+
+b {
+  color: $base8;
+}
+
+textarea {
+  overflow-x: auto;
+}
+
+// Navbar
+
+#navbar {
+  background-color: $base2;
+
+  ul {
+    list-style-type: none;
+
+    li {
+      display: inline;
+      font-size: 1.7rem;
+
+      a {
+        font-weight: bold;
+        margin-right: 2rem;
+        color: $green;
+      }
+    }
+  }
+}
+
+.subtitle {
+  font-weight: bold;
+  margin-top: 0;
+}
+
+#content {
+  max-width: 1400px;
+  margin: 0rem 2rem 0rem 1rem;
+  display: inline-grid;
+  grid-template-columns: 400px 1fr;
+  grid-template-rows: auto [last-line];
+
+  #table-of-contents {
+    grid-column: 1;
+    grid-row: 1 / last-line;
+    grid-row-start: span 20;
+    margin: 2rem 2rem 1rem 1rem;
+  }
+
+  :not(#table-of-contents) {
+    grid-column: 2;
+  }
+}
+
+.results {
+  color: $base5;
+  // .results divs are always above a <pre> block. Most (all?) browsers put a
+  // 1em margin above/below <pre> blocks. Here we move the .results div closer
+  // to its associated <pre> block.
+  margin-bottom: -0.9em;
+}
+
+// Media Queries
+
+// Get rid of left column on smaller screens
+@media screen and (max-width: 1200px) {
+  #content {
+    margin: 1rem;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+
+  #content > #table-of-contents {
+    grid-column: 1;
+    margin: 0rem;
+  }
+
+  #content > :not(#table-of-contents) {
+    grid-column: 1;
+  }
+}
+
+// Use smaller margins on smaller screens
+@media screen and (max-width: 900px) {
+  #content {
+    margin: 0rem 1rem 0rem 1rem;
+  }
+}
+
+
+p.verse {
+  margin-left: 3%;
+}
+
+// Images
+
+img {
+  display: block;
+  margin: auto;
+}
+
+.figure { padding: 1em; }
+.figure p { text-align: center; }
+.org-svg { width: 90%; }
+
+// Code
+
+// Inline code
+code {
+  color: $green;
+  font-size: $code-size;
+  font-weight: bold;
+}
+
+// Code blocks
+pre {
+  padding: 15px;
+  font-size: $code-size;
+  line-height: 1.6rem;
+  background-color: $base2;
+}
+
+.code-highlighted {
+  background-color: #ffff00;
+}
+
+// Tables
+
+table {
+  border-collapse: collapse;
+
+  th, td {
+    vertical-align:top;
+    padding: 0.5rem;
+    border: 1px solid $base4;
+  }
+}
+
+caption.t-above { caption-side: top; }
+caption.t-bottom { caption-side: bottom; }
+
+th.org-right  { text-align: center;  }
+th.org-left   { text-align: center;   }
+th.org-center { text-align: center; }
+td.org-right  { text-align: right;  }
+td.org-left   { text-align: left;   }
+td.org-center { text-align: center; }
+
+dt { font-weight: bold; }
+
+.footpara { display: inline; }
+.footdef  { margin-bottom: 1em; }
+
+// Math
+
+.equation-container {
+  display: table;
+  text-align: center;
+  width: 100%;
+}
+.equation {
+  vertical-align: middle;
+}
+.equation-label {
+  display: table-cell;
+  text-align: right;
+  vertical-align: middle;
+}
+
+// Agenda
+
+.inlinetask {
+  padding: 10px;
+  border: 2px solid gray;
+  margin: 10px;
+  background: #ffffcc;
+}
+
+#org-div-home-and-up
+{
+  text-align: right;
+  font-size: 70%;
+  white-space: nowrap;
+}
+
+.linenr {
+  font-size: smaller
+}

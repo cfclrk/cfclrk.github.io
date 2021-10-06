@@ -34,5 +34,10 @@
     :html-head
     "<link rel=\"stylesheet\" type=\"text/css\" href=\"/static/main.css\" />"))
 
+;; Add (or update) the projects in articles/org-project-alist
+(setq org-publish-project-alist
+      (cons articles/org-project-articles
+            (assoc-delete-all "articles" org-publish-project-alist)))
+
 (provide 'articles)
 ;;; articles.el ends here

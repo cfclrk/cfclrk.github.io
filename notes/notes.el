@@ -45,5 +45,12 @@
      :base-extension "png\\|svg"
      :publishing-function org-publish-attachment)))
 
+;; Add (or update) the projects in notes/org-project-alist
+(dolist (project notes/org-project-alist)
+  (let ((project-name (car project)))
+    (setq org-publish-project-alist
+          (cons project
+                (assoc-delete-all project-name org-publish-project-alist)))))
+
 (provide 'notes)
 ;;; notes.el ends here

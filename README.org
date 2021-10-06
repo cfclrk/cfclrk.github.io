@@ -4,6 +4,12 @@ The =docs= directory contains generated HTML. The directory is called =docs=
 because GitHub pages can only be configured to serve from a subdirectory if it
 is called "=docs=".
 
+* Dependencies
+
+  - [[https://sass-lang.com][sass]] CLI
+    - MacOS: =brew install sass/sass/sass=
+    - npm: =npm install -g sass=
+
 * Local Server
 
   Use a program like [[https://www.npmjs.com/package/serve][serve]] or =python -m http.server= for viewing locally (which
@@ -15,9 +21,29 @@ is called "=docs=".
 
 * TODO
 
-  - [ ] Move site project into this project
   - [ ] Create build script
   - [ ] Live reload HTML if I start an Emacs web server
   - [ ] Exclude README.org from HTML export (from site project?)
   - [ ] Different layouts for index pages vs content pages
-  - [ ] Point cfclrk.com domain to this website
+
+** Structure and Content
+
+  - [ ] Persistent links to sections
+  - [ ] Remove "home" from links on sitemap pages.
+  - [ ] Move html-head to file
+
+** Themes?
+
+   Move personal SCSS to a themes directory. Each theme can (and probably
+   should) =@import= the base CSS that org-mode generates.
+
+  - [ ] Hamburger menu on smaller screens
+  - [ ] Favicon
+
+* Resources
+
+  - https://www.taingram.org/blog/org-mode-blog.html
+  - https://thibaultmarin.github.io/blog/posts/2016-11-13-Personal_website_in_org.html
+  - https://github.com/bastibe/org-static-blog
+  - https://github.com/dmacvicar/site.org
+  - weblorg
