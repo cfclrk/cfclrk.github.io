@@ -55,7 +55,7 @@
 </nav>
 <p>
 <a href="https://docs.projectile.mx/projectile/index.html">Projectile</a> is an awesome part of Emacs &#x2013; <i>foundational</i> even. For example,
-<code>lsp-mode</code> uses projectile to determine what directory an LSP server should be
+<code>lsp-mode</code> uses Projectile to determine what directory an LSP server should be
 associated with.
 </p>
 
@@ -68,19 +68,19 @@ nightmares). Here was the problem:
 <h2 id="orgd27d485"><a href="#orgd27d485">The Problem</a></h2>
 <div class="outline-text-2" id="text-orgd27d485">
 <p>
-In monorepos, projectile determines the project root to be the <i>monorepo</i>, not
+In monorepos, Projectile determines the project root to be the <i>monorepo</i>, not
 the subproject that you're in.
 </p>
 
 <p>
-When I'm in a python project that happens to be in a monorepo, I still want
-projectile to operate on the python project. I should still be able to operate
-on the monorepo by opening a file or Dired buffer at the root of the monorepo.
+When I'm in a python project that happens to be in a monorepo, I want
+Projectile to operate on the python project. I can still use Projectile on the
+whole monorepo by opening a file or Dired buffer at the root of the monorepo.
 </p>
 
 <p>
-To jump to the solution, go to <a href="#solution">Solution</a>, or see the generated elisp file I
-use <a href="https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-discovery.el">on GitHub</a>.
+To jump to my solution, go to <a href="#solution">Solution</a>, or see the Elisp file I use,
+generated from this document, <a href="https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-discovery.el">on GitHub</a>.
 </p>
 </div>
 </div>
@@ -137,12 +137,12 @@ is the monorepo:
 </p>
 
 <p>
-I <i>want</i> projectile to say that the project root is <code>/tmp/repo/go/projectA</code>.
-By default, however, projectile finds the root of the monorepo.
+I <i>want</i> Projectile to say that the project root is <code>/tmp/repo/go/projectA</code>.
+By default, however, Projectile finds the root of the monorepo.
 </p>
 
 <p>
-To understand how to change this, we need to understand how projectile detects
+To understand how to change this, we need to understand how Projectile detects
 projects.
 </p>
 </div>
@@ -188,7 +188,7 @@ order. The order is defined by the variable:
 </table>
 
 <p>
-The second function, <code>projectile-root-bottom-up</code>, is the one that is
+The second function, <code>(projectile-root-bottom-up)</code>, is the one that is
 determining the monorepo to be the "project". See it in action:
 </p>
 
@@ -218,15 +218,15 @@ let's look at the source!
 </div>
 
 <p>
-This function is saying:
+In regular words, this function is doing this:
 </p>
 
 <ul class="org-ul">
 <li>For each marker file in <code>projectile-project-root-files-bottom-up</code>
 <ul class="org-ul">
-<li>Is the marker file in this directory? No?</li>
-<li>Is the marker file in the parent directory? No?</li>
-<li>Is the marker file in the parent-parent directory? No?</li>
+<li>Is the file in this directory? No?</li>
+<li>Is the file in the parent directory? No?</li>
+<li>Is the file in the parent-parent directory? No?</li>
 <li>&#x2026; etc up to <code>/</code></li>
 </ul></li>
 </ul>
@@ -283,13 +283,13 @@ And what are the marker files by default?
 </table>
 
 <p>
-So, projectile starts by looking for a <code>.projectile</code> between here and <code>/</code>,
-then looks for a <code>.git</code> between here and <code>/</code>, finds a <code>.git</code> at
-<code>/tmp/repo/.git</code>, and returns <code>/tmp/repo</code>.
+So, assuming we're somewhere in our monorepo, Projectile starts by looking for
+a <code>.projectile</code> between here and <code>/</code>, then looks for a <code>.git</code> between here and
+<code>/</code>, finds a <code>.git</code> at <code>/tmp/repo/.git</code>, and returns <code>/tmp/repo</code>.
 </p>
 
 <p>
-To illustrate this, say we append <code>go.mod</code> to that list of marker files:
+To drive this point home, say we append <code>go.mod</code> to that list of marker files:
 </p>
 
 <div class="org-src-container">
@@ -339,26 +339,26 @@ the list of marker files.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>default-directory <span style="color: #98be65;">"/tmp/notes/go/projectA"</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
-  <span style="color: #c678dd;">(</span>projectile-project-root<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>projectile-root-bottom-up <span style="color: #98be65;">"/tmp/notes/go/projectA"</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
 
 <div class="results">#+RESULTS:</div><pre class="example">
-/private/tmp/notes/
+/tmp/notes/
 </pre>
 
 
 <p>
-Projectile found a <code>.git</code> two directories up before looking for a <code>go.mod</code>. We
-could rectify this by <i>prepending</i> <code>go.mod</code> instead of appending it, but the
-general problem would still be there.
+Projectile found a <code>.git</code> two directories up before ever even looking for a
+<code>go.mod</code>. In this case we could rectify that by <i>prepending</i> <code>go.mod</code> instead
+of appending it, but the general problem would still be there.
 </p>
 
 <p>
-This behavior is perhaps useful in one situation: if you want to force a
-project root to a <i>higher</i> level. For example, if we wanted <code>/tmp/</code> to be the
-project root for some reason, we could just put a <code>.projectile</code> there.
+The existing behavior of the <code>(projectile-root-bottom-up)</code> function is useful
+in one situation: if you want to force a project root to a <i>higher</i> level. For
+example, if we wanted <code>/tmp/</code> to be the project root for some reason, we could
+just put a <code>.projectile</code> there.
 </p>
 
 <div class="org-src-container">
@@ -387,14 +387,14 @@ That works! We should probably try to keep that behavior.
 <h2 id="orgddd5dc0"><a href="#orgddd5dc0">Project Detection Issues</a></h2>
 <div class="outline-text-2" id="text-orgddd5dc0">
 <p>
-So, there are two issues preventing projectile from finding subprojects in
+So, there are two issues preventing Projectile from finding subprojects in
 our monorepo:
 </p>
 
 <ol class="org-ol">
 <li><b>Marker Files</b>: The variable <code>projectile-project-root-files-bottom-up</code>
 doesn't have <code>go.mod</code> or <code>setup.py</code> in it.</li>
-<li><b>Lookup Order</b>: Even if projectile <i>were</i> looking for <code>setup.py</code> and
+<li><b>Lookup Order</b>: Even if Projectile <i>were</i> looking for <code>setup.py</code> and
 <code>go.mod</code>, the ordering of the list matters. Projectile might find some
 other marker file at a higher level before looking for <code>go.mod</code> or
 <code>setup.py</code>.</li>
@@ -553,7 +553,7 @@ The problem was:
 
 <blockquote>
 <p>
-Even if projectile <i>were</i> looking for <code>setup.py</code> and <code>go.mod</code>, the ordering
+Even if Projectile <i>were</i> looking for <code>setup.py</code> and <code>go.mod</code>, the ordering
 of the list matters. Projectile might find another marker file at a higher
 level before looking for <code>go.mod</code> or <code>setup.py</code>.
 </p>
@@ -571,7 +571,7 @@ that checks whether any maker file is in that directory.
 </p>
 
 <p>
-Luckily, the <a href="https://github.com/rejeep/f.el">f</a> library already has a perfect function for that already:
+The <a href="https://github.com/rejeep/f.el">f</a> library already has a perfect function for that already:
 <a href="https://github.com/rejeep/f.el#f-traverse-upwards-fn-optional-path">f-traverse-upwards</a>.
 </p>
 </div>
@@ -585,8 +585,13 @@ Luckily, the <a href="https://github.com/rejeep/f.el">f</a> library already has 
 Define a new strategy for discovering projects.
 </p>
 
-<ol class="org-ol">
-<li><p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">require</span> '<span style="color: #a9a1e1;">projectile</span><span style="color: #51afef;">)</span>
+<span style="color: #51afef;">(</span><span style="color: #51afef;">require</span> '<span style="color: #a9a1e1;">f</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<p>
 Define a variable with the marker files that indicate a project root.
 </p>
 
@@ -596,9 +601,9 @@ Define a variable with the marker files that indicate a project root.
                projectile-project-root-files-bottom-up
                projectile-project-root-files<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
-</div></li>
+</div>
 
-<li><p>
+<p>
 Define a new discovery function.
 </p>
 
@@ -623,9 +628,9 @@ Define a new discovery function.
     <span style="color: #98be65;">(</span><span style="color: #51afef;">f--traverse-upwards</span> <span style="color: #a9a1e1;">(</span>any-file-exists? marker-files <span style="color: #dcaeea;">it</span><span style="color: #a9a1e1;">)</span>
                          dir<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
-</div></li>
+</div>
 
-<li><p>
+<p>
 Insert our new lookup function into <code>projectile-project-root-functions</code>.
 </p>
 
@@ -637,19 +642,19 @@ Insert our new lookup function into <code>projectile-project-root-functions</cod
         projectile-root-top-down
         projectile-root-top-down-recurring<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
-</div></li>
+</div>
 
-<li><p>
-Restrict projectile's original bottom-up discovery to only work for
-<code>.projectile</code> files.
+<p>
+Restrict Projectile's original bottom-up discovery to only work for
+<code>.projectile</code> files. This allows us to force a project root to a higher level
+by creating a <code>.projectile</code> file.
 </p>
 
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> projectile-project-root-files-bottom-up
       '<span style="color: #c678dd;">(</span><span style="color: #98be65;">".projectile"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
-</div></li>
-</ol>
+</div>
 </div>
 </div>
 
@@ -657,7 +662,7 @@ Restrict projectile's original bottom-up discovery to only work for
 <h2 id="org79672a4"><a href="#org79672a4">Test</a></h2>
 <div class="outline-text-2" id="text-org79672a4">
 <p>
-After applying the functions above, let's see what projectile says the project
+After applying the functions above, let's see what Projectile says the project
 roots are for our monorepo.
 </p>
 </div>

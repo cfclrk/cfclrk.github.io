@@ -84,14 +84,13 @@ a project is in. Git supports this with the <a href="https://git-scm.com/docs/gi
 creating the following two files.
 </p>
 
-<ol class="org-ol">
-<li><p>
+<p>
 <code>~/.config/git/config</code>
 </p>
 
-<p>
-Ignore the <code>[github]</code> part, that's for <a href="https://github.com/magit/forge">Emacs forge</a>.
-</p>
+<ul class="org-ul">
+<li>Ignore the <code>[github]</code> part, that's for <a href="https://github.com/magit/forge">Emacs forge</a>.</li>
+</ul>
 
 <div class="org-src-container">
 <pre class="src src-gitconfig">[<span style="color: #ECBE7B;">user</span>]
@@ -110,15 +109,15 @@ Ignore the <code>[github]</code> part, that's for <a href="https://github.com/ma
 [<span style="color: #ECBE7B;">includeIf</span> <span style="color: #c678dd;">"gitdir:~/go/"</span>]
     <span style="color: #dcaeea;">path</span> = work.gitconfig
 </pre>
-</div></li>
+</div>
 
-<li><p>
+<p>
 <code>~/.config/git/work.gitconfig</code>
 </p>
 
-<p>
-Ignore the <code>[github]</code> part, that's for <a href="https://github.com/magit/forge">Emacs forge</a>.
-</p>
+<ul class="org-ul">
+<li>Ignore the <code>[github]</code> part, that's for <a href="https://github.com/magit/forge">Emacs forge</a>.</li>
+</ul>
 
 <div class="org-src-container">
 <pre class="src src-gitconfig">[<span style="color: #ECBE7B;">user</span>]
@@ -137,8 +136,7 @@ Ignore the <code>[github]</code> part, that's for <a href="https://github.com/ma
 [<span style="color: #ECBE7B;">url</span> <span style="color: #c678dd;">"git@gist-work:a9e0dc9676cab129bc7b37a352257524.git"</span>]
     <span style="color: #dcaeea;">insteadOf</span> = git@gist.github.com:a9e0dc9676cab129bc7b37a352257524
 </pre>
-</div></li>
-</ol>
+</div>
 
 <p>
 Obviously, update values for your name, email address, your work's GitHub
@@ -298,7 +296,7 @@ both accounts). Assuming you've <a href="https://docs.github.com/en/github/authe
 something like:
 </p>
 
-<pre class="example" id="org4aef3ea">
+<pre class="example" id="org071c3ac">
 $ tree ~/.ssh/
 /Users/cfclrk/.ssh/
 ├── config
