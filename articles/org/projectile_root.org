@@ -146,7 +146,7 @@ nightmares). Here was the problem:
   2. The function looks for one file */all the way up to root/* before looking
      for the next file.
 
-  And what are the marker files by default?
+  And what are these "marker files"?
 
   #+begin_src emacs-lisp
     projectile-project-root-files-bottom-up
@@ -216,10 +216,10 @@ nightmares). Here was the problem:
 
   1. *Marker Files*: The variable =projectile-project-root-files-bottom-up=
      doesn't have =go.mod= or =setup.py= in it.
-  2. *Lookup Order*: Even if Projectile /were/ looking for =setup.py= and
-     =go.mod=, the ordering of the list matters. Projectile might find some
-     other marker file at a higher level before looking for =go.mod= or
-     =setup.py=.
+  2. *Lookup Behavior*: Even if Projectile knows to look for =setup.py= and
+     =go.mod=, the contents of directories above our project affects lookup.
+     Projectile can find marker files at a higher level before looking for
+     =go.mod= or =setup.py=.
 
   Let's examine each problem.
 
@@ -269,25 +269,24 @@ nightmares). Here was the problem:
    That creates a pretty complete list of marker files that can indicate project
    roots.
 
-** Lookup Order
+** Lookup Behavior
 
    The problem was:
 
    #+begin_quote
-   Even if Projectile /were/ looking for =setup.py= and =go.mod=, the ordering
-   of the list matters. Projectile might find another marker file at a higher
-   level before looking for =go.mod= or =setup.py=.
+   Even if Projectile knows to look for =setup.py= and =go.mod=, the contents of
+   directories above our project affects lookup. Projectile can find marker
+   files at a higher level before looking for =go.mod= or =setup.py=.
    #+end_quote
 
-   Instead, we want to look for for /every/ marker file in one directory before
-   continuing to the parent directory.
+   Instead, we want to look for for /every/ marker file in the current directory
+   before continuing to a parent directory.
 
    Instead of looping over the marker files and running =locate-dominating-file=
-   on each filename, we should loop over the /directories/ and run a function
-   that checks whether any maker file is in that directory.
+   on each filename, we should loop over the /directories/ (starting from the
+   bottom) and check whether any maker file is in that directory.
 
-   The [[https://github.com/rejeep/f.el][f]] library already has a perfect function for that already:
-   [[https://github.com/rejeep/f.el#f-traverse-upwards-fn-optional-path][f-traverse-upwards]].
+   The [[https://github.com/rejeep/f.el][f]] library already has a perfect function for that: [[https://github.com/rejeep/f.el#f-traverse-upwards-fn-optional-path][f-traverse-upwards]].
 
 * File Header                                                      :noexport:
 

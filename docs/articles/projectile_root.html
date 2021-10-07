@@ -39,7 +39,7 @@
 <li><a href="#orgddd5dc0">Project Detection Issues</a>
 <ul>
 <li><a href="#org6b9e820">Marker Files</a></li>
-<li><a href="#org8e5ebe0">Lookup Order</a></li>
+<li><a href="#org2db5392">Lookup Behavior</a></li>
 </ul>
 </li>
 <li><a href="#solution">Solution</a></li>
@@ -243,7 +243,7 @@ for the next file.</li>
 </ol>
 
 <p>
-And what are the marker files by default?
+And what are these "marker files"?
 </p>
 
 <div class="org-src-container">
@@ -394,10 +394,10 @@ our monorepo:
 <ol class="org-ol">
 <li><b>Marker Files</b>: The variable <code>projectile-project-root-files-bottom-up</code>
 doesn't have <code>go.mod</code> or <code>setup.py</code> in it.</li>
-<li><b>Lookup Order</b>: Even if Projectile <i>were</i> looking for <code>setup.py</code> and
-<code>go.mod</code>, the ordering of the list matters. Projectile might find some
-other marker file at a higher level before looking for <code>go.mod</code> or
-<code>setup.py</code>.</li>
+<li><b>Lookup Behavior</b>: Even if Projectile knows to look for <code>setup.py</code> and
+<code>go.mod</code>, the contents of directories above our project affects lookup.
+Projectile can find marker files at a higher level before looking for
+<code>go.mod</code> or <code>setup.py</code>.</li>
 </ol>
 
 <p>
@@ -544,35 +544,34 @@ roots.
 </div>
 </div>
 
-<div id="outline-container-org8e5ebe0" class="outline-3">
-<h3 id="org8e5ebe0"><a href="#org8e5ebe0">Lookup Order</a></h3>
-<div class="outline-text-3" id="text-org8e5ebe0">
+<div id="outline-container-org2db5392" class="outline-3">
+<h3 id="org2db5392"><a href="#org2db5392">Lookup Behavior</a></h3>
+<div class="outline-text-3" id="text-org2db5392">
 <p>
 The problem was:
 </p>
 
 <blockquote>
 <p>
-Even if Projectile <i>were</i> looking for <code>setup.py</code> and <code>go.mod</code>, the ordering
-of the list matters. Projectile might find another marker file at a higher
-level before looking for <code>go.mod</code> or <code>setup.py</code>.
+Even if Projectile knows to look for <code>setup.py</code> and <code>go.mod</code>, the contents of
+directories above our project affects lookup. Projectile can find marker
+files at a higher level before looking for <code>go.mod</code> or <code>setup.py</code>.
 </p>
 </blockquote>
 
 <p>
-Instead, we want to look for for <i>every</i> marker file in one directory before
-continuing to the parent directory.
+Instead, we want to look for for <i>every</i> marker file in the current directory
+before continuing to a parent directory.
 </p>
 
 <p>
 Instead of looping over the marker files and running <code>locate-dominating-file</code>
-on each filename, we should loop over the <i>directories</i> and run a function
-that checks whether any maker file is in that directory.
+on each filename, we should loop over the <i>directories</i> (starting from the
+bottom) and check whether any maker file is in that directory.
 </p>
 
 <p>
-The <a href="https://github.com/rejeep/f.el">f</a> library already has a perfect function for that already:
-<a href="https://github.com/rejeep/f.el#f-traverse-upwards-fn-optional-path">f-traverse-upwards</a>.
+The <a href="https://github.com/rejeep/f.el">f</a> library already has a perfect function for that: <a href="https://github.com/rejeep/f.el#f-traverse-upwards-fn-optional-path">f-traverse-upwards</a>.
 </p>
 </div>
 </div>
