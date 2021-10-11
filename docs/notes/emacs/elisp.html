@@ -33,6 +33,7 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
+<li><a href="#org20dab1a">Execute In Another Buffer</a></li>
 <li><a href="#orgc534b9c">Association Lists</a></li>
 <li><a href="#org474348f">Pretty Printing Objects</a>
 <ul>
@@ -43,6 +44,21 @@
 </ul>
 </div>
 </nav>
+
+<div id="outline-container-org20dab1a" class="outline-2">
+<h2 id="org20dab1a"><a href="#org20dab1a">Execute In Another Buffer</a></h2>
+<div class="outline-text-2" id="text-org20dab1a">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">with-current-buffer</span> <span style="color: #c678dd;">(</span>get-buffer <span style="color: #98be65;">"elisp.org"</span><span style="color: #c678dd;">)</span>
+  <span style="color: #c678dd;">(</span>buffer-file-name<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+/Users/chris.clark/Projects/cfclrk.com/notes/org/emacs/elisp.org
+</pre>
+</div>
+</div>
 
 <div id="outline-container-orgc534b9c" class="outline-2">
 <h2 id="orgc534b9c"><a href="#orgc534b9c">Association Lists</a></h2>

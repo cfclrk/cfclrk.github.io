@@ -222,88 +222,92 @@ remote/branch-name.</li>
 <h3 id="org1d6e0d1"><a href="#org1d6e0d1">Rebase to Ancestor</a></h3>
 <div class="outline-text-3" id="text-org1d6e0d1">
 <p>
-Adapted from <a href="https://stackoverflow.com/a/55049181/340613">this SO answer</a>.
+You created a sequence of commits, <code>feat-1</code> and <code>feat-2</code>, and you realize
+"hrmm, <code>feat-2</code> doesn't actually depend on <code>feat-1</code>. I could make both of
+these PRs against <code>main</code> at the same time."
 </p>
 
 <p>
-Given
+Given a repo like this:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">touch A &amp;&amp; git add A
-git commit -m <span style="color: #98be65;">"Add A"</span>
-touch B &amp;&amp; git add B
-git commit -m <span style="color: #98be65;">"Add B"</span>
-touch C &amp;&amp; git add C
-git commit -m <span style="color: #98be65;">"Add C"</span>
-touch D &amp;&amp; git add D
-git commit -m <span style="color: #98be65;">"Add D"</span>
+<pre class="src src-bash">git init
+touch A &amp;&amp; git add A &amp;&amp; git commit -m <span style="color: #98be65;">"A"</span>
+touch B &amp;&amp; git add B &amp;&amp; git commit -m <span style="color: #98be65;">"B"</span>
+git checkout -b <span style="color: #98be65;">"feat-1"</span>
+touch C &amp;&amp; git add C &amp;&amp; git commit -m <span style="color: #98be65;">"C"</span>
+git checkout -b <span style="color: #98be65;">"feat-2"</span>
+touch D &amp;&amp; git add D &amp;&amp; git commit -m <span style="color: #98be65;">"D"</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh" id="org7175b89">gitdot --png
 </pre>
 </div>
 
 
-<figure id="orgcebdb8b">
-<img src="../img/ABCD.png" alt="ABCD.png">
+<figure id="orgc719780">
+<img src="../img/RebaseToAncestor1.png" alt="RebaseToAncestor1.png">
 
 </figure>
 
 <p>
-And I want to rebase <code>D</code> to an ancestor <code>B</code> (I want <code>C</code> and <code>D</code> to be
-siblings):
+You want <code>feat-2</code> and <code>feat-1</code> to both be based off <code>main</code>. You can't just
+rebase <code>feat-2</code> on <code>main</code>:
 </p>
 
-<pre class="example" id="orgc52eb81">
-A --- B --- C         main
-      \
-       \-- D          feature
-</pre>
-
 <div class="org-src-container">
-<pre class="src src-sh">git log --pretty --oneline
+<pre class="src src-sh">git rebase main feat-2
 </pre>
 </div>
 
 <div class="results">#+RESULTS:</div><pre class="example">
-02cbe96 Add D
-081fb12 Add C
-81d13ca Add B
-334a6b5 Add A
+Current branch feat-2 is up to date.
 </pre>
 
 
 <div class="org-src-container">
-<pre class="src src-sh">git checkout main
-git rebase --onto 81d13ca 081fb12
+<pre class="src src-sh" id="org68ab231">gitdot --png
 </pre>
 </div>
 
-<div class="org-src-container">
-<pre class="src src-sh">git log -a --pretty --oneline
-</pre>
-</div>
 
-<div class="results">#+RESULTS:</div><pre class="example">
-7308a79 Add D
-81d13ca Add B
-334a6b5 Add A
-</pre>
-
-
-
-<figure id="org4d5fdc1">
-<img src="../img/RebaseAncestor.png" alt="RebaseAncestor.png">
+<figure id="orgb001f58">
+<img src="../img/RebaseToAncestor2.png" alt="RebaseToAncestor2.png">
 
 </figure>
 
+<p>
+Nothing happens, because a rebase replays commits onto the new base, and in
+this case that would just replay <code>feat-1</code> and <code>feat-2</code> on <code>main</code> again
+(changing nothing).
+</p>
+
+<p>
+Solution: only reply the <code>feat-2</code> commit on <code>man</code> using <code>--onto</code> with a
+cut-point!
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">git rebase --onto main feat-1
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh" id="org61ee2ee">gitdot --png
+</pre>
+</div>
+
+
+<figure id="org1b50799">
+<img src="../img/RebaseToAncestor3.png" alt="RebaseToAncestor3.png">
+
+</figure>
 
 <p>
 The form of the command is <code>git rebase --onto &lt;Target&gt; [&lt;Cut Point&gt;]</code>.
-</p>
-
-<p>
-In this case, a <code>git rebase --onto B</code> doesn't do anything, because <code>D</code> is
-already based on <code>B</code>. The optional <code>&lt;Upstream&gt;</code> argument serves as the <i>cut
-point</i>. We take everything after <code>C</code> and stick it on to <code>B</code>.
 </p>
 </div>
 </div>
@@ -315,7 +319,7 @@ point</i>. We take everything after <code>C</code> and stick it on to <code>B</c
 Given
 </p>
 
-<pre class="example" id="orgebba1b0">
+<pre class="example" id="orge109ffd">
 A --- B --- C          main
  \
   \-- D                topic
@@ -325,7 +329,7 @@ A --- B --- C          main
 And you want to rebase <code>topic</code> to <code>B</code> like so:
 </p>
 
-<pre class="example" id="org31431eb">
+<pre class="example" id="org5f7e6b9">
 A --- B --- C          main
        \
         \-- D          topic

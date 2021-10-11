@@ -11,9 +11,6 @@
      git symbolic-ref HEAD
    #+end_src
 
-   #+RESULTS:
-   : refs/heads/main
-
    Unless you are in a detached HEAD state, in which case HEAD points directly
    to a commit.
 
@@ -23,15 +20,9 @@
      git rev-parse HEAD
    #+end_src
 
-   #+RESULTS:
-   : 30946349acf16c90c4e892403fefa9e8ed04ee75
-
    #+begin_src sh
      git log -1 --format='%H'
    #+end_src
-
-   #+RESULTS:
-   : 30946349acf16c90c4e892403fefa9e8ed04ee75
 
 ** Branches
 
@@ -40,9 +31,6 @@
    #+begin_src sh
      git rev-parse --abbrev-ref HEAD
    #+end_src
-
-   #+RESULTS:
-   : main
 
 * I Accidentally...
 
@@ -88,80 +76,84 @@
 
 ** Rebase to Ancestor
 
-   Adapted from [[https://stackoverflow.com/a/55049181/340613][this SO answer]].
+   You created a sequence of commits, =feat-1= and =feat-2=, and you realize
+   "hrmm, =feat-2= doesn't actually depend on =feat-1=. I could make both of
+   these PRs against =main= at the same time."
 
    Given a repo like this:
 
-   #+header: :dir (gitdot-tempdir "readme1") :mkdirp yes
-   #+begin_src bash :results output
+   #+header: :dir (org-outline-tempdir 'empty) :mkdirp yes
+   #+begin_src bash :results silent
      git init
      touch A && git add A && git commit -m "A"
      touch B && git add B && git commit -m "B"
+     git checkout -b "feat-1"
      touch C && git add C && git commit -m "C"
+     git checkout -b "feat-2"
      touch D && git add D && git commit -m "D"
    #+end_src
 
-   #+NAME: ABCD
+   #+NAME: RebaseToAncestor1
    #+header: :results file :file-ext png
    #+header: :output-dir (expand-file-name "img" notes/project-directory)
-   #+begin_src sh :dir z :exports results
-     git2dot --png
+   #+header: :dir (org-outline-tempdir)
+   #+begin_src sh :exports both
+     gitdot --png
    #+end_src
 
-   #+RESULTS: ABCD
-   [[file:../img/ABCD.png]]
+   #+RESULTS: RebaseToAncestor1
+   [[file:../img/RebaseToAncestor1.png]]
 
-   And I want to rebase =D= to an ancestor =B= (I want =C= and =D= to be
-   siblings):
+   You want =feat-2= and =feat-1= to both be based off =main=. You can't just
+   rebase =feat-2= on =main=:
 
-   #+begin_example
-     A --- B --- C         main
-           \
-            \-- D          feature
-   #+end_example
-
-   #+begin_src sh :dir z :results output
-     git log --pretty --oneline
+   #+header: :dir (org-outline-tempdir)
+   #+begin_src sh
+     git checkout feat-2
+     git rebase main
    #+end_src
 
    #+RESULTS:
-   : 02cbe96 Add D
-   : 081fb12 Add C
-   : 81d13ca Add B
-   : 334a6b5 Add A
+   : Current branch feat-2 is up to date.
 
-   #+begin_src sh :dir z :results output
-     git checkout main
-     git rebase --onto 81d13ca 081fb12
-   #+end_src
-
-   #+RESULTS:
-
-   #+begin_src sh :dir z :results output
-     git log -a --pretty --oneline
-   #+end_src
-
-   #+RESULTS:
-   : 7308a79 Add D
-   : 81d13ca Add B
-   : 334a6b5 Add A
-
-   #+NAME: RebaseAncestor
+   #+NAME: RebaseToAncestor2
    #+header: :results file :file-ext png
    #+header: :output-dir (expand-file-name "img" notes/project-directory)
-   #+begin_src sh :dir z :exports results
-     git2dot --png
+   #+header: :dir (org-outline-tempdir)
+   #+begin_src sh :exports both
+     gitdot --png
    #+end_src
 
-   #+RESULTS: RebaseAncestor
-   [[file:../img/RebaseAncestor.png]]
+   #+RESULTS: RebaseToAncestor2
+   [[file:../img/RebaseToAncestor2.png]]
 
+   Nothing happens, because a rebase replays commits onto the new base, and in
+   this case that would just replay the =feat-1= and =feat-2= commits on =main=
+   again (changing nothing).
+
+   Solution: only reply the =feat-2= commit on =man= using =--onto= with a
+   cut-point!
+
+   #+header: :dir (org-outline-tempdir)
+   #+begin_src sh
+     git checkout feat-2
+     git rebase --onto main feat-1
+   #+end_src
+
+   #+RESULTS:
+
+   #+NAME: RebaseToAncestor3
+   #+header: :results file :file-ext png
+   #+header: :output-dir (expand-file-name "img" notes/project-directory)
+   #+header: :dir (org-outline-tempdir)
+   #+begin_src sh :exports both
+     gitdot --png
+   #+end_src
+
+   #+RESULTS: RebaseToAncestor3
+   [[file:../img/RebaseToAncestor3.png]]
 
    The form of the command is =git rebase --onto <Target> [<Cut Point>]=.
-
-   In this case, a =git rebase --onto B= doesn't do anything, because =D= is
-   already based on =B=. The optional =<Upstream>= argument serves as the /cut
-   point/. We take everything after =C= and stick it on to =B=.
 
 ** Rebase to Commit on Another Branch
 

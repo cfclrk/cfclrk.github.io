@@ -140,7 +140,7 @@ To print data structure, use <code>:results value pp</code>
 <div id="outline-container-org053834e" class="outline-3">
 <h3 id="org053834e"><a href="#org053834e">Single Hop</a></h3>
 <div class="outline-text-3" id="text-org053834e">
-<pre class="example" id="orgfc80995">
+<pre class="example" id="org96f0522">
 :dir /ssh:ec2-user@1.2.3.4:/
 </pre>
 </div>
@@ -149,7 +149,7 @@ To print data structure, use <code>:results value pp</code>
 <div id="outline-container-org31d8979" class="outline-3">
 <h3 id="org31d8979"><a href="#org31d8979">Double-Hop (Use a Bastion)</a></h3>
 <div class="outline-text-3" id="text-org31d8979">
-<pre class="example" id="org46d05c7">
+<pre class="example" id="orga6e3cec">
 :dir /ssh:ec2-user@1.2.3.4|ssh:ec2-user@10.192.1.2:/
 </pre>
 </div>
@@ -194,7 +194,7 @@ some kind of animal!
 Then set variables at the top of a file, and use something like:
 </p>
 
-<pre class="example" id="org0c84d80">
+<pre class="example" id="orgc65ebc1">
 #+begin_src bash :dir (host (getenv "HOST") (getenv "USER") "/home/ec2-user")
   pwd
 #+end_src

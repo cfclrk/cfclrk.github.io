@@ -370,17 +370,6 @@
   architecture: it is based on single-leader replication.
   #+end_quote
 
-** Create table with local secondary index
-
-   #+begin_src sh
-     aws dynamodb create-table \
-         --table-name MusicCollection2 \
-         --attribute-definitions AttributeName=Artist,AttributeType=S AttributeName=SongTitle,AttributeType=S AttributeName=Score,AttributeType=S \
-         --key-schema AttributeName=Artist,KeyType=HASH AttributeName=SongTitle,KeyType=RANGE \
-         --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 \
-         --local-secondary-indexes "IndexName=SuperCat,KeySchema=[{AttributeName=Artist,KeyType=HASH},{AttributeName=Score,KeyType=RANGE}],Projection={ProjectionType=KEYS_ONLY}"
-   #+end_src
-
 ** List Tables
 
    #+begin_src sh
@@ -389,14 +378,25 @@
 
 ** Delete Tables Like a Maniac
 
+   AWS allows you to delete have 10 =delete-table= operations running at a time.
+   We can create a pool of 10 processes and continuously pump =delete-table=
+   commands into it using =xargs=.
+
    #+begin_src sh
+     script=$(cat <<"EOF"
+     aws dynamodb delete-table --table-name {}
+     aws dynamodb wait table-not-exists --table-name {}
+     EOF
+     )
      echo ${tables[*]} \
-         | xargs -n 1 -P 10 -I {} sh -c \
-                 'aws dynamodb delete-table --table-name {} && aws dynamodb wait table-not-exists --table-name {}'
+         | xargs -n 1 -P 10 -I {} sh -c "$scrpt"
    #+end_src
 
    TODO: When I originally wrote this, I remember needing to add a =tr " " "\n"=
    or something for portability with Linux. Test this out again.
+
+   TODO: script used to be one command (using =&&=); test again after splitting
+   it into two commands.
 
 * EC2 AMIs
 
@@ -480,29 +480,11 @@
      aws ec2 describe-key-pairs | jq '.KeyPairs[]'
    #+end_src
 
-   #+RESULTS:
-   #+begin_example
-   {
-     "KeyPairId": "key-086cc980cd005be07",
-     "KeyFingerprint": "d2:51:6b:bd:8a:af:cd:91:23:7f:12:b8:c9:a9:ed:87",
-     "KeyName": "chrisclark",
-     "Tags": []
-   }
-   {
-     "KeyPairId": "key-0e4a6a6133dcfbff4",
-     "KeyFingerprint": "47:b3:fa:a0:72:c7:78:d2:6c:52:88:83:e1:b9:e1:59:79:2d:86:5c",
-     "KeyName": "test",
-     "Tags": []
-   }
-   #+end_example
-
 ** Delete
 
    #+begin_src sh :var KeyName="test"
      aws ec2 delete-key-pair --key-name $KeyName
    #+end_src
-
-   #+RESULTS:
 
 * EC2 Instance
 
@@ -537,7 +519,9 @@
    #+begin_src sh :var TagName="Project" TagValue="bps-ve-cloud"
      aws ec2 describe-instances \
          --filter "Name=tag:$TagName,Values=$TagValue" \
-         | jq -r '.Reservations[].Instances[].Tags[] | select(.Key == "Name") | .Value'
+         | jq -r '.Reservations[].Instances[].Tags[]
+                  | select(.Key == "Name")
+                  | .Value'
    #+end_src
 
    With a specific tag key and value
@@ -657,7 +641,10 @@
    #+begin_src sh
      aws elasticbeanstalk describe-configuration-options \
          | jq '.Options[]
-              | if .Namespace == "aws:autoscaling:launchconfiguration" then . else null end'
+               | if .Namespace == "aws:autoscaling:launchconfiguration"
+                 then .
+                 else null
+                 end'
    #+end_src
 
 * ElasticLoadBalancingV2
@@ -676,7 +663,8 @@
          | jq -r --arg DEPLOYMENT_NAME "$DEPLOYMENT_NAME" \
               '.LoadBalancers[]
                | select(.Type == "application")
-               | select(.LoadBalancerName | startswith($DEPLOYMENT_NAME))
+               | select(.LoadBalancerName
+               | startswith($DEPLOYMENT_NAME))
                | .DNSName'
    #+end_src
 
@@ -716,19 +704,24 @@
        "Version": "2012-10-17",
        "Statement": [{
          "Effect": "Allow",
-         "Action": ["secretsmanager:GetSecretValue", "secretsmanager:DescribeSecret"],
-         "Resource": ["arn:*:secretsmanager:*:*:secret:MySecret-??????"]
+         "Action": [
+           "secretsmanager:GetSecretValue",
+           "secretsmanager:DescribeSecret"
+         ],
+         "Resource": [
+           "arn:*:secretsmanager:*:*:secret:MySecret"
+         ]
        }]
      }'
    #+end_src
 
 ** Assume Role
 
+   #+NAME: RoleCreds
    #+begin_src sh
-     creds=$(aws sts assume-role --role-session-name foo --role-arn $RoleArn)
-     export AWS_ACCESS_KEY_ID=$(echo $creds | jq -r '.Credentials.AccessKeyId')
-     export AWS_SECRET_ACCESS_KEY=$(echo $creds | jq -r '.Credentials.SecretAccessKey')
-     export AWS_SESSION_TOKEN=$(echo $creds | jq -r '.Credentials.SessionToken')
+     aws sts assume-role \
+         --role-session-name foo \
+         --role-arn $RoleArn
    #+end_src
 
 ** List Instance Profiles
@@ -751,16 +744,10 @@
 
 * Kinesis
 
-** Delete all Kinesis Streams
+** Delete Stream
 
-   #+begin_src fish
-     for region in $regions
-         set streams (aws --region $region kinesis list-streams | jq -r ".StreamNames[]")
-         for stream in $streams
-             echo $region $stream
-             aws --region $region kinesis delete-stream --stream-name $stream
-         end
-     end
+   #+begin_src sh
+     aws kinesis delete-stream --stream-name $stream
    #+end_src
 
 * Kinesis Firehose
@@ -769,7 +756,8 @@
 
    #+begin_src sh :var StreamName=""
      aws firehose describe-delivery-stream \
-         --delivery-stream-name $StreamName | jq '.DeliveryStreamDescription'
+         --delivery-stream-name $StreamName \
+         | jq '.DeliveryStreamDescription'
    #+end_src
 
 ** Update Stream S3 Destination Bucket
@@ -779,7 +767,8 @@
          --delivery-stream-name $StreamName \
          --current-delivery-stream-version-id 1 \
          --destination-id destinationId-000000000001 \
-         --extended-s3-destination-update BucketARN=arn:aws:s3:::$BucketName
+         --extended-s3-destination-update \
+         BucketARN=arn:aws:s3:::$BucketName
    #+end_src
 
    THEN:
@@ -811,7 +800,8 @@
 
    Invoke from a bastion host:
 
-   #+begin_src bash :results output :dir /ssh:ec2-user@13.59.90.58|ssh:ec2-user@10.192.20.15:/
+   #+header: :dir /ssh:ec2-user@13.59.90.58|ssh:ec2-user@10.192.20.15:/
+   #+begin_src bash :results output
      /usr/local/bin/aws lambda invoke \
       --cli-binary-format raw-in-base64-out \
       --function-name cf-Hello-World \
@@ -854,7 +844,9 @@
 ** Container Image: Run Interactively
 
    #+begin_src sh
-     docker run -it --rm --entrypoint bash public.ecr.aws/lambda/python:3.8
+     docker run -it --rm \
+            --entrypoint bash \
+            public.ecr.aws/lambda/python:3.8
    #+end_src
 
 * Organizations
@@ -876,19 +868,6 @@
         && afplay /tmp/speech_standard.mp3
   #+end_src
 
-** Say something from insultgenerator.org
-
-   Doesn't work anymore. Get a new insult.
-
-   #+begin_src sh
-     aws polly synthesize-speech \
-         --output-format mp3 \
-         --text "$(curl insultgenerator.org | sed -n '/wrap/,/div/ { s/<[^>]*>//g; p; } ')" \
-         --voice-id Justin \
-         /tmp/speech.mp3 \
-         && afplay /tmp/speech.mp3
-   #+end_src
-
 * Reosurce Access Manager (RAM)
 
   This needs to be run against the AWS account that actually owns the shared
@@ -907,7 +886,9 @@
    #+begin_src sh :var HostedZoneName="irondev.io" :cache yes
      aws route53 list-hosted-zones \
          | jq -r --arg name $HostedZoneName \
-              '.HostedZones[] | select(.Name == $name + ".") | .Id'
+              '.HostedZones[]
+               | select(.Name == $name + ".")
+               | .Id'
    #+end_src
 
 ** List Records for a HostedZone
@@ -1012,21 +993,16 @@
          --key $Key ./foo
    #+end_src
 
-** Get bucket policy
+** Get Bucket Policy
 
    #+begin_src sh :var BucketName="" :results output
      aws s3api get-bucket-policy --bucket $BucketName \
          | jq -r '.Policy' | jq
    #+end_src
 
-** Delete Buckets with Name
+** Delete Buckets
 
-   #+begin_src sh :var Name="foo"
-     buckets=$(aws s3api list-buckets | jq -r .Buckets[].Name  | grep $Name)
-     for bucket in $buckets; do
-         aws s3 rb s3://$bucket
-     done
-   #+end_src
+   I have functions for this in [[https://github.com/cfclrk/dotfiles/blob/master/dotfiles/.functions.fish][dotfiles/.functions.fish]].
 
 * SNS
 
@@ -1052,19 +1028,6 @@
         --name $name
   #+end_src
 
-  #+RESULTS:
-  : {
-  :     "Parameter": {
-  :         "Name": "/aws/service/eks/optimized-ami/1.19/amazon-linux-2/recommended/image_id",
-  :         "Type": "String",
-  :         "Value": "ami-060e387c4a24f2434",
-  :         "Version": 21,
-  :         "LastModifiedDate": "2021-09-20T15:30:15.219000-04:00",
-  :         "ARN": "arn:aws:ssm:us-east-2::parameter/aws/service/eks/optimized-ami/1.19/amazon-linux-2/recommended/image_id",
-  :         "DataType": "text"
-  :     }
-  : }
-
 * SSO
 
 ** Token
@@ -1084,5 +1047,3 @@
          --access-token "$SsoToken" \
          | jq -c '.accountList[] | {accountName, accountId}'
    #+end_src
-
-   #+RESULTS:
