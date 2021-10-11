@@ -33,7 +33,7 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org897ff5e">Account</a></li>
+<li><a href="#org35ec56b">Account</a></li>
 <li><a href="#orgf9a3f98">IP Address Ranges</a>
 <ul>
 <li><a href="#org0b6e61a">Get Region of IP</a></li>
@@ -49,7 +49,7 @@
 <li><a href="#org6622052">ACM</a>
 <ul>
 <li><a href="#orga9d8f9e">List</a></li>
-<li><a href="#org95494f6">Describe</a></li>
+<li><a href="#org6fe8131">Describe</a></li>
 <li><a href="#org8db7a20">Get Certificate</a></li>
 <li><a href="#org671ce03">Get Certificate PEM File</a></li>
 </ul>
@@ -77,7 +77,6 @@
 </li>
 <li><a href="#orgd24a04e">DynamoDB</a>
 <ul>
-<li><a href="#orgacfaa2c">Create table with local secondary index</a></li>
 <li><a href="#orgc6af328">List Tables</a></li>
 <li><a href="#org415b9af">Delete Tables Like a Maniac</a></li>
 </ul>
@@ -93,7 +92,7 @@
 <li><a href="#orgbc46786">EC2 KeyPairs</a>
 <ul>
 <li><a href="#org4a97cf6">Create</a></li>
-<li><a href="#org6fe8131">Describe</a></li>
+<li><a href="#org85c3685">Describe</a></li>
 <li><a href="#org878c9b3">Delete</a></li>
 </ul>
 </li>
@@ -166,7 +165,7 @@
 <li><a href="#org5dd2021">IMDS</a></li>
 <li><a href="#orgd48228e">Kinesis</a>
 <ul>
-<li><a href="#orga6e1781">Delete all Kinesis Streams</a></li>
+<li><a href="#org29a60bd">Delete Stream</a></li>
 </ul>
 </li>
 <li><a href="#org3913fd2">Kinesis Firehose</a>
@@ -185,11 +184,7 @@
 </ul>
 </li>
 <li><a href="#orgdeb7bd1">Organizations</a></li>
-<li><a href="#org9b7dd05">Polly</a>
-<ul>
-<li><a href="#org12e8d54">Say something from insultgenerator.org</a></li>
-</ul>
-</li>
+<li><a href="#org9b7dd05">Polly</a></li>
 <li><a href="#orgc6df4eb">Reosurce Access Manager (RAM)</a></li>
 <li><a href="#org4f8f023">Route53</a>
 <ul>
@@ -221,8 +216,8 @@
 <li><a href="#org89bd061">Canonical ID</a></li>
 <li><a href="#orgef945d6">List objects in bucket</a></li>
 <li><a href="#org5109ba4">Get Object</a></li>
-<li><a href="#orgf55987f">Get bucket policy</a></li>
-<li><a href="#org413d757">Delete Buckets with Name</a></li>
+<li><a href="#orge29acab">Get Bucket Policy</a></li>
+<li><a href="#org2794a96">Delete Buckets</a></li>
 </ul>
 </li>
 <li><a href="#org30ded50">SNS</a>
@@ -246,15 +241,15 @@
 </div>
 </nav>
 
-<div id="outline-container-org897ff5e" class="outline-2">
-<h2 id="org897ff5e"><a href="#org897ff5e">Account</a></h2>
-<div class="outline-text-2" id="text-org897ff5e">
+<div id="outline-container-org35ec56b" class="outline-2">
+<h2 id="org35ec56b"><a href="#org35ec56b">Account</a></h2>
+<div class="outline-text-2" id="text-org35ec56b">
 <p>
 Account number:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="org5bb68c1">aws sts get-caller-identity --query <span style="color: #98be65;">'Account'</span> --output text
+<pre class="src src-sh" id="org897ff5e">aws sts get-caller-identity --query <span style="color: #98be65;">'Account'</span> --output text
 </pre>
 </div>
 </div>
@@ -425,7 +420,7 @@ Get the number of VPCs in each region the slow and simple way.
 </pre>
 </div>
 
-<pre class="example" id="orge4d0197">
+<pre class="example" id="org84052ca">
 eu-north-1: 0
 ap-south-1: 0
 eu-west-3: 0
@@ -462,7 +457,7 @@ syntax for th length of the <code>$regions</code> array.
 </pre>
 </div>
 
-<pre class="example" id="orgd96fc99">
+<pre class="example" id="org8094782">
 us-east-1: 2
 ca-central-1: 0
 us-east-2: 2
@@ -499,9 +494,9 @@ ap-southeast-1: 1
 </div>
 </div>
 
-<div id="outline-container-org95494f6" class="outline-3">
-<h3 id="org95494f6"><a href="#org95494f6">Describe</a></h3>
-<div class="outline-text-3" id="text-org95494f6">
+<div id="outline-container-org6fe8131" class="outline-3">
+<h3 id="org6fe8131"><a href="#org6fe8131">Describe</a></h3>
+<div class="outline-text-3" id="text-org6fe8131">
 <div class="org-src-container">
 <pre class="src src-sh">aws acm describe-certificate --certificate-arn $<span style="color: #dcaeea;">CertArn</span>
 </pre>
@@ -741,21 +736,6 @@ architecture: it is based on single-leader replication.
 </blockquote>
 </div>
 
-<div id="outline-container-orgacfaa2c" class="outline-3">
-<h3 id="orgacfaa2c"><a href="#orgacfaa2c">Create table with local secondary index</a></h3>
-<div class="outline-text-3" id="text-orgacfaa2c">
-<div class="org-src-container">
-<pre class="src src-sh">aws dynamodb create-table <span style="color: #98be65;">\</span>
-    --table-name MusicCollection2 <span style="color: #98be65;">\</span>
-    --attribute-definitions <span style="color: #dcaeea;">AttributeName</span>=Artist,<span style="color: #dcaeea;">AttributeType</span>=S <span style="color: #dcaeea;">AttributeName</span>=SongTitle,<span style="color: #dcaeea;">AttributeType</span>=S <span style="color: #dcaeea;">AttributeName</span>=Score,<span style="color: #dcaeea;">AttributeType</span>=S <span style="color: #98be65;">\</span>
-    --key-schema <span style="color: #dcaeea;">AttributeName</span>=Artist,<span style="color: #dcaeea;">KeyType</span>=HASH <span style="color: #dcaeea;">AttributeName</span>=SongTitle,<span style="color: #dcaeea;">KeyType</span>=RANGE <span style="color: #98be65;">\</span>
-    --provisioned-throughput <span style="color: #dcaeea;">ReadCapacityUnits</span>=5,<span style="color: #dcaeea;">WriteCapacityUnits</span>=5 <span style="color: #98be65;">\</span>
-    --local-secondary-indexes <span style="color: #98be65;">"IndexName=SuperCat,KeySchema=[{AttributeName=Artist,KeyType=HASH},{AttributeName=Score,KeyType=RANGE}],Projection={ProjectionType=KEYS_ONLY}"</span>
-</pre>
-</div>
-</div>
-</div>
-
 <div id="outline-container-orgc6af328" class="outline-3">
 <h3 id="orgc6af328"><a href="#orgc6af328">List Tables</a></h3>
 <div class="outline-text-3" id="text-orgc6af328">
@@ -769,16 +749,31 @@ architecture: it is based on single-leader replication.
 <div id="outline-container-org415b9af" class="outline-3">
 <h3 id="org415b9af"><a href="#org415b9af">Delete Tables Like a Maniac</a></h3>
 <div class="outline-text-3" id="text-org415b9af">
+<p>
+AWS allows you to delete have 10 <code>delete-table</code> operations running at a time.
+We can create a pool of 10 processes and continuously pump <code>delete-table</code>
+commands into it using <code>xargs</code>.
+</p>
+
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #c678dd;">echo</span> ${<span style="color: #dcaeea;">tables</span>[*]} <span style="color: #98be65;">\</span>
-    | xargs -n 1 -P 10 -I {} sh -c <span style="color: #98be65;">\</span>
-            <span style="color: #98be65;">'aws dynamodb delete-table --table-name {} &amp;&amp; aws dynamodb wait table-not-exists --table-name {}'</span>
+<pre class="src src-sh"><span style="color: #dcaeea;">script</span>=$(cat &lt;&lt;<span style="color: #98be65;">"EOF"</span>
+<span style="color: #98be65;">aws dynamodb delete-table --table-name {}</span>
+<span style="color: #98be65;">aws dynamodb wait table-not-exists --table-name {}</span>
+<span style="color: #98be65;">EOF</span>
+)
+<span style="color: #c678dd;">echo</span> ${<span style="color: #dcaeea;">tables</span>[*]} <span style="color: #98be65;">\</span>
+    | xargs -n 1 -P 10 -I {} sh -c <span style="color: #98be65;">"$scrpt"</span>
 </pre>
 </div>
 
 <p>
 TODO: When I originally wrote this, I remember needing to add a <code>tr " " "\n"</code>
 or something for portability with Linux. Test this out again.
+</p>
+
+<p>
+TODO: script used to be one command (using <code>&amp;&amp;</code>); test again after splitting
+it into two commands.
 </p>
 </div>
 </div>
@@ -897,28 +892,13 @@ chmod 0600 $<span style="color: #dcaeea;">KeyFile</span>
 </div>
 </div>
 
-<div id="outline-container-org6fe8131" class="outline-3">
-<h3 id="org6fe8131"><a href="#org6fe8131">Describe</a></h3>
-<div class="outline-text-3" id="text-org6fe8131">
+<div id="outline-container-org85c3685" class="outline-3">
+<h3 id="org85c3685"><a href="#org85c3685">Describe</a></h3>
+<div class="outline-text-3" id="text-org85c3685">
 <div class="org-src-container">
 <pre class="src src-sh">aws ec2 describe-key-pairs | jq <span style="color: #98be65;">'.KeyPairs[]'</span>
 </pre>
 </div>
-
-<pre class="example" id="orgc638b42">
-{
-  "KeyPairId": "key-086cc980cd005be07",
-  "KeyFingerprint": "d2:51:6b:bd:8a:af:cd:91:23:7f:12:b8:c9:a9:ed:87",
-  "KeyName": "chrisclark",
-  "Tags": []
-}
-{
-  "KeyPairId": "key-0e4a6a6133dcfbff4",
-  "KeyFingerprint": "47:b3:fa:a0:72:c7:78:d2:6c:52:88:83:e1:b9:e1:59:79:2d:86:5c",
-  "KeyName": "test",
-  "Tags": []
-}
-</pre>
 </div>
 </div>
 
@@ -985,7 +965,9 @@ With just a specific Tag key:
 <div class="org-src-container">
 <pre class="src src-sh">aws ec2 describe-instances <span style="color: #98be65;">\</span>
     --filter <span style="color: #98be65;">"Name=tag:$TagName,Values=$TagValue"</span> <span style="color: #98be65;">\</span>
-    | jq -r <span style="color: #98be65;">'.Reservations[].Instances[].Tags[] | select(.Key == "Name") | .Value'</span>
+    | jq -r <span style="color: #98be65;">'.Reservations[].Instances[].Tags[]</span>
+<span style="color: #98be65;">             | select(.Key == "Name")</span>
+<span style="color: #98be65;">             | .Value'</span>
 </pre>
 </div>
 
@@ -1180,7 +1162,10 @@ aws eks update-kubeconfig <span style="color: #98be65;">\</span>
 <div class="org-src-container">
 <pre class="src src-sh">aws elasticbeanstalk describe-configuration-options <span style="color: #98be65;">\</span>
     | jq <span style="color: #98be65;">'.Options[]</span>
-<span style="color: #98be65;">         | if .Namespace == "aws:autoscaling:launchconfiguration" then . else null end'</span>
+<span style="color: #98be65;">          | if .Namespace == "aws:autoscaling:launchconfiguration"</span>
+<span style="color: #98be65;">            then .</span>
+<span style="color: #98be65;">            else null</span>
+<span style="color: #98be65;">            end'</span>
 </pre>
 </div>
 </div>
@@ -1210,7 +1195,8 @@ aws eks update-kubeconfig <span style="color: #98be65;">\</span>
     | jq -r --arg DEPLOYMENT_NAME <span style="color: #98be65;">"$DEPLOYMENT_NAME"</span> <span style="color: #98be65;">\</span>
          <span style="color: #98be65;">'.LoadBalancers[]</span>
 <span style="color: #98be65;">          | select(.Type == "application")</span>
-<span style="color: #98be65;">          | select(.LoadBalancerName | startswith($DEPLOYMENT_NAME))</span>
+<span style="color: #98be65;">          | select(.LoadBalancerName</span>
+<span style="color: #98be65;">          | startswith($DEPLOYMENT_NAME))</span>
 <span style="color: #98be65;">          | .DNSName'</span>
 </pre>
 </div>
@@ -1274,8 +1260,13 @@ GlobalAccelerator is only in <code>us-west-2</code>, so set the region explicitl
 <span style="color: #98be65;">  "Version": "2012-10-17",</span>
 <span style="color: #98be65;">  "Statement": [{</span>
 <span style="color: #98be65;">    "Effect": "Allow",</span>
-<span style="color: #98be65;">    "Action": ["secretsmanager:GetSecretValue", "secretsmanager:DescribeSecret"],</span>
-<span style="color: #98be65;">    "Resource": ["arn:*:secretsmanager:*:*:secret:MySecret-??????"]</span>
+<span style="color: #98be65;">    "Action": [</span>
+<span style="color: #98be65;">      "secretsmanager:GetSecretValue",</span>
+<span style="color: #98be65;">      "secretsmanager:DescribeSecret"</span>
+<span style="color: #98be65;">    ],</span>
+<span style="color: #98be65;">    "Resource": [</span>
+<span style="color: #98be65;">      "arn:*:secretsmanager:*:*:secret:MySecret"</span>
+<span style="color: #98be65;">    ]</span>
 <span style="color: #98be65;">  }]</span>
 <span style="color: #98be65;">}'</span>
 </pre>
@@ -1287,10 +1278,9 @@ GlobalAccelerator is only in <code>us-west-2</code>, so set the region explicitl
 <h3 id="orgdefdcf3"><a href="#orgdefdcf3">Assume Role</a></h3>
 <div class="outline-text-3" id="text-orgdefdcf3">
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #dcaeea;">creds</span>=$(aws sts assume-role --role-session-name foo --role-arn $<span style="color: #dcaeea;">RoleArn</span>)
-<span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">AWS_ACCESS_KEY_ID</span>=$(<span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">creds</span> | jq -r <span style="color: #98be65;">'.Credentials.AccessKeyId'</span>)
-<span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">AWS_SECRET_ACCESS_KEY</span>=$(<span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">creds</span> | jq -r <span style="color: #98be65;">'.Credentials.SecretAccessKey'</span>)
-<span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">AWS_SESSION_TOKEN</span>=$(<span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">creds</span> | jq -r <span style="color: #98be65;">'.Credentials.SessionToken'</span>)
+<pre class="src src-sh" id="orgd7788cd">aws sts assume-role <span style="color: #98be65;">\</span>
+    --role-session-name foo <span style="color: #98be65;">\</span>
+    --role-arn $<span style="color: #dcaeea;">RoleArn</span>
 </pre>
 </div>
 </div>
@@ -1332,17 +1322,11 @@ GlobalAccelerator is only in <code>us-west-2</code>, so set the region explicitl
 <h2 id="orgd48228e"><a href="#orgd48228e">Kinesis</a></h2>
 <div class="outline-text-2" id="text-orgd48228e">
 </div>
-<div id="outline-container-orga6e1781" class="outline-3">
-<h3 id="orga6e1781"><a href="#orga6e1781">Delete all Kinesis Streams</a></h3>
-<div class="outline-text-3" id="text-orga6e1781">
+<div id="outline-container-org29a60bd" class="outline-3">
+<h3 id="org29a60bd"><a href="#org29a60bd">Delete Stream</a></h3>
+<div class="outline-text-3" id="text-org29a60bd">
 <div class="org-src-container">
-<pre class="src src-fish"><span style="color: #51afef;">for</span> <span style="color: #c678dd;">region</span> in <span style="color: #98be65;">$</span><span style="color: #dcaeea;">regions</span>
-    <span style="color: #51afef;">set</span> <span style="color: #dcaeea;">streams</span> (<span style="color: #c678dd;">aws</span> --region <span style="color: #98be65;">$</span><span style="color: #dcaeea;">region</span> kinesis list-streams <span style="color: #51afef; font-weight: bold;">|</span> <span style="color: #c678dd;">jq</span> -r <span style="color: #98be65;">".StreamNames[]"</span>)
-    <span style="color: #51afef;">for</span> <span style="color: #c678dd;">stream</span> in <span style="color: #98be65;">$</span><span style="color: #dcaeea;">streams</span>
-        <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">$</span><span style="color: #dcaeea;">region</span> <span style="color: #98be65;">$</span><span style="color: #dcaeea;">stream</span>
-        <span style="color: #c678dd;">aws</span> --region <span style="color: #98be65;">$</span><span style="color: #dcaeea;">region</span> kinesis delete-stream --stream-name <span style="color: #98be65;">$</span><span style="color: #dcaeea;">stream</span>
-    <span style="color: #51afef;">end</span>
-<span style="color: #51afef;">end</span>
+<pre class="src src-sh">aws kinesis delete-stream --stream-name $<span style="color: #dcaeea;">stream</span>
 </pre>
 </div>
 </div>
@@ -1358,7 +1342,8 @@ GlobalAccelerator is only in <code>us-west-2</code>, so set the region explicitl
 <div class="outline-text-3" id="text-org2d6cfe5">
 <div class="org-src-container">
 <pre class="src src-sh">aws firehose describe-delivery-stream <span style="color: #98be65;">\</span>
-    --delivery-stream-name $<span style="color: #dcaeea;">StreamName</span> | jq <span style="color: #98be65;">'.DeliveryStreamDescription'</span>
+    --delivery-stream-name $<span style="color: #dcaeea;">StreamName</span> <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.DeliveryStreamDescription'</span>
 </pre>
 </div>
 </div>
@@ -1372,7 +1357,8 @@ GlobalAccelerator is only in <code>us-west-2</code>, so set the region explicitl
     --delivery-stream-name $<span style="color: #dcaeea;">StreamName</span> <span style="color: #98be65;">\</span>
     --current-delivery-stream-version-id 1 <span style="color: #98be65;">\</span>
     --destination-id destinationId-000000000001 <span style="color: #98be65;">\</span>
-    --extended-s3-destination-update <span style="color: #dcaeea;">BucketARN</span>=arn:aws:s3:::$<span style="color: #dcaeea;">BucketName</span>
+    --extended-s3-destination-update <span style="color: #98be65;">\</span>
+    <span style="color: #dcaeea;">BucketARN</span>=arn:aws:s3:::$<span style="color: #dcaeea;">BucketName</span>
 </pre>
 </div>
 
@@ -1483,7 +1469,9 @@ With payload file:
 <h3 id="org5121dcc"><a href="#org5121dcc">Container Image: Run Interactively</a></h3>
 <div class="outline-text-3" id="text-org5121dcc">
 <div class="org-src-container">
-<pre class="src src-sh">docker run -it --rm --entrypoint bash public.ecr.aws/lambda/python:3.8
+<pre class="src src-sh">docker run -it --rm <span style="color: #98be65;">\</span>
+       --entrypoint bash <span style="color: #98be65;">\</span>
+       public.ecr.aws/lambda/python:3.8
 </pre>
 </div>
 </div>
@@ -1514,25 +1502,6 @@ With payload file:
 </pre>
 </div>
 </div>
-
-<div id="outline-container-org12e8d54" class="outline-3">
-<h3 id="org12e8d54"><a href="#org12e8d54">Say something from insultgenerator.org</a></h3>
-<div class="outline-text-3" id="text-org12e8d54">
-<p>
-Doesn't work anymore. Get a new insult.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">aws polly synthesize-speech <span style="color: #98be65;">\</span>
-    --output-format mp3 <span style="color: #98be65;">\</span>
-    --text <span style="color: #98be65;">"$(curl insultgenerator.org | sed -n '/wrap/,/div/ { s/&lt;[^&gt;]*&gt;//g; p; } ')"</span> <span style="color: #98be65;">\</span>
-    --voice-id Justin <span style="color: #98be65;">\</span>
-    /tmp/speech.mp3 <span style="color: #98be65;">\</span>
-    &amp;&amp; afplay /tmp/speech.mp3
-</pre>
-</div>
-</div>
-</div>
 </div>
 
 <div id="outline-container-orgc6df4eb" class="outline-2">
@@ -1561,7 +1530,9 @@ account.
 <div class="org-src-container">
 <pre class="src src-sh" id="org874ca33">aws route53 list-hosted-zones <span style="color: #98be65;">\</span>
     | jq -r --arg name $<span style="color: #dcaeea;">HostedZoneName</span> <span style="color: #98be65;">\</span>
-         <span style="color: #98be65;">'.HostedZones[] | select(.Name == $name + ".") | .Id'</span>
+         <span style="color: #98be65;">'.HostedZones[]</span>
+<span style="color: #98be65;">          | select(.Name == $name + ".")</span>
+<span style="color: #98be65;">          | .Id'</span>
 </pre>
 </div>
 </div>
@@ -1733,9 +1704,9 @@ so you need to request all objects and then sort them.
 </div>
 </div>
 
-<div id="outline-container-orgf55987f" class="outline-3">
-<h3 id="orgf55987f"><a href="#orgf55987f">Get bucket policy</a></h3>
-<div class="outline-text-3" id="text-orgf55987f">
+<div id="outline-container-orge29acab" class="outline-3">
+<h3 id="orge29acab"><a href="#orge29acab">Get Bucket Policy</a></h3>
+<div class="outline-text-3" id="text-orge29acab">
 <div class="org-src-container">
 <pre class="src src-sh">aws s3api get-bucket-policy --bucket $<span style="color: #dcaeea;">BucketName</span> <span style="color: #98be65;">\</span>
     | jq -r <span style="color: #98be65;">'.Policy'</span> | jq
@@ -1744,16 +1715,12 @@ so you need to request all objects and then sort them.
 </div>
 </div>
 
-<div id="outline-container-org413d757" class="outline-3">
-<h3 id="org413d757"><a href="#org413d757">Delete Buckets with Name</a></h3>
-<div class="outline-text-3" id="text-org413d757">
-<div class="org-src-container">
-<pre class="src src-sh"><span style="color: #dcaeea;">buckets</span>=$(aws s3api list-buckets | jq -r .Buckets[].Name  | grep $<span style="color: #dcaeea;">Name</span>)
-<span style="color: #51afef;">for</span> bucket<span style="color: #51afef;"> in</span> $<span style="color: #dcaeea;">buckets</span>; <span style="color: #51afef;">do</span>
-    aws s3 rb s3://$<span style="color: #dcaeea;">bucket</span>
-<span style="color: #51afef;">done</span>
-</pre>
-</div>
+<div id="outline-container-org2794a96" class="outline-3">
+<h3 id="org2794a96"><a href="#org2794a96">Delete Buckets</a></h3>
+<div class="outline-text-3" id="text-org2794a96">
+<p>
+I have functions for this in <a href="https://github.com/cfclrk/dotfiles/blob/master/dotfiles/.functions.fish">dotfiles/.functions.fish</a>.
+</p>
 </div>
 </div>
 </div>
@@ -1797,20 +1764,6 @@ so you need to request all objects and then sort them.
     --name $<span style="color: #dcaeea;">name</span>
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-{
-    "Parameter": {
-        "Name": "/aws/service/eks/optimized-ami/1.19/amazon-linux-2/recommended/image_id",
-        "Type": "String",
-        "Value": "ami-060e387c4a24f2434",
-        "Version": 21,
-        "LastModifiedDate": "2021-09-20T15:30:15.219000-04:00",
-        "ARN": "arn:aws:ssm:us-east-2::parameter/aws/service/eks/optimized-ami/1.19/amazon-linux-2/recommended/image_id",
-        "DataType": "text"
-    }
-}
-</pre>
 </div>
 </div>
 

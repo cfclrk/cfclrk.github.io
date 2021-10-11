@@ -63,11 +63,7 @@
 </ul>
 </li>
 <li><a href="#orga560843">Project Root Dir</a></li>
-<li><a href="#org72f87c1">Tools and Resources</a>
-<ul>
-<li><a href="#org74075c8">git-quick-stats</a></li>
-</ul>
-</li>
+<li><a href="#org72f87c1">Tools and Resources</a></li>
 </ul>
 </div>
 </nav>
@@ -88,11 +84,6 @@ HEAD is usually a symbolic ref, meaning it points to another ref.
 </pre>
 </div>
 
-<div class="results">#+RESULTS:</div><pre class="example">
-refs/heads/main
-</pre>
-
-
 <p>
 Unless you are in a detached HEAD state, in which case HEAD points directly
 to a commit.
@@ -107,19 +98,10 @@ Some ways to print the SHA of the HEAD ref:
 </pre>
 </div>
 
-<div class="results">#+RESULTS:</div><pre class="example">
-30946349acf16c90c4e892403fefa9e8ed04ee75
-</pre>
-
-
 <div class="org-src-container">
 <pre class="src src-sh">git log -1 --format=<span style="color: #98be65;">'%H'</span>
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-30946349acf16c90c4e892403fefa9e8ed04ee75
-</pre>
 </div>
 </div>
 
@@ -134,10 +116,6 @@ Current branch name:
 <pre class="src src-sh">git rev-parse --abbrev-ref HEAD
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-main
-</pre>
 </div>
 </div>
 </div>
@@ -248,7 +226,7 @@ touch D &amp;&amp; git add D &amp;&amp; git commit -m <span style="color: #98be6
 </div>
 
 
-<figure id="orgc719780">
+<figure id="org59e86dc">
 <img src="../img/RebaseToAncestor1.png" alt="RebaseToAncestor1.png">
 
 </figure>
@@ -259,7 +237,8 @@ rebase <code>feat-2</code> on <code>main</code>:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">git rebase main feat-2
+<pre class="src src-sh">git checkout feat-2
+git rebase main
 </pre>
 </div>
 
@@ -274,15 +253,15 @@ Current branch feat-2 is up to date.
 </div>
 
 
-<figure id="orgb001f58">
+<figure id="org163d696">
 <img src="../img/RebaseToAncestor2.png" alt="RebaseToAncestor2.png">
 
 </figure>
 
 <p>
 Nothing happens, because a rebase replays commits onto the new base, and in
-this case that would just replay <code>feat-1</code> and <code>feat-2</code> on <code>main</code> again
-(changing nothing).
+this case that would just replay the <code>feat-1</code> and <code>feat-2</code> commits on <code>main</code>
+again (changing nothing).
 </p>
 
 <p>
@@ -291,7 +270,8 @@ cut-point!
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">git rebase --onto main feat-1
+<pre class="src src-sh">git checkout feat-2
+git rebase --onto main feat-1
 </pre>
 </div>
 
@@ -301,7 +281,7 @@ cut-point!
 </div>
 
 
-<figure id="org1b50799">
+<figure id="org4a392e9">
 <img src="../img/RebaseToAncestor3.png" alt="RebaseToAncestor3.png">
 
 </figure>
@@ -319,7 +299,7 @@ The form of the command is <code>git rebase --onto &lt;Target&gt; [&lt;Cut Point
 Given
 </p>
 
-<pre class="example" id="orge109ffd">
+<pre class="example" id="orge7459db">
 A --- B --- C          main
  \
   \-- D                topic
@@ -329,7 +309,7 @@ A --- B --- C          main
 And you want to rebase <code>topic</code> to <code>B</code> like so:
 </p>
 
-<pre class="example" id="org5f7e6b9">
+<pre class="example" id="orgff00f67">
 A --- B --- C          main
        \
         \-- D          topic
@@ -364,7 +344,7 @@ commit).
 </p>
 
 <p>
-First, make the commit and mark it as a <code>fixup</code> for the offending commit:
+First, make this new commit and mark it as a <code>fixup</code> of the offending commit:
 </p>
 
 <div class="org-src-container">
@@ -450,15 +430,9 @@ If HEAD is a tag, this will print the tag name. If not, it prints nothing.
 <div id="outline-container-org72f87c1" class="outline-2">
 <h2 id="org72f87c1"><a href="#org72f87c1">Tools and Resources</a></h2>
 <div class="outline-text-2" id="text-org72f87c1">
-</div>
-<div id="outline-container-org74075c8" class="outline-3">
-<h3 id="org74075c8"><a href="#org74075c8">git-quick-stats</a></h3>
-<div class="outline-text-3" id="text-org74075c8">
-<p>
-Bash script that shows cool stats of git repos.
-<a href="https://github.com/arzzen/git-quick-stats/blob/master/git-quick-stats">https://github.com/arzzen/git-quick-stats/blob/master/git-quick-stats</a>
-</p>
-</div>
+<ul class="org-ul">
+<li><a href="https://github.com/arzzen/git-quick-stats/blob/master/git-quick-stats">git-quick-stats</a>: Bash script that shows cool stats of git repos.</li>
+</ul>
 </div>
 </div>
 </div>

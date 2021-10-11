@@ -190,7 +190,7 @@
   previous commit is not the last commit (so you can't just =--amend= the last
   commit).
 
-  First, make the commit and mark it as a =fixup= for the offending commit:
+  First, make this new commit and mark it as a =fixup= of the offending commit:
 
   #+begin_src sh
     git commit --fixup fb2f677
@@ -242,7 +242,4 @@
 
 * Tools and Resources
 
-** git-quick-stats
-
-   Bash script that shows cool stats of git repos.
-   https://github.com/arzzen/git-quick-stats/blob/master/git-quick-stats
+  - [[https://github.com/arzzen/git-quick-stats/blob/master/git-quick-stats][git-quick-stats]]: Bash script that shows cool stats of git repos.
