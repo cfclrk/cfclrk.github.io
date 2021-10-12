@@ -322,12 +322,7 @@
 
 ** Spec Files
 
-   Spec files are documented [[https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html][here]].
-
-   #+begin_src sh
-     curl https://dnwj8swjjbsbt.cloudfront.net/latest/CloudFormationResourceSpecification.zip \
-          -o us_east_2.zip
-   #+end_src
+   URLs are documented [[https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html][here]].
 
 * CloudWatch
 
@@ -422,7 +417,9 @@
      aws ec2 describe-images \
          --owners $Account \
          --filters "Name=state,Values=available" \
-         | jq -r '.Images | sort_by(.CreationDate) | last | .ImageId'
+         | jq -r '.Images
+                  | sort_by(.CreationDate)
+                  | last | .ImageId'
    #+end_src
 
 ** Delete AMIs and EBS Snapshots
@@ -631,7 +628,8 @@
 ** List ReplicationGroups
 
    #+begin_src sh
-     aws elasticache describe-replication-groups | jq '.ReplicationGroups'
+     aws elasticache describe-replication-groups =
+         | jq '.ReplicationGroups'
    #+end_src
 
 * ElasticBeanstalk
@@ -675,21 +673,24 @@
 ** List Accelerators
 
    #+begin_src sh
-     aws --region us-west-2 globalaccelerator \
-         list-accelerators | jq '.Accelerators[]'
+     aws --region us-west-2 \
+         globalaccelerator list-accelerators \
+         | jq '.Accelerators[]'
    #+end_src
 
 ** List Listeners
 
    #+begin_src sh :var AcceleratorArn=""
-     aws --region us-west-2 globalaccelerator \
-         list-listeners --accelerator-arn $AcceleratorArn
+     aws --region us-west-2 \
+         globalaccelerator list-listeners \
+         --accelerator-arn $AcceleratorArn
    #+end_src
 
 ** IPs
 
    #+begin_src sh
-     aws --region us-west-2 globalaccelerator list-accelerators \
+     aws --region us-west-2 \
+         globalaccelerator list-accelerators \
          | jq -r '.Accelerators[].IpSets[].IpAddresses[]'
    #+end_src
 
@@ -982,7 +983,9 @@
    #+begin_src sh :var BucketName="" :results output
      aws s3api list-objects-v2 \
          --bucket $BucketName \
-         | jq -r '.Contents | sort_by(.LastModified) | reverse | first | .Key'
+         | jq -r '.Contents
+                  | sort_by(.LastModified)
+                  | reverse | first | .Key'
    #+end_src
 
 ** Get Object

@@ -1,14 +1,13 @@
-#+TITLE: Python Development Setup (Emacs and MacOS)
+#+TITLE: Python Development Setup
 #+SETUPFILE: ../setup.org
 
-* Problem
+* The Problem
 
   You want to have several versions of Python installed and easily switch
   between them.
 
-  In my personal opinion, the best solution for managing python virtual
-  environments on Linux/MacOS is =pyenv=, both for installing Python versions
-  and for creating Python virtual environments.
+  In my opinion the best solution on Linux/MacOS is =pyenv=, both for installing
+  Python versions and for creating Python virtual environments.
 
 * Solution: =pyenv=
 
@@ -28,6 +27,16 @@
    #+begin_src sh
      eval "$(pyenv init -)"
      eval "$(pyenv virtualenv-init -)"
+   #+end_src
+
+   Or, with fish shell:
+
+   #+begin_src fish
+     if command -v pyenv > /dev/null
+         pyenv init --path | source
+         pyenv init - | source
+         pyenv virtualenv-init - | source
+     end
    #+end_src
 
    Remember to source your =~/.profile= (or log out and log back in) for the
@@ -53,17 +62,16 @@
 ** Project Workflow
 
    The Pythonista makes a habit of using a separate Python virtual environment
-   for every project. This helps to ensure that you specify your dependencies
-   correctly in every project. If you have two projects, "fooproject" and
-   "barproject", and each uses python 3.5.0, you can set up a virtual
-   environment for each one like this:
+   for every project. Say you have two projects: "fooproject" and "barproject",
+   and each uses python 3.5.0. You can set up a virtual environment for each one
+   like this:
 
    $ cd /path/to/fooproject
-   $ pyenv virtualenv 3.5.0 fooproj
+   $ pyenv virtualenv 3.5.0 fooproject
    $ pyenv local fooproj
 
    $ cd /path/to/barproject
-   $ pyenv virtualenv 3.5.0 barproj
+   $ pyenv virtualenv 3.5.0 barproject
    $ pyenv local barproj
 
    Each time you =cd= into one of those projects, =pyenv= activates the correct
@@ -78,6 +86,9 @@
 
    venv is part of the standard library. It is the lowest common denominator for
    creating virtual environments.
+
+   =venv= is for creating virtual environments; it does not attempt to address
+   the problem of how to install multiple versions of python.
 
    Problems:
 

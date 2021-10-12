@@ -1,4 +1,6 @@
-#+TITLE: cons is weird
+#+TITLE: cons
+
+cons is weird.
 
 =cons= means "construct"
 
@@ -33,3 +35,10 @@
 
 #+RESULTS:
 : ((1 . 2) (3 . 4))
+
+#+begin_src emacs-lisp
+  (cons 1 (cons 2 (cons 3 4)))
+#+end_src
+
+#+RESULTS:
+: (1 2 3 . 4)

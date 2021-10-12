@@ -33,7 +33,7 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org35ec56b">Account</a></li>
+<li><a href="#orgf226c03">Account</a></li>
 <li><a href="#orgf9a3f98">IP Address Ranges</a>
 <ul>
 <li><a href="#org0b6e61a">Get Region of IP</a></li>
@@ -49,7 +49,7 @@
 <li><a href="#org6622052">ACM</a>
 <ul>
 <li><a href="#orga9d8f9e">List</a></li>
-<li><a href="#org6fe8131">Describe</a></li>
+<li><a href="#org85c3685">Describe</a></li>
 <li><a href="#org8db7a20">Get Certificate</a></li>
 <li><a href="#org671ce03">Get Certificate PEM File</a></li>
 </ul>
@@ -92,7 +92,7 @@
 <li><a href="#orgbc46786">EC2 KeyPairs</a>
 <ul>
 <li><a href="#org4a97cf6">Create</a></li>
-<li><a href="#org85c3685">Describe</a></li>
+<li><a href="#orgba58c12">Describe</a></li>
 <li><a href="#org878c9b3">Delete</a></li>
 </ul>
 </li>
@@ -241,15 +241,15 @@
 </div>
 </nav>
 
-<div id="outline-container-org35ec56b" class="outline-2">
-<h2 id="org35ec56b"><a href="#org35ec56b">Account</a></h2>
-<div class="outline-text-2" id="text-org35ec56b">
+<div id="outline-container-orgf226c03" class="outline-2">
+<h2 id="orgf226c03"><a href="#orgf226c03">Account</a></h2>
+<div class="outline-text-2" id="text-orgf226c03">
 <p>
 Account number:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="org897ff5e">aws sts get-caller-identity --query <span style="color: #98be65;">'Account'</span> --output text
+<pre class="src src-sh" id="org35ec56b">aws sts get-caller-identity --query <span style="color: #98be65;">'Account'</span> --output text
 </pre>
 </div>
 </div>
@@ -420,7 +420,7 @@ Get the number of VPCs in each region the slow and simple way.
 </pre>
 </div>
 
-<pre class="example" id="org84052ca">
+<pre class="example" id="org349a25d">
 eu-north-1: 0
 ap-south-1: 0
 eu-west-3: 0
@@ -457,7 +457,7 @@ syntax for th length of the <code>$regions</code> array.
 </pre>
 </div>
 
-<pre class="example" id="org8094782">
+<pre class="example" id="org8e21b60">
 us-east-1: 2
 ca-central-1: 0
 us-east-2: 2
@@ -494,9 +494,9 @@ ap-southeast-1: 1
 </div>
 </div>
 
-<div id="outline-container-org6fe8131" class="outline-3">
-<h3 id="org6fe8131"><a href="#org6fe8131">Describe</a></h3>
-<div class="outline-text-3" id="text-org6fe8131">
+<div id="outline-container-org85c3685" class="outline-3">
+<h3 id="org85c3685"><a href="#org85c3685">Describe</a></h3>
+<div class="outline-text-3" id="text-org85c3685">
 <div class="org-src-container">
 <pre class="src src-sh">aws acm describe-certificate --certificate-arn $<span style="color: #dcaeea;">CertArn</span>
 </pre>
@@ -664,14 +664,8 @@ List exports that start with a string:
 <h3 id="orgbfffa28"><a href="#orgbfffa28">Spec Files</a></h3>
 <div class="outline-text-3" id="text-orgbfffa28">
 <p>
-Spec files are documented <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html">here</a>.
+URLs are documented <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html">here</a>.
 </p>
-
-<div class="org-src-container">
-<pre class="src src-sh">curl https://dnwj8swjjbsbt.cloudfront.net/latest/CloudFormationResourceSpecification.zip <span style="color: #98be65;">\</span>
-     -o us_east_2.zip
-</pre>
-</div>
 </div>
 </div>
 </div>
@@ -815,7 +809,9 @@ All of this account's AMIs with a particular Name tag:
 <pre class="src src-sh">aws ec2 describe-images <span style="color: #98be65;">\</span>
     --owners $<span style="color: #dcaeea;">Account</span> <span style="color: #98be65;">\</span>
     --filters <span style="color: #98be65;">"Name=state,Values=available"</span> <span style="color: #98be65;">\</span>
-    | jq -r <span style="color: #98be65;">'.Images | sort_by(.CreationDate) | last | .ImageId'</span>
+    | jq -r <span style="color: #98be65;">'.Images</span>
+<span style="color: #98be65;">             | sort_by(.CreationDate)</span>
+<span style="color: #98be65;">             | last | .ImageId'</span>
 </pre>
 </div>
 </div>
@@ -892,9 +888,9 @@ chmod 0600 $<span style="color: #dcaeea;">KeyFile</span>
 </div>
 </div>
 
-<div id="outline-container-org85c3685" class="outline-3">
-<h3 id="org85c3685"><a href="#org85c3685">Describe</a></h3>
-<div class="outline-text-3" id="text-org85c3685">
+<div id="outline-container-orgba58c12" class="outline-3">
+<h3 id="orgba58c12"><a href="#orgba58c12">Describe</a></h3>
+<div class="outline-text-3" id="text-orgba58c12">
 <div class="org-src-container">
 <pre class="src src-sh">aws ec2 describe-key-pairs | jq <span style="color: #98be65;">'.KeyPairs[]'</span>
 </pre>
@@ -1145,7 +1141,8 @@ aws eks update-kubeconfig <span style="color: #98be65;">\</span>
 <h3 id="org63e1a8c"><a href="#org63e1a8c">List ReplicationGroups</a></h3>
 <div class="outline-text-3" id="text-org63e1a8c">
 <div class="org-src-container">
-<pre class="src src-sh">aws elasticache describe-replication-groups | jq <span style="color: #98be65;">'.ReplicationGroups'</span>
+<pre class="src src-sh">aws elasticache describe-replication-groups =
+    | jq <span style="color: #98be65;">'.ReplicationGroups'</span>
 </pre>
 </div>
 </div>
@@ -1216,8 +1213,9 @@ GlobalAccelerator is only in <code>us-west-2</code>, so set the region explicitl
 <h3 id="orga1fb30d"><a href="#orga1fb30d">List Accelerators</a></h3>
 <div class="outline-text-3" id="text-orga1fb30d">
 <div class="org-src-container">
-<pre class="src src-sh">aws --region us-west-2 globalaccelerator <span style="color: #98be65;">\</span>
-    list-accelerators | jq <span style="color: #98be65;">'.Accelerators[]'</span>
+<pre class="src src-sh">aws --region us-west-2 <span style="color: #98be65;">\</span>
+    globalaccelerator list-accelerators <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.Accelerators[]'</span>
 </pre>
 </div>
 </div>
@@ -1227,8 +1225,9 @@ GlobalAccelerator is only in <code>us-west-2</code>, so set the region explicitl
 <h3 id="orgbd138d9"><a href="#orgbd138d9">List Listeners</a></h3>
 <div class="outline-text-3" id="text-orgbd138d9">
 <div class="org-src-container">
-<pre class="src src-sh">aws --region us-west-2 globalaccelerator <span style="color: #98be65;">\</span>
-    list-listeners --accelerator-arn $<span style="color: #dcaeea;">AcceleratorArn</span>
+<pre class="src src-sh">aws --region us-west-2 <span style="color: #98be65;">\</span>
+    globalaccelerator list-listeners <span style="color: #98be65;">\</span>
+    --accelerator-arn $<span style="color: #dcaeea;">AcceleratorArn</span>
 </pre>
 </div>
 </div>
@@ -1238,7 +1237,8 @@ GlobalAccelerator is only in <code>us-west-2</code>, so set the region explicitl
 <h3 id="org12897ab"><a href="#org12897ab">IPs</a></h3>
 <div class="outline-text-3" id="text-org12897ab">
 <div class="org-src-container">
-<pre class="src src-sh">aws --region us-west-2 globalaccelerator list-accelerators <span style="color: #98be65;">\</span>
+<pre class="src src-sh">aws --region us-west-2 <span style="color: #98be65;">\</span>
+    globalaccelerator list-accelerators <span style="color: #98be65;">\</span>
     | jq -r <span style="color: #98be65;">'.Accelerators[].IpSets[].IpAddresses[]'</span>
 </pre>
 </div>
@@ -1686,7 +1686,9 @@ so you need to request all objects and then sort them.
 <div class="org-src-container">
 <pre class="src src-sh">aws s3api list-objects-v2 <span style="color: #98be65;">\</span>
     --bucket $<span style="color: #dcaeea;">BucketName</span> <span style="color: #98be65;">\</span>
-    | jq -r <span style="color: #98be65;">'.Contents | sort_by(.LastModified) | reverse | first | .Key'</span>
+    | jq -r <span style="color: #98be65;">'.Contents</span>
+<span style="color: #98be65;">             | sort_by(.LastModified)</span>
+<span style="color: #98be65;">             | reverse | first | .Key'</span>
 </pre>
 </div>
 </div>
