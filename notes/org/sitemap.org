@@ -8,6 +8,7 @@
 - [[file:docker.org][Docker]]
 - [[file:fish.org][Fish]]
 - [[file:git.org][Git]]
+- [[file:git_log.org][Git Log]]
 - [[file:go.org][Go]]
 - [[file:jmespath.org][JMESPath]]
 - [[file:jwt.org][JSON Web Tokens]]

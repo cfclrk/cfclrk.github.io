@@ -74,7 +74,7 @@
 
 * Rebasing
 
-** Rebase to Ancestor
+** To Ancestor
 
    You created a sequence of commits, =feat-1= and =feat-2=, and you realize
    "hrmm, =feat-2= doesn't actually depend on =feat-1=. I could make both of
@@ -132,7 +132,8 @@
    again (changing nothing).
 
    Solution: only reply the =feat-2= commit on =man= using =--onto= with a
-   cut-point!
+   cut-point! The form of the command is =git rebase --onto <Target> <Cut
+   Point>=.
 
    #+header: :dir (org-outline-tempdir)
    #+begin_src sh
@@ -153,29 +154,38 @@
    #+RESULTS: RebaseToAncestor3
    [[file:../img/RebaseToAncestor3.png]]
 
-   The form of the command is =git rebase --onto <Target> [<Cut Point>]=.
+** To Specific Commit
 
-** Rebase to Commit on Another Branch
+   Given a repo like this:
 
-   Given
+   #+header: :dir (org-outline-tempdir 'empty) :mkdirp yes
+   #+begin_src bash :results silent
+     git init
+     touch A && git add A && git commit -m "A"
+     git checkout -b "feat-1"
+     touch B && git add B && git commit -m "B"
+     git checkout main
+     touch C && git add C && git commit -m "C"
+     touch D && git add D && git commit -m "D"
+   #+end_src
 
-   #+begin_example
-     A --- B --- C          main
-      \
-       \-- D                topic
-   #+end_example
+   #+NAME: RebaseToCommit1
+   #+header: :results file :file-ext png
+   #+header: :output-dir (expand-file-name "img" notes/project-directory)
+   #+header: :dir (org-outline-tempdir)
+   #+begin_src sh :exports both
+     gitdot --png --msg
+   #+end_src
 
-   And you want to rebase =topic= to =B= like so:
+   #+RESULTS: RebaseToCommit1
+   [[file:../img/RebaseToCommit1.png]]
 
-   #+begin_example
-     A --- B --- C          main
-            \
-             \-- D          topic
-   #+end_example
+   Rebasing =feat-1= on =main= would make =B= point to =D=. But say we wanted to
+   rebase =B= on to =C= instead?
 
    #+begin_src sh
-     git checkout topic
-     git rebase --onto B
+     git checkout feat-1
+     git rebase --onto C
    #+end_src
 
 * List Tags Matching Pattern
@@ -211,6 +221,8 @@
   #+begin_src sh
     git show $(git rev-list --max-parents=0 HEAD)
   #+end_src
+
+  #+RESULTS:
 
   #+begin_src sh
     git log --reverse

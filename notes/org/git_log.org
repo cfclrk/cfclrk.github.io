@@ -1,0 +1,80 @@
+#+TITLE: Git Log
+#+SETUPFILE: ../setup.org
+
+* Revision Range
+
+  #+header: :dir (org-outline-tempdir 'empty) :mkdirp yes
+  #+begin_src sh :results silent
+    git init -b foo
+    touch A && git add A && git commit -m "A"
+    touch B && git add B && git commit -m "B"
+
+    git checkout -b baz
+    git checkout -b bar
+    touch C && git add C && git commit -m "C"
+    touch D && git add D && git commit -m "D"
+
+    git checkout foo
+    touch E && git add E && git commit -m "E"
+    touch F && git add F && git commit -m "F"
+  #+end_src
+
+  #+NAME: Range1
+  #+header: :results file :file-ext png
+  #+header: :output-dir (f-join (f-parent (f-this-file)) "examples")
+  #+header: :dir (org-outline-tempdir)
+  #+begin_src sh :exports both
+    gitdot --png --msg
+  #+end_src
+
+  #+RESULTS: Range1
+  [[file:examples/Range1.png]]
+
+  #+NAME: Range2
+  #+header: :dir (org-outline-tempdir)
+  #+begin_src sh :exports both :results output
+    git log foo bar ^baz
+  #+end_src
+
+  #+RESULTS: Range2
+  : commit 602324372bd8336b6b0a017411b1cda26928c80b
+  : Author: Chris Clark <cfclrk@gmail.com>
+  : Date:   Tue Oct 12 05:08:07 2021 -0400
+  :
+  :     F
+  :
+  : commit 91d3e6df6430b6941312f023276431698a5bd664
+  : Author: Chris Clark <cfclrk@gmail.com>
+  : Date:   Tue Oct 12 05:08:07 2021 -0400
+  :
+  :     D
+  :
+  : commit 7fe5fbdaaef26951eaadd84fc855065002e944fe
+  : Author: Chris Clark <cfclrk@gmail.com>
+  : Date:   Tue Oct 12 05:08:07 2021 -0400
+  :
+  :     E
+  :
+  : commit 6232832ac71956876873c7361d7ee67980425eb9
+  : Author: Chris Clark <cfclrk@gmail.com>
+  : Date:   Tue Oct 12 05:08:07 2021 -0400
+  :
+  :     C
+
+  #+NAME: readme2
+  #+header: :results file :file-ext png
+  #+header: :output-dir (f-join (f-parent (f-this-file)) "examples")
+  #+header: :dir (org-outline-tempdir)
+  #+begin_src sh :exports both
+    gitdot --png --msg --log-paths foo bar ^baz
+  #+end_src
+
+means "list all the commits which are reachable from foo or bar, but not from
+baz".
+
+A special notation =<commit1>..<commit2>= can be used as a short-hand for
+=^<commit1> <commit2>=. For example, either of the following may be used
+interchangeably:
+
+git log origin..HEAD
+git log HEAD ^origin

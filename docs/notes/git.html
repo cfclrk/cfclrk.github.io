@@ -49,8 +49,8 @@
 </li>
 <li><a href="#orgd06b233">Rebasing</a>
 <ul>
-<li><a href="#org1d6e0d1">Rebase to Ancestor</a></li>
-<li><a href="#org72822f1">Rebase to Commit on Another Branch</a></li>
+<li><a href="#orged48c97">To Ancestor</a></li>
+<li><a href="#org74a0a41">To Specific Commit</a></li>
 </ul>
 </li>
 <li><a href="#org8e7c2e5">List Tags Matching Pattern</a></li>
@@ -196,9 +196,9 @@ remote/branch-name.</li>
 <h2 id="orgd06b233"><a href="#orgd06b233">Rebasing</a></h2>
 <div class="outline-text-2" id="text-orgd06b233">
 </div>
-<div id="outline-container-org1d6e0d1" class="outline-3">
-<h3 id="org1d6e0d1"><a href="#org1d6e0d1">Rebase to Ancestor</a></h3>
-<div class="outline-text-3" id="text-org1d6e0d1">
+<div id="outline-container-orged48c97" class="outline-3">
+<h3 id="orged48c97"><a href="#orged48c97">To Ancestor</a></h3>
+<div class="outline-text-3" id="text-orged48c97">
 <p>
 You created a sequence of commits, <code>feat-1</code> and <code>feat-2</code>, and you realize
 "hrmm, <code>feat-2</code> doesn't actually depend on <code>feat-1</code>. I could make both of
@@ -226,7 +226,7 @@ touch D &amp;&amp; git add D &amp;&amp; git commit -m <span style="color: #98be6
 </div>
 
 
-<figure id="org59e86dc">
+<figure id="org52a3ef7">
 <img src="../img/RebaseToAncestor1.png" alt="RebaseToAncestor1.png">
 
 </figure>
@@ -253,7 +253,7 @@ Current branch feat-2 is up to date.
 </div>
 
 
-<figure id="org163d696">
+<figure id="orgeda3613">
 <img src="../img/RebaseToAncestor2.png" alt="RebaseToAncestor2.png">
 
 </figure>
@@ -266,7 +266,8 @@ again (changing nothing).
 
 <p>
 Solution: only reply the <code>feat-2</code> commit on <code>man</code> using <code>--onto</code> with a
-cut-point!
+cut-point! The form of the command is <code>git rebase --onto &lt;Target&gt; &lt;Cut
+   Point&gt;</code>.
 </p>
 
 <div class="org-src-container">
@@ -281,43 +282,50 @@ git rebase --onto main feat-1
 </div>
 
 
-<figure id="org4a392e9">
+<figure id="org8fc08dd">
 <img src="../img/RebaseToAncestor3.png" alt="RebaseToAncestor3.png">
+
+</figure>
+</div>
+</div>
+
+<div id="outline-container-org74a0a41" class="outline-3">
+<h3 id="org74a0a41"><a href="#org74a0a41">To Specific Commit</a></h3>
+<div class="outline-text-3" id="text-org74a0a41">
+<p>
+Given a repo like this:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">git init
+touch A &amp;&amp; git add A &amp;&amp; git commit -m <span style="color: #98be65;">"A"</span>
+git checkout -b <span style="color: #98be65;">"feat-1"</span>
+touch B &amp;&amp; git add B &amp;&amp; git commit -m <span style="color: #98be65;">"B"</span>
+git checkout main
+touch C &amp;&amp; git add C &amp;&amp; git commit -m <span style="color: #98be65;">"C"</span>
+touch D &amp;&amp; git add D &amp;&amp; git commit -m <span style="color: #98be65;">"D"</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh" id="org5a63538">gitdot --png --msg
+</pre>
+</div>
+
+
+<figure id="orgf73fb92">
+<img src="../img/RebaseToCommit1.png" alt="RebaseToCommit1.png">
 
 </figure>
 
 <p>
-The form of the command is <code>git rebase --onto &lt;Target&gt; [&lt;Cut Point&gt;]</code>.
+Rebasing <code>feat-1</code> on <code>main</code> would make <code>B</code> point to <code>D</code>. But say we wanted to
+rebase <code>B</code> on to <code>C</code> instead?
 </p>
-</div>
-</div>
-
-<div id="outline-container-org72822f1" class="outline-3">
-<h3 id="org72822f1"><a href="#org72822f1">Rebase to Commit on Another Branch</a></h3>
-<div class="outline-text-3" id="text-org72822f1">
-<p>
-Given
-</p>
-
-<pre class="example" id="orge7459db">
-A --- B --- C          main
- \
-  \-- D                topic
-</pre>
-
-<p>
-And you want to rebase <code>topic</code> to <code>B</code> like so:
-</p>
-
-<pre class="example" id="orgff00f67">
-A --- B --- C          main
-       \
-        \-- D          topic
-</pre>
 
 <div class="org-src-container">
-<pre class="src src-sh">git checkout topic
-git rebase --onto B
+<pre class="src src-sh">git checkout feat-1
+git rebase --onto C
 </pre>
 </div>
 </div>

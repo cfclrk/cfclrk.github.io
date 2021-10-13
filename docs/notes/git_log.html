@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Git Log</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Git Log</h1>
+</header><nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgabea8e1">Revision Range</a></li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-orgabea8e1" class="outline-2">
+<h2 id="orgabea8e1"><a href="#orgabea8e1">Revision Range</a></h2>
+<div class="outline-text-2" id="text-orgabea8e1">
+<div class="org-src-container">
+<pre class="src src-sh">git init -b foo
+touch A &amp;&amp; git add A &amp;&amp; git commit -m <span style="color: #98be65;">"A"</span>
+touch B &amp;&amp; git add B &amp;&amp; git commit -m <span style="color: #98be65;">"B"</span>
+
+git checkout -b baz
+git checkout -b bar
+touch C &amp;&amp; git add C &amp;&amp; git commit -m <span style="color: #98be65;">"C"</span>
+touch D &amp;&amp; git add D &amp;&amp; git commit -m <span style="color: #98be65;">"D"</span>
+
+git checkout foo
+touch E &amp;&amp; git add E &amp;&amp; git commit -m <span style="color: #98be65;">"E"</span>
+touch F &amp;&amp; git add F &amp;&amp; git commit -m <span style="color: #98be65;">"F"</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh" id="org7bb50da">gitdot --png --msg
+</pre>
+</div>
+
+
+<figure id="org5f3ba1f">
+<img src="examples/Range1.png" alt="Range1.png">
+
+</figure>
+
+<div class="org-src-container">
+<pre class="src src-sh" id="org47d0a3f">git log foo bar ^baz
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+commit 602324372bd8336b6b0a017411b1cda26928c80b
+Author: Chris Clark &lt;cfclrk@gmail.com&gt;
+Date:   Tue Oct 12 05:08:07 2021 -0400
+
+    F
+
+commit 91d3e6df6430b6941312f023276431698a5bd664
+Author: Chris Clark &lt;cfclrk@gmail.com&gt;
+Date:   Tue Oct 12 05:08:07 2021 -0400
+
+    D
+
+commit 7fe5fbdaaef26951eaadd84fc855065002e944fe
+Author: Chris Clark &lt;cfclrk@gmail.com&gt;
+Date:   Tue Oct 12 05:08:07 2021 -0400
+
+    E
+
+commit 6232832ac71956876873c7361d7ee67980425eb9
+Author: Chris Clark &lt;cfclrk@gmail.com&gt;
+Date:   Tue Oct 12 05:08:07 2021 -0400
+
+    C
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-sh" id="orgec7c9cc">gitdot --png --msg --log-paths foo bar ^baz
+</pre>
+</div>
+
+<p>
+means "list all the commits which are reachable from foo or bar, but not from
+baz".
+</p>
+
+<p>
+A special notation <code>&lt;commit1&gt;..&lt;commit2&gt;</code> can be used as a short-hand for
+<code>^&lt;commit1&gt; &lt;commit2&gt;</code>. For example, either of the following may be used
+interchangeably:
+</p>
+
+<p>
+git log origin..HEAD
+git log HEAD ^origin
+</p>
+</div>
+</div>
+</div>
+</body>
+</html>
