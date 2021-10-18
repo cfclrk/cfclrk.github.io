@@ -1,8 +1,11 @@
 #+TITLE: Dap Mode
 #+SETUPFILE: ../setup.org
 
+* How To Python
 
-* Debug
+  - Ensure [[https://github.com/microsoft/debugpy][debugpy]] is installed (=pip install debugpy=) in the virtual
+    environment. I install this by default in new virtual environments (see:
+    [[https://github.com/cfclrk/dotfiles/blob/master/.pyenv/default_packages][.pyenv/default_packages]]).
 
   In source file, move point somewhere you want a breakpoint, and run
   =M-x dap-breakpoint-toggle=
@@ -15,9 +18,12 @@
    You can jump forward or backward in the stack. Use =M-x
    dap-switch-stack-frame=, or click around in the "Debug Sessions" dap buffer.
 
+   TODO: How does this work? Does this only work in languages with first-class
+   continuations? How much program state is actually restored?
+
   - =dap-disconnect= Quit the debugging session
 
-** Rerun last
+** Rerun Last
 
    =dap=
 

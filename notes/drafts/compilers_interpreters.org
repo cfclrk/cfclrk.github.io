@@ -56,18 +56,25 @@
   Compilers need not only operate on "programs"; they might translate documents
   from one form to another. For example: pandoc.
 
-  An interpreter /executes/ code.
+  An interpreter also /executes/ code.
 
-  I've heard it said that the CPU is just the "lowest level interpreter". Not
-  sure I agree with that yet: "intepret" connotes some kind of translation
-  taking place. A binary specifically built for a certain CPU still needs a
-  bunch of stuff to actually execute on that CPU (fetched from disk,
-  instructions properly loaded to the right places one at a time, step through
-  executing ops with the registers). That's definitely a hard problem, but I
-  don't think that's what people mean when they talk about interpreters. That's
-  really more about CPU and OS implementation. Implementing an intepreter
-  doesn't include such things. We need to use different words for different
-  things.
+  From [[https://norvig.com/lispy.html][lispy]], Peter Norvig describes the process of execution like this:
+
+  #+begin_quote
+  The internal representation is then processed according to the /semantic
+  rules/ of the language, thereby carrying out the computation.
+  #+end_quote
+
+  One might say all languages are intepreted, and the CPU is just the "lowest
+  level interpreter". Not sure I agree with that: "intepret" connotes some kind
+  of translation taking place. A binary specifically built for a certain CPU
+  still needs a bunch of stuff to actually execute on that CPU (fetched from
+  disk, instructions properly loaded to the right places one at a time, step
+  through executing ops with the registers). That's definitely a hard problem,
+  but I don't think that's what people mean when they talk about interpreters.
+  That's really more about computer architecture and OS implementation.
+  Implementing an intepreter doesn't include such things. We need to use
+  different words for different things.
 
 * Kinds of Intepreters
 

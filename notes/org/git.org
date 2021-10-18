@@ -1,77 +1,6 @@
 #+TITLE: Git
 #+SETUPFILE: ../setup.org
 
-* Refs
-
-** HEAD
-
-   HEAD is usually a symbolic ref, meaning it points to another ref.
-
-   #+begin_src sh
-     git symbolic-ref HEAD
-   #+end_src
-
-   Unless you are in a detached HEAD state, in which case HEAD points directly
-   to a commit.
-
-   Some ways to print the SHA of the HEAD ref:
-
-   #+begin_src sh
-     git rev-parse HEAD
-   #+end_src
-
-   #+begin_src sh
-     git log -1 --format='%H'
-   #+end_src
-
-** Branches
-
-   Current branch name:
-
-   #+begin_src sh
-     git rev-parse --abbrev-ref HEAD
-   #+end_src
-
-* I Accidentally...
-
-** Commited to the Wrong Branch
-
-   You locally committed to =main= instead of =develop=, but you haven't pushed
-   the commit yet.
-
-   - Soft-reset main back to origin/develop
-   - The committed changes will now be staged
-   - Switch to develop branch
-   - Commit staged changes
-
-   #+begin_src sh
-     git reset --soft origin/develop
-   #+end_src
-
-** Rebased Remote Branch
-
-   You rebased, and then remembered that the branch you were on has already been
-   pushed to a remote repo. You shouldn't push this rebase!
-
-   - You need to return the current branch to where it was before the rebase.
-
-** Ammended Remote Commit
-
-   You ran a =git commit --ammend=, then realized you've already pushed the
-   commit you were ammending! You can't push the ammended commit! (You /can/,
-   but that would be rewriting history on the remote).
-
-   - Reset soft to =origin/<branch-name>=. Then the changes you just committed
-     will be staged. Now you can commit again as a new commit.
-
-** Committed Locally Before Pulling Remote
-
-   Somebody pushed changes to your branch while you were still committing
-   locally. Now your branch and the remote branch have diverged.
-
-   - Option 1: Merge remote into local. Just do a git merge of
-     remote/branch-name.
-
 * Rebasing
 
 ** To Ancestor
@@ -188,11 +117,45 @@
      git rebase --onto C
    #+end_src
 
-* List Tags Matching Pattern
+* I Accidentally...
 
-  #+begin_src sh
-    git tag --list "v*"
-  #+end_src
+** Commited to the Wrong Branch
+
+   You locally committed to =main= instead of =develop=, but you haven't pushed
+   the commit yet.
+
+   - Soft-reset main back to origin/develop
+   - The committed changes will now be staged
+   - Switch to develop branch
+   - Commit staged changes
+
+   #+begin_src sh
+     git reset --soft origin/develop
+   #+end_src
+
+** Rebased Remote Branch
+
+   You rebased, and then remembered that the branch you were on has already been
+   pushed to a remote repo. You shouldn't push this rebase!
+
+   - You need to return the current branch to where it was before the rebase.
+
+** Ammended Remote Commit
+
+   You ran a =git commit --ammend=, then realized you've already pushed the
+   commit you were ammending! You can't push the ammended commit! (You /can/,
+   but that would be rewriting history on the remote).
+
+   - Reset soft to =origin/<branch-name>=. Then the changes you just committed
+     will be staged. Now you can commit again as a new commit.
+
+** Committed Locally Before Pulling Remote
+
+   Somebody pushed changes to your branch while you were still committing
+   locally. Now your branch and the remote branch have diverged.
+
+   - Option 1: Merge remote into local. Just do a git merge of
+     remote/branch-name.
 
 * Fixup
 
@@ -213,6 +176,37 @@
   #+begin_src sh
     git rebase -i --squash ac5db87
   #+end_src
+
+* Refs
+
+** HEAD
+
+   HEAD is usually a symbolic ref, meaning it points to another ref.
+
+   #+begin_src sh
+     git symbolic-ref HEAD
+   #+end_src
+
+   Unless you are in a detached HEAD state, in which case HEAD points directly
+   to a commit.
+
+   Some ways to print the SHA of the HEAD ref:
+
+   #+begin_src sh
+     git rev-parse HEAD
+   #+end_src
+
+   #+begin_src sh
+     git log -1 --format='%H'
+   #+end_src
+
+** Branches
+
+   Current branch name:
+
+   #+begin_src sh
+     git rev-parse --abbrev-ref HEAD
+   #+end_src
 
 * First Commit
 
@@ -245,6 +239,12 @@
    #+begin_src sh
      git tag --points-at HEAD
    #+end_src
+
+** List Tags Matching Pattern
+
+  #+begin_src sh
+    git tag --list "v*"
+  #+end_src
 
 * Project Root Dir
 
