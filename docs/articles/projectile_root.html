@@ -204,16 +204,20 @@ determining the monorepo to be the "project". See it in action:
 
 <p>
 Yup &#x2013; it found the monorepo, not the subproject. To understand why this is,
-let's look at the source!
+let's look at <a href="https://github.com/bbatsov/projectile/blob/7f64570d3e6829d767d340c8584f3e4f3472ee81/projectile.el#L1124-L1129">the source</a>! Here it is, slightly reformatted:
 </p>
 
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">projectile-root-bottom-up</span> <span style="color: #c678dd;">(</span>dir <span style="color: #ECBE7B;">&amp;optional</span> list<span style="color: #c678dd;">)</span>
-  <span style="color: #83898d;">"Identify a project root in DIR by bottom-up search for files in LIST.</span>
-<span style="color: #83898d;">If LIST is nil, use `</span><span style="color: #a9a1e1;">projectile-project-root-files-bottom-up</span><span style="color: #83898d;">' instead.</span>
-<span style="color: #83898d;">Return the first (bottommost) matched directory or nil if not found."</span>
-  <span style="color: #c678dd;">(</span>cl-some <span style="color: #98be65;">(</span><span style="color: #51afef;">lambda</span> <span style="color: #a9a1e1;">(</span>name<span style="color: #a9a1e1;">)</span> <span style="color: #a9a1e1;">(</span>projectile-locate-dominating-file dir name<span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
-           <span style="color: #98be65;">(</span><span style="color: #51afef;">or</span> list projectile-project-root-files-bottom-up<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+  <span style="color: #83898d;">"Identify a project root in DIR by bottom-up search for</span>
+<span style="color: #83898d;">files in LIST.</span>
+
+<span style="color: #83898d;">If LIST is nil, use `</span><span style="color: #a9a1e1;">projectile-project-root-files-bottom-up</span><span style="color: #83898d;">'</span>
+<span style="color: #83898d;">instead. Return the first (bottommost) matched directory or nil</span>
+<span style="color: #83898d;">if not found."</span>
+  <span style="color: #c678dd;">(</span>cl-some
+   <span style="color: #98be65;">(</span><span style="color: #51afef;">lambda</span> <span style="color: #a9a1e1;">(</span>name<span style="color: #a9a1e1;">)</span> <span style="color: #a9a1e1;">(</span>projectile-locate-dominating-file dir name<span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
+   <span style="color: #98be65;">(</span><span style="color: #51afef;">or</span> list projectile-project-root-files-bottom-up<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
 
@@ -421,9 +425,8 @@ or <code>setup.py</code> in it.
 
 <p>
 We just need to add <code>setup.py</code> and <code>go.mod</code> to the list of marker files.
-While we're at it, let's add every other filename that might indicate a
-project root. Projectile already has a variable for this, documented in <a href="https://docs.projectile.mx/projectile/projects.html#file-markers">File
-markers</a>:
+While we're at it, let's add every other filename that indicates a project
+root. Projectile already has a variable for this, documented in <a href="https://docs.projectile.mx/projectile/projects.html#file-markers">File markers</a>:
 </p>
 
 <div class="org-src-container">
@@ -526,12 +529,14 @@ markers</a>:
 <p>
 Decent start, but it doesn't have <code>go.mod</code>, so we should add that. Might as
 well also add all the files in <code>projectile-project-root-files-bottom-up</code>
-(which has <code>.git</code>, etc).
+(which has <code>.git</code>, etc). I also add <code>requirements.txt</code>, which is a useful way
+for me to demarcate a small Python example (like a GitHub Gist) that maybe
+doesn't warrant a whole <code>setup.py</code>.
 </p>
 
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> my-project-root-files
-      <span style="color: #c678dd;">(</span>-concat '<span style="color: #98be65;">(</span><span style="color: #98be65;">"go.mod"</span><span style="color: #98be65;">)</span>
+      <span style="color: #c678dd;">(</span>-concat '<span style="color: #98be65;">(</span><span style="color: #98be65;">"go.mod"</span> <span style="color: #98be65;">"requirements.txt"</span><span style="color: #98be65;">)</span>
                projectile-project-root-files-bottom-up
                projectile-project-root-files<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
@@ -596,7 +601,7 @@ Define a variable with the marker files that indicate a project root.
 
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> my-project-root-files
-      <span style="color: #c678dd;">(</span>-concat '<span style="color: #98be65;">(</span><span style="color: #98be65;">"go.mod"</span><span style="color: #98be65;">)</span>
+      <span style="color: #c678dd;">(</span>-concat '<span style="color: #98be65;">(</span><span style="color: #98be65;">"go.mod"</span> <span style="color: #98be65;">"requirements.txt"</span><span style="color: #98be65;">)</span>
                projectile-project-root-files-bottom-up
                projectile-project-root-files<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>

@@ -120,15 +120,19 @@ nightmares). Here was the problem:
   : /tmp/notes/
 
   Yup -- it found the monorepo, not the subproject. To understand why this is,
-  let's look at the source!
+  let's look at [[https://github.com/bbatsov/projectile/blob/7f64570d3e6829d767d340c8584f3e4f3472ee81/projectile.el#L1124-L1129][the source]]! Here it is, slightly reformatted:
 
   #+begin_src emacs-lisp
     (defun projectile-root-bottom-up (dir &optional list)
-      "Identify a project root in DIR by bottom-up search for files in LIST.
-    If LIST is nil, use `projectile-project-root-files-bottom-up' instead.
-    Return the first (bottommost) matched directory or nil if not found."
-      (cl-some (lambda (name) (projectile-locate-dominating-file dir name))
-               (or list projectile-project-root-files-bottom-up)))
+      "Identify a project root in DIR by bottom-up search for
+    files in LIST.
+
+    If LIST is nil, use `projectile-project-root-files-bottom-up'
+    instead. Return the first (bottommost) matched directory or nil
+    if not found."
+      (cl-some
+       (lambda (name) (projectile-locate-dominating-file dir name))
+       (or list projectile-project-root-files-bottom-up)))
   #+end_src
 
   In regular words, this function is doing this:
@@ -233,9 +237,8 @@ nightmares). Here was the problem:
    #+end_quote
 
    We just need to add =setup.py= and =go.mod= to the list of marker files.
-   While we're at it, let's add every other filename that might indicate a
-   project root. Projectile already has a variable for this, documented in [[https://docs.projectile.mx/projectile/projects.html#file-markers][File
-   markers]]:
+   While we're at it, let's add every other filename that indicates a project
+   root. Projectile already has a variable for this, documented in [[https://docs.projectile.mx/projectile/projects.html#file-markers][File markers]]:
 
    #+header: :post partition(*this*, 4)
    #+begin_src emacs-lisp
@@ -257,11 +260,13 @@ nightmares). Here was the problem:
 
    Decent start, but it doesn't have =go.mod=, so we should add that. Might as
    well also add all the files in =projectile-project-root-files-bottom-up=
-   (which has =.git=, etc).
+   (which has =.git=, etc). I also add =requirements.txt=, which is a useful way
+   for me to demarcate a small Python example (like a GitHub Gist) that maybe
+   doesn't warrant a whole =setup.py=.
 
    #+begin_src emacs-lisp :results silent
      (setq my-project-root-files
-           (-concat '("go.mod")
+           (-concat '("go.mod" "requirements.txt")
                     projectile-project-root-files-bottom-up
                     projectile-project-root-files))
    #+end_src
@@ -319,7 +324,7 @@ nightmares). Here was the problem:
   #+header: :tangle (expand-file-name "~/Projects/dotfiles/emacs/projectile-discovery.el")
   #+begin_src emacs-lisp :results silent
     (setq my-project-root-files
-          (-concat '("go.mod")
+          (-concat '("go.mod" "requirements.txt")
                    projectile-project-root-files-bottom-up
                    projectile-project-root-files))
   #+end_src
