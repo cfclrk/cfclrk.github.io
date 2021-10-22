@@ -33,10 +33,10 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org91b1060">Refs</a>
+<li><a href="#orgd06b233">Rebasing</a>
 <ul>
-<li><a href="#org2c89a04">HEAD</a></li>
-<li><a href="#orgd52d56f">Branches</a></li>
+<li><a href="#orged48c97">To Ancestor</a></li>
+<li><a href="#org74a0a41">To Specific Commit</a></li>
 </ul>
 </li>
 <li><a href="#orgbcdeafa">I Accidentally&#x2026;</a>
@@ -47,19 +47,19 @@
 <li><a href="#org16b67e9">Committed Locally Before Pulling Remote</a></li>
 </ul>
 </li>
-<li><a href="#orgd06b233">Rebasing</a>
+<li><a href="#org568b1b4">Fixup</a></li>
+<li><a href="#org91b1060">Refs</a>
 <ul>
-<li><a href="#orged48c97">To Ancestor</a></li>
-<li><a href="#org74a0a41">To Specific Commit</a></li>
+<li><a href="#org2c89a04">HEAD</a></li>
+<li><a href="#orgd52d56f">Branches</a></li>
 </ul>
 </li>
-<li><a href="#org8e7c2e5">List Tags Matching Pattern</a></li>
-<li><a href="#org568b1b4">Fixup</a></li>
 <li><a href="#org2ca21d4">First Commit</a></li>
 <li><a href="#org925ca90">Tags</a>
 <ul>
 <li><a href="#orgc4f5a7e">Get Project Version From Tag</a></li>
 <li><a href="#orgecc97d2">Is HEAD a tag?</a></li>
+<li><a href="#org8e7c2e5">List Tags Matching Pattern</a></li>
 </ul>
 </li>
 <li><a href="#orga560843">Project Root Dir</a></li>
@@ -68,52 +68,140 @@
 </div>
 </nav>
 
-<div id="outline-container-org91b1060" class="outline-2">
-<h2 id="org91b1060"><a href="#org91b1060">Refs</a></h2>
-<div class="outline-text-2" id="text-org91b1060">
+<div id="outline-container-orgd06b233" class="outline-2">
+<h2 id="orgd06b233"><a href="#orgd06b233">Rebasing</a></h2>
+<div class="outline-text-2" id="text-orgd06b233">
 </div>
-<div id="outline-container-org2c89a04" class="outline-3">
-<h3 id="org2c89a04"><a href="#org2c89a04">HEAD</a></h3>
-<div class="outline-text-3" id="text-org2c89a04">
+<div id="outline-container-orged48c97" class="outline-3">
+<h3 id="orged48c97"><a href="#orged48c97">To Ancestor</a></h3>
+<div class="outline-text-3" id="text-orged48c97">
 <p>
-HEAD is usually a symbolic ref, meaning it points to another ref.
+You created a sequence of commits, <code>feat-1</code> and <code>feat-2</code>, and you realize
+"hrmm, <code>feat-2</code> doesn't actually depend on <code>feat-1</code>. I could make both of
+these PRs against <code>main</code> at the same time."
+</p>
+
+<p>
+Given a repo like this:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">git symbolic-ref HEAD
+<pre class="src src-bash">git init
+touch A &amp;&amp; git add A &amp;&amp; git commit -m <span style="color: #98be65;">"A"</span>
+touch B &amp;&amp; git add B &amp;&amp; git commit -m <span style="color: #98be65;">"B"</span>
+git checkout -b <span style="color: #98be65;">"feat-1"</span>
+touch C &amp;&amp; git add C &amp;&amp; git commit -m <span style="color: #98be65;">"C"</span>
+git checkout -b <span style="color: #98be65;">"feat-2"</span>
+touch D &amp;&amp; git add D &amp;&amp; git commit -m <span style="color: #98be65;">"D"</span>
 </pre>
 </div>
 
-<p>
-Unless you are in a detached HEAD state, in which case HEAD points directly
-to a commit.
-</p>
+<div class="org-src-container">
+<pre class="src src-sh" id="org7175b89">gitdot --png
+</pre>
+</div>
+
+
+<figure id="orgad45656">
+<img src="../img/RebaseToAncestor1.png" alt="RebaseToAncestor1.png">
+
+</figure>
 
 <p>
-Some ways to print the SHA of the HEAD ref:
+You want <code>feat-2</code> and <code>feat-1</code> to both be based off <code>main</code>. You can't just
+rebase <code>feat-2</code> on <code>main</code>:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">git rev-parse HEAD
+<pre class="src src-sh">git checkout feat-2
+git rebase main
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+Current branch feat-2 is up to date.
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-sh" id="org68ab231">gitdot --png
+</pre>
+</div>
+
+
+<figure id="orgc40909e">
+<img src="../img/RebaseToAncestor2.png" alt="RebaseToAncestor2.png">
+
+</figure>
+
+<p>
+Nothing happens, because a rebase replays commits onto the new base, and in
+this case that would just replay the <code>feat-1</code> and <code>feat-2</code> commits on <code>main</code>
+again (changing nothing).
+</p>
+
+<p>
+Solution: only reply the <code>feat-2</code> commit on <code>man</code> using <code>--onto</code> with a
+cut-point! The form of the command is <code>git rebase --onto &lt;Target&gt; &lt;Cut
+   Point&gt;</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">git checkout feat-2
+git rebase --onto main feat-1
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-sh">git log -1 --format=<span style="color: #98be65;">'%H'</span>
+<pre class="src src-sh" id="org61ee2ee">gitdot --png
 </pre>
 </div>
+
+
+<figure id="orgd273c53">
+<img src="../img/RebaseToAncestor3.png" alt="RebaseToAncestor3.png">
+
+</figure>
 </div>
 </div>
 
-<div id="outline-container-orgd52d56f" class="outline-3">
-<h3 id="orgd52d56f"><a href="#orgd52d56f">Branches</a></h3>
-<div class="outline-text-3" id="text-orgd52d56f">
+<div id="outline-container-org74a0a41" class="outline-3">
+<h3 id="org74a0a41"><a href="#org74a0a41">To Specific Commit</a></h3>
+<div class="outline-text-3" id="text-org74a0a41">
 <p>
-Current branch name:
+Given a repo like this:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">git rev-parse --abbrev-ref HEAD
+<pre class="src src-bash">git init
+touch A &amp;&amp; git add A &amp;&amp; git commit -m <span style="color: #98be65;">"A"</span>
+git checkout -b <span style="color: #98be65;">"feat-1"</span>
+touch B &amp;&amp; git add B &amp;&amp; git commit -m <span style="color: #98be65;">"B"</span>
+git checkout main
+touch C &amp;&amp; git add C &amp;&amp; git commit -m <span style="color: #98be65;">"C"</span>
+touch D &amp;&amp; git add D &amp;&amp; git commit -m <span style="color: #98be65;">"D"</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh" id="org5a63538">gitdot --png --msg
+</pre>
+</div>
+
+
+<figure id="org59e4e29">
+<img src="../img/RebaseToCommit1.png" alt="RebaseToCommit1.png">
+
+</figure>
+
+<p>
+Rebasing <code>feat-1</code> on <code>main</code> would make <code>B</code> point to <code>D</code>. But say we wanted to
+rebase <code>B</code> on to <code>C</code> instead?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">git checkout feat-1
+git rebase --onto C
 </pre>
 </div>
 </div>
@@ -192,156 +280,6 @@ remote/branch-name.</li>
 </div>
 </div>
 
-<div id="outline-container-orgd06b233" class="outline-2">
-<h2 id="orgd06b233"><a href="#orgd06b233">Rebasing</a></h2>
-<div class="outline-text-2" id="text-orgd06b233">
-</div>
-<div id="outline-container-orged48c97" class="outline-3">
-<h3 id="orged48c97"><a href="#orged48c97">To Ancestor</a></h3>
-<div class="outline-text-3" id="text-orged48c97">
-<p>
-You created a sequence of commits, <code>feat-1</code> and <code>feat-2</code>, and you realize
-"hrmm, <code>feat-2</code> doesn't actually depend on <code>feat-1</code>. I could make both of
-these PRs against <code>main</code> at the same time."
-</p>
-
-<p>
-Given a repo like this:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-bash">git init
-touch A &amp;&amp; git add A &amp;&amp; git commit -m <span style="color: #98be65;">"A"</span>
-touch B &amp;&amp; git add B &amp;&amp; git commit -m <span style="color: #98be65;">"B"</span>
-git checkout -b <span style="color: #98be65;">"feat-1"</span>
-touch C &amp;&amp; git add C &amp;&amp; git commit -m <span style="color: #98be65;">"C"</span>
-git checkout -b <span style="color: #98be65;">"feat-2"</span>
-touch D &amp;&amp; git add D &amp;&amp; git commit -m <span style="color: #98be65;">"D"</span>
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-sh" id="org7175b89">gitdot --png
-</pre>
-</div>
-
-
-<figure id="org52a3ef7">
-<img src="../img/RebaseToAncestor1.png" alt="RebaseToAncestor1.png">
-
-</figure>
-
-<p>
-You want <code>feat-2</code> and <code>feat-1</code> to both be based off <code>main</code>. You can't just
-rebase <code>feat-2</code> on <code>main</code>:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">git checkout feat-2
-git rebase main
-</pre>
-</div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-Current branch feat-2 is up to date.
-</pre>
-
-
-<div class="org-src-container">
-<pre class="src src-sh" id="org68ab231">gitdot --png
-</pre>
-</div>
-
-
-<figure id="orgeda3613">
-<img src="../img/RebaseToAncestor2.png" alt="RebaseToAncestor2.png">
-
-</figure>
-
-<p>
-Nothing happens, because a rebase replays commits onto the new base, and in
-this case that would just replay the <code>feat-1</code> and <code>feat-2</code> commits on <code>main</code>
-again (changing nothing).
-</p>
-
-<p>
-Solution: only reply the <code>feat-2</code> commit on <code>man</code> using <code>--onto</code> with a
-cut-point! The form of the command is <code>git rebase --onto &lt;Target&gt; &lt;Cut
-   Point&gt;</code>.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">git checkout feat-2
-git rebase --onto main feat-1
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-sh" id="org61ee2ee">gitdot --png
-</pre>
-</div>
-
-
-<figure id="org8fc08dd">
-<img src="../img/RebaseToAncestor3.png" alt="RebaseToAncestor3.png">
-
-</figure>
-</div>
-</div>
-
-<div id="outline-container-org74a0a41" class="outline-3">
-<h3 id="org74a0a41"><a href="#org74a0a41">To Specific Commit</a></h3>
-<div class="outline-text-3" id="text-org74a0a41">
-<p>
-Given a repo like this:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-bash">git init
-touch A &amp;&amp; git add A &amp;&amp; git commit -m <span style="color: #98be65;">"A"</span>
-git checkout -b <span style="color: #98be65;">"feat-1"</span>
-touch B &amp;&amp; git add B &amp;&amp; git commit -m <span style="color: #98be65;">"B"</span>
-git checkout main
-touch C &amp;&amp; git add C &amp;&amp; git commit -m <span style="color: #98be65;">"C"</span>
-touch D &amp;&amp; git add D &amp;&amp; git commit -m <span style="color: #98be65;">"D"</span>
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-sh" id="org5a63538">gitdot --png --msg
-</pre>
-</div>
-
-
-<figure id="orgf73fb92">
-<img src="../img/RebaseToCommit1.png" alt="RebaseToCommit1.png">
-
-</figure>
-
-<p>
-Rebasing <code>feat-1</code> on <code>main</code> would make <code>B</code> point to <code>D</code>. But say we wanted to
-rebase <code>B</code> on to <code>C</code> instead?
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">git checkout feat-1
-git rebase --onto C
-</pre>
-</div>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org8e7c2e5" class="outline-2">
-<h2 id="org8e7c2e5"><a href="#org8e7c2e5">List Tags Matching Pattern</a></h2>
-<div class="outline-text-2" id="text-org8e7c2e5">
-<div class="org-src-container">
-<pre class="src src-sh">git tag --list <span style="color: #98be65;">"v*"</span>
-</pre>
-</div>
-</div>
-</div>
-
 <div id="outline-container-org568b1b4" class="outline-2">
 <h2 id="org568b1b4"><a href="#org568b1b4">Fixup</a></h2>
 <div class="outline-text-2" id="text-org568b1b4">
@@ -369,6 +307,58 @@ the rebase is started from.
 <div class="org-src-container">
 <pre class="src src-sh">git rebase -i --squash ac5db87
 </pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org91b1060" class="outline-2">
+<h2 id="org91b1060"><a href="#org91b1060">Refs</a></h2>
+<div class="outline-text-2" id="text-org91b1060">
+</div>
+<div id="outline-container-org2c89a04" class="outline-3">
+<h3 id="org2c89a04"><a href="#org2c89a04">HEAD</a></h3>
+<div class="outline-text-3" id="text-org2c89a04">
+<p>
+HEAD is usually a symbolic ref, meaning it points to another ref.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">git symbolic-ref HEAD
+</pre>
+</div>
+
+<p>
+Unless you are in a detached HEAD state, in which case HEAD points directly
+to a commit.
+</p>
+
+<p>
+Some ways to print the SHA of the HEAD ref:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">git rev-parse HEAD
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh">git log -1 --format=<span style="color: #98be65;">'%H'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd52d56f" class="outline-3">
+<h3 id="orgd52d56f"><a href="#orgd52d56f">Branches</a></h3>
+<div class="outline-text-3" id="text-orgd52d56f">
+<p>
+Current branch name:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">git rev-parse --abbrev-ref HEAD
+</pre>
+</div>
 </div>
 </div>
 </div>
@@ -419,6 +409,16 @@ If HEAD is a tag, this will print the tag name. If not, it prints nothing.
 
 <div class="org-src-container">
 <pre class="src src-sh">git tag --points-at HEAD
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8e7c2e5" class="outline-3">
+<h3 id="org8e7c2e5"><a href="#org8e7c2e5">List Tags Matching Pattern</a></h3>
+<div class="outline-text-3" id="text-org8e7c2e5">
+<div class="org-src-container">
+<pre class="src src-sh">git tag --list <span style="color: #98be65;">"v*"</span>
 </pre>
 </div>
 </div>

@@ -4,14 +4,18 @@
 * Variables                                                        :noexport:
 
   #+NAME: Env
-  | Env Var      | Value                                  |
-  |--------------+----------------------------------------|
-  | CLUSTER_NAME | crafty-lynx                            |
-  | KUBECONFIG   | ~/.kube/ironnet_clusters/$CLUSTER_NAME |
+  | Env Var            | Value                                  |
+  |--------------------+----------------------------------------|
+  | CLUSTER_NAME       | steger1018test1                        |
+  | KUBECONFIG         | ~/.kube/ironnet_clusters/$CLUSTER_NAME |
+  | AWS_PROFILE        | devsaas                                |
+  | AWS_DEFAULT_REGION | us-east-2                              |
 
   #+begin_src emacs-lisp :var env=Env
     (setenv-file-export-pairs env)
   #+end_src
+
+  #+RESULTS:
 
 * What is Kubernetes?
 
@@ -23,22 +27,28 @@
   #+end_quote
 
   Personally, I would define it more like: Kubernetes is a program for creating
-  and managing a cluster of computers.
+  and managing a /cluster/ of computers.
 
-  Running programs on a cluster is different from running programs on a single
+  A cluster is a kind of distributed system in which multiple computers work
+  together to present a facade like they are one, much bigger computer. While a
+  distributed system is fundamentally different from single computer, cluster
+  management software (e.g. Kubernetes) bring the two kinds of systems
+  conceptually closer together.
+
+  Running a program on a cluster is different from a running program on a single
   computer, and Kubernetes provides some heavy abstractions that are useful for
-  dealing with a cluster.
-
-  People started trying to create "clusters" a long time ago. Some of the
-  problems that need to be addressed are:
+  dealing with clusters. People started trying to create "clusters" a long time
+  ago (see: [[https://en.wikipedia.org/wiki/Beowulf_cluster][beowulf clusters]]). Some of the problems that need to be addressed
+  are:
 
   - What does it mean for a machine to be "in" the cluster vs "out" of the
     cluster?
-  - When you run a process on the cluster, which machine should that process run
-    on?
-  - How does inter-process communication work when processes might be on
+  - When you run a process on the cluster, which computer should the process
+    actually run on?
+  - How can inter-process communication work when processes might be on
     different machines?
-  - How can processes shared data when they might running on different machines?
+  - How can processes share data (on disk) when they might running on different
+    machines?
   - Should the cluster have some kind of RBAC (authn/authz)?
 
 * Operators
@@ -46,11 +56,11 @@
   An operator is just a controller that monitors a CRD instead of a resource
   defined by Kubernetes.
 
-  A controller monitors a set of resources (where resources are just entries in
-  a database, representing some kind of "desired state"), and reconciles those
-  with the "actual state" of the system. Whenever the controller sees
-  differences between the desired and actual states, it takes steps to reduce
-  that difference.
+  A controller monitors a set of resources (resources are just entries in the
+  database, representing some kind of "desired state"), and reconciles the
+  database contents with the "actual state" of the system. Whenever the
+  controller sees differences between the desired and actual states, it takes
+  steps to reduce that difference.
 
 * Describing a Cluster
 
@@ -182,6 +192,46 @@
    #+begin_src sh
      kubectl scale deployment <deployment-name> --replicas=1
    #+end_src
+
+* Secrets
+
+** Create Docker Registry Secret
+
+  #+header: :var User="robot$foo"
+  #+header: :var Server="registry.cloud"
+  #+header: :var Password="cats"
+  #+header: :var SecretName="ironnet-harbor"
+  #+begin_src sh :results output
+    kubectl create secret docker-registry $SecretName \
+            --docker-server=$Server \
+            --docker-username=$User \
+            --docker-password=$Password
+  #+end_src
+
+** Decode Docker Registry Secret
+
+   TODO: also decode ==.auths["registry.ironnet.cloud"].auth=
+
+   #+header: :var SecretName="ironnet-harbor"
+   #+begin_src sh :results output
+     kubectl get secret $SecretName -o json \
+         | jq -r '.data[".dockerconfigjson"]' \
+              | base64 --decode | jq
+   #+end_src
+
+** Update a Secret
+
+  #+header: :var User="robot$foo"
+  #+header: :var Server="registry.cloud"
+  #+header: :var Password="cats"
+  #+header: :var SecretName="ironnet-harbor"
+  #+begin_src sh :results output
+    kubectl create secret docker-registry $SecretName \
+            --docker-server=$Server \
+            --docker-username=$User \
+            --docker-password=$Password \
+            --dry-run=client -o yaml | kubectl apply -f -
+  #+end_src
 
 * Service Accounts
 

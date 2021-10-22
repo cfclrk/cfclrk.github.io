@@ -1,6 +1,9 @@
 #+TITLE: Using Multiple GitHub Accounts
 #+SETUPFILE: ../setup.org
 
+The source blocks in this program are tangled to my dotfiles repo at
+[[https://github.com/cfclrk/dotfiles/tree/master/xdg_config/git][xdg_config/git]] and [[https://github.com/cfclrk/dotfiles/blob/master/.ssh/config][.ssh/config]].
+
 * The Problem
 
   You have multiple GitHub accounts, and you want git to automatically push/pull
@@ -56,8 +59,8 @@
     [github]
         user = chrisc-ironnet
 
-    # These "insteadOf = ..." parts must be more specific than
-    # the insteadOf rules for the github-home account.
+    # These "insteadOf" values must be more specific than
+    # the ones for the github-home account.
     [url "git@github-work:IronNetCybersecurity"]
         insteadOf = git@github.com:IronNetCybersecurity
     [url "git@github-work:chrisc-ironnet"]
@@ -69,7 +72,7 @@
   #+end_src
 
   Obviously, update values for your name, email address, your work's GitHub
-  organization name, and your work Gist URLs.
+  organization name, and your Gist URLs.
 
   That's it for the git config! Move on to [[#the-ssh-config]]. The next two
   subsections explain the above, if you are interested.
@@ -86,12 +89,12 @@
          insteadOf = git@github.com
    #+end_src
 
-   Here we've said: "Mr. Git, any time you see a URL that starts with
+   This is saying: "Mr. Git, any time you see a URL that starts with
    =git@github.com=, please just pretend like the URL actually starts with
    =git@github-home=".
 
-   For example, in [[https://github.com/cfclrk/cfclrk.github.io][the git repository]] where I'm writing this article, I can
-   =cat= the git config file remotes and see the /real/ remote URL:
+   For example, in [[https://github.com/cfclrk/cfclrk.github.io][the git repository]] where I'm writing this article, I can cat
+   the =.git/config= file and see the /real/ remote:
 
    #+begin_src bash :results output :dir ~/Projects/cfclrk.com
      cat .git/config | grep "\[remote" -A 2
@@ -102,8 +105,8 @@
    : 	url = git@github.com:cfclrk/cfclrk.github.io.git
    : 	fetch = +refs/heads/*:refs/remotes/origin/*
 
-   But when I use a =git= command (like =git remote=) to view that same value, I
-   see the /rewritten/ form of the URL:
+   But, if you use a =git= command (like =git remote=) to view that same value,
+   you will see the /rewritten/ form of the URL:
 
    #+begin_src bash :results output :dir ~/Projects/cfclrk.com
      git remote -v
@@ -113,9 +116,9 @@
    : origin	git@github-home:cfclrk/cfclrk.github.io.git (fetch)
    : origin	git@github-home:cfclrk/cfclrk.github.io.git (push)
 
-   Importantly, multiple =url.insteadOf= rules do *not* overwrite each other.
-   All rules are loaded, and the most specific match is used. From the [[https://git-scm.com/docs/git-config#Documentation/git-config.txt-urlltbasegtinsteadOf][insteadOf]]
-   documentation:
+   You may specify multiple =url.insteadOf= directives in a git config file. All
+   the directives will be loaded and the most specific match is used. From the
+   [[https://git-scm.com/docs/git-config#Documentation/git-config.txt-urlltbasegtinsteadOf][insteadOf]] documentation:
 
    #+begin_quote
    When more than one insteadOf strings match a given URL, the longest match is

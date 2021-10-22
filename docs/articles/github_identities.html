@@ -46,6 +46,10 @@
 </ul>
 </div>
 </nav>
+<p>
+The source blocks in this program are tangled to my dotfiles repo at
+<a href="https://github.com/cfclrk/dotfiles/tree/master/xdg_config/git">xdg<sub>config</sub>/git</a> and <a href="https://github.com/cfclrk/dotfiles/blob/master/.ssh/config">.ssh/config</a>.
+</p>
 
 <div id="outline-container-org50f6963" class="outline-2">
 <h2 id="org50f6963"><a href="#org50f6963">The Problem</a></h2>
@@ -125,8 +129,8 @@ creating the following two files.
 [<span style="color: #ECBE7B;">github</span>]
     <span style="color: #dcaeea;">user</span> = chrisc-ironnet
 
-<span style="color: #5B6268;"># </span><span style="color: #5B6268;">These "insteadOf = ..." parts must be more specific than</span>
-<span style="color: #5B6268;"># </span><span style="color: #5B6268;">the insteadOf rules for the github-home account.</span>
+<span style="color: #5B6268;"># </span><span style="color: #5B6268;">These "insteadOf" values must be more specific than</span>
+<span style="color: #5B6268;"># </span><span style="color: #5B6268;">the ones for the github-home account.</span>
 [<span style="color: #ECBE7B;">url</span> <span style="color: #c678dd;">"git@github-work:IronNetCybersecurity"</span>]
     <span style="color: #dcaeea;">insteadOf</span> = git@github.com:IronNetCybersecurity
 [<span style="color: #ECBE7B;">url</span> <span style="color: #c678dd;">"git@github-work:chrisc-ironnet"</span>]
@@ -140,7 +144,7 @@ creating the following two files.
 
 <p>
 Obviously, update values for your name, email address, your work's GitHub
-organization name, and your work Gist URLs.
+organization name, and your Gist URLs.
 </p>
 
 <p>
@@ -163,14 +167,14 @@ Git URL-rewriting uses the <a href="https://git-scm.com/docs/git-config#Document
 </div>
 
 <p>
-Here we've said: "Mr. Git, any time you see a URL that starts with
+This is saying: "Mr. Git, any time you see a URL that starts with
 <code>git@github.com</code>, please just pretend like the URL actually starts with
 <code>git@github-home</code>".
 </p>
 
 <p>
-For example, in <a href="https://github.com/cfclrk/cfclrk.github.io">the git repository</a> where I'm writing this article, I can
-<code>cat</code> the git config file remotes and see the <i>real</i> remote URL:
+For example, in <a href="https://github.com/cfclrk/cfclrk.github.io">the git repository</a> where I'm writing this article, I can cat
+the <code>.git/config</code> file and see the <i>real</i> remote:
 </p>
 
 <div class="org-src-container">
@@ -186,8 +190,8 @@ For example, in <a href="https://github.com/cfclrk/cfclrk.github.io">the git rep
 
 
 <p>
-But when I use a <code>git</code> command (like <code>git remote</code>) to view that same value, I
-see the <i>rewritten</i> form of the URL:
+But, if you use a <code>git</code> command (like <code>git remote</code>) to view that same value,
+you will see the <i>rewritten</i> form of the URL:
 </p>
 
 <div class="org-src-container">
@@ -202,9 +206,9 @@ origin	git@github-home:cfclrk/cfclrk.github.io.git (push)
 
 
 <p>
-Importantly, multiple <code>url.insteadOf</code> rules do <b>not</b> overwrite each other.
-All rules are loaded, and the most specific match is used. From the <a href="https://git-scm.com/docs/git-config#Documentation/git-config.txt-urlltbasegtinsteadOf">insteadOf</a>
-documentation:
+You may specify multiple <code>url.insteadOf</code> directives in a git config file. All
+the directives will be loaded and the most specific match is used. From the
+<a href="https://git-scm.com/docs/git-config#Documentation/git-config.txt-urlltbasegtinsteadOf">insteadOf</a> documentation:
 </p>
 
 <blockquote>
@@ -296,7 +300,7 @@ both accounts). Assuming you've <a href="https://docs.github.com/en/github/authe
 something like:
 </p>
 
-<pre class="example" id="org071c3ac">
+<pre class="example" id="orge332379">
 $ tree ~/.ssh/
 /Users/cfclrk/.ssh/
 ├── config

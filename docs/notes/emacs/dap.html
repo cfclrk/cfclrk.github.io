@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2021-09-24 Fri 15:51 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Dap Mode</title>
@@ -34,10 +33,10 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgbc0ee6b">Debug</a>
+<li><a href="#orgde1294c">How To Python</a>
 <ul>
 <li><a href="#orga1c6560">Jumping in the Stack</a></li>
-<li><a href="#orgd4ab8c5">Rerun last</a></li>
+<li><a href="#orgff14c74">Rerun Last</a></li>
 </ul>
 </li>
 <li><a href="#orga276bcc">Old Sessions</a></li>
@@ -45,10 +44,15 @@
 </div>
 </nav>
 
+<div id="outline-container-orgde1294c" class="outline-2">
+<h2 id="orgde1294c"><a href="#orgde1294c">How To Python</a></h2>
+<div class="outline-text-2" id="text-orgde1294c">
+<ul class="org-ul">
+<li>Ensure <a href="https://github.com/microsoft/debugpy">debugpy</a> is installed (<code>pip install debugpy</code>) in the virtual
+environment. I install this by default in new virtual environments (see:
+<a href="https://github.com/cfclrk/dotfiles/blob/master/.pyenv/default_packages">.pyenv/default<sub>packages</sub></a>).</li>
+</ul>
 
-<div id="outline-container-orgbc0ee6b" class="outline-2">
-<h2 id="orgbc0ee6b"><a href="#orgbc0ee6b">Debug</a></h2>
-<div class="outline-text-2" id="text-orgbc0ee6b">
 <p>
 In source file, move point somewhere you want a breakpoint, and run
 <code>M-x dap-breakpoint-toggle</code>
@@ -68,15 +72,20 @@ You can jump forward or backward in the stack. Use <code>M-x
    dap-switch-stack-frame</code>, or click around in the "Debug Sessions" dap buffer.
 </p>
 
+<p>
+TODO: How does this work? Does this only work in languages with first-class
+continuations? How much program state is actually restored?
+</p>
+
 <ul class="org-ul">
 <li><code>dap-disconnect</code> Quit the debugging session</li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgd4ab8c5" class="outline-3">
-<h3 id="orgd4ab8c5"><a href="#orgd4ab8c5">Rerun last</a></h3>
-<div class="outline-text-3" id="text-orgd4ab8c5">
+<div id="outline-container-orgff14c74" class="outline-3">
+<h3 id="orgff14c74"><a href="#orgff14c74">Rerun Last</a></h3>
+<div class="outline-text-3" id="text-orgff14c74">
 <p>
 <code>dap</code>
 </p>

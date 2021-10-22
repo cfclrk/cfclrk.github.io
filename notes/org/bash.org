@@ -390,7 +390,9 @@
 	done
   #+end_src
 
-* Echo vs Printf
+* Strings, Echo, and Printf
+
+** Echo Adds Newline
 
   Notice that =echo= adds a newline.
 
@@ -409,6 +411,26 @@
   #+RESULTS:
   : 0000000    f   o   o
   : 0000003
+
+** Print Multiline String
+
+   Notice that =echo $a= prints everything on one line, while =echo "$a"=
+   preserves newlines. Why is that?
+
+	#+begin_src sh
+      a=$(cat <<EOF
+      hello
+      world
+      EOF
+      )
+      echo $a
+      echo "$a"
+	#+end_src
+
+    #+RESULTS:
+    : hello world
+    : hello
+    : world
 
 * Numbered List
 

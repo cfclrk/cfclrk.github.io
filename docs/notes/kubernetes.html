@@ -69,6 +69,13 @@
 <li><a href="#org40c7d8f">Scaling a deployment</a></li>
 </ul>
 </li>
+<li><a href="#orgb18be80">Secrets</a>
+<ul>
+<li><a href="#org4d815fd">Create Docker Registry Secret</a></li>
+<li><a href="#org9ec59c3">Decode Docker Registry Secret</a></li>
+<li><a href="#org0987caa">Update a Secret</a></li>
+</ul>
+</li>
 <li><a href="#org2b770ad">Service Accounts</a></li>
 <li><a href="#orgae9b313">Affinity, Taints, and Tolerations</a>
 <ul>
@@ -112,28 +119,34 @@ containerized applications.
 
 <p>
 Personally, I would define it more like: Kubernetes is a program for creating
-and managing a cluster of computers.
+and managing a <i>cluster</i> of computers.
 </p>
 
 <p>
-Running programs on a cluster is different from running programs on a single
+A cluster is a kind of distributed system in which multiple computers work
+together to present a facade like they are one, much bigger computer. While a
+distributed system is fundamentally different from single computer, cluster
+management software (e.g. Kubernetes) bring the two kinds of systems
+conceptually closer together.
+</p>
+
+<p>
+Running a program on a cluster is different from a running program on a single
 computer, and Kubernetes provides some heavy abstractions that are useful for
-dealing with a cluster.
-</p>
-
-<p>
-People started trying to create "clusters" a long time ago. Some of the
-problems that need to be addressed are:
+dealing with clusters. People started trying to create "clusters" a long time
+ago (see: <a href="https://en.wikipedia.org/wiki/Beowulf_cluster">beowulf clusters</a>). Some of the problems that need to be addressed
+are:
 </p>
 
 <ul class="org-ul">
 <li>What does it mean for a machine to be "in" the cluster vs "out" of the
 cluster?</li>
-<li>When you run a process on the cluster, which machine should that process run
-on?</li>
-<li>How does inter-process communication work when processes might be on
+<li>When you run a process on the cluster, which computer should the process
+actually run on?</li>
+<li>How can inter-process communication work when processes might be on
 different machines?</li>
-<li>How can processes shared data when they might running on different machines?</li>
+<li>How can processes share data (on disk) when they might running on different
+machines?</li>
 <li>Should the cluster have some kind of RBAC (authn/authz)?</li>
 </ul>
 </div>
@@ -148,11 +161,11 @@ defined by Kubernetes.
 </p>
 
 <p>
-A controller monitors a set of resources (where resources are just entries in
-a database, representing some kind of "desired state"), and reconciles those
-with the "actual state" of the system. Whenever the controller sees
-differences between the desired and actual states, it takes steps to reduce
-that difference.
+A controller monitors a set of resources (resources are just entries in the
+database, representing some kind of "desired state"), and reconciles the
+database contents with the "actual state" of the system. Whenever the
+controller sees differences between the desired and actual states, it takes
+steps to reduce that difference.
 </p>
 </div>
 </div>
@@ -361,6 +374,54 @@ Now, <code>ssh user@nodeIp</code>
 <div class="outline-text-3" id="text-org40c7d8f">
 <div class="org-src-container">
 <pre class="src src-sh">kubectl scale deployment &lt;deployment-name&gt; --replicas=1
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb18be80" class="outline-2">
+<h2 id="orgb18be80"><a href="#orgb18be80">Secrets</a></h2>
+<div class="outline-text-2" id="text-orgb18be80">
+</div>
+<div id="outline-container-org4d815fd" class="outline-3">
+<h3 id="org4d815fd"><a href="#org4d815fd">Create Docker Registry Secret</a></h3>
+<div class="outline-text-3" id="text-org4d815fd">
+<div class="org-src-container">
+<pre class="src src-sh">kubectl create secret docker-registry $<span style="color: #dcaeea;">SecretName</span> <span style="color: #98be65;">\</span>
+        --docker-server=$<span style="color: #dcaeea;">Server</span> <span style="color: #98be65;">\</span>
+        --docker-username=$<span style="color: #dcaeea;">User</span> <span style="color: #98be65;">\</span>
+        --docker-password=$<span style="color: #dcaeea;">Password</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9ec59c3" class="outline-3">
+<h3 id="org9ec59c3"><a href="#org9ec59c3">Decode Docker Registry Secret</a></h3>
+<div class="outline-text-3" id="text-org9ec59c3">
+<p>
+TODO: also decode <code>=.auths["registry.ironnet.cloud"].auth</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">kubectl get secret $<span style="color: #dcaeea;">SecretName</span> -o json <span style="color: #98be65;">\</span>
+    | jq -r <span style="color: #98be65;">'.data[".dockerconfigjson"]'</span> <span style="color: #98be65;">\</span>
+         | base64 --decode | jq
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0987caa" class="outline-3">
+<h3 id="org0987caa"><a href="#org0987caa">Update a Secret</a></h3>
+<div class="outline-text-3" id="text-org0987caa">
+<div class="org-src-container">
+<pre class="src src-sh">kubectl create secret docker-registry $<span style="color: #dcaeea;">SecretName</span> <span style="color: #98be65;">\</span>
+        --docker-server=$<span style="color: #dcaeea;">Server</span> <span style="color: #98be65;">\</span>
+        --docker-username=$<span style="color: #dcaeea;">User</span> <span style="color: #98be65;">\</span>
+        --docker-password=$<span style="color: #dcaeea;">Password</span> <span style="color: #98be65;">\</span>
+        --dry-run=client -o yaml | kubectl apply -f -
 </pre>
 </div>
 </div>
