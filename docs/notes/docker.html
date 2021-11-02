@@ -178,9 +178,11 @@ Run and mount current dir.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">docker run -it --rm <span style="color: #98be65;">\</span>
-       --name ${<span style="color: #dcaeea;">PROJECT_NAME</span>} <span style="color: #98be65;">\</span>
-       --mount <span style="color: #dcaeea;">type</span>=bind,<span style="color: #dcaeea;">source</span>=(<span style="color: #c678dd;">pwd</span>),<span style="color: #dcaeea;">target</span>=/${<span style="color: #dcaeea;">PROJECT_NAME</span>} <span style="color: #98be65;">\</span>
+<pre class="src src-bash"><span style="color: #dcaeea;">PROJECT_NAME</span>=$(basename $(<span style="color: #c678dd;">pwd</span>))
+
+docker run --rm <span style="color: #98be65;">\</span>
+       --name $<span style="color: #dcaeea;">PROJECT_NAME</span> <span style="color: #98be65;">\</span>
+       --mount <span style="color: #dcaeea;">type</span>=bind,<span style="color: #dcaeea;">source</span>=$(<span style="color: #c678dd;">pwd</span>),<span style="color: #dcaeea;">target</span>=/$<span style="color: #dcaeea;">PROJECT_NAME</span> <span style="color: #98be65;">\</span>
        python:3.6.5-slim-stretch /bin/bash
 </pre>
 </div>
@@ -218,7 +220,7 @@ Run golang container for interactive use
 </pre>
 </div>
 
-<pre class="example" id="org6def7ce">
+<pre class="example" id="org591aabd">
 HTTP/1.1 200 OK
 Content-Length: 2782
 Content-Type: application/vnd.docker.distribution.manifest.v1+prettyjws

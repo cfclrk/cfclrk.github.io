@@ -1,9 +1,6 @@
 #+TITLE: Using Multiple GitHub Accounts
 #+SETUPFILE: ../setup.org
 
-The source blocks in this program are tangled to my dotfiles repo at
-[[https://github.com/cfclrk/dotfiles/tree/master/xdg_config/git][xdg_config/git]] and [[https://github.com/cfclrk/dotfiles/blob/master/.ssh/config][.ssh/config]].
-
 * The Problem
 
   You have multiple GitHub accounts, and you want git to automatically push/pull
@@ -20,6 +17,9 @@ The source blocks in this program are tangled to my dotfiles repo at
   For your *work* account, each Gist URL will need to be individually added to
   your git config file. All Gists are publically readable, so I tend to use
   Gists less frequently at work.
+
+  My current config files are located at [[https://github.com/cfclrk/dotfiles/tree/master/xdg_config/git][xdg_config/git]] and [[https://github.com/cfclrk/dotfiles/blob/master/.ssh/config][.ssh/config]] on
+  GitHub; they are generated from this article.
 
 * The Git Config
 

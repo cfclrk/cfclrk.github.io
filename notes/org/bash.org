@@ -431,6 +431,7 @@
     : hello world
     : hello
     : world
+    : -e hello world
 
 * Numbered List
 

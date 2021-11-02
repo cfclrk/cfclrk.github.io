@@ -16,7 +16,7 @@
 
   - =M-x magit-log-buffer-file=
 
-* View File at Specific Commit
+* Previous Version of File
 
   The function =magit-find-file= is to "View FILE from REV". Running =M-x
   magit-find-file= will first prompt for a revision (completes with a list of

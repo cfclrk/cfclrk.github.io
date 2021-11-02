@@ -20,10 +20,12 @@
 - [[file:webassembly.org][WebAssembly]]
 - [[file:windows.org][Windows Stuff]]
 - [[file:home.org][home]]
+- [[file:java.org][java]]
 - [[file:javascript.org][javascript]]
 - [[file:jq.org][jq]]
 - [[file:macos.org][macos]]
 - [[file:sed.org][sed]]
+- [[file:tmux.org][tmux]]
 - [[file:yq.org][yq]]
 - aws
   - [[file:aws/commands.org][AWS Commands]]

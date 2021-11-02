@@ -27,29 +27,46 @@
   #+end_quote
 
   Personally, I would define it more like: Kubernetes is a program for creating
-  and managing a /cluster/ of computers.
+  and managing a /computer cluster/.
 
   A cluster is a kind of distributed system in which multiple computers work
-  together to present a facade like they are one, much bigger computer. While a
+  together to behave somewhat like they are one bigger computer. While a
   distributed system is fundamentally different from single computer, cluster
-  management software (e.g. Kubernetes) bring the two kinds of systems
+  management software (e.g. Kubernetes) bring these two kinds of systems
   conceptually closer together.
 
-  Running a program on a cluster is different from a running program on a single
-  computer, and Kubernetes provides some heavy abstractions that are useful for
-  dealing with clusters. People started trying to create "clusters" a long time
-  ago (see: [[https://en.wikipedia.org/wiki/Beowulf_cluster][beowulf clusters]]). Some of the problems that need to be addressed
-  are:
+  Running a program on a cluster is different than a running program on a single
+  computer. Kubernetes provides heavy abstractions for dealing with clusters.
+  People started trying to create "clusters" a long time ago (see: [[https://en.wikipedia.org/wiki/Beowulf_cluster][beowulf
+  clusters]]). Some of the problems that need to be addressed are:
 
-  - What does it mean for a machine to be "in" the cluster vs "out" of the
-    cluster?
-  - When you run a process on the cluster, which computer should the process
-    actually run on?
-  - How can inter-process communication work when processes might be on
-    different machines?
-  - How can processes share data (on disk) when they might running on different
-    machines?
-  - Should the cluster have some kind of RBAC (authn/authz)?
+  - Networking
+    - What does it mean for a machine to be "in" the cluster vs "out" of the
+      cluster?
+    - How should inter-process communication work when processes might be on
+      different machines?
+    - What happens when a machine is no longer responsive?
+
+  - Process Scheduling
+    - When you run a process on the cluster, which specific machine should the
+      process actually run on?
+    - What if certain processes can only run on certain nodes?
+
+  - Data
+    - How can processes share data (on disk) when they might running on
+      different machines?
+    - Should a process have access to the whole filesystem on its host?
+      (Probably not.) How can we make process-local disk space?
+
+  - Security
+    - Should the cluster have some kind of RBAC (authn/authz) separate from that
+      of each individual node?
+
+  The first time I heard about Kubernetes, I thought it was mostly a process
+  scheduler, but that is actually a small part. In fact, the most crucial part
+  of Kubernetes is probably the networking constructs: how an internal network
+  is set up and how communication can happen between processes, regardless of
+  which nodes they run.
 
 * Operators
 
@@ -197,16 +214,16 @@
 
 ** Create Docker Registry Secret
 
-  #+header: :var User="robot$foo"
-  #+header: :var Server="registry.cloud"
-  #+header: :var Password="cats"
-  #+header: :var SecretName="ironnet-harbor"
-  #+begin_src sh :results output
-    kubectl create secret docker-registry $SecretName \
-            --docker-server=$Server \
-            --docker-username=$User \
-            --docker-password=$Password
-  #+end_src
+   #+header: :var User="robot$foo"
+   #+header: :var Server="registry.cloud"
+   #+header: :var Password="cats"
+   #+header: :var SecretName="ironnet-harbor"
+   #+begin_src sh :results output
+     kubectl create secret docker-registry $SecretName \
+             --docker-server=$Server \
+             --docker-username=$User \
+             --docker-password=$Password
+   #+end_src
 
 ** Decode Docker Registry Secret
 
@@ -216,22 +233,22 @@
    #+begin_src sh :results output
      kubectl get secret $SecretName -o json \
          | jq -r '.data[".dockerconfigjson"]' \
-              | base64 --decode | jq
+         | base64 --decode | jq
    #+end_src
 
 ** Update a Secret
 
-  #+header: :var User="robot$foo"
-  #+header: :var Server="registry.cloud"
-  #+header: :var Password="cats"
-  #+header: :var SecretName="ironnet-harbor"
-  #+begin_src sh :results output
-    kubectl create secret docker-registry $SecretName \
-            --docker-server=$Server \
-            --docker-username=$User \
-            --docker-password=$Password \
-            --dry-run=client -o yaml | kubectl apply -f -
-  #+end_src
+   #+header: :var User="robot$foo"
+   #+header: :var Server="registry.cloud"
+   #+header: :var Password="cats"
+   #+header: :var SecretName="ironnet-harbor"
+   #+begin_src sh :results output
+     kubectl create secret docker-registry $SecretName \
+             --docker-server=$Server \
+             --docker-username=$User \
+             --docker-password=$Password \
+             --dry-run=client -o yaml | kubectl apply -f -
+   #+end_src
 
 * Service Accounts
 
@@ -241,6 +258,15 @@
     kubectl get secret -o json \
         | jq '.items[]
               | select(.metadata.annotations["kubernetes.io/service-account.name"] == "default")'
+  #+end_src
+
+* ConfigMaps
+
+  #+begin_src sh
+    kubectl get cm aws-auth \
+            -n kube-system \
+            --output=json \
+        | jq -r '.data'
   #+end_src
 
 * Affinity, Taints, and Tolerations
@@ -345,6 +371,37 @@
   Which gets:
   https://gist.githubusercontent.com/mauilion/2bab4b00eb7a0ab4fca7023ae251e8ee/raw/etcdclient.yaml
 
-  Or, just ssh to the master, and download etcdctl
+  Or, just ssh to the master, and download etcdctl on the master node.
 
   Try looking at a secret at /registry/secrets/default/mysecret
+
+* Autoscaling
+
+  There are two kinds of autoscaling in Kubernetes:
+
+  1. Scaling the number of Pods in Deployments/StatefulSets
+  2. Scaling the number of Nodes in the Cluster
+
+** Scaling Pods
+
+*** Horizontal Pod Autoscaler
+
+    Kubernetes has a built-in autoscaling mechanism called the Horizontal Pod
+    Autoscaler. An HPA can be created and configured using standard Kubernetes
+    objects:
+
+    #+begin_src sh
+      kubectl get hpa
+    #+end_src
+
+    Also, HPAs can be created with the special =kubectl autoscale= command:
+
+    #+begin_src sh
+      kubectl autoscale rs foo --min=2 --max=5 --cpu-percent=80
+    #+end_src
+
+    The HPA supports scaling based on metrics exposed through the Kubernetes
+    Metrics API (i.e. what =kubectl top= uses). I think this means you need a
+    metrics-server pod running in your cluster.
+
+** Scaling Nodes

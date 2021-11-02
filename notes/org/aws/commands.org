@@ -575,6 +575,27 @@
          --prefix-list-id $plid | jq '.Entries[]'
    #+end_src
 
+* EC2 Volumes
+
+** List Volumes
+
+   #+NAME: Volumes
+   #+header: :var Tag="kubernetes.io/cluster/steger1018test1"
+   #+begin_src sh :cache yes
+     aws ec2 describe-volumes \
+         --filters Name=tag-key,Values=$Tag \
+         | jq -r '.Volumes[].VolumeId'
+   #+end_src
+
+** Delete Volumes
+
+  #+begin_src sh :var Volumes=Volumes
+    for volume in $Volumes; do
+        aws ec2 delete-volume --volume-id $volume
+    done
+  #+end_src
+
+
 * ECR
 
 ** Log in
@@ -1035,6 +1056,8 @@
 
 ** Token
 
+   TODO: Need to run aws sso login. Requires block in =~/.aws/config= I think.
+
    TODO: Look up token file programatically
 
    #+NAME: SsoToken
@@ -1045,8 +1068,17 @@
 
 ** List Accounts I Can Access
 
-   #+begin_src sh :var SsoToken=SsoToken
+   TODO: SsoToken has a trailing newline!
+
+   #+begin_src sh :var SsoToken=SsoToken :results output
      aws sso list-accounts \
+         --access-token $SsoToken
+   #+end_src
+
+   #+RESULTS:
+
+   #+begin_src sh :var SsoToken=SsoToken Account=Account
+     aws sso list-account-roles \
          --access-token "$SsoToken" \
-         | jq -c '.accountList[] | {accountName, accountId}'
+         --account-id $Account
    #+end_src

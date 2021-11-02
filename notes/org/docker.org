@@ -73,10 +73,13 @@
 
    Run and mount current dir.
 
-   #+begin_src sh
-     docker run -it --rm \
-            --name ${PROJECT_NAME} \
-            --mount type=bind,source=(pwd),target=/${PROJECT_NAME} \
+   #+header: :dir ~/Projects/codenotes/docker/aws_cli_v2
+   #+begin_src bash
+     PROJECT_NAME=$(basename $(pwd))
+
+     docker run --rm \
+            --name $PROJECT_NAME \
+            --mount type=bind,source=$(pwd),target=/$PROJECT_NAME \
             python:3.6.5-slim-stretch /bin/bash
    #+end_src
 

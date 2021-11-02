@@ -51,7 +51,9 @@
   Generate a public key from a private key:
 
   #+begin_src sh :results output :var keyname="chrisclark"
-    ssh-keygen -y -f ~/.ssh/${keyname}.pem $HOME/.ssh/${keyname}.pub
+    ssh-keygen -y \
+               -f ~/.ssh/${keyname}.pem \
+               $HOME/.ssh/${keyname}.pub
   #+end_src
 
 * Eliptic Curve Keys and Certs

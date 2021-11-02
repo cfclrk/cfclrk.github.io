@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>&lrm;</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org82ccdfc">Installation</a>
+<ul>
+<li><a href="#orga6b5f09">Latest</a></li>
+<li><a href="#orga26592a">Java 8</a></li>
+<li><a href="#orgb2cb35f">Java 7</a></li>
+</ul>
+</li>
+<li><a href="#orgbe98e8b">Versions</a></li>
+</ul>
+</div>
+</nav>
+<div id="outline-container-org82ccdfc" class="outline-2">
+<h2 id="org82ccdfc"><a href="#org82ccdfc">Installation</a></h2>
+<div class="outline-text-2" id="text-org82ccdfc">
+<p>
+Best resource I've found is <a href="https://mkyong.com/java/how-to-install-java-on-mac-osx/">How to install Java JDK on macOS</a>.
+</p>
+</div>
+
+<div id="outline-container-orga6b5f09" class="outline-3">
+<h3 id="orga6b5f09"><a href="#orga6b5f09">Latest</a></h3>
+<div class="outline-text-3" id="text-orga6b5f09">
+<div class="org-src-container">
+<pre class="src src-sh">brew install java
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh">sudo ln -sfn <span style="color: #98be65;">\</span>
+     /usr/local/opt/openjdk/libexec/openjdk.jdk <span style="color: #98be65;">\</span>
+     /Library/Java/JavaVirtualMachines/openjdk.jdk
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga26592a" class="outline-3">
+<h3 id="orga26592a"><a href="#orga26592a">Java 8</a></h3>
+<div class="outline-text-3" id="text-orga26592a">
+<div class="org-src-container">
+<pre class="src src-sh">brew install openjdk@8
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh">sudo ln -sfn <span style="color: #98be65;">\</span>
+     /usr/local/opt/openjdk@8/libexec/openjdk.jdk <span style="color: #98be65;">\</span>
+     /Library/Java/JavaVirtualMachines/openjdk-8.jdk
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb2cb35f" class="outline-3">
+<h3 id="orgb2cb35f"><a href="#orgb2cb35f">Java 7</a></h3>
+<div class="outline-text-3" id="text-orgb2cb35f">
+<div class="org-src-container">
+<pre class="src src-sh">brew install openjdk@7
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbe98e8b" class="outline-2">
+<h2 id="orgbe98e8b"><a href="#orgbe98e8b">Versions</a></h2>
+<div class="outline-text-2" id="text-orgbe98e8b">
+<p>
+To see installed Java versions (assuming they have been properly symlinked):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">/usr/libexec/java_home -V
+</pre>
+</div>
+
+<p>
+You can set <code>JAVA_HOME</code> to be one of those paths like this:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">JAVA_HOME</span>=$(/usr/libexec/java_home -v 1.8)
+</pre>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,13 +1,81 @@
 #+TITLE: Maven
 #+SETUPFILE: ../setup.org
 
+* Installation
+
+  #+begin_src sh
+    brew install mvn
+  #+end_src
+
 * New Project
 
-#+begin_src sh
-  mvn archetype:generate \
-      -DgroupId=com.cfclrk \
-      -DartifactId=k8stest \
-      -DarchetypeArtifactId=maven-archetype-quickstart \
-      -DarchetypeVersion=1.4 \
-      -DinteractiveMode=false
-#+end_src
+  See: [[https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html#creating-a-project][Creating a Project]].
+
+  #+header: :dir ~/Projects/codenotes/java
+  #+header: :var ProjectName="lox"
+  #+begin_src sh :results output
+    mvn archetype:generate \
+        -DgroupId=com.cfclrk \
+        -DartifactId=$ProjectName \
+        -DarchetypeArtifactId=maven-archetype-quickstart \
+        -DarchetypeVersion=1.4 \
+        -DinteractiveMode=false
+  #+end_src
+
+* Download Single Dependency
+
+  #+begin_src sh
+    mvn org.apache.maven.plugins:maven-dependency-plugin:3.2.0:get \
+        -Dartifact=com.amazonaws:aws-java-sdk-ec2:1.11.281
+  #+end_src
+
+* Versions
+
+** Show Dependency Version
+
+   For a Maven plugin:
+
+   #+begin_src sh
+     mvn help:describe \
+         -Dplugin=org.apache.maven.plugins:maven-deploy-plugin
+   #+end_src
+
+   For an application dependency:
+
+   #+begin_src sh
+     mvn help:describe \
+         -DgroupId=org.apache.maven.plugins \
+         -DartifactId=maven-help-plugin
+   #+end_src
+
+** Show Outdated Dependencies
+
+   Uses the [[https://www.mojohaus.org/versions-maven-plugin/][versions-maven-plugin]].
+
+   #+begin_src sh
+     mvn versions:display-dependency-updates
+   #+end_src
+
+   #+begin_src sh
+     mvn versions:display-plugin-updates
+   #+end_src
+
+* Effective POM
+
+  The effective pom is the current POM combined with it's parents all the way up
+  to the super pom.
+
+  #+begin_src sh
+    mvn help:effective-pom
+  #+end_src
+
+* Archetypes
+
+  By default, I think maven uses the archetype catalog here:
+  https://repo.maven.apache.org/maven2/archetype-catalog.xml
+
+** List Archetypes
+
+   #+begin_src sh
+     mvn archetype:generate
+   #+end_src

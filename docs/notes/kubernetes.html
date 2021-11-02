@@ -77,6 +77,7 @@
 </ul>
 </li>
 <li><a href="#org2b770ad">Service Accounts</a></li>
+<li><a href="#org90a2acf">ConfigMaps</a></li>
 <li><a href="#orgae9b313">Affinity, Taints, and Tolerations</a>
 <ul>
 <li><a href="#orgee68518">Affinity</a></li>
@@ -99,6 +100,16 @@
 </ul>
 </li>
 <li><a href="#org7ac204f">etcd</a></li>
+<li><a href="#org4b3a8eb">Autoscaling</a>
+<ul>
+<li><a href="#orgfafeff4">Scaling Pods</a>
+<ul>
+<li><a href="#orged7e053">Horizontal Pod Autoscaler</a></li>
+</ul>
+</li>
+<li><a href="#org0743202">Scaling Nodes</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </nav>
@@ -119,36 +130,63 @@ containerized applications.
 
 <p>
 Personally, I would define it more like: Kubernetes is a program for creating
-and managing a <i>cluster</i> of computers.
+and managing a <i>computer cluster</i>.
 </p>
 
 <p>
 A cluster is a kind of distributed system in which multiple computers work
-together to present a facade like they are one, much bigger computer. While a
+together to behave somewhat like they are one bigger computer. While a
 distributed system is fundamentally different from single computer, cluster
-management software (e.g. Kubernetes) bring the two kinds of systems
+management software (e.g. Kubernetes) bring these two kinds of systems
 conceptually closer together.
 </p>
 
 <p>
-Running a program on a cluster is different from a running program on a single
-computer, and Kubernetes provides some heavy abstractions that are useful for
-dealing with clusters. People started trying to create "clusters" a long time
-ago (see: <a href="https://en.wikipedia.org/wiki/Beowulf_cluster">beowulf clusters</a>). Some of the problems that need to be addressed
-are:
+Running a program on a cluster is different than a running program on a single
+computer. Kubernetes provides heavy abstractions for dealing with clusters.
+People started trying to create "clusters" a long time ago (see: <a href="https://en.wikipedia.org/wiki/Beowulf_cluster">beowulf
+clusters</a>). Some of the problems that need to be addressed are:
 </p>
 
 <ul class="org-ul">
+<li>Networking
+<ul class="org-ul">
 <li>What does it mean for a machine to be "in" the cluster vs "out" of the
 cluster?</li>
-<li>When you run a process on the cluster, which computer should the process
-actually run on?</li>
-<li>How can inter-process communication work when processes might be on
+<li>How should inter-process communication work when processes might be on
 different machines?</li>
-<li>How can processes share data (on disk) when they might running on different
-machines?</li>
-<li>Should the cluster have some kind of RBAC (authn/authz)?</li>
+<li>What happens when a machine is no longer responsive?</li>
+</ul></li>
+
+<li>Process Scheduling
+<ul class="org-ul">
+<li>When you run a process on the cluster, which specific machine should the
+process actually run on?</li>
+<li>What if certain processes can only run on certain nodes?</li>
+</ul></li>
+
+<li>Data
+<ul class="org-ul">
+<li>How can processes share data (on disk) when they might running on
+different machines?</li>
+<li>Should a process have access to the whole filesystem on its host?
+(Probably not.) How can we make process-local disk space?</li>
+</ul></li>
+
+<li>Security
+<ul class="org-ul">
+<li>Should the cluster have some kind of RBAC (authn/authz) separate from that
+of each individual node?</li>
+</ul></li>
 </ul>
+
+<p>
+The first time I heard about Kubernetes, I thought it was mostly a process
+scheduler, but that is actually a small part. In fact, the most crucial part
+of Kubernetes is probably the networking constructs: how an internal network
+is set up and how communication can happen between processes, regardless of
+which nodes they run.
+</p>
 </div>
 </div>
 
@@ -407,7 +445,7 @@ TODO: also decode <code>=.auths["registry.ironnet.cloud"].auth</code>
 <div class="org-src-container">
 <pre class="src src-sh">kubectl get secret $<span style="color: #dcaeea;">SecretName</span> -o json <span style="color: #98be65;">\</span>
     | jq -r <span style="color: #98be65;">'.data[".dockerconfigjson"]'</span> <span style="color: #98be65;">\</span>
-         | base64 --decode | jq
+    | base64 --decode | jq
 </pre>
 </div>
 </div>
@@ -439,6 +477,19 @@ Get the default service account:
 <pre class="src src-sh">kubectl get secret -o json <span style="color: #98be65;">\</span>
     | jq <span style="color: #98be65;">'.items[]</span>
 <span style="color: #98be65;">          | select(.metadata.annotations["kubernetes.io/service-account.name"] == "default")'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org90a2acf" class="outline-2">
+<h2 id="org90a2acf"><a href="#org90a2acf">ConfigMaps</a></h2>
+<div class="outline-text-2" id="text-org90a2acf">
+<div class="org-src-container">
+<pre class="src src-sh">kubectl get cm aws-auth <span style="color: #98be65;">\</span>
+        -n kube-system <span style="color: #98be65;">\</span>
+        --output=json <span style="color: #98be65;">\</span>
+    | jq -r <span style="color: #98be65;">'.data'</span>
 </pre>
 </div>
 </div>
@@ -618,12 +669,66 @@ Which gets:
 </p>
 
 <p>
-Or, just ssh to the master, and download etcdctl
+Or, just ssh to the master, and download etcdctl on the master node.
 </p>
 
 <p>
 Try looking at a secret at /registry/secrets/default/mysecret
 </p>
+</div>
+</div>
+
+<div id="outline-container-org4b3a8eb" class="outline-2">
+<h2 id="org4b3a8eb"><a href="#org4b3a8eb">Autoscaling</a></h2>
+<div class="outline-text-2" id="text-org4b3a8eb">
+<p>
+There are two kinds of autoscaling in Kubernetes:
+</p>
+
+<ol class="org-ol">
+<li>Scaling the number of Pods in Deployments/StatefulSets</li>
+<li>Scaling the number of Nodes in the Cluster</li>
+</ol>
+</div>
+
+<div id="outline-container-orgfafeff4" class="outline-3">
+<h3 id="orgfafeff4"><a href="#orgfafeff4">Scaling Pods</a></h3>
+<div class="outline-text-3" id="text-orgfafeff4">
+</div>
+<div id="outline-container-orged7e053" class="outline-4">
+<h4 id="orged7e053"><a href="#orged7e053">Horizontal Pod Autoscaler</a></h4>
+<div class="outline-text-4" id="text-orged7e053">
+<p>
+Kubernetes has a built-in autoscaling mechanism called the Horizontal Pod
+Autoscaler. An HPA can be created and configured using standard Kubernetes
+objects:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">kubectl get hpa
+</pre>
+</div>
+
+<p>
+Also, HPAs can be created with the special <code>kubectl autoscale</code> command:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">kubectl autoscale rs foo --min=2 --max=5 --cpu-percent=80
+</pre>
+</div>
+
+<p>
+The HPA supports scaling based on metrics exposed through the Kubernetes
+Metrics API (i.e. what <code>kubectl top</code> uses). I think this means you need a
+metrics-server pod running in your cluster.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0743202" class="outline-3">
+<h3 id="org0743202"><a href="#org0743202">Scaling Nodes</a></h3>
 </div>
 </div>
 </div>

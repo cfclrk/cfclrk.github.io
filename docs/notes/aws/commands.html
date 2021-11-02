@@ -33,7 +33,7 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgf226c03">Account</a></li>
+<li><a href="#org24d2d85">Account</a></li>
 <li><a href="#orgf9a3f98">IP Address Ranges</a>
 <ul>
 <li><a href="#org0b6e61a">Get Region of IP</a></li>
@@ -49,7 +49,7 @@
 <li><a href="#org6622052">ACM</a>
 <ul>
 <li><a href="#orga9d8f9e">List</a></li>
-<li><a href="#org85c3685">Describe</a></li>
+<li><a href="#orgba58c12">Describe</a></li>
 <li><a href="#org8db7a20">Get Certificate</a></li>
 <li><a href="#org671ce03">Get Certificate PEM File</a></li>
 </ul>
@@ -92,7 +92,7 @@
 <li><a href="#orgbc46786">EC2 KeyPairs</a>
 <ul>
 <li><a href="#org4a97cf6">Create</a></li>
-<li><a href="#orgba58c12">Describe</a></li>
+<li><a href="#orged5d51e">Describe</a></li>
 <li><a href="#org878c9b3">Delete</a></li>
 </ul>
 </li>
@@ -116,6 +116,12 @@
 <li><a href="#org03fe971">SecurityGroups</a></li>
 <li><a href="#org5e6a6b6">Private ALB IPs</a></li>
 <li><a href="#org45563e2">Managed Prefix Lists</a></li>
+</ul>
+</li>
+<li><a href="#org7d0d552">EC2 Volumes</a>
+<ul>
+<li><a href="#org00561f2">List Volumes</a></li>
+<li><a href="#org8fe17be">Delete Volumes</a></li>
 </ul>
 </li>
 <li><a href="#orgfc156b4">ECR</a>
@@ -241,15 +247,15 @@
 </div>
 </nav>
 
-<div id="outline-container-orgf226c03" class="outline-2">
-<h2 id="orgf226c03"><a href="#orgf226c03">Account</a></h2>
-<div class="outline-text-2" id="text-orgf226c03">
+<div id="outline-container-org24d2d85" class="outline-2">
+<h2 id="org24d2d85"><a href="#org24d2d85">Account</a></h2>
+<div class="outline-text-2" id="text-org24d2d85">
 <p>
 Account number:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="org35ec56b">aws sts get-caller-identity --query <span style="color: #98be65;">'Account'</span> --output text
+<pre class="src src-sh" id="orgf226c03">aws sts get-caller-identity --query <span style="color: #98be65;">'Account'</span> --output text
 </pre>
 </div>
 </div>
@@ -420,7 +426,7 @@ Get the number of VPCs in each region the slow and simple way.
 </pre>
 </div>
 
-<pre class="example" id="org349a25d">
+<pre class="example" id="org22e436d">
 eu-north-1: 0
 ap-south-1: 0
 eu-west-3: 0
@@ -457,7 +463,7 @@ syntax for th length of the <code>$regions</code> array.
 </pre>
 </div>
 
-<pre class="example" id="org8e21b60">
+<pre class="example" id="org067c2b4">
 us-east-1: 2
 ca-central-1: 0
 us-east-2: 2
@@ -494,9 +500,9 @@ ap-southeast-1: 1
 </div>
 </div>
 
-<div id="outline-container-org85c3685" class="outline-3">
-<h3 id="org85c3685"><a href="#org85c3685">Describe</a></h3>
-<div class="outline-text-3" id="text-org85c3685">
+<div id="outline-container-orgba58c12" class="outline-3">
+<h3 id="orgba58c12"><a href="#orgba58c12">Describe</a></h3>
+<div class="outline-text-3" id="text-orgba58c12">
 <div class="org-src-container">
 <pre class="src src-sh">aws acm describe-certificate --certificate-arn $<span style="color: #dcaeea;">CertArn</span>
 </pre>
@@ -888,9 +894,9 @@ chmod 0600 $<span style="color: #dcaeea;">KeyFile</span>
 </div>
 </div>
 
-<div id="outline-container-orgba58c12" class="outline-3">
-<h3 id="orgba58c12"><a href="#orgba58c12">Describe</a></h3>
-<div class="outline-text-3" id="text-orgba58c12">
+<div id="outline-container-orged5d51e" class="outline-3">
+<h3 id="orged5d51e"><a href="#orged5d51e">Describe</a></h3>
+<div class="outline-text-3" id="text-orged5d51e">
 <div class="org-src-container">
 <pre class="src src-sh">aws ec2 describe-key-pairs | jq <span style="color: #98be65;">'.KeyPairs[]'</span>
 </pre>
@@ -1056,6 +1062,36 @@ With a specific tag key and value
 </div>
 </div>
 </div>
+
+<div id="outline-container-org7d0d552" class="outline-2">
+<h2 id="org7d0d552"><a href="#org7d0d552">EC2 Volumes</a></h2>
+<div class="outline-text-2" id="text-org7d0d552">
+</div>
+<div id="outline-container-org00561f2" class="outline-3">
+<h3 id="org00561f2"><a href="#org00561f2">List Volumes</a></h3>
+<div class="outline-text-3" id="text-org00561f2">
+<div class="org-src-container">
+<pre class="src src-sh" id="org22a21e7">aws ec2 describe-volumes <span style="color: #98be65;">\</span>
+    --filters <span style="color: #dcaeea;">Name</span>=tag-key,<span style="color: #dcaeea;">Values</span>=$<span style="color: #dcaeea;">Tag</span> <span style="color: #98be65;">\</span>
+    | jq -r <span style="color: #98be65;">'.Volumes[].VolumeId'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8fe17be" class="outline-3">
+<h3 id="org8fe17be"><a href="#org8fe17be">Delete Volumes</a></h3>
+<div class="outline-text-3" id="text-org8fe17be">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #51afef;">for</span> volume<span style="color: #51afef;"> in</span> $<span style="color: #dcaeea;">Volumes</span>; <span style="color: #51afef;">do</span>
+    aws ec2 delete-volume --volume-id $<span style="color: #dcaeea;">volume</span>
+<span style="color: #51afef;">done</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
 
 <div id="outline-container-orgfc156b4" class="outline-2">
 <h2 id="orgfc156b4"><a href="#orgfc156b4">ECR</a></h2>
@@ -1777,6 +1813,10 @@ I have functions for this in <a href="https://github.com/cfclrk/dotfiles/blob/ma
 <h3 id="org5599b19"><a href="#org5599b19">Token</a></h3>
 <div class="outline-text-3" id="text-org5599b19">
 <p>
+TODO: Need to run aws sso login. Requires block in <code>~/.aws/config</code> I think.
+</p>
+
+<p>
 TODO: Look up token file programatically
 </p>
 
@@ -1790,10 +1830,20 @@ TODO: Look up token file programatically
 <div id="outline-container-org8f92a28" class="outline-3">
 <h3 id="org8f92a28"><a href="#org8f92a28">List Accounts I Can Access</a></h3>
 <div class="outline-text-3" id="text-org8f92a28">
+<p>
+TODO: SsoToken has a trailing newline!
+</p>
+
 <div class="org-src-container">
 <pre class="src src-sh">aws sso list-accounts <span style="color: #98be65;">\</span>
+    --access-token $<span style="color: #dcaeea;">SsoToken</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh">aws sso list-account-roles <span style="color: #98be65;">\</span>
     --access-token <span style="color: #98be65;">"$SsoToken"</span> <span style="color: #98be65;">\</span>
-    | jq -c <span style="color: #98be65;">'.accountList[] | {accountName, accountId}'</span>
+    --account-id $<span style="color: #dcaeea;">Account</span>
 </pre>
 </div>
 </div>
