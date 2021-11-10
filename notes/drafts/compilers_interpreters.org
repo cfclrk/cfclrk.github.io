@@ -9,19 +9,26 @@
 ** Scanner
 
    - Reads one character at a time
-   - Names: scanner, lexer, tokenizer
-   - DFA
-   - DFAs and regular expressions are equivalent! So, usually implemented with
-     regular expressions. (Example when it isn't?)
+   - Names: scanner, lexer, tokenizer. Originally "scanning" and "lexing" were
+     distinct phases, where scanning meant reading a program into memory.
+   - If this is a regular language (the most specific type of formal language),
+     tokens can be recognized with a regex or DFA.
+     - DFAs and regular expressions are equivalent! So, usually implemented with
+       regular expressions. (Example when it isn't?)
+   - Some languages are not regular, but context-free (one level up the Chomsky
+     Heirarchy). E.g. Python, because the indentation level is important.
 
-   is this what the "reader" is in Clojure?
+   Question: is this what the "reader" is in Clojure?
 
    Can sometimes be as simple Python =string.split()=
 
    "Lexical analysis"
 
    Splits the program into tokens. Might be a completely invalid program, there
-   is no syntax checking here.
+   is no syntax checking here. A token is the "word" (lexeme) plus some metadata
+   about the token. Without more metadata, the parsing stage would have to read
+   the whole token again to figure out what it is, which would effectively
+   result in another full scan of the whole source code.
 
    Creates the first internal representation: a list of tokens.
 

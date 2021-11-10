@@ -46,10 +46,6 @@
 </ul>
 </div>
 </nav>
-<p>
-The source blocks in this program are tangled to my dotfiles repo at
-<a href="https://github.com/cfclrk/dotfiles/tree/master/xdg_config/git">xdg<sub>config</sub>/git</a> and <a href="https://github.com/cfclrk/dotfiles/blob/master/.ssh/config">.ssh/config</a>.
-</p>
 
 <div id="outline-container-org50f6963" class="outline-2">
 <h2 id="org50f6963"><a href="#org50f6963">The Problem</a></h2>
@@ -75,6 +71,11 @@ handle. In this setup, Gists in your GitHub <b>home</b> account will "just work"
 For your <b>work</b> account, each Gist URL will need to be individually added to
 your git config file. All Gists are publically readable, so I tend to use
 Gists less frequently at work.
+</p>
+
+<p>
+My git configuration <a href="https://github.com/cfclrk/dotfiles/tree/master/xdg_config/git">on GitHub</a> is generated from this article. My SSH
+configuration is als on GitHub <a href="https://github.com/cfclrk/dotfiles/blob/master/.ssh/config">here</a>.
 </p>
 </div>
 </div>
@@ -300,7 +301,7 @@ both accounts). Assuming you've <a href="https://docs.github.com/en/github/authe
 something like:
 </p>
 
-<pre class="example" id="orge332379">
+<pre class="example" id="org4b477e3">
 $ tree ~/.ssh/
 /Users/cfclrk/.ssh/
 ├── config

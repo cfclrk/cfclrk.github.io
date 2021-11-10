@@ -15,7 +15,7 @@
   #+header: :var ProjectName="lox"
   #+begin_src sh :results output
     mvn archetype:generate \
-        -DgroupId=com.cfclrk \
+        -DgroupId=com.cfclrk.$ProjectName \
         -DartifactId=$ProjectName \
         -DarchetypeArtifactId=maven-archetype-quickstart \
         -DarchetypeVersion=1.4 \

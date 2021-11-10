@@ -18,8 +18,8 @@
   your git config file. All Gists are publically readable, so I tend to use
   Gists less frequently at work.
 
-  My current config files are located at [[https://github.com/cfclrk/dotfiles/tree/master/xdg_config/git][xdg_config/git]] and [[https://github.com/cfclrk/dotfiles/blob/master/.ssh/config][.ssh/config]] on
-  GitHub; they are generated from this article.
+  My git configuration [[https://github.com/cfclrk/dotfiles/tree/master/xdg_config/git][on GitHub]] is generated from this article. My SSH
+  configuration is als on GitHub [[https://github.com/cfclrk/dotfiles/blob/master/.ssh/config][here]].
 
 * The Git Config
 
