@@ -425,8 +425,8 @@ Verify some environment variables exist.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">: <span style="color: #98be65;">"${ARTIFACTORY_USER:?ARTIFACTORY_USER is not set}"</span>
-: <span style="color: #98be65;">"${ARTIFACTORY_PASSWORD:?ARTIFACTORY_PASSWORD is not set}"</span>
+<pre class="src src-sh">: <span style="color: #98be65;">"${FOO:?FOO is not set}"</span>
+: <span style="color: #98be65;">"${BAR:?BAR is not set}"</span>
 </pre>
 </div>
 </div>
@@ -714,7 +714,7 @@ world
 </pre>
 </div>
 
-<pre class="example" id="orgbd57340">
+<pre class="example" id="org1a4f2f4">
  1	/Users/chris.clark/.rbenv/shims
  2	/usr/local/Cellar/pyenv-virtualenv/1.1.5/shims
  3	/Users/chris.clark/.pyenv/shims

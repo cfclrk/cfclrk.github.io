@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Groovy</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Groovy</h1>
+</header><nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org0bac1dd">HTTP</a>
+<ul>
+<li><a href="#org2da3030">GET</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-org0bac1dd" class="outline-2">
+<h2 id="org0bac1dd"><a href="#org0bac1dd">HTTP</a></h2>
+<div class="outline-text-2" id="text-org0bac1dd">
+</div>
+<div id="outline-container-org2da3030" class="outline-3">
+<h3 id="org2da3030"><a href="#org2da3030">GET</a></h3>
+<div class="outline-text-3" id="text-org2da3030">
+<div class="org-src-container">
+<pre class="src src-groovy"><span style="color: #98be65;">"http://httpbin.org/get"</span>.toURL().text
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+{
+  "args": {},
+  "headers": {
+    "Accept": "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2",
+    "Host": "httpbin.org",
+    "User-Agent": "Java/17.0.1",
+    "X-Amzn-Trace-Id": "Root=1-618bf6df-6dbbe58a1b91dd340d09620c"
+  },
+  "origin": "67.23.104.250",
+  "url": "http://httpbin.org/get"
+}
+
+</pre>
+
+
+<p>
+With http-builder:
+</p>
+
+<p>
+TODO: Doesn't work in org-babel with an import. Fix that? Do imports work in
+python blocks?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-groovy"><span style="color: #51afef;">import</span> groovyx.net.http.<span style="color: #ECBE7B;">RESTClient</span>
+
+<span style="color: #a9a1e1;">@Grab</span>(<span style="color: #98be65;">'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'</span>)
+
+<span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">baseURL</span> = <span style="color: #98be65;">'http://httpbin.org/get'</span>
+<span style="color: #51afef;">def</span> <span style="color: #dcaeea;">restClient</span> = <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">RESTClient</span>(baseURL)
+restClient.get(<span style="color: #98be65;">'/get'</span>)
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

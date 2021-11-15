@@ -595,7 +595,6 @@
     done
   #+end_src
 
-
 * ECR
 
 ** Log in
@@ -988,7 +987,16 @@
      aws s3api get-bucket-acl --bucket $BucketName
    #+end_src
 
-** List objects in bucket
+** Create Bucket
+
+   #+header: :var BUCKET_NAME="cfc-s3"
+   #+begin_src sh
+     aws s3api create-bucket \
+         --bucket $BUCKET_NAME \
+         --create-bucket-configuration LocationConstraint=$AWS_DEFAULT_REGION
+   #+end_src
+
+** List Objects
 
    All objects
 

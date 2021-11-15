@@ -33,7 +33,7 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org24d2d85">Account</a></li>
+<li><a href="#orgdbbcc0c">Account</a></li>
 <li><a href="#orgf9a3f98">IP Address Ranges</a>
 <ul>
 <li><a href="#org0b6e61a">Get Region of IP</a></li>
@@ -49,7 +49,7 @@
 <li><a href="#org6622052">ACM</a>
 <ul>
 <li><a href="#orga9d8f9e">List</a></li>
-<li><a href="#orgba58c12">Describe</a></li>
+<li><a href="#orged5d51e">Describe</a></li>
 <li><a href="#org8db7a20">Get Certificate</a></li>
 <li><a href="#org671ce03">Get Certificate PEM File</a></li>
 </ul>
@@ -92,7 +92,7 @@
 <li><a href="#orgbc46786">EC2 KeyPairs</a>
 <ul>
 <li><a href="#org4a97cf6">Create</a></li>
-<li><a href="#orged5d51e">Describe</a></li>
+<li><a href="#orgcf737f5">Describe</a></li>
 <li><a href="#org878c9b3">Delete</a></li>
 </ul>
 </li>
@@ -220,7 +220,8 @@
 <li><a href="#orgd3edbcc">S3</a>
 <ul>
 <li><a href="#org89bd061">Canonical ID</a></li>
-<li><a href="#orgef945d6">List objects in bucket</a></li>
+<li><a href="#org82dd913">Create Bucket</a></li>
+<li><a href="#org291922e">List Objects</a></li>
 <li><a href="#org5109ba4">Get Object</a></li>
 <li><a href="#orge29acab">Get Bucket Policy</a></li>
 <li><a href="#org2794a96">Delete Buckets</a></li>
@@ -247,15 +248,15 @@
 </div>
 </nav>
 
-<div id="outline-container-org24d2d85" class="outline-2">
-<h2 id="org24d2d85"><a href="#org24d2d85">Account</a></h2>
-<div class="outline-text-2" id="text-org24d2d85">
+<div id="outline-container-orgdbbcc0c" class="outline-2">
+<h2 id="orgdbbcc0c"><a href="#orgdbbcc0c">Account</a></h2>
+<div class="outline-text-2" id="text-orgdbbcc0c">
 <p>
 Account number:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="orgf226c03">aws sts get-caller-identity --query <span style="color: #98be65;">'Account'</span> --output text
+<pre class="src src-sh" id="org24d2d85">aws sts get-caller-identity --query <span style="color: #98be65;">'Account'</span> --output text
 </pre>
 </div>
 </div>
@@ -426,7 +427,7 @@ Get the number of VPCs in each region the slow and simple way.
 </pre>
 </div>
 
-<pre class="example" id="org22e436d">
+<pre class="example" id="orge2651b5">
 eu-north-1: 0
 ap-south-1: 0
 eu-west-3: 0
@@ -463,7 +464,7 @@ syntax for th length of the <code>$regions</code> array.
 </pre>
 </div>
 
-<pre class="example" id="org067c2b4">
+<pre class="example" id="org068873e">
 us-east-1: 2
 ca-central-1: 0
 us-east-2: 2
@@ -500,9 +501,9 @@ ap-southeast-1: 1
 </div>
 </div>
 
-<div id="outline-container-orgba58c12" class="outline-3">
-<h3 id="orgba58c12"><a href="#orgba58c12">Describe</a></h3>
-<div class="outline-text-3" id="text-orgba58c12">
+<div id="outline-container-orged5d51e" class="outline-3">
+<h3 id="orged5d51e"><a href="#orged5d51e">Describe</a></h3>
+<div class="outline-text-3" id="text-orged5d51e">
 <div class="org-src-container">
 <pre class="src src-sh">aws acm describe-certificate --certificate-arn $<span style="color: #dcaeea;">CertArn</span>
 </pre>
@@ -894,9 +895,9 @@ chmod 0600 $<span style="color: #dcaeea;">KeyFile</span>
 </div>
 </div>
 
-<div id="outline-container-orged5d51e" class="outline-3">
-<h3 id="orged5d51e"><a href="#orged5d51e">Describe</a></h3>
-<div class="outline-text-3" id="text-orged5d51e">
+<div id="outline-container-orgcf737f5" class="outline-3">
+<h3 id="orgcf737f5"><a href="#orgcf737f5">Describe</a></h3>
+<div class="outline-text-3" id="text-orgcf737f5">
 <div class="org-src-container">
 <pre class="src src-sh">aws ec2 describe-key-pairs | jq <span style="color: #98be65;">'.KeyPairs[]'</span>
 </pre>
@@ -1091,7 +1092,6 @@ With a specific tag key and value
 </div>
 </div>
 </div>
-
 
 <div id="outline-container-orgfc156b4" class="outline-2">
 <h2 id="orgfc156b4"><a href="#orgfc156b4">ECR</a></h2>
@@ -1700,9 +1700,21 @@ You can do this with <code>aws servicecatalog associate-principal-with-portfolio
 </div>
 </div>
 
-<div id="outline-container-orgef945d6" class="outline-3">
-<h3 id="orgef945d6"><a href="#orgef945d6">List objects in bucket</a></h3>
-<div class="outline-text-3" id="text-orgef945d6">
+<div id="outline-container-org82dd913" class="outline-3">
+<h3 id="org82dd913"><a href="#org82dd913">Create Bucket</a></h3>
+<div class="outline-text-3" id="text-org82dd913">
+<div class="org-src-container">
+<pre class="src src-sh">aws s3api create-bucket <span style="color: #98be65;">\</span>
+    --bucket $<span style="color: #dcaeea;">BUCKET_NAME</span> <span style="color: #98be65;">\</span>
+    --create-bucket-configuration <span style="color: #dcaeea;">LocationConstraint</span>=$<span style="color: #dcaeea;">AWS_DEFAULT_REGION</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org291922e" class="outline-3">
+<h3 id="org291922e"><a href="#org291922e">List Objects</a></h3>
+<div class="outline-text-3" id="text-org291922e">
 <p>
 All objects
 </p>

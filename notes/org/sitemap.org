@@ -10,6 +10,7 @@
 - [[file:git.org][Git]]
 - [[file:git_log.org][Git Log]]
 - [[file:go.org][Go]]
+- [[file:groovy.org][Groovy]]
 - [[file:jmespath.org][JMESPath]]
 - [[file:jwt.org][JSON Web Tokens]]
 - [[file:keys_and_certs.org][Keys and Certificates]]

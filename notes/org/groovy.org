@@ -1,0 +1,39 @@
+#+TITLE: Groovy
+#+SETUPFILE: ../setup.org
+
+* HTTP
+
+** GET
+
+   #+begin_src groovy
+     "http://httpbin.org/get".toURL().text
+   #+end_src
+
+   #+RESULTS:
+   : {
+   :   "args": {},
+   :   "headers": {
+   :     "Accept": "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2",
+   :     "Host": "httpbin.org",
+   :     "User-Agent": "Java/17.0.1",
+   :     "X-Amzn-Trace-Id": "Root=1-618bf6df-6dbbe58a1b91dd340d09620c"
+   :   },
+   :   "origin": "67.23.104.250",
+   :   "url": "http://httpbin.org/get"
+   : }
+   :
+
+   With http-builder:
+
+   TODO: Doesn't work in org-babel with an import. Fix that? Do imports work in
+   python blocks?
+
+   #+begin_src groovy
+     import groovyx.net.http.RESTClient
+
+     @Grab('org.codehaus.groovy.modules.http-builder:http-builder:0.7.1')
+
+     String baseURL = 'http://httpbin.org/get'
+     def restClient = new RESTClient(baseURL)
+     restClient.get('/get')
+   #+end_src

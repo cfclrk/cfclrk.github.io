@@ -240,8 +240,8 @@
   Verify some environment variables exist.
 
   #+begin_src sh
-	: "${ARTIFACTORY_USER:?ARTIFACTORY_USER is not set}"
-	: "${ARTIFACTORY_PASSWORD:?ARTIFACTORY_PASSWORD is not set}"
+    : "${FOO:?FOO is not set}"
+    : "${BAR:?BAR is not set}"
   #+end_src
 
 * Parameter Expansion
