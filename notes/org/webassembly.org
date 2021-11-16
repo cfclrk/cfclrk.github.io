@@ -1,6 +1,56 @@
 #+TITLE: WebAssembly
 #+SETUPFILE: ../setup.org
 
+* What Is WebAssembly?
+
+  Mostly, WebAssembly is a specification ([[https://webassembly.github.io/spec/core/][here]]) for a bytecode format (i.e. a
+  /virtual instruction set architecture/) for a virtual stack machine. See [[https://youtu.be/2qV-1JhxWeE?t=175][here]]
+  for an intro to virtual stack machines.
+
+  Just like many other programming languages (Python, Ruby, every JVM language),
+  the idea is that a virtual machine can interpret the bytecode. These days
+  browsers include such a VM, as does NodeJS.
+
+  A WebAssembly virtual machine has some important differences from other
+  popular language virtual machines:
+
+  - Host Environment.
+  - Security Model.
+
+** WebAssmbly vs Javascript
+
+*** Interpreters
+
+    There are a couple existing Javascript intepreters:
+
+    - V8 (Chrome, NodeJS)
+    - SpiderMonkey (FireFox)
+    - [[https://trac.webkit.org/wiki/JavaScriptCore][JavaScriptCore]] (Safari)
+
+    So, there's a V8 team at Google who created their own interpreter for
+    Javascript. They invented a bytecode format and implemented a VM
+    (incidentally, a register machine) that executes the bytecode.
+
+    V8 scans and parses Javascript code (into an AST) and then generates
+    bytecode. The interpreter evaluates the bytecodes using C functions. The
+    bytecode form of the program can't be shared for execution in other browsers,
+    since it only works in V8; instead, sharing the program means sharing the
+    Javascript (which is fine, just slightly slower to load and execute).
+
+    A WebAssembly VM could execute a program that has been pre-compiled into
+    WebAssembly bytecode.
+
+    Since a whole new VM is required, WebAssembly is also an opportunity to
+    revisit every single design decision about Javascript to make it better for
+    running in browsers.
+
+*** Bytcode as a Compilation Target
+
+    Bytecode is a nicer compilation target than a high-level textual language
+    like Javascript. While there have been many tools to transpile various
+    languages into Javascript, it is easier to create tools that compile those
+    languages to WebAssembly bytecode.
+
 * wat, wasm, and wast
 
   - =wat=: is the textual format (lisp)
@@ -17,11 +67,15 @@
 
   - [[https://github.com/webassembly/wabt][wabt]], the WebAssembly Binary Toolkit.
 
-     #+begin_src sh
-       brew install wabt
-     #+end_src
+    #+begin_src sh
+      brew install wabt
+    #+end_src
 
   - Emscripten: LLVM backend for wasm
+
+  - [[https://mbebenita.github.io/WasmExplorer/][WasmExplorer]] - Website where you can programs to WebAssembly and view them.
+
+  - WasmFiddle
 
 * Runtimes
 
@@ -31,105 +85,144 @@
   - Wasmtime
   - Wasmer
 
-* Convert wat (text) to wasm (binary)
+* Hello World
 
-  Tangle this to =simple.wat=.
-
-  #+begin_src wat :tangle simple.wat
+  #+header: :tangle webassembly/AddInt.wat
+  #+begin_src wat
     (module
-     (func $i (import "imports" "imported_func") (param i32))
-     (func (export "exported_func")
-           i32.const 42
-           call $i))
+     (func (export "AddInt")
+           (param $value_1 i32) (param $value_2 i32)
+           (result i32)
+           local.get $value_1
+           local.get $value_2
+           i32.add
+           )
+     )
   #+end_src
-
-  Now run =wat2wasm= to produce a binary file called =simple.wasm=.
 
   #+begin_src sh
-    wat2wasm simple.wat -o simple.wasm
+    wat2wasm webassembly/AddInt.wat \
+             -o webassembly/AddInt.wasm
   #+end_src
 
-  Why is this writing to stderr?
+  #+header: :var dir=(f-join notes/project-directory "org/webassembly")
+  #+begin_src js
+    // Read wasm file
+    const fs = require('fs');
+    const bytes = fs.readFileSync(dir + "/AddInt.wasm");
 
-  #+begin_src sh :results output :prologue "exec 2>&1"
-    wat2wasm simple.wat -v
-  #+end_src
-
-  #+RESULTS:
-  #+begin_example
-  0000000: 0061 736d                                 ; WASM_BINARY_MAGIC
-  0000004: 0100 0000                                 ; WASM_BINARY_VERSION
-  ; section "Type" (1)
-  0000008: 01                                        ; section code
-  0000009: 00                                        ; section size (guess)
-  000000a: 02                                        ; num types
-  ; func type 0
-  000000b: 60                                        ; func
-  000000c: 01                                        ; num params
-  000000d: 7f                                        ; i32
-  000000e: 00                                        ; num results
-  ; func type 1
-  000000f: 60                                        ; func
-  0000010: 00                                        ; num params
-  0000011: 00                                        ; num results
-  0000009: 08                                        ; FIXUP section size
-  ; section "Import" (2)
-  0000012: 02                                        ; section code
-  0000013: 00                                        ; section size (guess)
-  0000014: 01                                        ; num imports
-  ; import header 0
-  0000015: 07                                        ; string length
-  0000016: 696d 706f 7274 73                        imports  ; import module name
-  000001d: 0d                                        ; string length
-  000001e: 696d 706f 7274 6564 5f66 756e 63         imported_func  ; import field name
-  000002b: 00                                        ; import kind
-  000002c: 00                                        ; import signature index
-  0000013: 19                                        ; FIXUP section size
-  ; section "Function" (3)
-  000002d: 03                                        ; section code
-  000002e: 00                                        ; section size (guess)
-  000002f: 01                                        ; num functions
-  0000030: 01                                        ; function 0 signature index
-  000002e: 02                                        ; FIXUP section size
-  ; section "Export" (7)
-  0000031: 07                                        ; section code
-  0000032: 00                                        ; section size (guess)
-  0000033: 01                                        ; num exports
-  0000034: 0d                                        ; string length
-  0000035: 6578 706f 7274 6564 5f66 756e 63         exported_func  ; export name
-  0000042: 00                                        ; export kind
-  0000043: 01                                        ; export func index
-  0000032: 11                                        ; FIXUP section size
-  ; section "Code" (10)
-  0000044: 0a                                        ; section code
-  0000045: 00                                        ; section size (guess)
-  0000046: 01                                        ; num functions
-  ; function body 0
-  0000047: 00                                        ; func body size (guess)
-  0000048: 00                                        ; local decl count
-  0000049: 41                                        ; i32.const
-  000004a: 2a                                        ; i32 literal
-  000004b: 10                                        ; call
-  000004c: 00                                        ; function index
-  000004d: 0b                                        ; end
-  0000047: 06                                        ; FIXUP func body size
-  0000045: 08                                        ; FIXUP section size
-  #+end_example
-
-* Convert wasm to wat
-
-  We can disassemble! Ain't that peachy!
-
-  #+begin_src sh :results output
-    wasm2wat simple.wasm
+    WebAssembly.instantiate(new Uint8Array(bytes))
+      .then(obj => {
+        let result = obj.instance.exports.AddInt(3, 4);
+        console.log(`3 + 4 = ${result}`);
+      })
   #+end_src
 
   #+RESULTS:
-  : (module
-  :   (type (;0;) (func (param i32)))
-  :   (type (;1;) (func))
-  :   (import "imports" "imported_func" (func (;0;) (type 0)))
-  :   (func (;1;) (type 1)
-  :     i32.const 42
-  :     call 0)
-  :   (export "exported_func" (func 1)))
+  : undefined3 + 4 = 7
+
+* Text/Binary Conversion
+
+** From wat (text) to wasm (binary)
+
+   Tangle this to =simple.wat=.
+
+   #+header: :tangle simple.wat
+   #+begin_src wat
+     (module
+      (func $i (import "imports" "imported_func") (param i32))
+      (func (export "exported_func")
+            i32.const 42
+            call $i))
+   #+end_src
+
+   Now run =wat2wasm= to produce a binary file called =simple.wasm=.
+
+   #+begin_src sh
+     wat2wasm simple.wat -o simple.wasm
+   #+end_src
+
+   Why is this writing to stderr?
+
+   #+begin_src sh :results output :prologue "exec 2>&1"
+     wat2wasm simple.wat -v
+   #+end_src
+
+   #+RESULTS:
+   #+begin_example
+   0000000: 0061 736d                                 ; WASM_BINARY_MAGIC
+   0000004: 0100 0000                                 ; WASM_BINARY_VERSION
+   ; section "Type" (1)
+   0000008: 01                                        ; section code
+   0000009: 00                                        ; section size (guess)
+   000000a: 02                                        ; num types
+   ; func type 0
+   000000b: 60                                        ; func
+   000000c: 01                                        ; num params
+   000000d: 7f                                        ; i32
+   000000e: 00                                        ; num results
+   ; func type 1
+   000000f: 60                                        ; func
+   0000010: 00                                        ; num params
+   0000011: 00                                        ; num results
+   0000009: 08                                        ; FIXUP section size
+   ; section "Import" (2)
+   0000012: 02                                        ; section code
+   0000013: 00                                        ; section size (guess)
+   0000014: 01                                        ; num imports
+   ; import header 0
+   0000015: 07                                        ; string length
+   0000016: 696d 706f 7274 73                        imports  ; import module name
+   000001d: 0d                                        ; string length
+   000001e: 696d 706f 7274 6564 5f66 756e 63         imported_func  ; import field name
+   000002b: 00                                        ; import kind
+   000002c: 00                                        ; import signature index
+   0000013: 19                                        ; FIXUP section size
+   ; section "Function" (3)
+   000002d: 03                                        ; section code
+   000002e: 00                                        ; section size (guess)
+   000002f: 01                                        ; num functions
+   0000030: 01                                        ; function 0 signature index
+   000002e: 02                                        ; FIXUP section size
+   ; section "Export" (7)
+   0000031: 07                                        ; section code
+   0000032: 00                                        ; section size (guess)
+   0000033: 01                                        ; num exports
+   0000034: 0d                                        ; string length
+   0000035: 6578 706f 7274 6564 5f66 756e 63         exported_func  ; export name
+   0000042: 00                                        ; export kind
+   0000043: 01                                        ; export func index
+   0000032: 11                                        ; FIXUP section size
+   ; section "Code" (10)
+   0000044: 0a                                        ; section code
+   0000045: 00                                        ; section size (guess)
+   0000046: 01                                        ; num functions
+   ; function body 0
+   0000047: 00                                        ; func body size (guess)
+   0000048: 00                                        ; local decl count
+   0000049: 41                                        ; i32.const
+   000004a: 2a                                        ; i32 literal
+   000004b: 10                                        ; call
+   000004c: 00                                        ; function index
+   000004d: 0b                                        ; end
+   0000047: 06                                        ; FIXUP func body size
+   0000045: 08                                        ; FIXUP section size
+   #+end_example
+
+** From wasm to wat
+
+   We can disassemble! Ain't that peachy!
+
+   #+begin_src sh :results output
+     wasm2wat simple.wasm
+   #+end_src
+
+   #+RESULTS:
+   : (module
+   :   (type (;0;) (func (param i32)))
+   :   (type (;1;) (func))
+   :   (import "imports" "imported_func" (func (;0;) (type 0)))
+   :   (func (;1;) (type 1)
+   :     i32.const 42
+   :     call 0)
+   :   (export "exported_func" (func 1)))

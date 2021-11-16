@@ -64,3 +64,14 @@
   #+begin_src sh
     return "🤦🏼‍♂️".length
   #+end_src
+
+* Scripts
+
+  #+begin_src js
+    const fs = require('fs');
+    console.log("hello")
+  #+end_src
+
+  #+RESULTS:
+  : hello
+  : undefined

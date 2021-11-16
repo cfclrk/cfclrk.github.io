@@ -187,7 +187,9 @@ nightmares). Here was the problem:
 
   Projectile found a =.git= two directories up before ever even looking for a
   =go.mod=. In this case we could rectify that by /prepending/ =go.mod= instead
-  of appending it, but the general problem would still be there.
+  of appending it, but the general problem would still remain (i.e. that marker
+  files several directories up could be discovered before files in the current
+  directory).
 
   The existing behavior of the =(projectile-root-bottom-up)= function is useful
   in one situation: if you want to force a project root to a /higher/ level. For
@@ -311,15 +313,14 @@ nightmares). Here was the problem:
   :CUSTOM_ID: solution
   :END:
 
-  Define a new strategy for discovering projects.
-
   #+header: :tangle (expand-file-name "~/Projects/dotfiles/emacs/projectile-discovery.el")
   #+begin_src emacs-lisp
     (require 'projectile)
     (require 'f)
   #+end_src
 
-  Define a variable with the marker files that indicate a project root.
+  We will define a new strategy for discovering projects. First, define a
+  variable with the marker files that indicate a project root.
 
   #+header: :tangle (expand-file-name "~/Projects/dotfiles/emacs/projectile-discovery.el")
   #+begin_src emacs-lisp :results silent

@@ -33,14 +33,113 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
+<li><a href="#orge73eba0">What Is WebAssembly?</a>
+<ul>
+<li><a href="#orga694118">WebAssmbly vs Javascript</a>
+<ul>
+<li><a href="#orgfdb8efb">Interpreters</a></li>
+<li><a href="#orgeade553">Bytcode as a Compilation Target</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="#org2a1a2d3">wat, wasm, and wast</a></li>
 <li><a href="#org4a77ae6">Tooling</a></li>
 <li><a href="#org8a548c5">Runtimes</a></li>
-<li><a href="#orge87741c">Convert wat (text) to wasm (binary)</a></li>
-<li><a href="#org1d33868">Convert wasm to wat</a></li>
+<li><a href="#org0a27e59">Hello World</a></li>
+<li><a href="#org8540117">Text/Binary Conversion</a>
+<ul>
+<li><a href="#org43aa9e6">From wat (text) to wasm (binary)</a></li>
+<li><a href="#orga08e298">From wasm to wat</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </nav>
+
+<div id="outline-container-orge73eba0" class="outline-2">
+<h2 id="orge73eba0"><a href="#orge73eba0">What Is WebAssembly?</a></h2>
+<div class="outline-text-2" id="text-orge73eba0">
+<p>
+Mostly, WebAssembly is a specification (<a href="https://webassembly.github.io/spec/core/">here</a>) for a bytecode format (i.e. a
+<i>virtual instruction set architecture</i>) for a virtual stack machine. See <a href="https://youtu.be/2qV-1JhxWeE?t=175">here</a>
+for an intro to virtual stack machines.
+</p>
+
+<p>
+Just like many other programming languages (Python, Ruby, every JVM language),
+the idea is that a virtual machine can interpret the bytecode. These days
+browsers include such a VM, as does NodeJS.
+</p>
+
+<p>
+A WebAssembly virtual machine has some important differences from other
+popular language virtual machines:
+</p>
+
+<ul class="org-ul">
+<li>Host Environment.</li>
+<li>Security Model.</li>
+</ul>
+</div>
+
+<div id="outline-container-orga694118" class="outline-3">
+<h3 id="orga694118"><a href="#orga694118">WebAssmbly vs Javascript</a></h3>
+<div class="outline-text-3" id="text-orga694118">
+</div>
+<div id="outline-container-orgfdb8efb" class="outline-4">
+<h4 id="orgfdb8efb"><a href="#orgfdb8efb">Interpreters</a></h4>
+<div class="outline-text-4" id="text-orgfdb8efb">
+<p>
+There are a couple existing Javascript intepreters:
+</p>
+
+<ul class="org-ul">
+<li>V8 (Chrome, NodeJS)</li>
+<li>SpiderMonkey (FireFox)</li>
+<li><a href="https://trac.webkit.org/wiki/JavaScriptCore">JavaScriptCore</a> (Safari)</li>
+</ul>
+
+<p>
+So, there's a V8 team at Google who created their own interpreter for
+Javascript. They invented a bytecode format and implemented a VM
+(incidentally, a register machine) that executes the bytecode.
+</p>
+
+<p>
+V8 scans and parses Javascript code (into an AST) and then generates
+bytecode. The interpreter evaluates the bytecodes using C functions. The
+bytecode form of the program can't be shared for execution in other browsers,
+since it only works in V8; instead, sharing the program means sharing the
+Javascript (which is fine, just slightly slower to load and execute).
+</p>
+
+<p>
+A WebAssembly VM could execute a program that has been pre-compiled into
+WebAssembly bytecode.
+</p>
+
+<p>
+Since a whole new VM is required, WebAssembly is also an opportunity to
+revisit every single design decision about Javascript to make it better for
+running in browsers.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgeade553" class="outline-4">
+<h4 id="orgeade553"><a href="#orgeade553">Bytcode as a Compilation Target</a></h4>
+<div class="outline-text-4" id="text-orgeade553">
+<p>
+Bytecode is a nicer compilation target than a high-level textual language
+like Javascript. While there have been many tools to transpile various
+languages into Javascript, it is easier to create tools that compile those
+languages to WebAssembly bytecode.
+</p>
+</div>
+</div>
+</div>
+</div>
 
 <div id="outline-container-org2a1a2d3" class="outline-2">
 <h2 id="org2a1a2d3"><a href="#org2a1a2d3">wat, wasm, and wast</a></h2>
@@ -75,6 +174,10 @@ text format and the wasm binary format".
 </div></li>
 
 <li>Emscripten: LLVM backend for wasm</li>
+
+<li><a href="https://mbebenita.github.io/WasmExplorer/">WasmExplorer</a> - Website where you can programs to WebAssembly and view them.</li>
+
+<li>WasmFiddle</li>
 </ul>
 </div>
 </div>
@@ -94,9 +197,54 @@ The <a href="https://webassembly.org/roadmap/">roadmap</a> lists three non-brows
 </div>
 </div>
 
-<div id="outline-container-orge87741c" class="outline-2">
-<h2 id="orge87741c"><a href="#orge87741c">Convert wat (text) to wasm (binary)</a></h2>
-<div class="outline-text-2" id="text-orge87741c">
+<div id="outline-container-org0a27e59" class="outline-2">
+<h2 id="org0a27e59"><a href="#org0a27e59">Hello World</a></h2>
+<div class="outline-text-2" id="text-org0a27e59">
+<div class="org-src-container">
+<pre class="src src-wat"><span style="color: #51afef;">(</span><span style="color: #51afef;">module</span>
+ <span style="color: #c678dd;">(</span><span style="color: #51afef;">func</span> <span style="color: #98be65;">(</span><span style="color: #51afef;">export</span> <span style="color: #98be65;">"AddInt"</span><span style="color: #98be65;">)</span>
+       <span style="color: #98be65;">(</span><span style="color: #ECBE7B;">param</span> <span style="color: #dcaeea;">$value_1</span><span style="color: #ECBE7B;"> i32</span><span style="color: #98be65;">)</span> <span style="color: #98be65;">(</span><span style="color: #ECBE7B;">param</span> <span style="color: #dcaeea;">$value_2</span><span style="color: #ECBE7B;"> i32</span><span style="color: #98be65;">)</span>
+       <span style="color: #98be65;">(</span><span style="color: #ECBE7B;">result i32</span><span style="color: #98be65;">)</span>
+       <span style="color: #c678dd;">local.get</span> <span style="color: #dcaeea;">$value_1</span>
+       <span style="color: #c678dd;">local.get</span> <span style="color: #dcaeea;">$value_2</span>
+       <span style="color: #c678dd;">i32.add</span>
+       <span style="color: #c678dd;">)</span>
+ <span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh">wat2wasm webassembly/AddInt.wat <span style="color: #98be65;">\</span>
+         -o webassembly/AddInt.wasm
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-js"><span style="color: #5B6268;">// </span><span style="color: #5B6268;">Read wasm file</span>
+<span style="color: #51afef;">const</span> <span style="color: #dcaeea;">fs</span> = require(<span style="color: #98be65;">'fs'</span>);
+<span style="color: #51afef;">const</span> <span style="color: #dcaeea;">bytes</span> = fs.readFileSync(dir + <span style="color: #98be65;">"/AddInt.wasm"</span>);
+
+WebAssembly.instantiate(<span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">Uint8Array</span>(bytes))
+  .then(obj =&gt; {
+    <span style="color: #51afef;">let</span> <span style="color: #dcaeea;">result</span> = obj.instance.exports.AddInt(3, 4);
+    console.log(<span style="color: #98be65;">`3 + 4 = ${result}`</span>);
+  })
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+undefined3 + 4 = 7
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org8540117" class="outline-2">
+<h2 id="org8540117"><a href="#org8540117">Text/Binary Conversion</a></h2>
+<div class="outline-text-2" id="text-org8540117">
+</div>
+<div id="outline-container-org43aa9e6" class="outline-3">
+<h3 id="org43aa9e6"><a href="#org43aa9e6">From wat (text) to wasm (binary)</a></h3>
+<div class="outline-text-3" id="text-org43aa9e6">
 <p>
 Tangle this to <code>simple.wat</code>.
 </p>
@@ -128,7 +276,7 @@ Why is this writing to stderr?
 </pre>
 </div>
 
-<pre class="example" id="orgf9f71a2">
+<pre class="example" id="orgabc909b">
 0000000: 0061 736d                                 ; WASM_BINARY_MAGIC
 0000004: 0100 0000                                 ; WASM_BINARY_VERSION
 ; section "Type" (1)
@@ -190,9 +338,9 @@ Why is this writing to stderr?
 </div>
 </div>
 
-<div id="outline-container-org1d33868" class="outline-2">
-<h2 id="org1d33868"><a href="#org1d33868">Convert wasm to wat</a></h2>
-<div class="outline-text-2" id="text-org1d33868">
+<div id="outline-container-orga08e298" class="outline-3">
+<h3 id="orga08e298"><a href="#orga08e298">From wasm to wat</a></h3>
+<div class="outline-text-3" id="text-orga08e298">
 <p>
 We can disassemble! Ain't that peachy!
 </p>
@@ -212,6 +360,7 @@ We can disassemble! Ain't that peachy!
     call 0)
   (export "exported_func" (func 1)))
 </pre>
+</div>
 </div>
 </div>
 </div>
