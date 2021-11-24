@@ -3,23 +3,32 @@
 
 * The Problem
 
-  You have multiple GitHub accounts, and you want git to automatically push/pull
-  to the correct account.
+  You have multiple GitHub accounts, and you want git to automatically use a
+  certain GitHub account based on the local directory you're working in.
 
   In this article I set things up so that:
 
-  - Projects in =~/Work/= use your *work* GitHub account
-  - Projects in =~/go/= use your *work* GitHub account
-  - Projects elsewhere use your *home* GitHub account
-
-  There is a concise solution for GitHub /repos/, but /Gists/ are harder to
-  handle. In this setup, Gists in your GitHub *home* account will "just work".
-  For your *work* account, each Gist URL will need to be individually added to
-  your git config file. All Gists are publically readable, so I tend to use
-  Gists less frequently at work.
+  - Repos in your *work GitHub org* cloned into =~/Work/= use your *work* GitHub
+    account
+  - Repos in your *work GitHub org* cloned into =~/go/= use your *work* GitHub
+    account
+  - Repos elsewhere use your *home* GitHub account
 
   My git configuration [[https://github.com/cfclrk/dotfiles/tree/master/xdg_config/git][on GitHub]] is generated from this article. My SSH
-  configuration is als on GitHub [[https://github.com/cfclrk/dotfiles/blob/master/.ssh/config][here]].
+  configuration is also on GitHub [[https://github.com/cfclrk/dotfiles/blob/master/.ssh/config][here]].
+
+** Limitations
+
+  *Gists*: There is a concise solution for GitHub /repos/, but /Gists/ are
+  harder to handle. In this setup, Gists in your *home* account will "just
+  work". Gists in your *work* account need to be individually added to your git
+  config file. All Gists are publically readable, so I tend to use Gists less
+  frequently at work.
+
+  *Repos Outside of Your Work Org*: Your work account is only used when working
+  on repos from your work GitHub org. If you work on a project in another GitHub
+  org, your personal SSH key is used (... I think). That would be a problem if
+  you are trying to make signed commits.
 
 * The Git Config
 
@@ -204,7 +213,6 @@
   #+begin_src conf
     Host github-home
     HostName       github.com
-    User           git
     IdentityFile   ~/.ssh/github-home
     IdentitiesOnly yes
 

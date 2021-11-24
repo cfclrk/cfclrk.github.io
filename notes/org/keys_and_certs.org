@@ -30,8 +30,12 @@
 
 ** No Passphrase
 
-   #+begin_src sh :var keyname="foo" email="chris.clark@ironnet.com"
-     ssh-keygen -t ed25519 -N "" -f ~/.ssh/$keyname -C "$email"
+   #+begin_src sh :var keyname="id_rsa" email="chris.clark@ironnet.com"
+     ssh-keygen \
+         -t ed25519 \  # for RSA: -t rsa -b 2048
+         -N "" \
+         -f ~/.ssh/$keyname \
+         -C "$email"
    #+end_src
 
    The email address is optional:

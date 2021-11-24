@@ -355,7 +355,9 @@ the list of marker files.
 <p>
 Projectile found a <code>.git</code> two directories up before ever even looking for a
 <code>go.mod</code>. In this case we could rectify that by <i>prepending</i> <code>go.mod</code> instead
-of appending it, but the general problem would still be there.
+of appending it, but the general problem would still remain (i.e. that marker
+files several directories up could be discovered before files in the current
+directory).
 </p>
 
 <p>
@@ -585,10 +587,6 @@ The <a href="https://github.com/rejeep/f.el">f</a> library already has a perfect
 <div id="outline-container-solution" class="outline-2">
 <h2 id="solution"><a href="#solution">Solution</a></h2>
 <div class="outline-text-2" id="text-solution">
-<p>
-Define a new strategy for discovering projects.
-</p>
-
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">require</span> '<span style="color: #a9a1e1;">projectile</span><span style="color: #51afef;">)</span>
 <span style="color: #51afef;">(</span><span style="color: #51afef;">require</span> '<span style="color: #a9a1e1;">f</span><span style="color: #51afef;">)</span>
@@ -596,7 +594,8 @@ Define a new strategy for discovering projects.
 </div>
 
 <p>
-Define a variable with the marker files that indicate a project root.
+We will define a new strategy for discovering projects. First, define a
+variable with the marker files that indicate a project root.
 </p>
 
 <div class="org-src-container">

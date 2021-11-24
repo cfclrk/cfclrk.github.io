@@ -8,7 +8,7 @@
   for an intro to virtual stack machines.
 
   Just like many other programming languages (Python, Ruby, every JVM language),
-  the idea is that a virtual machine can interpret the bytecode. These days
+  the idea is that a virtual machine interprets the bytecode. These days
   browsers include such a VM, as does NodeJS.
 
   A WebAssembly virtual machine has some important differences from other
@@ -23,8 +23,8 @@
 
     There are a couple existing Javascript intepreters:
 
-    - V8 (Chrome, NodeJS)
-    - SpiderMonkey (FireFox)
+    - [[https://v8.dev/][V8]] (Chrome, NodeJS)
+    - [[https://spidermonkey.dev/][SpiderMonkey]] (FireFox)
     - [[https://trac.webkit.org/wiki/JavaScriptCore][JavaScriptCore]] (Safari)
 
     So, there's a V8 team at Google who created their own interpreter for

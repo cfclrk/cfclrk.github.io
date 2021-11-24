@@ -33,7 +33,11 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org50f6963">The Problem</a></li>
+<li><a href="#org50f6963">The Problem</a>
+<ul>
+<li><a href="#org9a6b8e0">Limitations</a></li>
+</ul>
+</li>
 <li><a href="#org892bdab">The Git Config</a>
 <ul>
 <li><a href="#url-rewriting">Git URL Rewriting</a></li>
@@ -51,8 +55,8 @@
 <h2 id="org50f6963"><a href="#org50f6963">The Problem</a></h2>
 <div class="outline-text-2" id="text-org50f6963">
 <p>
-You have multiple GitHub accounts, and you want git to automatically push/pull
-to the correct account.
+You have multiple GitHub accounts, and you want git to automatically use a
+certain GitHub account based on the local directory you're working in.
 </p>
 
 <p>
@@ -60,23 +64,37 @@ In this article I set things up so that:
 </p>
 
 <ul class="org-ul">
-<li>Projects in <code>~/Work/</code> use your <b>work</b> GitHub account</li>
-<li>Projects in <code>~/go/</code> use your <b>work</b> GitHub account</li>
-<li>Projects elsewhere use your <b>home</b> GitHub account</li>
+<li>Repos in your <b>work GitHub org</b> cloned into <code>~/Work/</code> use your <b>work</b> GitHub
+account</li>
+<li>Repos in your <b>work GitHub org</b> cloned into <code>~/go/</code> use your <b>work</b> GitHub
+account</li>
+<li>Repos elsewhere use your <b>home</b> GitHub account</li>
 </ul>
 
 <p>
-There is a concise solution for GitHub <i>repos</i>, but <i>Gists</i> are harder to
-handle. In this setup, Gists in your GitHub <b>home</b> account will "just work".
-For your <b>work</b> account, each Gist URL will need to be individually added to
-your git config file. All Gists are publically readable, so I tend to use
-Gists less frequently at work.
+My git configuration <a href="https://github.com/cfclrk/dotfiles/tree/master/xdg_config/git">on GitHub</a> is generated from this article. My SSH
+configuration is also on GitHub <a href="https://github.com/cfclrk/dotfiles/blob/master/.ssh/config">here</a>.
+</p>
+</div>
+
+<div id="outline-container-org9a6b8e0" class="outline-3">
+<h3 id="org9a6b8e0"><a href="#org9a6b8e0">Limitations</a></h3>
+<div class="outline-text-3" id="text-org9a6b8e0">
+<p>
+<b>Gists</b>: There is a concise solution for GitHub <i>repos</i>, but <i>Gists</i> are
+harder to handle. In this setup, Gists in your <b>home</b> account will "just
+work". Gists in your <b>work</b> account need to be individually added to your git
+config file. All Gists are publically readable, so I tend to use Gists less
+frequently at work.
 </p>
 
 <p>
-My git configuration <a href="https://github.com/cfclrk/dotfiles/tree/master/xdg_config/git">on GitHub</a> is generated from this article. My SSH
-configuration is als on GitHub <a href="https://github.com/cfclrk/dotfiles/blob/master/.ssh/config">here</a>.
+<b>Repos Outside of Your Work Org</b>: Your work account is only used when working
+on repos from your work GitHub org. If you work on a project in another GitHub
+org, your personal SSH key is used (&#x2026; I think). That would be a problem if
+you are trying to make signed commits.
 </p>
+</div>
 </div>
 </div>
 
@@ -301,7 +319,7 @@ both accounts). Assuming you've <a href="https://docs.github.com/en/github/authe
 something like:
 </p>
 
-<pre class="example" id="org4b477e3">
+<pre class="example" id="orga48a7c9">
 $ tree ~/.ssh/
 /Users/cfclrk/.ssh/
 ├── config
@@ -326,7 +344,6 @@ File: <code>~/.ssh/config</code>
 <div class="org-src-container">
 <pre class="src src-conf">Host github-home
 HostName       github.com
-User           git
 IdentityFile   ~/.ssh/github-home
 IdentitiesOnly yes
 

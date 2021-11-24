@@ -10,6 +10,14 @@ is called "=docs=".
     - MacOS: =brew install sass/sass/sass=
     - npm: =npm install -g sass=
 
+* Directories
+
+  - =articles/=: Org files.
+  - =notes/=: Org files.
+  - =static/=: Top-level static assets (currently just a SCSS file).
+  - =docs/=: Generated HTML files. GitHub Pages requires this directory to be
+    called "docs".
+
 * Local Server
 
   Use a program like [[https://www.npmjs.com/package/serve][serve]] or =python -m http.server= for viewing locally (which
