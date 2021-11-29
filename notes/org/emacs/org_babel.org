@@ -19,17 +19,33 @@
    : ls: illegal option -- -
    : usage: ls [-@ABCFGHLOPRSTUWabcdefghiklmnopqrstuwx1%] [file ...]
 
-   Doesn't work:
+*** NOT WORKING
 
-   #+begin_src bash :results output :prologue "exec 2>&1"
-     echo "hi"
-     exit 1
-   #+end_src
+    Doesn't work:
 
-   #+begin_src bash :results output :prologue "exec 2>&1"
-     set -u
-     echo $foo
-   #+end_src
+    #+begin_src bash :results output :prologue "exec 2>&1"
+      echo "hi"
+      exit 1
+    #+end_src
+
+    #+begin_src bash :results output :prologue "exec 2>&1"
+      set -u
+      echo $foo
+    #+end_src
+
+    #+header: :prologue "exec 2>&1" :epilogue "true"
+    #+begin_src sh
+      ssh -T github-work
+    #+end_src
+
+    Instead, this works though:
+
+    #+begin_src sh :results output
+      ssh -T github-work 2>&1 || true
+    #+end_src
+
+    #+RESULTS:
+    : Hi chrisc-ironnet! You've successfully authenticated, but GitHub does not provide shell access.
 
 ** Python
 

@@ -44,6 +44,9 @@
     [user]
         name = Chris Clark
         email = cfclrk@gmail.com
+        signingkey = 279B742AFFA518D5
+    [commit]
+        gpgsign = true
     [github]
         user = cfclrk
     [init]
@@ -65,6 +68,7 @@
   #+begin_src gitconfig :tangle ~/.config/git/work.gitconfig
     [user]
         email = chris.clark@ironnet.com
+        signingkey = EDC41C0910322DD6
     [github]
         user = chrisc-ironnet
 
@@ -81,7 +85,7 @@
   #+end_src
 
   Obviously, update values for your name, email address, your work's GitHub
-  organization name, and your Gist URLs.
+  organization name, and -- if you're using [[#signed-commits]] -- your PGP key ids.
 
   That's it for the git config! Move on to [[#the-ssh-config]]. The next two
   subsections explain the above, if you are interested.
@@ -234,6 +238,22 @@
     IdentityFile   ~/.ssh/github-work
     IdentitiesOnly yes
   #+end_src
+
+  Test the SSH connections:
+
+  #+begin_src sh :results output
+    ssh -T github-home 2>&1 || true
+  #+end_src
+
+  #+RESULTS:
+  : Hi cfclrk! You've successfully authenticated, but GitHub does not provide shell access.
+
+  #+begin_src sh :results output
+    ssh -T github-work 2>&1 || true
+  #+end_src
+
+  #+RESULTS:
+  : Hi chrisc-ironnet! You've successfully authenticated, but GitHub does not provide shell access.
 
 * Signed Commits
   :PROPERTIES:

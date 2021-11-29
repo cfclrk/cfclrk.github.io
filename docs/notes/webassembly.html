@@ -68,7 +68,7 @@ for an intro to virtual stack machines.
 
 <p>
 Just like many other programming languages (Python, Ruby, every JVM language),
-the idea is that a virtual machine can interpret the bytecode. These days
+the idea is that a virtual machine interprets the bytecode. These days
 browsers include such a VM, as does NodeJS.
 </p>
 
@@ -95,8 +95,8 @@ There are a couple existing Javascript intepreters:
 </p>
 
 <ul class="org-ul">
-<li>V8 (Chrome, NodeJS)</li>
-<li>SpiderMonkey (FireFox)</li>
+<li><a href="https://v8.dev/">V8</a> (Chrome, NodeJS)</li>
+<li><a href="https://spidermonkey.dev/">SpiderMonkey</a> (FireFox)</li>
 <li><a href="https://trac.webkit.org/wiki/JavaScriptCore">JavaScriptCore</a> (Safari)</li>
 </ul>
 
@@ -276,7 +276,7 @@ Why is this writing to stderr?
 </pre>
 </div>
 
-<pre class="example" id="orgabc909b">
+<pre class="example" id="orge21e053">
 0000000: 0061 736d                                 ; WASM_BINARY_MAGIC
 0000004: 0100 0000                                 ; WASM_BINARY_VERSION
 ; section "Type" (1)
