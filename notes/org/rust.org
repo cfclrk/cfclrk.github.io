@@ -1,0 +1,37 @@
+#+TITLE: Rust
+#+SETUPFILE: ../setup.org
+
+* Hello World
+
+  #+begin_src rust
+    fn main() {
+        println!("Hello world");
+    }
+  #+end_src
+
+  #+RESULTS:
+  : Hello world
+
+* Lifetimes
+
+  #+begin_src rust
+    fn main() {
+        let s1 = "abcd";
+        {
+            let s2 = "foo";
+            let result = longest(s1, s2);
+            println!("result is: {}", result);
+        }
+    }
+
+    fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+        if x.len() > y.len() {
+            x
+        } else {
+            y
+        }
+    }
+  #+end_src
+
+  #+RESULTS:
+  : result is: abcd

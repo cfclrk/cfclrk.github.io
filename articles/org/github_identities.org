@@ -266,12 +266,21 @@
   GitHub displays a "Verified" badge on commits that are signed with a PGP key
   that matches the email address associated with the commit.
 
-  You can configure git to automatically [[https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work][sign commits with a PGP key]].
+  =pinentry-mac= saves the passphrases in the MacOS keyring.
 
-  TODO: I haven't actually set this up with one (let alone two!) accounts.
+  #+begin_src sh
+    brew install gnupg
+    brew install pinentry-mac
+  #+end_src
 
-  If you have a setup to automatically sign commits when using multiple GitHub
-  accounts (with different email addresses) let me know!
+  Now add this to =~/.gnupg/gpg-agent.conf=:
+
+  #+begin_src conf :tangle ~/.gnupg/gpg-agent.conf
+    # Connects gpg-agent to the OSX keychain via the brew-installed pinentry program
+    # from GPGtools. This is the OSX 'magic sauce', allowing the gpg key's
+    # passphrase to be stored in the login keychain, enabling automatic key signing.
+    pinentry-program /usr/local/bin/pinentry-mac
+  #+end_src
 
 * Resources
 

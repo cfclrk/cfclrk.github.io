@@ -1,0 +1,38 @@
+#+TITLE: Homebrew
+#+SETUPFILE: ../setup.org
+
+* Get Info
+
+  #+header: :var formula="gnupg"
+  #+begin_src sh :results output
+    brew info $formula
+  #+end_src
+
+  Opens the formula's homepage in the browser:
+
+  #+header: :var formula="gnupg"
+  #+begin_src sh :results output
+    brew home $formula
+  #+end_src
+
+  View the formula's code.
+
+  #+header: :var formula="gnupg"
+  #+begin_src sh :results output
+    brew cat $formula
+  #+end_src
+
+  Show the last 5 git commits that updated this formula:
+
+  #+header: :var formula="gnupg"
+  #+begin_src sh :results output
+    brew log gnupg --oneline -n 5
+  #+end_src
+
+* Edit Formula
+
+  Opens the formula in =$EDITOR=.
+
+  #+begin_src sh
+    brew edit $formula
+  #+end_src

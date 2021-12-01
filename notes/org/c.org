@@ -1,0 +1,10 @@
+#+TITLE: C
+
+* Compiler Installation
+
+  MacOS links =cc=, =gcc=, and =clang= to =clang=.
+
+  You can install =gcc= with =brew install gcc=. Then you have the executable:
+  =gcc-11=. Just use =gcc-11= when you want to use the GNU version of =gcc=.
+
+  But honestly, just use =clang=.
