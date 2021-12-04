@@ -1,4 +1,5 @@
 #+TITLE: C
+#+SETUPFILE: ../setup.org
 
 * Compiler Installation
 

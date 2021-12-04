@@ -5,7 +5,7 @@
 * Variables                                                        :noexport:
 
   #+NAME: DnsName
-  : route-guide.cfc.ironnet.cloud
+  : lenaclarklegal.com
 
 * Get IP Address(es) for DNS Name
 
@@ -17,21 +17,33 @@
     host $DnsName
   #+end_src
 
-* Get NS records
+* View Records
 
-** host
+** NS
 
-   #+begin_src sh :results output
-     host -t ns $DnsName
-   #+end_src
-
-** dig
+   dig:
 
    #+begin_src sh :results output
      dig ns $DnsName +short
    #+end_src
 
-* Get the CNAME
+   host:
+
+   #+begin_src sh :results output
+     host -t ns $DnsName
+   #+end_src
+
+** TXT
+
+   #+begin_src sh :results output
+     dig -t txt '\@.lenaclarklegal.com' +short
+   #+end_src
+
+   #+begin_src sh
+     host -t txt '@.lenaclarklegal.com'
+   #+end_src
+
+** CNAME
 
   #+begin_src sh
     dig $DnsName CNAME +short
@@ -39,4 +51,4 @@
 
 * NS Delegation in AWS
 
-  See Projects/codenotes/aws/route53_dns_delegation.org
+  See notes in =Projects/codenotes/aws/route53_dns_delegation.org=.

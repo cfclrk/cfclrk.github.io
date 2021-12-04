@@ -1,6 +1,20 @@
 #+TITLE: Magit and Forge
 #+SETUPFILE: ../setup.org
 
+* Diff a PR
+
+  From the /status page/:
+
+  - =' f f= to fetch all topics
+  - =n= down to the PR listing
+  - =d d= (diff dwim) on the PR listing
+
+  This doesn't work if you're actually visiting the PR topic (i.e. you hit Enter
+  on the PR listing and are now in a buffer with a name like =*forge: repo
+  #123*=).
+
+  This runs a diff between =origin/dev...refs/pullreqs/<PR number>=.
+
 * Rebase and move branch pointers
 
   Do the rebase. The same commits will have different SHAs. Old branches will

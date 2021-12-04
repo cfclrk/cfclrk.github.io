@@ -10,8 +10,8 @@
 =lsp-mode= uses Projectile to determine what directory an LSP server should be
 associated with.
 
-A minor annoyance (the bane of an Emacs user) has been nagging me (plaguing my
-nightmares). Here was the problem:
+A minor annoyance (the bane of an Emacs user) had been nagging me. Here was the
+problem:
 
 * The Problem
 

@@ -104,9 +104,13 @@ page.
 <div id="outline-container-org517310e" class="outline-3">
 <h3 id="org517310e"><a href="#org517310e">No Passphrase</a></h3>
 <div class="outline-text-3" id="text-org517310e">
+<p>
+For RSA: use <code>-t rsa -b 2048</code>.
+</p>
+
 <div class="org-src-container">
 <pre class="src src-sh">ssh-keygen <span style="color: #98be65;">\</span>
-    -t ed25519 <span style="color: #98be65;">\ </span> <span style="color: #5B6268;"># </span><span style="color: #5B6268;">for RSA: -t rsa -b 2048</span>
+    -t ed25519 <span style="color: #98be65;">\</span>
     -N <span style="color: #98be65;">""</span> <span style="color: #98be65;">\</span>
     -f ~/.ssh/$<span style="color: #dcaeea;">keyname</span> <span style="color: #98be65;">\</span>
     -C <span style="color: #98be65;">"$email"</span>

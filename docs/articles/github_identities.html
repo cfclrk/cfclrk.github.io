@@ -119,6 +119,9 @@ creating the following two files.
 <pre class="src src-gitconfig">[<span style="color: #ECBE7B;">user</span>]
     <span style="color: #dcaeea;">name</span> = Chris Clark
     <span style="color: #dcaeea;">email</span> = cfclrk@gmail.com
+    <span style="color: #dcaeea;">signingkey</span> = 279B742AFFA518D5
+[<span style="color: #ECBE7B;">commit</span>]
+    <span style="color: #dcaeea;">gpgsign</span> = <span style="color: #51afef;">true</span>
 [<span style="color: #ECBE7B;">github</span>]
     <span style="color: #dcaeea;">user</span> = cfclrk
 [<span style="color: #ECBE7B;">init</span>]
@@ -145,6 +148,7 @@ creating the following two files.
 <div class="org-src-container">
 <pre class="src src-gitconfig">[<span style="color: #ECBE7B;">user</span>]
     <span style="color: #dcaeea;">email</span> = chris.clark@ironnet.com
+    <span style="color: #dcaeea;">signingkey</span> = EDC41C0910322DD6
 [<span style="color: #ECBE7B;">github</span>]
     <span style="color: #dcaeea;">user</span> = chrisc-ironnet
 
@@ -163,7 +167,7 @@ creating the following two files.
 
 <p>
 Obviously, update values for your name, email address, your work's GitHub
-organization name, and your Gist URLs.
+organization name, and &#x2013; if you're using <a href="#signed-commits">Signed Commits</a> &#x2013; your PGP key ids.
 </p>
 
 <p>
@@ -294,16 +298,6 @@ So, if you define multiple <code>includeIf</code> directives that overwrite each
 you should specify the directives in order from <i>most general</i> to <i>most
 specific</i>.
 </p>
-
-<p>
-<i>Aside</i>: The value of <code>user.email</code> is the only piece of information GitHub
-uses when determining what profile picture to display next to a commit. You
-can set that email address to anything! E.g. set it to
-<code>torvalds@linux-foundation.org</code>, and GitHub will happily put Linus Torvalds'
-picture next to your git commits. And to be sure, <a href="https://news.ycombinator.com/item?id=10005577">that happens</a>. You can
-<i>partially</i> mitigate this problem of attribution by using <a href="https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work">signed commits</a>, as
-discussed in the section <a href="#signed-commits">Signed Commits</a>.
-</p>
 </div>
 </div>
 </div>
@@ -319,7 +313,7 @@ both accounts). Assuming you've <a href="https://docs.github.com/en/github/authe
 something like:
 </p>
 
-<pre class="example" id="orga48a7c9">
+<pre class="example" id="orgcbdbc4e">
 $ tree ~/.ssh/
 /Users/cfclrk/.ssh/
 ├── config
@@ -366,6 +360,29 @@ IdentityFile   ~/.ssh/github-work
 IdentitiesOnly yes
 </pre>
 </div>
+
+<p>
+Test the SSH connections:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">ssh -T github-home 2&gt;&amp;1 || true
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+Hi cfclrk! You've successfully authenticated, but GitHub does not provide shell access.
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-sh">ssh -T github-work 2&gt;&amp;1 || true
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+Hi chrisc-ironnet! You've successfully authenticated, but GitHub does not provide shell access.
+</pre>
 </div>
 </div>
 
@@ -373,25 +390,57 @@ IdentitiesOnly yes
 <h2 id="signed-commits"><a href="#signed-commits">Signed Commits</a></h2>
 <div class="outline-text-2" id="text-signed-commits">
 <p>
-In <a href="#config-loading">Git Config Loading</a>, I mentioned how to make git commits appear to be
-associated with someone else's GitHub account. To (somewhat) mitigate that
-situation, GitHub allows you to upload a PGP key to your GitHub account, and
-GitHub displays a "Verified" badge on commits that are signed with a PGP key
-that matches the email address associated with the commit.
+The value of <code>user.email</code> is the only piece of information GitHub uses when
+determining what profile picture to display next to a commit. You can set that
+email address to anything! E.g. set it to <code>torvalds@linux-foundation.org</code>, and
+GitHub will happily put Linus Torvalds' picture next to your git commits. And
+to be sure, <a href="https://news.ycombinator.com/item?id=10005577">that happens</a>. You can <i>partially</i> mitigate this problem of
+attribution by using <a href="https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work">signed commits</a>.
 </p>
 
 <p>
-You can configure git to automatically <a href="https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work">sign commits with a PGP key</a>.
+GitHub allows you to upload a PGP key to your GitHub account, and GitHub
+displays a "Verified" badge on commits that proprely verify (i.e. <code>git
+  verify-commit</code> works). For a commit to verify,
+</p>
+
+<ol class="org-ol">
+<li>The email address in the commit must match your GitHub account email
+address</li>
+<li>The commit must be signed with a key that has been uploaded to your GitHub
+account</li>
+</ol>
+
+<p>
+To set up commit signing, first install the necessary tools:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">brew install gnupg
+brew install pinentry-mac
+</pre>
+</div>
+
+<p>
+<code>pinentry-mac</code> saves the passphrases in the MacOS keyring.
 </p>
 
 <p>
-TODO: I haven't actually set this up with one (let alone two!) accounts.
+Follow GitHub's <a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key">instructions</a> for creating PGP keys. Create one for each GitHub
+account.
 </p>
 
 <p>
-If you have a setup to automatically sign commits when using multiple GitHub
-accounts (with different email addresses) let me know!
+Now add this to <code>~/.gnupg/gpg-agent.conf</code> to allow for automatic signing (on
+MacOS anyway).
 </p>
+
+<div class="org-src-container">
+<pre class="src src-conf"><span style="color: #5B6268;"># </span><span style="color: #5B6268;">Connects gpg-agent to the MacOS keychain. This enables</span>
+<span style="color: #5B6268;"># </span><span style="color: #5B6268;">automatic key signing.</span>
+pinentry-program /usr/local/bin/pinentry-mac
+</pre>
+</div>
 </div>
 </div>
 

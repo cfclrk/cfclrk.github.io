@@ -33,6 +33,7 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
+<li><a href="#org70f79a0">Diff a PR</a></li>
 <li><a href="#org651e595">Rebase and move branch pointers</a></li>
 <li><a href="#orgdf2a4ca">View File History</a></li>
 <li><a href="#org29186a3">Previous Version of File</a></li>
@@ -42,6 +43,31 @@
 </ul>
 </div>
 </nav>
+
+<div id="outline-container-org70f79a0" class="outline-2">
+<h2 id="org70f79a0"><a href="#org70f79a0">Diff a PR</a></h2>
+<div class="outline-text-2" id="text-org70f79a0">
+<p>
+From the <i>status page</i>:
+</p>
+
+<ul class="org-ul">
+<li><code>' f f</code> to fetch all topics</li>
+<li><code>n</code> down to the PR listing</li>
+<li><code>d d</code> (diff dwim) on the PR listing</li>
+</ul>
+
+<p>
+This doesn't work if you're actually visiting the PR topic (i.e. you hit Enter
+on the PR listing and are now in a buffer with a name like <code>*forge: repo
+  #123*</code>).
+</p>
+
+<p>
+This runs a diff between <code>origin/dev...refs/pullreqs/&lt;PR number&gt;</code>.
+</p>
+</div>
+</div>
 
 <div id="outline-container-org651e595" class="outline-2">
 <h2 id="org651e595"><a href="#org651e595">Rebase and move branch pointers</a></h2>

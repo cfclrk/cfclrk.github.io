@@ -5,14 +5,18 @@
 
 ** Latest Version
 
+   In fish, you don't need the =\= in =dev\|rc=.
+
    #+NAME: LatestPython
    #+begin_src sh
-     pyenv install --list \
-         | grep "^  3" \
+     python-build --definitions \
+         | grep "^3" \
          | grep -v "dev\|rc" \
-         | tail -1 \
-         | tr -d '[:space:]'
+         | tail -n 1
    #+end_src
+
+   #+RESULTS: LatestPython
+   : 3.11.0a2
 
 * Using a src directory
 

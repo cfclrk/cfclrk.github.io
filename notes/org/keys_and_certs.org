@@ -30,9 +30,12 @@
 
 ** No Passphrase
 
-   #+begin_src sh :var keyname="id_rsa" email="chris.clark@ironnet.com"
+   For RSA: use =-t rsa -b 2048=.
+
+   #+header: :var keyname="foo" email="chris.clark@ironnet.com"
+   #+begin_src sh
      ssh-keygen \
-         -t ed25519 \  # for RSA: -t rsa -b 2048
+         -t ed25519 \
          -N "" \
          -f ~/.ssh/$keyname \
          -C "$email"
@@ -40,13 +43,15 @@
 
    The email address is optional:
 
-   #+begin_src sh :results output :var keyname="gh_ixiactl_deploy_key"
+   #+header: :var keyname="gh_ixiactl_deploy_key"
+   #+begin_src sh :results output
      ssh-keygen -t ed25519 -f ~/.ssh/$keyname -N ""
    #+end_src
 
 ** With Passphrase
 
-   #+begin_src sh :results output :var keyname="ixiactl-new" passphrase="foo"
+   #+header: :var keyname="ixiactl-new" passphrase="foo"
+   #+begin_src sh :results output
      ssh-keygen -t ed25519 -f ~/.ssh/$keyname
    #+end_src
 
@@ -54,7 +59,8 @@
 
   Generate a public key from a private key:
 
-  #+begin_src sh :results output :var keyname="chrisclark"
+  #+header: :var keyname="chrisclark"
+  #+begin_src sh :results output
     ssh-keygen -y \
                -f ~/.ssh/${keyname}.pem \
                $HOME/.ssh/${keyname}.pub

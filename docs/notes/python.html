@@ -77,14 +77,21 @@
 <div id="outline-container-org421dd4b" class="outline-3">
 <h3 id="org421dd4b"><a href="#org421dd4b">Latest Version</a></h3>
 <div class="outline-text-3" id="text-org421dd4b">
+<p>
+In fish, you don't need the <code>\</code> in <code>dev\|rc</code>.
+</p>
+
 <div class="org-src-container">
-<pre class="src src-sh" id="org4c96b0c">pyenv install --list <span style="color: #98be65;">\</span>
-    | grep <span style="color: #98be65;">"^  3"</span> <span style="color: #98be65;">\</span>
+<pre class="src src-sh" id="org4c96b0c">python-build --definitions <span style="color: #98be65;">\</span>
+    | grep <span style="color: #98be65;">"^3"</span> <span style="color: #98be65;">\</span>
     | grep -v <span style="color: #98be65;">"dev\|rc"</span> <span style="color: #98be65;">\</span>
-    | tail -1 <span style="color: #98be65;">\</span>
-    | tr -d <span style="color: #98be65;">'[:space:]'</span>
+    | tail -n 1
 </pre>
 </div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+3.11.0a2
+</pre>
 </div>
 </div>
 </div>

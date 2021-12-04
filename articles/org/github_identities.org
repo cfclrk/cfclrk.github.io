@@ -177,14 +177,6 @@
    you should specify the directives in order from /most general/ to /most
    specific/.
 
-   /Aside/: The value of =user.email= is the only piece of information GitHub
-   uses when determining what profile picture to display next to a commit. You
-   can set that email address to anything! E.g. set it to
-   =torvalds@linux-foundation.org=, and GitHub will happily put Linus Torvalds'
-   picture next to your git commits. And to be sure, [[https://news.ycombinator.com/item?id=10005577][that happens]]. You can
-   /partially/ mitigate this problem of attribution by using [[https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work][signed commits]], as
-   discussed in the section [[#signed-commits]].
-
 * The SSH Config
   :PROPERTIES:
   :CUSTOM_ID: the-ssh-config
@@ -260,25 +252,41 @@
   :CUSTOM_ID: signed-commits
   :END:
 
-  In [[#config-loading]], I mentioned how to make git commits appear to be
-  associated with someone else's GitHub account. To (somewhat) mitigate that
-  situation, GitHub allows you to upload a PGP key to your GitHub account, and
-  GitHub displays a "Verified" badge on commits that are signed with a PGP key
-  that matches the email address associated with the commit.
+  The value of =user.email= is the only piece of information GitHub uses when
+  determining what profile picture to display next to a commit. You can set that
+  email address to anything! E.g. set it to =torvalds@linux-foundation.org=, and
+  GitHub will happily put Linus Torvalds' picture next to your git commits. And
+  to be sure, [[https://news.ycombinator.com/item?id=10005577][that happens]]. You can /partially/ mitigate this problem of
+  attribution by using [[https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work][signed commits]].
 
-  =pinentry-mac= saves the passphrases in the MacOS keyring.
+  GitHub allows you to upload a PGP key to your GitHub account, and GitHub
+  displays a "Verified" badge on commits that proprely verify (i.e. =git
+  verify-commit= works). For a commit to verify,
+
+  1. The email address in the commit must match your GitHub account email
+     address
+  2. The commit must be signed with a key that has been uploaded to your GitHub
+     account
+
+  To set up commit signing, first install the necessary tools:
 
   #+begin_src sh
     brew install gnupg
     brew install pinentry-mac
   #+end_src
 
-  Now add this to =~/.gnupg/gpg-agent.conf=:
+  =pinentry-mac= saves the passphrases in the MacOS keyring.
 
-  #+begin_src conf :tangle ~/.gnupg/gpg-agent.conf
-    # Connects gpg-agent to the OSX keychain via the brew-installed pinentry program
-    # from GPGtools. This is the OSX 'magic sauce', allowing the gpg key's
-    # passphrase to be stored in the login keychain, enabling automatic key signing.
+  Follow GitHub's [[https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key][instructions]] for creating PGP keys. Create one for each GitHub
+  account.
+
+  Now add this to =~/.gnupg/gpg-agent.conf= to allow for automatic signing (on
+  MacOS anyway).
+
+  #+header: :tangle ~/.gnupg/gpg-agent.conf
+  #+begin_src conf
+    # Connects gpg-agent to the MacOS keychain. This enables
+    # automatic key signing.
     pinentry-program /usr/local/bin/pinentry-mac
   #+end_src
 
