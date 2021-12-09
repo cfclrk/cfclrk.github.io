@@ -230,20 +230,40 @@
         | openssl sha1 -c
   #+end_src
 
+* Native Certs
+
+  Sometimes certificates are bundled with applications; e.g. browsers bundle a
+  set of certificates curated by the browser's creators.
+
+  Other times, certificates are installed on, and managed by, the OS. These are
+  referred to as "native certificates".
+
+  /Properly/ using native certificates is a headache, and requires knowledge of
+  how the OS handles certificates. See:
+
+  - [[https://github.com/rustls/rustls-native-certs/issues/25][This issue]] for rustls-native-certs
+  - [[https://github.com/golang/go/issues/46287][This issue]] for golang
+
+  However, if you're not trying to make the perfect system, you can just trust
+  whatever certs are in the MacOS Keychain or use the =update-ca-certificates=
+  program on Debian.
+
 * Checking and Viewing Certs
 
 ** View a Server's Certificate
 
-   Show cert info for a local certificate file.
-
-   #+begin_src sh :var cert="/Users/chris.clark/Projects/codenotes/aws/cert.pem"
-     openssl x509 -in $cert -text -noout
-   #+end_src
-
    Show cert info for a website.
 
-   #+begin_src sh :var domain="google.com"
+   #+header: :var domain="cfclrk.com"
+   #+begin_src sh
      openssl s_client -connect $domain:443 -showcerts
+   #+end_src
+
+   Show cert info for a local certificate file.
+
+   #+header: :var cert="/Users/chris.clark/Projects/codenotes/aws/cert.pem"
+   #+begin_src sh
+     openssl x509 -in $cert -text -noout
    #+end_src
 
 ** Check if a Private Key Matches a Certificate

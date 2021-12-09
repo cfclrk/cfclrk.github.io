@@ -73,9 +73,10 @@ the subproject that you're in.
 </p>
 
 <p>
-When I'm in a python project that happens to be in a monorepo, I want
-Projectile to operate on the python project. I can still use Projectile on the
-whole monorepo by opening a file or Dired buffer at the root of the monorepo.
+Instead: when I'm working in, say, a python project that happens to be in a
+monorepo, I want Projectile to operate on that python project. One could still
+use Projectile on the whole monorepo by navigating to file at the root of the
+monorepo.
 </p>
 
 <p>
@@ -138,7 +139,7 @@ is the monorepo:
 
 <p>
 I <i>want</i> Projectile to say that the project root is <code>/tmp/repo/go/projectA</code>.
-By default, however, Projectile finds the root of the monorepo.
+But alas, Projectile instead found <code>/tmp/repo/</code>.
 </p>
 
 <p>
@@ -153,8 +154,8 @@ projects.
 <div class="outline-text-2" id="text-org86839b3">
 <p>
 The relevant documentation is here: <a href="https://docs.projectile.mx/projectile/projects.html#customizing-project-detection">Customizing Project Detection</a>. Projectile
-has a few strategies for finding a project root, and it tries each one in
-order. The order is defined by the variable:
+has a few strategies for finding a project root, and tries each one in order.
+The order is defined by this variable:
 </p>
 
 <div class="org-src-container">
@@ -188,8 +189,8 @@ order. The order is defined by the variable:
 </table>
 
 <p>
-The second function, <code>(projectile-root-bottom-up)</code>, is the one that is
-determining the monorepo to be the "project". See it in action:
+The second function &#x2013; <code>projectile-root-bottom-up</code> &#x2013; is our culprit. We can
+try it out interactively:
 </p>
 
 <div class="org-src-container">

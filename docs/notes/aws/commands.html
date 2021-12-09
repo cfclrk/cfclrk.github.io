@@ -33,7 +33,7 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgdbbcc0c">Account</a></li>
+<li><a href="#org51c9ec5">Account</a></li>
 <li><a href="#orgf9a3f98">IP Address Ranges</a>
 <ul>
 <li><a href="#org0b6e61a">Get Region of IP</a></li>
@@ -49,7 +49,7 @@
 <li><a href="#org6622052">ACM</a>
 <ul>
 <li><a href="#orga9d8f9e">List</a></li>
-<li><a href="#orged5d51e">Describe</a></li>
+<li><a href="#orgcf737f5">Describe</a></li>
 <li><a href="#org8db7a20">Get Certificate</a></li>
 <li><a href="#org671ce03">Get Certificate PEM File</a></li>
 </ul>
@@ -92,7 +92,7 @@
 <li><a href="#orgbc46786">EC2 KeyPairs</a>
 <ul>
 <li><a href="#org4a97cf6">Create</a></li>
-<li><a href="#orgcf737f5">Describe</a></li>
+<li><a href="#org4a4d9f2">Describe</a></li>
 <li><a href="#org878c9b3">Delete</a></li>
 </ul>
 </li>
@@ -138,7 +138,7 @@
 </li>
 <li><a href="#orgb68facb">Elasticache</a>
 <ul>
-<li><a href="#orgba1c1ed">List CasheClusters</a></li>
+<li><a href="#orgdef9d6b">List CacheClusters</a></li>
 <li><a href="#org63e1a8c">List ReplicationGroups</a></li>
 </ul>
 </li>
@@ -248,15 +248,15 @@
 </div>
 </nav>
 
-<div id="outline-container-orgdbbcc0c" class="outline-2">
-<h2 id="orgdbbcc0c"><a href="#orgdbbcc0c">Account</a></h2>
-<div class="outline-text-2" id="text-orgdbbcc0c">
+<div id="outline-container-org51c9ec5" class="outline-2">
+<h2 id="org51c9ec5"><a href="#org51c9ec5">Account</a></h2>
+<div class="outline-text-2" id="text-org51c9ec5">
 <p>
 Account number:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="org24d2d85">aws sts get-caller-identity --query <span style="color: #98be65;">'Account'</span> --output text
+<pre class="src src-sh" id="orgdbbcc0c">aws sts get-caller-identity --query <span style="color: #98be65;">'Account'</span> --output text
 </pre>
 </div>
 </div>
@@ -314,7 +314,8 @@ See: <a href="https://unix.stackexchange.com/questions/274330/check-ip-is-in-ran
 <h3 id="orgadaf3d4"><a href="#orgadaf3d4">All Regions in Partition</a></h3>
 <div class="outline-text-3" id="text-orgadaf3d4">
 <div class="org-src-container">
-<pre class="src src-sh" id="org4ff72a9">aws ec2 describe-regions | jq -r <span style="color: #98be65;">".Regions[].RegionName"</span>
+<pre class="src src-sh" id="org4ff72a9">aws ec2 describe-regions <span style="color: #98be65;">\</span>
+    | jq -r <span style="color: #98be65;">".Regions[].RegionName"</span>
 </pre>
 </div>
 
@@ -324,6 +325,7 @@ eu-north-1
 ap-south-1
 eu-west-3
 eu-west-2
+eu-south-1
 eu-west-1
 ap-northeast-3
 ap-northeast-2
@@ -331,6 +333,7 @@ me-south-1
 ap-northeast-1
 sa-east-1
 ca-central-1
+ap-east-1
 ap-southeast-1
 ap-southeast-2
 eu-central-1
@@ -354,8 +357,8 @@ Number of regions:
 </div>
 
 <div class="results">#+RESULTS:</div><pre class="example">
-      19
-19
+21
+21
 </pre>
 </div>
 </div>
@@ -374,41 +377,6 @@ document. You have to decide whether "GLOBAL" is a "region" in your situation.
     | sort | uniq
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-GLOBAL
-af-south-1
-ap-east-1
-ap-northeast-1
-ap-northeast-2
-ap-northeast-3
-ap-south-1
-ap-south-2
-ap-southeast-1
-ap-southeast-2
-ap-southeast-3
-ap-southeast-4
-ca-central-1
-cn-north-1
-cn-northwest-1
-eu-central-1
-eu-central-2
-eu-north-1
-eu-south-1
-eu-south-2
-eu-west-1
-eu-west-2
-eu-west-3
-me-central-1
-me-south-1
-sa-east-1
-us-east-1
-us-east-2
-us-gov-east-1
-us-gov-west-1
-us-west-1
-us-west-2
-</pre>
 </div>
 </div>
 
@@ -427,61 +395,75 @@ Get the number of VPCs in each region the slow and simple way.
 </pre>
 </div>
 
-<pre class="example" id="orge2651b5">
-eu-north-1: 0
-ap-south-1: 0
-eu-west-3: 0
-eu-west-2: 0
-eu-west-1: 0
+<div class="results">#+RESULTS:</div><pre class="example">
+af-south-1: 1
+eu-north-1: 2
+ap-south-1: 1
+eu-west-3: 1
+eu-west-2: 3
+eu-south-1: 1
+eu-west-1: 1
 ap-northeast-3: 1
-ap-northeast-2: 0
-ap-northeast-1: 0
-sa-east-1: 0
-ca-central-1: 0
+ap-northeast-2: 1
+me-south-1: 1
+ap-northeast-1: 2
+sa-east-1: 1
+ca-central-1: 2
+ap-east-1: 1
 ap-southeast-1: 1
-ap-southeast-2: 0
-eu-central-1: 0
-us-east-1: 2
-us-east-2: 2
-us-west-1: 0
-us-west-2: 0
+ap-southeast-2: 1
+eu-central-1: 1
+us-east-1: 98
+us-east-2: 8
+us-west-1: 4
+us-west-2: 3
 </pre>
 
+
 <p>
-Get the number of VPCs in each region the 🚀 and 😎 (and 🤮) way by starting a
-subprocess for each region in parallel. Note that <code>${#regions[*]}</code> is bash
-syntax for th length of the <code>$regions</code> array.
+Get the number of VPCs in each region the 🚀 and 😎 (and 🤮) way by starting
+a subprocess for each region in parallel. Note that <code>${#regions[@]}</code> is bash
+syntax for the length of the <code>$regions</code> array.
 </p>
 
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #dcaeea;">script</span>=$(cat &lt;&lt;-<span style="color: #98be65;">"EOF"</span>
 <span style="color: #98be65;">vpcs=($(aws --region {} ec2 describe-vpcs | jq '.Vpcs[].VpcId'))</span>
-<span style="color: #98be65;">echo "{}: ${#vpcs[*]}"</span>
+<span style="color: #98be65;">echo "{}: ${#vpcs[@]}"</span>
 <span style="color: #98be65;">EOF</span>
 )
+
 <span style="color: #dcaeea;">regions</span>=($<span style="color: #dcaeea;">AllRegions</span>)
-<span style="color: #c678dd;">echo</span> ${<span style="color: #dcaeea;">regions</span>[*]} | xargs -n 1 -P ${#<span style="color: #dcaeea;">regions</span>[*]} -I {} bash -c <span style="color: #98be65;">"$script"</span>
+printf <span style="color: #98be65;">"%s\n"</span> <span style="color: #98be65;">"${regions[@]}"</span> <span style="color: #98be65;">\</span>
+    | xargs -n 1 <span style="color: #98be65;">\</span>
+            -P ${#<span style="color: #dcaeea;">regions</span>[*]} <span style="color: #98be65;">\</span>
+            -I {} <span style="color: #98be65;">\</span>
+            bash -c <span style="color: #98be65;">"$script"</span>
 </pre>
 </div>
 
-<pre class="example" id="org068873e">
-us-east-1: 2
-ca-central-1: 0
-us-east-2: 2
-us-west-1: 0
-eu-west-3: 0
-eu-west-2: 0
-eu-west-1: 0
-us-west-2: 0
-eu-central-1: 0
-eu-north-1: 0
-sa-east-1: 0
+<div class="results">#+RESULTS:</div><pre class="example">
+us-east-2: 8
+ca-central-1: 2
+eu-south-1: 1
+eu-west-3: 1
+us-west-2: 3
+us-east-1: 97
+eu-central-1: 1
+us-west-1: 4
+eu-north-1: 2
+eu-west-2: 3
+eu-west-1: 1
+sa-east-1: 1
+ap-northeast-2: 1
+ap-northeast-1: 2
+ap-south-1: 1
+me-south-1: 1
+ap-east-1: 1
 ap-northeast-3: 1
-ap-northeast-1: 0
-ap-northeast-2: 0
-ap-southeast-2: 0
-ap-south-1: 0
+af-south-1: 1
 ap-southeast-1: 1
+ap-southeast-2: 1
 </pre>
 </div>
 </div>
@@ -495,17 +477,20 @@ ap-southeast-1: 1
 <h3 id="orga9d8f9e"><a href="#orga9d8f9e">List</a></h3>
 <div class="outline-text-3" id="text-orga9d8f9e">
 <div class="org-src-container">
-<pre class="src src-sh">aws acm list-certificates --includes <span style="color: #98be65;">"keyUsage=ANY"</span> | jq <span style="color: #98be65;">'.CertificateSummaryList[]'</span>
+<pre class="src src-sh">aws acm list-certificates <span style="color: #98be65;">\</span>
+    --includes <span style="color: #98be65;">"keyUsage=ANY"</span> <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.CertificateSummaryList[]'</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orged5d51e" class="outline-3">
-<h3 id="orged5d51e"><a href="#orged5d51e">Describe</a></h3>
-<div class="outline-text-3" id="text-orged5d51e">
+<div id="outline-container-orgcf737f5" class="outline-3">
+<h3 id="orgcf737f5"><a href="#orgcf737f5">Describe</a></h3>
+<div class="outline-text-3" id="text-orgcf737f5">
 <div class="org-src-container">
-<pre class="src src-sh">aws acm describe-certificate --certificate-arn $<span style="color: #dcaeea;">CertArn</span>
+<pre class="src src-sh">aws acm describe-certificate <span style="color: #98be65;">\</span>
+    --certificate-arn $<span style="color: #dcaeea;">CertArn</span>
 </pre>
 </div>
 </div>
@@ -515,7 +500,8 @@ ap-southeast-1: 1
 <h3 id="org8db7a20"><a href="#org8db7a20">Get Certificate</a></h3>
 <div class="outline-text-3" id="text-org8db7a20">
 <div class="org-src-container">
-<pre class="src src-sh">aws acm get-certificate --certificate-arn $<span style="color: #dcaeea;">CertificateArn</span>
+<pre class="src src-sh">aws acm get-certificate <span style="color: #98be65;">\</span>
+    --certificate-arn $<span style="color: #dcaeea;">CertificateArn</span>
 </pre>
 </div>
 </div>
@@ -525,7 +511,8 @@ ap-southeast-1: 1
 <h3 id="org671ce03"><a href="#org671ce03">Get Certificate PEM File</a></h3>
 <div class="outline-text-3" id="text-org671ce03">
 <div class="org-src-container">
-<pre class="src src-sh">aws acm get-certificate --certificate-arn $<span style="color: #dcaeea;">CertificateArn</span> <span style="color: #98be65;">\</span>
+<pre class="src src-sh">aws acm get-certificate <span style="color: #98be65;">\</span>
+    --certificate-arn $<span style="color: #dcaeea;">CertificateArn</span> <span style="color: #98be65;">\</span>
     | jq -r <span style="color: #98be65;">'.Certificate'</span> &gt; route_guide_cert.pem
 </pre>
 </div>
@@ -546,7 +533,8 @@ ap-southeast-1: 1
 <h3 id="org71d0405"><a href="#org71d0405">List APIs</a></h3>
 <div class="outline-text-3" id="text-org71d0405">
 <div class="org-src-container">
-<pre class="src src-sh">aws apigatewayv2 get-apis | jq <span style="color: #98be65;">'.Items[]'</span>
+<pre class="src src-sh">aws apigatewayv2 get-apis <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.Items[]'</span>
 </pre>
 </div>
 </div>
@@ -687,8 +675,10 @@ URLs are documented <a href="https://docs.aws.amazon.com/AWSCloudFormation/lates
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #dcaeea;">alarms</span>=$(aws cloudwatch describe-alarms <span style="color: #98be65;">\</span>
              | jq -r <span style="color: #98be65;">'.MetricAlarms[].AlarmName'</span>)
+
 <span style="color: #51afef;">for</span> alarm<span style="color: #51afef;"> in</span> $<span style="color: #dcaeea;">alarms</span>; <span style="color: #51afef;">do</span>
-    aws cloudwatch delete-alarms --alarm-names $<span style="color: #dcaeea;">alarm</span>;
+    aws cloudwatch delete-alarms <span style="color: #98be65;">\</span>
+        --alarm-names $<span style="color: #dcaeea;">alarm</span>;
 <span style="color: #51afef;">done</span>
 </pre>
 </div>
@@ -895,9 +885,9 @@ chmod 0600 $<span style="color: #dcaeea;">KeyFile</span>
 </div>
 </div>
 
-<div id="outline-container-orgcf737f5" class="outline-3">
-<h3 id="orgcf737f5"><a href="#orgcf737f5">Describe</a></h3>
-<div class="outline-text-3" id="text-orgcf737f5">
+<div id="outline-container-org4a4d9f2" class="outline-3">
+<h3 id="org4a4d9f2"><a href="#org4a4d9f2">Describe</a></h3>
+<div class="outline-text-3" id="text-org4a4d9f2">
 <div class="org-src-container">
 <pre class="src src-sh">aws ec2 describe-key-pairs | jq <span style="color: #98be65;">'.KeyPairs[]'</span>
 </pre>
@@ -1011,6 +1001,19 @@ With a specific tag key and value
 <pre class="src src-bash">aws ec2 describe-vpcs | jq <span style="color: #98be65;">'.Vpcs[]'</span>
 </pre>
 </div>
+
+<p>
+The names of VPCs that have a <code>Name</code> tag:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">aws ec2 describe-vpcs <span style="color: #98be65;">\</span>
+    --filters <span style="color: #dcaeea;">Name</span>=tag-key,<span style="color: #dcaeea;">Values</span>=Name <span style="color: #98be65;">\</span>
+    | jq -r <span style="color: #98be65;">'.Vpcs[].Tags[]</span>
+<span style="color: #98be65;">             | select(.Key == "Name")</span>
+<span style="color: #98be65;">             | .Value'</span>
+</pre>
+</div>
 </div>
 </div>
 
@@ -1028,7 +1031,8 @@ With a specific tag key and value
 <h3 id="org03fe971"><a href="#org03fe971">SecurityGroups</a></h3>
 <div class="outline-text-3" id="text-org03fe971">
 <div class="org-src-container">
-<pre class="src src-sh">aws ec2 describe-security-groups  | jq <span style="color: #98be65;">'.SecurityGroups'</span>
+<pre class="src src-sh">aws ec2 describe-security-groups <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.SecurityGroups'</span>
 </pre>
 </div>
 </div>
@@ -1051,13 +1055,18 @@ With a specific tag key and value
 <h3 id="org45563e2"><a href="#org45563e2">Managed Prefix Lists</a></h3>
 <div class="outline-text-3" id="text-org45563e2">
 <div class="org-src-container">
-<pre class="src src-sh">aws ec2 describe-managed-prefix-lists | jq <span style="color: #98be65;">'.PrefixLists[]'</span>
+<pre class="src src-sh">aws ec2 describe-managed-prefix-lists <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.PrefixLists[]'</span>
 </pre>
 </div>
 
+<p>
+#+header :var PrefixListID=""
+</p>
 <div class="org-src-container">
 <pre class="src src-sh">aws ec2 get-managed-prefix-list-entries <span style="color: #98be65;">\</span>
-    --prefix-list-id $<span style="color: #dcaeea;">plid</span> | jq <span style="color: #98be65;">'.Entries[]'</span>
+    --prefix-list-id $<span style="color: #dcaeea;">PrefixListID</span> <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.Entries[]'</span>
 </pre>
 </div>
 </div>
@@ -1162,12 +1171,13 @@ aws eks update-kubeconfig <span style="color: #98be65;">\</span>
 <h2 id="orgb68facb"><a href="#orgb68facb">Elasticache</a></h2>
 <div class="outline-text-2" id="text-orgb68facb">
 </div>
-<div id="outline-container-orgba1c1ed" class="outline-3">
-<h3 id="orgba1c1ed"><a href="#orgba1c1ed">List CasheClusters</a></h3>
-<div class="outline-text-3" id="text-orgba1c1ed">
+<div id="outline-container-orgdef9d6b" class="outline-3">
+<h3 id="orgdef9d6b"><a href="#orgdef9d6b">List CacheClusters</a></h3>
+<div class="outline-text-3" id="text-orgdef9d6b">
 <div class="org-src-container">
 <pre class="src src-sh">aws elasticache describe-cache-clusters <span style="color: #98be65;">\</span>
-    --show-cache-node-info | jq <span style="color: #98be65;">'.CacheClusters'</span>
+    --show-cache-node-info <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.CacheClusters'</span>
 </pre>
 </div>
 </div>
@@ -1177,7 +1187,7 @@ aws eks update-kubeconfig <span style="color: #98be65;">\</span>
 <h3 id="org63e1a8c"><a href="#org63e1a8c">List ReplicationGroups</a></h3>
 <div class="outline-text-3" id="text-org63e1a8c">
 <div class="org-src-container">
-<pre class="src src-sh">aws elasticache describe-replication-groups =
+<pre class="src src-sh">aws elasticache describe-replication-groups
     | jq <span style="color: #98be65;">'.ReplicationGroups'</span>
 </pre>
 </div>
@@ -1401,6 +1411,7 @@ GlobalAccelerator is only in <code>us-west-2</code>, so set the region explicitl
 <p>
 THEN:
 </p>
+
 <ul class="org-ul">
 <li>Update the Stream's IAM policy to allow it to write to the new location</li>
 <li>Update the S3 Bucket Policy to allow the Stream's IAM Role to write to it</li>
@@ -1448,9 +1459,9 @@ Invoke from a bastion host:
 
 <div class="org-src-container">
 <pre class="src src-bash">/usr/local/bin/aws lambda invoke <span style="color: #98be65;">\</span>
- --cli-binary-format raw-in-base64-out <span style="color: #98be65;">\</span>
- --function-name cf-Hello-World <span style="color: #98be65;">\</span>
- /tmp/cats.json
+                   --cli-binary-format raw-in-base64-out <span style="color: #98be65;">\</span>
+                   --function-name cf-Hello-World <span style="color: #98be65;">\</span>
+                   /tmp/cats.json
 </pre>
 </div>
 
@@ -1518,7 +1529,8 @@ With payload file:
 <h2 id="orgdeb7bd1"><a href="#orgdeb7bd1">Organizations</a></h2>
 <div class="outline-text-2" id="text-orgdeb7bd1">
 <div class="org-src-container">
-<pre class="src src-sh" id="org2fe6396">aws organizations list-roots | jq -r <span style="color: #98be65;">'.Roots[].Id'</span>
+<pre class="src src-sh" id="org2fe6396">aws organizations list-roots <span style="color: #98be65;">\</span>
+    | jq -r <span style="color: #98be65;">'.Roots[].Id'</span>
 </pre>
 </div>
 </div>
@@ -1783,7 +1795,8 @@ I have functions for this in <a href="https://github.com/cfclrk/dotfiles/blob/ma
 <h3 id="org81186a6"><a href="#org81186a6">SNS topics</a></h3>
 <div class="outline-text-3" id="text-org81186a6">
 <div class="org-src-container">
-<pre class="src src-sh">aws sns list-topics | jq <span style="color: #98be65;">'.Topics[] | .TopicArn'</span>
+<pre class="src src-sh">aws sns list-topics <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.Topics[] | .TopicArn'</span>
 </pre>
 </div>
 </div>
@@ -1798,7 +1811,8 @@ I have functions for this in <a href="https://github.com/cfclrk/dotfiles/blob/ma
 <h3 id="org5aa0029"><a href="#org5aa0029">List Queues</a></h3>
 <div class="outline-text-3" id="text-org5aa0029">
 <div class="org-src-container">
-<pre class="src src-sh">aws sqs list-queues | jq <span style="color: #98be65;">'.QueueUrls[]'</span>
+<pre class="src src-sh">aws sqs list-queues <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.QueueUrls[]'</span>
 </pre>
 </div>
 </div>

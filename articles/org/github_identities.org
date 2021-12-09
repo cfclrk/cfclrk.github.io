@@ -3,8 +3,8 @@
 
 * The Problem
 
-  You have multiple GitHub accounts, and you want git to automatically use a
-  certain GitHub account based on the local directory you're working in.
+  You have multiple GitHub accounts, and you want git to automatically use the
+  "right" GitHub account depending on the local directory you're working in.
 
   In this article I set things up so that:
 
@@ -74,8 +74,8 @@
 
     # These "insteadOf" values must be more specific than
     # the ones for the github-home account.
-    [url "git@github-work:IronNetCybersecurity"]
-        insteadOf = git@github.com:IronNetCybersecurity
+    [url "git@github-work:IronNet"]
+        insteadOf = git@github.com:IronNet
     [url "git@github-work:chrisc-ironnet"]
         insteadOf = git@github.com:chrisc-ironnet
 
@@ -95,39 +95,53 @@
    :CUSTOM_ID: url-rewriting
    :END:
 
-   Git URL-rewriting uses the [[https://git-scm.com/docs/git-config#Documentation/git-config.txt-urlltbasegtinsteadOf][insteadOf]] directive.
+   The [[https://git-scm.com/docs/git-config#Documentation/git-config.txt-urlltbasegtinsteadOf][insteadOf]] directive performs git "URL rewriting".
 
    #+begin_src gitconfig
      [url "git@github-home"]
          insteadOf = git@github.com
    #+end_src
 
-   This is saying: "Mr. Git, any time you see a URL that starts with
+   That is saying: "Mr. Git, any time you see a URL that starts with
    =git@github.com=, please just pretend like the URL actually starts with
    =git@github-home=".
 
-   For example, in [[https://github.com/cfclrk/cfclrk.github.io][the git repository]] where I'm writing this article, I can cat
-   the =.git/config= file and see the /real/ remote:
+   For example, take [[https://github.com/cfclrk/cfclrk.github.io][the git repository]] where I'm writing this article. I can
+   see the two different forms of the remote URL as follows:
 
-   #+begin_src bash :results output :dir ~/Projects/cfclrk.com
-     cat .git/config | grep "\[remote" -A 2
-   #+end_src
+   1. The URL in the project's git config:
 
-   #+RESULTS:
-   : [remote "origin"]
-   : 	url = git@github.com:cfclrk/cfclrk.github.io.git
-   : 	fetch = +refs/heads/*:refs/remotes/origin/*
+      #+header: :dir ~/Projects/cfclrk.com
+      #+begin_src bash :results output
+        git config --get remote.origin.url
+      #+end_src
 
-   But, if you use a =git= command (like =git remote=) to view that same value,
-   you will see the /rewritten/ form of the URL:
+      #+RESULTS:
+      : git@github.com:cfclrk/cfclrk.github.io.git
 
-   #+begin_src bash :results output :dir ~/Projects/cfclrk.com
-     git remote -v
-   #+end_src
+   2. The URL returned by the =git remote= command:
 
-   #+RESULTS:
-   : origin	git@github-home:cfclrk/cfclrk.github.io.git (fetch)
-   : origin	git@github-home:cfclrk/cfclrk.github.io.git (push)
+      #+header: :dir ~/Projects/cfclrk.com
+      #+begin_src bash :results output
+        git remote get-url origin
+      #+end_src
+
+      #+RESULTS:
+      : git@github-home:cfclrk/cfclrk.github.io.git
+
+   Git is smart enough to figure out when to use the original form of the URL
+   and when to use the rewritten form.
+
+   There is another approach to git URL rewriting where you reverse the above
+   approach: put the "fake" URL in the =./git/config= and have it rewritten to
+   the "real" URL. Some prefer this approach to manage multiple GitHub accounts.
+   For more information, see here. I've chosen not to use that approach for the
+   reasons I wrote [[https://github.com/magit/forge/discussions/436#discussioncomment-1778052][here]].
+
+   You may even use URL rewriting the other way around: where you specify a
+   "fake" URL in the =./git/config= file, and have a URL rewriting rule that
+   rewrites it into a "real" URL. E.g. having git rewrite "gh-home/my-repo" to
+   "git@github.com:cfclrk/my-repo".
 
    You may specify multiple =url.insteadOf= directives in a git config file. All
    the directives will be loaded and the most specific match is used. From the
@@ -290,6 +304,6 @@
     pinentry-program /usr/local/bin/pinentry-mac
   #+end_src
 
-* Resources
+* Other Resources
 
-  https://yayimorphology.org/ssh-identities-made-easy.html
+  - [[https://yayimorphology.org/ssh-identities-made-easy.html][Managing several SSH identities explained]]

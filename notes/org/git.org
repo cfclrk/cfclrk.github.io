@@ -216,8 +216,6 @@
     git show $(git rev-list --max-parents=0 HEAD)
   #+end_src
 
-  #+RESULTS:
-
   #+begin_src sh
     git log --reverse
   #+end_src

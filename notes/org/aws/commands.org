@@ -57,7 +57,8 @@
 
    #+NAME: AllRegions
    #+begin_src sh :cache yes
-     aws ec2 describe-regions | jq -r ".Regions[].RegionName"
+     aws ec2 describe-regions \
+         | jq -r ".Regions[].RegionName"
    #+end_src
 
    #+RESULTS[38daa3accfaed92cf15bd1e035de2f8ae9fde37b]: AllRegions
@@ -66,6 +67,7 @@
    : ap-south-1
    : eu-west-3
    : eu-west-2
+   : eu-south-1
    : eu-west-1
    : ap-northeast-3
    : ap-northeast-2
@@ -73,6 +75,7 @@
    : ap-northeast-1
    : sa-east-1
    : ca-central-1
+   : ap-east-1
    : ap-southeast-1
    : ap-southeast-2
    : eu-central-1
@@ -91,8 +94,8 @@
    #+end_src
 
    #+RESULTS:
-   :       19
-   : 19
+   : 21
+   : 21
 
 ** All Regions in All Partitions
 
@@ -104,40 +107,6 @@
          | jq -r '.prefixes[].region' \
          | sort | uniq
    #+end_src
-
-   #+RESULTS:
-   : GLOBAL
-   : af-south-1
-   : ap-east-1
-   : ap-northeast-1
-   : ap-northeast-2
-   : ap-northeast-3
-   : ap-south-1
-   : ap-south-2
-   : ap-southeast-1
-   : ap-southeast-2
-   : ap-southeast-3
-   : ap-southeast-4
-   : ca-central-1
-   : cn-north-1
-   : cn-northwest-1
-   : eu-central-1
-   : eu-central-2
-   : eu-north-1
-   : eu-south-1
-   : eu-south-2
-   : eu-west-1
-   : eu-west-2
-   : eu-west-3
-   : me-central-1
-   : me-south-1
-   : sa-east-1
-   : us-east-1
-   : us-east-2
-   : us-gov-east-1
-   : us-gov-west-1
-   : us-west-1
-   : us-west-2
 
 ** Run a Command in All Regions
 
@@ -151,85 +120,100 @@
    #+end_src
 
    #+RESULTS:
-   #+begin_example
-   eu-north-1: 0
-   ap-south-1: 0
-   eu-west-3: 0
-   eu-west-2: 0
-   eu-west-1: 0
-   ap-northeast-3: 1
-   ap-northeast-2: 0
-   ap-northeast-1: 0
-   sa-east-1: 0
-   ca-central-1: 0
-   ap-southeast-1: 1
-   ap-southeast-2: 0
-   eu-central-1: 0
-   us-east-1: 2
-   us-east-2: 2
-   us-west-1: 0
-   us-west-2: 0
-   #+end_example
+   : af-south-1: 1
+   : eu-north-1: 2
+   : ap-south-1: 1
+   : eu-west-3: 1
+   : eu-west-2: 3
+   : eu-south-1: 1
+   : eu-west-1: 1
+   : ap-northeast-3: 1
+   : ap-northeast-2: 1
+   : me-south-1: 1
+   : ap-northeast-1: 2
+   : sa-east-1: 1
+   : ca-central-1: 2
+   : ap-east-1: 1
+   : ap-southeast-1: 1
+   : ap-southeast-2: 1
+   : eu-central-1: 1
+   : us-east-1: 98
+   : us-east-2: 8
+   : us-west-1: 4
+   : us-west-2: 3
 
-   Get the number of VPCs in each region the 🚀 and 😎 (and 🤮) way by starting a
-   subprocess for each region in parallel. Note that =${#regions[*]}= is bash
-   syntax for th length of the =$regions= array.
+   Get the number of VPCs in each region the 🚀 and 😎 (and 🤮) way by starting
+   a subprocess for each region in parallel. Note that =${#regions[@]}= is bash
+   syntax for the length of the =$regions= array.
 
-   #+begin_src sh :var AllRegions=AllRegions
+   #+header: :var AllRegions=AllRegions
+   #+begin_src sh
      script=$(cat <<-"EOF"
      vpcs=($(aws --region {} ec2 describe-vpcs | jq '.Vpcs[].VpcId'))
-     echo "{}: ${#vpcs[*]}"
+     echo "{}: ${#vpcs[@]}"
      EOF
      )
+
      regions=($AllRegions)
-     echo ${regions[*]} | xargs -n 1 -P ${#regions[*]} -I {} bash -c "$script"
+     printf "%s\n" "${regions[@]}" \
+         | xargs -n 1 \
+                 -P ${#regions[*]} \
+                 -I {} \
+                 bash -c "$script"
    #+end_src
 
    #+RESULTS:
-   #+begin_example
-   us-east-1: 2
-   ca-central-1: 0
-   us-east-2: 2
-   us-west-1: 0
-   eu-west-3: 0
-   eu-west-2: 0
-   eu-west-1: 0
-   us-west-2: 0
-   eu-central-1: 0
-   eu-north-1: 0
-   sa-east-1: 0
-   ap-northeast-3: 1
-   ap-northeast-1: 0
-   ap-northeast-2: 0
-   ap-southeast-2: 0
-   ap-south-1: 0
-   ap-southeast-1: 1
-   #+end_example
+   : us-east-2: 8
+   : ca-central-1: 2
+   : eu-south-1: 1
+   : eu-west-3: 1
+   : us-west-2: 3
+   : us-east-1: 97
+   : eu-central-1: 1
+   : us-west-1: 4
+   : eu-north-1: 2
+   : eu-west-2: 3
+   : eu-west-1: 1
+   : sa-east-1: 1
+   : ap-northeast-2: 1
+   : ap-northeast-1: 2
+   : ap-south-1: 1
+   : me-south-1: 1
+   : ap-east-1: 1
+   : ap-northeast-3: 1
+   : af-south-1: 1
+   : ap-southeast-1: 1
+   : ap-southeast-2: 1
 
 * ACM
 
 ** List
 
    #+begin_src sh
-     aws acm list-certificates --includes "keyUsage=ANY" | jq '.CertificateSummaryList[]'
+     aws acm list-certificates \
+         --includes "keyUsage=ANY" \
+         | jq '.CertificateSummaryList[]'
    #+end_src
 
 ** Describe
 
    #+begin_src sh :var CertArn=""
-     aws acm describe-certificate --certificate-arn $CertArn
+     aws acm describe-certificate \
+         --certificate-arn $CertArn
    #+end_src
 
 ** Get Certificate
 
    #+begin_src sh :var CertificateArn="" :results output
-     aws acm get-certificate --certificate-arn $CertificateArn
+     aws acm get-certificate \
+         --certificate-arn $CertificateArn
    #+end_src
 
 ** Get Certificate PEM File
 
    #+begin_src sh :var CertificateArn="" :results output
-     aws acm get-certificate --certificate-arn $CertificateArn \
+     aws acm get-certificate \
+         --certificate-arn $CertificateArn \
          | jq -r '.Certificate' > route_guide_cert.pem
    #+end_src
 
@@ -242,7 +226,8 @@
 ** List APIs
 
    #+begin_src sh
-     aws apigatewayv2 get-apis | jq '.Items[]'
+     aws apigatewayv2 get-apis \
+         | jq '.Items[]'
    #+end_src
 
 * CloudFormation
@@ -331,8 +316,10 @@
    #+begin_src sh
      alarms=$(aws cloudwatch describe-alarms \
                   | jq -r '.MetricAlarms[].AlarmName')
+
      for alarm in $alarms; do
-         aws cloudwatch delete-alarms --alarm-names $alarm;
+         aws cloudwatch delete-alarms \
+             --alarm-names $alarm;
      done
    #+end_src
 
@@ -543,6 +530,16 @@
      aws ec2 describe-vpcs | jq '.Vpcs[]'
    #+end_src
 
+   The names of VPCs that have a =Name= tag:
+
+   #+begin_src sh
+     aws ec2 describe-vpcs \
+         --filters Name=tag-key,Values=Name \
+         | jq -r '.Vpcs[].Tags[]
+                  | select(.Key == "Name")
+                  | .Value'
+   #+end_src
+
 ** Subnets
 
    #+begin_src sh
@@ -552,7 +549,8 @@
 ** SecurityGroups
 
    #+begin_src sh
-     aws ec2 describe-security-groups  | jq '.SecurityGroups'
+     aws ec2 describe-security-groups \
+         | jq '.SecurityGroups'
    #+end_src
 
 ** Private ALB IPs
@@ -567,12 +565,15 @@
 ** Managed Prefix Lists
 
    #+begin_src sh
-     aws ec2 describe-managed-prefix-lists | jq '.PrefixLists[]'
+     aws ec2 describe-managed-prefix-lists \
+         | jq '.PrefixLists[]'
    #+end_src
 
-   #+begin_src sh :var plid=""
+   #+header :var PrefixListID=""
+   #+begin_src sh
      aws ec2 get-managed-prefix-list-entries \
-         --prefix-list-id $plid | jq '.Entries[]'
+         --prefix-list-id $PrefixListID \
+         | jq '.Entries[]'
    #+end_src
 
 * EC2 Volumes
@@ -638,17 +639,18 @@
 
 * Elasticache
 
-** List CasheClusters
+** List CacheClusters
 
    #+begin_src sh
      aws elasticache describe-cache-clusters \
-         --show-cache-node-info | jq '.CacheClusters'
+         --show-cache-node-info \
+         | jq '.CacheClusters'
    #+end_src
 
 ** List ReplicationGroups
 
    #+begin_src sh
-     aws elasticache describe-replication-groups =
+     aws elasticache describe-replication-groups
          | jq '.ReplicationGroups'
    #+end_src
 
@@ -793,6 +795,7 @@
    #+end_src
 
    THEN:
+
    - Update the Stream's IAM policy to allow it to write to the new location
    - Update the S3 Bucket Policy to allow the Stream's IAM Role to write to it
 
@@ -824,9 +827,9 @@
    #+header: :dir /ssh:ec2-user@13.59.90.58|ssh:ec2-user@10.192.20.15:/
    #+begin_src bash :results output
      /usr/local/bin/aws lambda invoke \
-      --cli-binary-format raw-in-base64-out \
-      --function-name cf-Hello-World \
-      /tmp/cats.json
+                        --cli-binary-format raw-in-base64-out \
+                        --function-name cf-Hello-World \
+                        /tmp/cats.json
    #+end_src
 
    #+begin_src sh
@@ -874,7 +877,8 @@
 
   #+NAME: OrgRoot
   #+begin_src sh
-    aws organizations list-roots | jq -r '.Roots[].Id'
+    aws organizations list-roots \
+        | jq -r '.Roots[].Id'
   #+end_src
 
 * Polly
@@ -1041,7 +1045,8 @@
 ** SNS topics
 
    #+begin_src sh
-     aws sns list-topics | jq '.Topics[] | .TopicArn'
+     aws sns list-topics \
+         | jq '.Topics[] | .TopicArn'
    #+end_src
 
 * SQS
@@ -1049,12 +1054,14 @@
 ** List Queues
 
    #+begin_src sh
-     aws sqs list-queues | jq '.QueueUrls[]'
+     aws sqs list-queues \
+         | jq '.QueueUrls[]'
    #+end_src
 
 * SSM
 
-  #+begin_src sh :var name="/aws/service/eks/optimized-ami/1.19/amazon-linux-2/recommended/image_id"
+  #+header: :var name="/aws/service/eks/optimized-ami/1.19/amazon-linux-2/recommended/image_id"
+  #+begin_src sh
     aws ssm get-parameter \
         --with-decryption \
         --name $name

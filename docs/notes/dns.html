@@ -34,13 +34,13 @@
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
 <li><a href="#orgaa27ebb">Get IP Address(es) for DNS Name</a></li>
-<li><a href="#org836ee2c">Get NS records</a>
+<li><a href="#orgc2d2119">View Records</a>
 <ul>
-<li><a href="#orga6af6b6">host</a></li>
-<li><a href="#orgc5da41c">dig</a></li>
+<li><a href="#org1b42fdd">NS</a></li>
+<li><a href="#orge7ad3d9">TXT</a></li>
+<li><a href="#org50b5d45">CNAME</a></li>
 </ul>
 </li>
-<li><a href="#org3db7dcd">Get the CNAME</a></li>
 <li><a href="#org10c5427">NS Delegation in AWS</a></li>
 </ul>
 </div>
@@ -62,13 +62,26 @@ IP.
 </div>
 </div>
 
-<div id="outline-container-org836ee2c" class="outline-2">
-<h2 id="org836ee2c"><a href="#org836ee2c">Get NS records</a></h2>
-<div class="outline-text-2" id="text-org836ee2c">
+<div id="outline-container-orgc2d2119" class="outline-2">
+<h2 id="orgc2d2119"><a href="#orgc2d2119">View Records</a></h2>
+<div class="outline-text-2" id="text-orgc2d2119">
 </div>
-<div id="outline-container-orga6af6b6" class="outline-3">
-<h3 id="orga6af6b6"><a href="#orga6af6b6">host</a></h3>
-<div class="outline-text-3" id="text-orga6af6b6">
+<div id="outline-container-org1b42fdd" class="outline-3">
+<h3 id="org1b42fdd"><a href="#org1b42fdd">NS</a></h3>
+<div class="outline-text-3" id="text-org1b42fdd">
+<p>
+dig:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">dig ns $<span style="color: #dcaeea;">DnsName</span> +short
+</pre>
+</div>
+
+<p>
+host:
+</p>
+
 <div class="org-src-container">
 <pre class="src src-sh">host -t ns $<span style="color: #dcaeea;">DnsName</span>
 </pre>
@@ -76,23 +89,28 @@ IP.
 </div>
 </div>
 
-<div id="outline-container-orgc5da41c" class="outline-3">
-<h3 id="orgc5da41c"><a href="#orgc5da41c">dig</a></h3>
-<div class="outline-text-3" id="text-orgc5da41c">
+<div id="outline-container-orge7ad3d9" class="outline-3">
+<h3 id="orge7ad3d9"><a href="#orge7ad3d9">TXT</a></h3>
+<div class="outline-text-3" id="text-orge7ad3d9">
 <div class="org-src-container">
-<pre class="src src-sh">dig ns $<span style="color: #dcaeea;">DnsName</span> +short
+<pre class="src src-sh">dig -t txt <span style="color: #98be65;">'\@.lenaclarklegal.com'</span> +short
 </pre>
 </div>
+
+<div class="org-src-container">
+<pre class="src src-sh">host -t txt <span style="color: #98be65;">'@.lenaclarklegal.com'</span>
+</pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org3db7dcd" class="outline-2">
-<h2 id="org3db7dcd"><a href="#org3db7dcd">Get the CNAME</a></h2>
-<div class="outline-text-2" id="text-org3db7dcd">
+<div id="outline-container-org50b5d45" class="outline-3">
+<h3 id="org50b5d45"><a href="#org50b5d45">CNAME</a></h3>
+<div class="outline-text-3" id="text-org50b5d45">
 <div class="org-src-container">
 <pre class="src src-sh">dig $<span style="color: #dcaeea;">DnsName</span> CNAME +short
 </pre>
+</div>
 </div>
 </div>
 </div>
@@ -101,7 +119,7 @@ IP.
 <h2 id="org10c5427"><a href="#org10c5427">NS Delegation in AWS</a></h2>
 <div class="outline-text-2" id="text-org10c5427">
 <p>
-See Projects/codenotes/aws/route53<sub>dns</sub><sub>delegation.org</sub>
+See notes in <code>Projects/codenotes/aws/route53_dns_delegation.org</code>.
 </p>
 </div>
 </div>

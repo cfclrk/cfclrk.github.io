@@ -25,6 +25,6 @@
   [[https://en.wikipedia.org/wiki/Literate_programming][literate-programming]] environment; within Emacs I can execute the code blocks
   on this site interactively.
 
-  The source code is spread out among a couple personal repos: [[https://github.com/cfclrk/articles][articles]],
-  [[https://github.com/cfclrk/cloudformation][cloudformation]], [[https://github.com/cfclrk/site][site]], [[https://github.com/cfclrk/cfclrk.github.io][cfclrk.github.io]], and some org-mode configuration in
+  The source code is mostly located here: [[https://github.com/cfclrk/cfclrk.github.io][cfclrk.github.io]]. The CloudFormation
+  stuff is in my [[https://github.com/cfclrk/cloudformation][cloudformation]] repo, and some org-mode configuration is in my
   [[https://github.com/cfclrk/dotfiles/blob/master/emacs_cfclrk/cfclrk_org.el][dotfiles]].

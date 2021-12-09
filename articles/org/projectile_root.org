@@ -18,9 +18,10 @@ problem:
   In monorepos, Projectile determines the project root to be the /monorepo/, not
   the subproject that you're in.
 
-  When I'm in a python project that happens to be in a monorepo, I want
-  Projectile to operate on the python project. I can still use Projectile on the
-  whole monorepo by opening a file or Dired buffer at the root of the monorepo.
+  Instead: when I'm working in, say, a python project that happens to be in a
+  monorepo, I want Projectile to operate on that python project. One could still
+  use Projectile on the whole monorepo by navigating to file at the root of the
+  monorepo.
 
   To jump to my solution, go to [[#solution]], or see the Elisp file I use,
   generated from this document, [[https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-discovery.el][on GitHub]].
@@ -87,7 +88,7 @@ problem:
   =/private/tmp=).
 
   I /want/ Projectile to say that the project root is =/tmp/repo/go/projectA=.
-  By default, however, Projectile finds the root of the monorepo.
+  But alas, Projectile instead found =/tmp/repo/=.
 
   To understand how to change this, we need to understand how Projectile detects
   projects.
@@ -95,8 +96,8 @@ problem:
 * Project Detection
 
   The relevant documentation is here: [[https://docs.projectile.mx/projectile/projects.html#customizing-project-detection][Customizing Project Detection]]. Projectile
-  has a few strategies for finding a project root, and it tries each one in
-  order. The order is defined by the variable:
+  has a few strategies for finding a project root, and tries each one in order.
+  The order is defined by this variable:
 
   #+begin_src emacs-lisp :post partition(*this*, 1)
     projectile-project-root-functions
@@ -108,8 +109,8 @@ problem:
   | projectile-root-top-down           |
   | projectile-root-top-down-recurring |
 
-  The second function, =(projectile-root-bottom-up)=, is the one that is
-  determining the monorepo to be the "project". See it in action:
+  The second function -- =projectile-root-bottom-up= -- is our culprit. We can
+  try it out interactively:
 
   #+header: :prologue (projectile-invalidate-cache nil)
   #+begin_src emacs-lisp
