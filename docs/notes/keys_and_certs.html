@@ -61,6 +61,7 @@
 </li>
 <li><a href="#org61c20c7">cfssl</a></li>
 <li><a href="#org8c46358">Fingerprint</a></li>
+<li><a href="#orgf12e80d">Native Certs</a></li>
 <li><a href="#org09dbf98">Checking and Viewing Certs</a>
 <ul>
 <li><a href="#org5223a9c">View a Server's Certificate</a></li>
@@ -405,6 +406,37 @@ docs <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.
 </div>
 </div>
 
+<div id="outline-container-orgf12e80d" class="outline-2">
+<h2 id="orgf12e80d"><a href="#orgf12e80d">Native Certs</a></h2>
+<div class="outline-text-2" id="text-orgf12e80d">
+<p>
+Sometimes certificates are bundled with applications; e.g. browsers bundle a
+set of certificates curated by the browser's creators.
+</p>
+
+<p>
+Other times, certificates are installed on, and managed by, the OS. These are
+referred to as "native certificates".
+</p>
+
+<p>
+<i>Properly</i> using native certificates is a headache, and requires knowledge of
+how the OS handles certificates. See:
+</p>
+
+<ul class="org-ul">
+<li><a href="https://github.com/rustls/rustls-native-certs/issues/25">This issue</a> for rustls-native-certs</li>
+<li><a href="https://github.com/golang/go/issues/46287">This issue</a> for golang</li>
+</ul>
+
+<p>
+However, if you're not trying to make the perfect system, you can just trust
+whatever certs are in the MacOS Keychain or use the <code>update-ca-certificates</code>
+program on Debian.
+</p>
+</div>
+</div>
+
 <div id="outline-container-org09dbf98" class="outline-2">
 <h2 id="org09dbf98"><a href="#org09dbf98">Checking and Viewing Certs</a></h2>
 <div class="outline-text-2" id="text-org09dbf98">
@@ -413,20 +445,20 @@ docs <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.
 <h3 id="org5223a9c"><a href="#org5223a9c">View a Server's Certificate</a></h3>
 <div class="outline-text-3" id="text-org5223a9c">
 <p>
-Show cert info for a local certificate file.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">openssl x509 -in $<span style="color: #dcaeea;">cert</span> -text -noout
-</pre>
-</div>
-
-<p>
 Show cert info for a website.
 </p>
 
 <div class="org-src-container">
 <pre class="src src-sh">openssl s_client -connect $<span style="color: #dcaeea;">domain</span>:443 -showcerts
+</pre>
+</div>
+
+<p>
+Show cert info for a local certificate file.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">openssl x509 -in $<span style="color: #dcaeea;">cert</span> -text -noout
 </pre>
 </div>
 </div>

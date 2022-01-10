@@ -1,27 +1,35 @@
 #+TITLE: Clojure
 #+SETUPFILE: ../setup.org
 
+* Installation
+
+  #+header: :tangle ~/Projects/dotfiles/langs/clojure.sh
+  #+begin_src sh
+    brew install clojure
+  #+end_src
+
 * clj vs clojure
 
   =clj= is just a program that wraps =clojure= with =readline= support.
 
   #+begin_src bash :results output
-    cat $(which clj) | grep exec
+    find /usr/local/Cellar/clojure -name clj \
+        | sed -n '2 p' \
+        | xargs cat \
+        | grep exec
   #+end_src
 
   #+RESULTS:
   :   exec rlwrap -r -q '\"' -b "(){}[],^%#@\";:'" "$bin_dir/clojure" "$@"
 
   =readline= provides support for editing a command in the terminal (e.g. using
-  arrow keys for moving around within the command, using =C-a= =C-e= =C-f= =C-b=
-  movement commands) and stuff like that.
+  arrow keys and =C-a= =C-e= =C-f= =C-b= for movement, and stuff like that.
 
-  So, =clj= just provides better interactivity in the REPL. As an end user, you
-  might as well just use =clj= for everything.
+  So, =clj= just provides better interactivity in the terminal REPL.
 
 * Cmd Execution and REPL
 
-  Call a function
+  Call a single function
 
   #+header: :dir ~/Projects/codenotes/clojure/scratch
   #+begin_src sh :var nsname="hello" funcname="foo" :results output
@@ -41,13 +49,9 @@
 
 * Project Creation
 
-** Minimal command line
+** Minimal
 
-   All you need is a project directory with a
-
-   1. =deps.edn=
-   2. =src/foo.clj=
-
+   All you need is a project directory with a =deps.edn= and a =src/foo.clj=.
    However it should be namespaced properly (TODO: work on this).
 
    #+begin_src sh :var d="helloworld"
@@ -57,21 +61,37 @@
      clj -m core
    #+end_src
 
-** Using clj-new
+** Using deps-new
 
-   The following makes use of an alias defined in =~/.clojure/deps.edn=.
+   First, make sure [[https://github.com/seancorfield/deps-new][deps-new]] is installed:
 
    #+begin_src sh
-     clj -X:new-app :name cfclrk/$projectName
+     clojure -Ttools install \
+         io.github.seancorfield/deps-new \
+         '{:git/tag "v0.4.9"}' :as new
+   #+end_src
+
+   Create a new app:
+
+   #+header: :dir ~/Projects/codenotes/rundoc
+   #+header: :var projectName="rundoc-server"
+   #+begin_src sh
+     clojure -Tnew app :name cfclrk/$projectName
+   #+end_src
+
+   Create a new lib:
+
+   #+begin_src sh
+     clojure -Tnew lib :name cfclrk/$projectName
    #+end_src
 
 * Emacs Cider
 
   Basic workflow is described [[https://docs.cider.mx/cider/usage/cider_mode.html#basic-workflow][in the cider docs here]].
 
-  - Open a file at the root dir of the project
+  - Open a file in the project
   - =M-x cider-jack-in=
-  - Open a file in the project, and =C-c C-k= (=cider-load-buffer=)
+  - Load a project file using =C-c C-k= (=cider-load-buffer=)
   - In the =*cider-repl= buffer, you know call the fully-qualified functions in
     that file. Or, =(in-ns <ns-name>)= to call functions in that file without
     namespace qualification.

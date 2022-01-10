@@ -16,21 +16,24 @@
    #+end_src
 
    #+RESULTS:
-   : ls: illegal option -- -
-   : usage: ls [-@ABCFGHLOPRSTUWabcdefghiklmnopqrstuwx1%] [file ...]
+   : ls: unrecognized option '--foo'
+   : Try 'ls --help' for more information.
 
 *** NOT WORKING
 
     Doesn't work:
 
-    #+begin_src bash :results output :prologue "exec 2>&1"
+    #+header: :prologue "exec 2>&1" :epilogue "true"
+    #+begin_src bash :results output
       echo "hi"
       exit 1
     #+end_src
 
-    #+begin_src bash :results output :prologue "exec 2>&1"
+    #+header: :prologue "exec 2>&1" :epilogue "true"
+    #+begin_src bash :results output
       set -u
       echo $foo
+      echo "hi"
     #+end_src
 
     #+header: :prologue "exec 2>&1" :epilogue "true"

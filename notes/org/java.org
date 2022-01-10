@@ -1,3 +1,6 @@
+#+TITLE: Java
+#+SETUPFILE: ../setup.org
+
 * Installation
 
   Best resource I've found is [[https://mkyong.com/java/how-to-install-java-on-mac-osx/][How to install Java JDK on macOS]].
@@ -32,7 +35,7 @@
      brew install openjdk@7
    #+end_src
 
-* Versions
+* Switch Versions
 
   To see installed Java versions (assuming they have been properly symlinked):
 

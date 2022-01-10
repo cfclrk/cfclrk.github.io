@@ -21,6 +21,21 @@
      security find-generic-password -a ${USER} -s $1 -w
    #+end_src
 
+* Certificates
+
+  Get system root certificates.
+
+  #+begin_src sh
+    security find-certificate \
+             -a -p \
+             /System/Library/Keychains/SystemRootCertificates.keychain \
+             > ~/Documents/certs.pem
+    security find-certificate \
+             -a -p \
+             /Library/Keychains/System.keychain \
+             >> ~/Documents/certs.pem
+  #+end_src
+
 * Temp Files
 
   #+begin_src sh

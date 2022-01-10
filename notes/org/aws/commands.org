@@ -61,21 +61,17 @@
          | jq -r ".Regions[].RegionName"
    #+end_src
 
-   #+RESULTS[38daa3accfaed92cf15bd1e035de2f8ae9fde37b]: AllRegions
-   : af-south-1
+   #+RESULTS[04317e7a06778532f7f315cce532515421a80543]: AllRegions
    : eu-north-1
    : ap-south-1
    : eu-west-3
    : eu-west-2
-   : eu-south-1
    : eu-west-1
    : ap-northeast-3
    : ap-northeast-2
-   : me-south-1
    : ap-northeast-1
    : sa-east-1
    : ca-central-1
-   : ap-east-1
    : ap-southeast-1
    : ap-southeast-2
    : eu-central-1
@@ -120,27 +116,23 @@
    #+end_src
 
    #+RESULTS:
-   : af-south-1: 1
-   : eu-north-1: 2
-   : ap-south-1: 1
-   : eu-west-3: 1
-   : eu-west-2: 3
-   : eu-south-1: 1
-   : eu-west-1: 1
+   : eu-north-1: 0
+   : ap-south-1: 0
+   : eu-west-3: 0
+   : eu-west-2: 0
+   : eu-west-1: 0
    : ap-northeast-3: 1
-   : ap-northeast-2: 1
-   : me-south-1: 1
-   : ap-northeast-1: 2
-   : sa-east-1: 1
-   : ca-central-1: 2
-   : ap-east-1: 1
+   : ap-northeast-2: 0
+   : ap-northeast-1: 0
+   : sa-east-1: 0
+   : ca-central-1: 0
    : ap-southeast-1: 1
-   : ap-southeast-2: 1
-   : eu-central-1: 1
-   : us-east-1: 98
-   : us-east-2: 8
-   : us-west-1: 4
-   : us-west-2: 3
+   : ap-southeast-2: 0
+   : eu-central-1: 0
+   : us-east-1: 2
+   : us-east-2: 3
+   : us-west-1: 0
+   : us-west-2: 0
 
    Get the number of VPCs in each region the 🚀 and 😎 (and 🤮) way by starting
    a subprocess for each region in parallel. Note that =${#regions[@]}= is bash
@@ -438,6 +430,38 @@
          --image-id $ImageID \
          --attribute launchPermission
    #+end_src
+
+* EC2 AZs
+
+  All AZs in all regions:
+
+  #+header: :var AllRegions=AllRegions
+  #+begin_src sh
+    for region in $AllRegions; do
+        azs=$(aws --region $region ec2 describe-availability-zones \
+                  | jq -c '[.AvailabilityZones[].ZoneName]')
+        printf "$region: $azs\n"
+    done
+  #+end_src
+
+  #+RESULTS:
+  : eu-north-1: ["eu-north-1a","eu-north-1b","eu-north-1c"]
+  : ap-south-1: ["ap-south-1a","ap-south-1b","ap-south-1c"]
+  : eu-west-3: ["eu-west-3a","eu-west-3b","eu-west-3c"]
+  : eu-west-2: ["eu-west-2a","eu-west-2b","eu-west-2c"]
+  : eu-west-1: ["eu-west-1a","eu-west-1b","eu-west-1c"]
+  : ap-northeast-3: ["ap-northeast-3a","ap-northeast-3b","ap-northeast-3c"]
+  : ap-northeast-2: ["ap-northeast-2a","ap-northeast-2b","ap-northeast-2c","ap-northeast-2d"]
+  : ap-northeast-1: ["ap-northeast-1a","ap-northeast-1c","ap-northeast-1d"]
+  : sa-east-1: ["sa-east-1a","sa-east-1b","sa-east-1c"]
+  : ca-central-1: ["ca-central-1a","ca-central-1b","ca-central-1d"]
+  : ap-southeast-1: ["ap-southeast-1a","ap-southeast-1b","ap-southeast-1c"]
+  : ap-southeast-2: ["ap-southeast-2a","ap-southeast-2b","ap-southeast-2c"]
+  : eu-central-1: ["eu-central-1a","eu-central-1b","eu-central-1c"]
+  : us-east-1: ["us-east-1a","us-east-1b","us-east-1c","us-east-1d","us-east-1e","us-east-1f"]
+  : us-east-2: ["us-east-2a","us-east-2b","us-east-2c"]
+  : us-west-1: ["us-west-1b","us-west-1c"]
+  : us-west-2: ["us-west-2a","us-west-2b","us-west-2c","us-west-2d"]
 
 * EC2 KeyPairs
 

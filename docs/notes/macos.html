@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2021-09-24 Fri 15:51 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>&lrm;</title>
@@ -39,6 +38,7 @@
 <li><a href="#org0e6e707">Retrieve Secret</a></li>
 </ul>
 </li>
+<li><a href="#orgfdc5883">Certificates</a></li>
 <li><a href="#org67675a2">Temp Files</a></li>
 <li><a href="#org0168ca1">Cache Files</a></li>
 </ul>
@@ -78,6 +78,27 @@
 <pre class="src src-sh">security find-generic-password -a ${<span style="color: #dcaeea;">USER</span>} -s $<span style="color: #dcaeea;">1</span> -w
 </pre>
 </div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfdc5883" class="outline-2">
+<h2 id="orgfdc5883"><a href="#orgfdc5883">Certificates</a></h2>
+<div class="outline-text-2" id="text-orgfdc5883">
+<p>
+Get system root certificates.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">security find-certificate <span style="color: #98be65;">\</span>
+         -a -p <span style="color: #98be65;">\</span>
+         /System/Library/Keychains/SystemRootCertificates.keychain <span style="color: #98be65;">\</span>
+         &gt; ~/Documents/certs.pem
+security find-certificate <span style="color: #98be65;">\</span>
+         -a -p <span style="color: #98be65;">\</span>
+         /Library/Keychains/System.keychain <span style="color: #98be65;">\</span>
+         &gt;&gt; ~/Documents/certs.pem
+</pre>
 </div>
 </div>
 </div>

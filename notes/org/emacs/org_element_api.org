@@ -1,4 +1,4 @@
-#+TITLE: Org Element Api
+#+TITLE: Org Element API
 #+SETUPFILE: ../../setup.org
 
 * Resources
@@ -153,3 +153,7 @@
 
   #+RESULTS:
   : ("Org Element Api")
+
+* Get List of H1
+
+  See: https://stackoverflow.com/a/70366787/340613
