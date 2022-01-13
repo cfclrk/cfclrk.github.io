@@ -85,8 +85,8 @@
    #+begin_src sh :var AllRegions=AllRegions
      echo $AllRegions | wc -w   # Using wc
 
-     regions=($AllRegions)      # Or use an array
-     echo ${#regions[*]}
+     regions=($AllRegions)      # Or use an array, and
+     echo ${#regions[*]}        # print array length
    #+end_src
 
    #+RESULTS:
@@ -610,6 +610,14 @@
      aws ec2 describe-volumes \
          --filters Name=tag-key,Values=$Tag \
          | jq -r '.Volumes[].VolumeId'
+   #+end_src
+
+** List Unattached Volumes
+
+   #+begin_src sh
+     aws ec2 describe-volumes --region us-east-1 \
+         --filters Name=status,Values=available \
+         | jq '.Volumes | length'
    #+end_src
 
 ** Delete Volumes
