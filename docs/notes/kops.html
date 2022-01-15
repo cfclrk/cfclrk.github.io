@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>kOps</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">kOps</h1>
+</header><nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org8bbc717">Clusters</a>
+<ul>
+<li><a href="#org72d31e5">List Clusters</a></li>
+<li><a href="#org1148892">Cluster Spec</a></li>
+</ul>
+</li>
+<li><a href="#orgbb44d42">InstanceGroups</a></li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-org8bbc717" class="outline-2">
+<h2 id="org8bbc717"><a href="#org8bbc717">Clusters</a></h2>
+<div class="outline-text-2" id="text-org8bbc717">
+</div>
+<div id="outline-container-org72d31e5" class="outline-3">
+<h3 id="org72d31e5"><a href="#org72d31e5">List Clusters</a></h3>
+<div class="outline-text-3" id="text-org72d31e5">
+<div class="org-src-container">
+<pre class="src src-sh">kops --state $<span style="color: #dcaeea;">bucket</span> get clusters
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1148892" class="outline-3">
+<h3 id="org1148892"><a href="#org1148892">Cluster Spec</a></h3>
+<div class="outline-text-3" id="text-org1148892">
+<div class="org-src-container">
+<pre class="src src-sh">kops --state $<span style="color: #dcaeea;">bucket</span> get clusters <span style="color: #98be65;">\</span>
+     --name $<span style="color: #dcaeea;">CLUSTER_NAME</span> -o yaml
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbb44d42" class="outline-2">
+<h2 id="orgbb44d42"><a href="#orgbb44d42">InstanceGroups</a></h2>
+<div class="outline-text-2" id="text-orgbb44d42">
+<div class="org-src-container">
+<pre class="src src-sh">kops --state $<span style="color: #dcaeea;">bucket</span> get instancegroup
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh">kops describe --state $<span style="color: #dcaeea;">bucket</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -6,7 +6,7 @@
 * Hello
 
   I am Chris! I like family time, hugging my baby, tinkering with Emacs,
-  drinking beer, and playing sports -- simultaneously.
+  learning programming languages, and playing sports.
 
   Find me on:
 

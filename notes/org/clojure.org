@@ -97,6 +97,16 @@
     namespace qualification.
   - Edit a function, and =C-c C-e= on that function to reload it.
 
+** Tips
+
+  - From source file, =C-u C-c C-z= to jump to cider buffer already namespaced
+    to the source file.
+  - Quit a long-running eval with =C-c C-b= (=cider-interrupt=).
+
+** Doc
+
+   Function doc: =C-c C-d C-d= (=cider-doc=)
+
 * Testing
 
   Use test-runner, which handles test discovery and running tests.

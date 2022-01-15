@@ -33,7 +33,7 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org832c923">Account</a></li>
+<li><a href="#org9455144">Account</a></li>
 <li><a href="#orgf9a3f98">IP Address Ranges</a>
 <ul>
 <li><a href="#org0b6e61a">Get Region of IP</a></li>
@@ -49,7 +49,7 @@
 <li><a href="#org6622052">ACM</a>
 <ul>
 <li><a href="#orga9d8f9e">List</a></li>
-<li><a href="#org4a4d9f2">Describe</a></li>
+<li><a href="#org745bfe2">Describe</a></li>
 <li><a href="#org8db7a20">Get Certificate</a></li>
 <li><a href="#org671ce03">Get Certificate PEM File</a></li>
 </ul>
@@ -93,7 +93,7 @@
 <li><a href="#orgbc46786">EC2 KeyPairs</a>
 <ul>
 <li><a href="#org4a97cf6">Create</a></li>
-<li><a href="#org745bfe2">Describe</a></li>
+<li><a href="#org07ae811">Describe</a></li>
 <li><a href="#org878c9b3">Delete</a></li>
 </ul>
 </li>
@@ -122,6 +122,7 @@
 <li><a href="#org7d0d552">EC2 Volumes</a>
 <ul>
 <li><a href="#org00561f2">List Volumes</a></li>
+<li><a href="#orgb8112d8">List Unattached Volumes</a></li>
 <li><a href="#org8fe17be">Delete Volumes</a></li>
 </ul>
 </li>
@@ -249,15 +250,15 @@
 </div>
 </nav>
 
-<div id="outline-container-org832c923" class="outline-2">
-<h2 id="org832c923"><a href="#org832c923">Account</a></h2>
-<div class="outline-text-2" id="text-org832c923">
+<div id="outline-container-org9455144" class="outline-2">
+<h2 id="org9455144"><a href="#org9455144">Account</a></h2>
+<div class="outline-text-2" id="text-org9455144">
 <p>
 Account number:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="org51c9ec5">aws sts get-caller-identity --query <span style="color: #98be65;">'Account'</span> --output text
+<pre class="src src-sh" id="org832c923">aws sts get-caller-identity --query <span style="color: #98be65;">'Account'</span> --output text
 </pre>
 </div>
 </div>
@@ -348,8 +349,8 @@ Number of regions:
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">AllRegions</span> | wc -w   <span style="color: #5B6268;"># </span><span style="color: #5B6268;">Using wc</span>
 
-<span style="color: #dcaeea;">regions</span>=($<span style="color: #dcaeea;">AllRegions</span>)      <span style="color: #5B6268;"># </span><span style="color: #5B6268;">Or use an array</span>
-<span style="color: #c678dd;">echo</span> ${#<span style="color: #dcaeea;">regions</span>[*]}
+<span style="color: #dcaeea;">regions</span>=($<span style="color: #dcaeea;">AllRegions</span>)      <span style="color: #5B6268;"># </span><span style="color: #5B6268;">Or use an array, and</span>
+<span style="color: #c678dd;">echo</span> ${#<span style="color: #dcaeea;">regions</span>[*]}        <span style="color: #5B6268;"># </span><span style="color: #5B6268;">print array length</span>
 </pre>
 </div>
 
@@ -478,9 +479,9 @@ ap-southeast-2: 1
 </div>
 </div>
 
-<div id="outline-container-org4a4d9f2" class="outline-3">
-<h3 id="org4a4d9f2"><a href="#org4a4d9f2">Describe</a></h3>
-<div class="outline-text-3" id="text-org4a4d9f2">
+<div id="outline-container-org745bfe2" class="outline-3">
+<h3 id="org745bfe2"><a href="#org745bfe2">Describe</a></h3>
+<div class="outline-text-3" id="text-org745bfe2">
 <div class="org-src-container">
 <pre class="src src-sh">aws acm describe-certificate <span style="color: #98be65;">\</span>
     --certificate-arn $<span style="color: #dcaeea;">CertArn</span>
@@ -916,9 +917,9 @@ chmod 0600 $<span style="color: #dcaeea;">KeyFile</span>
 </div>
 </div>
 
-<div id="outline-container-org745bfe2" class="outline-3">
-<h3 id="org745bfe2"><a href="#org745bfe2">Describe</a></h3>
-<div class="outline-text-3" id="text-org745bfe2">
+<div id="outline-container-org07ae811" class="outline-3">
+<h3 id="org07ae811"><a href="#org07ae811">Describe</a></h3>
+<div class="outline-text-3" id="text-org07ae811">
 <div class="org-src-container">
 <pre class="src src-sh">aws ec2 describe-key-pairs | jq <span style="color: #98be65;">'.KeyPairs[]'</span>
 </pre>
@@ -1115,6 +1116,18 @@ The names of VPCs that have a <code>Name</code> tag:
 <pre class="src src-sh" id="org22a21e7">aws ec2 describe-volumes <span style="color: #98be65;">\</span>
     --filters <span style="color: #dcaeea;">Name</span>=tag-key,<span style="color: #dcaeea;">Values</span>=$<span style="color: #dcaeea;">Tag</span> <span style="color: #98be65;">\</span>
     | jq -r <span style="color: #98be65;">'.Volumes[].VolumeId'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb8112d8" class="outline-3">
+<h3 id="orgb8112d8"><a href="#orgb8112d8">List Unattached Volumes</a></h3>
+<div class="outline-text-3" id="text-orgb8112d8">
+<div class="org-src-container">
+<pre class="src src-sh">aws ec2 describe-volumes --region us-east-1 <span style="color: #98be65;">\</span>
+    --filters <span style="color: #dcaeea;">Name</span>=status,<span style="color: #dcaeea;">Values</span>=available <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.Volumes | length'</span>
 </pre>
 </div>
 </div>

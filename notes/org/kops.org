@@ -1,0 +1,55 @@
+#+TITLE: kOps
+
+* Variables                                                        :noexport:
+
+#+NAME: env
+| Var                | Value            |
+|--------------------+------------------|
+| AWS_PROFILE        | cloud-infra-prod |
+| AWS_DEFAULT_REGION | us-east-2        |
+
+#+begin_src emacs-lisp :var env=env :exports none
+  (setenv-file-export-pairs env)
+#+end_src
+
+** Account
+
+  #+NAME: Account
+  #+begin_src sh :cache yes :results output
+    aws sts get-caller-identity --query 'Account' --output text
+  #+end_src
+
+** State Bucket
+
+  #+NAME: StateBucket
+  #+header: :var account=Account
+  #+begin_src sh :cache yes
+    echo "s3://ironk8s-kops-state-store-$account"
+  #+end_src
+
+* Clusters
+
+** List Clusters
+
+  #+header: :var bucket=StateBucket
+  #+begin_src sh :results output
+    kops --state $bucket get clusters
+  #+end_src
+
+** Cluster Spec
+
+   #+begin_src sh
+     kops --state $bucket get clusters \
+          --name $CLUSTER_NAME -o yaml
+   #+end_src
+
+* InstanceGroups
+
+  #+header: :var bucket=StateBucket
+  #+begin_src sh
+    kops --state $bucket get instancegroup
+  #+end_src
+
+  #+begin_src sh
+    kops describe --state $bucket
+  #+end_src

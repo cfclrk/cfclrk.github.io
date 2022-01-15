@@ -27,6 +27,7 @@
 - [[file:java.org][java]]
 - [[file:javascript.org][javascript]]
 - [[file:jq.org][jq]]
+- [[file:kops.org][kOps]]
 - [[file:macos.org][macos]]
 - [[file:sed.org][sed]]
 - [[file:tmux.org][tmux]]
