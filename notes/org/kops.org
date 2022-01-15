@@ -1,4 +1,5 @@
 #+TITLE: kOps
+#+SETUPFILE: ../setup.org
 
 * Variables                                                        :noexport:
 

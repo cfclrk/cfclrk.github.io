@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>&lrm;</title>
+<title>Javascript</title>
 <meta name="generator" content="Org Mode" />
 <link rel="stylesheet" type="text/css" href="/static/main.css" />
 </head>
@@ -27,16 +27,18 @@
 </nav>
 </div>
 <div id="content" class="content">
-<nav id="table-of-contents" role="doc-toc">
+<header>
+<h1 class="title">Javascript</h1>
+</header><nav id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
 <li><a href="#org63dd746">yarn</a>
 <ul>
-<li><a href="#org8749bbc">Global Packages</a>
+<li><a href="#orgc527e90">Global Packages</a>
 <ul>
 <li><a href="#org690e203">Install</a></li>
-<li><a href="#org3e16896">List</a></li>
+<li><a href="#org8bb0714">List</a></li>
 <li><a href="#orgb4d0920">Upgrade</a></li>
 </ul>
 </li>
@@ -44,9 +46,9 @@
 </li>
 <li><a href="#org180d7b7">npm</a>
 <ul>
-<li><a href="#orgc527e90">Global Packages</a>
+<li><a href="#org4dcf9ea">Global Packages</a>
 <ul>
-<li><a href="#org8bb0714">List</a></li>
+<li><a href="#org8e94550">List</a></li>
 <li><a href="#orgf4d44d9">Delete Them All</a></li>
 </ul>
 </li>
@@ -57,13 +59,14 @@
 </ul>
 </div>
 </nav>
+
 <div id="outline-container-org63dd746" class="outline-2">
 <h2 id="org63dd746"><a href="#org63dd746">yarn</a></h2>
 <div class="outline-text-2" id="text-org63dd746">
 </div>
-<div id="outline-container-org8749bbc" class="outline-3">
-<h3 id="org8749bbc"><a href="#org8749bbc">Global Packages</a></h3>
-<div class="outline-text-3" id="text-org8749bbc">
+<div id="outline-container-orgc527e90" class="outline-3">
+<h3 id="orgc527e90"><a href="#orgc527e90">Global Packages</a></h3>
+<div class="outline-text-3" id="text-orgc527e90">
 <p>
 Global packages are installed to <code>$(yarn global dir)/node_modules/</code> and
 symlinks are placed in <code>$(yarn global bin)</code>.
@@ -80,9 +83,9 @@ symlinks are placed in <code>$(yarn global bin)</code>.
 </div>
 </div>
 
-<div id="outline-container-org3e16896" class="outline-4">
-<h4 id="org3e16896"><a href="#org3e16896">List</a></h4>
-<div class="outline-text-4" id="text-org3e16896">
+<div id="outline-container-org8bb0714" class="outline-4">
+<h4 id="org8bb0714"><a href="#org8bb0714">List</a></h4>
+<div class="outline-text-4" id="text-org8bb0714">
 <div class="org-src-container">
 <pre class="src src-sh">yarn global list
 </pre>
@@ -120,13 +123,13 @@ Without <code>--latest</code>, yarn will respect semver specs in <code>$(yarn gl
 <h2 id="org180d7b7"><a href="#org180d7b7">npm</a></h2>
 <div class="outline-text-2" id="text-org180d7b7">
 </div>
-<div id="outline-container-orgc527e90" class="outline-3">
-<h3 id="orgc527e90"><a href="#orgc527e90">Global Packages</a></h3>
-<div class="outline-text-3" id="text-orgc527e90">
+<div id="outline-container-org4dcf9ea" class="outline-3">
+<h3 id="org4dcf9ea"><a href="#org4dcf9ea">Global Packages</a></h3>
+<div class="outline-text-3" id="text-org4dcf9ea">
 </div>
-<div id="outline-container-org8bb0714" class="outline-4">
-<h4 id="org8bb0714"><a href="#org8bb0714">List</a></h4>
-<div class="outline-text-4" id="text-org8bb0714">
+<div id="outline-container-org8e94550" class="outline-4">
+<h4 id="org8e94550"><a href="#org8e94550">List</a></h4>
+<div class="outline-text-4" id="text-org8e94550">
 <div class="org-src-container">
 <pre class="src src-sh">npm -g list --depth 0
 </pre>
@@ -166,9 +169,13 @@ From: <a href="https://hsivonen.fi/string-length/">https://hsivonen.fi/string-le
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #51afef;">return</span> <span style="color: #98be65;">"&#129318;&#127996;&#8205;&#9794;&#65039;"</span>.length
+<pre class="src src-js"><span style="color: #51afef;">return</span> <span style="color: #98be65;">"&#129318;&#127996;&#8205;&#9794;&#65039;"</span>.length
 </pre>
 </div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+7
+</pre>
 </div>
 </div>
 

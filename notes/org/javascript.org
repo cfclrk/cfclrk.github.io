@@ -1,3 +1,6 @@
+#+TITLE: Javascript
+#+SETUPFILE: ../setup.org
+
 * yarn
 
 ** Global Packages
@@ -52,7 +55,7 @@
 
 * Strings
 
-  #+begin_src js :results value
+  #+begin_src js
     return "😂".length
   #+end_src
 
@@ -61,9 +64,12 @@
 
   From: https://hsivonen.fi/string-length/
 
-  #+begin_src sh
+  #+begin_src js
     return "🤦🏼‍♂️".length
   #+end_src
+
+  #+RESULTS:
+  : 7
 
 * Scripts
 
