@@ -13,6 +13,46 @@
 
   My git configuration [[https://github.com/cfclrk/dotfiles/tree/master/xdg_config/git][on GitHub]] is generated from this article.
 
+* The SSH Config
+  :PROPERTIES:
+  :CUSTOM_ID: the-ssh-config
+  :END:
+
+  Assuming you use the =git= protocol to clone repositories (not =https= like
+  some kind of animal), you must create at least two SSH keys for GitHub -- one
+  for each GitHub account (GitHub will not allow you to use the same SSH key for
+  both accounts). Assuming you've [[https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh][created]] those, your =~/.ssh= directory should
+  look something like:
+
+  #+begin_example
+    $ tree ~/.ssh/
+    /Users/cfclrk/.ssh/
+    ├── config
+    ├── github-home
+    ├── github-home.pub
+    ├── github-work
+    └── github-work.pub
+  #+end_example
+
+  Ensure these SSH keys work:
+
+  #+begin_src sh :results output
+    ssh -T github-home 2>&1 || true
+  #+end_src
+
+  #+RESULTS:
+  : Hi cfclrk! You've successfully authenticated, but GitHub does not provide shell access.
+
+  #+begin_src sh :results output
+    ssh -T github-work 2>&1 || true
+  #+end_src
+
+  #+RESULTS:
+  : Hi chrisc-ironnet! You've successfully authenticated, but GitHub does not provide shell access.
+
+  We don't need to modify the =~/.ssh/config= file. Instead, we'll explicitly
+  tell git which SSH keys to use in our git config files.
+
 * The Git Config
 
   First, tell git to use different git configurations depending on the directory
@@ -62,7 +102,7 @@
   That's it for the git config! Move on to [[#signed-commits]]. The next subsection
   explains the above, if you are interested.
 
-** Git Config Loading
+** More about Git Config Loading
    :PROPERTIES:
    :CUSTOM_ID: config-loading
    :END:
