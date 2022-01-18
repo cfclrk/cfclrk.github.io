@@ -1,0 +1,58 @@
+#+TITLE: I/O Stuff
+
+One definition: sync and async are about how code is written. E.g. if code is
+written using callbacks, that's async code. If it's more linear, that sync code.
+
+Blocking/non-blocking is whether the execution of a particular thing causes the
+current thread to wait or whether the current thread can continue before this
+thing returns a value.
+
+FOR EXAMPLE: originally, the ruby interpreter did all IO operations in a
+synchronous, blocking way. Eventually, they updated IO operations to be
+asynchronous, but the /code didn't change/. All ruby programs just magically got
+a little faster.
+
+* Synchronous vs Asynchronous
+
+  Some define the difference as how the code is written.
+
+  Synchronous: write you code to look like it blocks. The code is written
+  step-by-step.
+
+  Asynchronous: write you code using callbacks or something.
+
+* Blocking vs Nonblocking
+
+  A thread cannot do anything until the IO operation has completed.
+
+* Examples
+
+  Synchronous, blocking IO: the simplest case. Write code in a linear fashion,
+  IO operations block, execution does not move forward until IO operation
+  completes. Your code executes the way it looks.
+
+  Asynchronous, blocking IO: doesn't make sense. Means you're writing your code
+  in a way that enables non-linear execution, but everything the code doesn't
+  actually run that way.
+
+  Goroutines: synchronous, non-blocking. Synchronous because code is still
+  step-by-step. Non-blocking because the current thread continues on while the
+  IO operation is still happening.
+
+  Asynchronous, non-blocking IO: Write your code using callbacks. Any other way?
+
+* Non-Blocking vs Asynchronous
+
+  From [[https://www.cs.rutgers.edu/courses/416/classes/fall_2009_ganapathy/slides/io.pdf][here]], slide 19.
+
+  #+begin_quote
+  Asynchronous – similar to non-blocking I/O.  The I/O call
+  returns immediately, without waiting for the operation to
+  complete. I/O subsystem signals the process when I/O is done.
+  Same advantages and disadvantages of non­blocking I/O.
+  Difference between non-blocking and asynchronous I/O: a non­
+  blocking read() returns immediately with whatever data
+  available; an asynchronous read() requests a transfer that will be
+  performed in its entirety, but that will complete at some future
+  time.
+  #+end_quote
