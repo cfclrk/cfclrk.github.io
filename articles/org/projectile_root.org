@@ -403,6 +403,8 @@ problem:
    #+RESULTS:
    : /private/tmp/notes/go/projectA
 
+   ✔ Works!
+
 ** Python
 
    Can we correctly identify a Python project?
@@ -415,6 +417,8 @@ problem:
 
    #+RESULTS:
    : /private/tmp/notes/python/projectC
+
+   ✔ Works!
 
 ** Force Root Higher
 
@@ -437,6 +441,8 @@ problem:
    #+begin_src sh :results silent :exports none
      rm /tmp/repo/.projectile
    #+end_src
+
+   ✔ Works!
 
 * File Footer                                                      :noexport:
 
