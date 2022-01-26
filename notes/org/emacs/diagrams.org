@@ -19,9 +19,6 @@
     }
   #+end_src
 
-  #+RESULTS: A
-  [[file:A.png]]
-
   #+NAME: Records
   #+begin_src dot :file Records.svg
     digraph structs {

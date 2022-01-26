@@ -51,7 +51,7 @@
 
    See: https://unix.stackexchange.com/questions/274330/check-ip-is-in-range-of-whitelist-array
 
-* All Regions
+* Regions
 
 ** All Regions in Partition
 
@@ -106,76 +106,81 @@
 
 ** Run a Command in All Regions
 
-   Get the number of VPCs in each region the slow and simple way.
+*** Linear
 
-   #+begin_src sh :var AllRegions=AllRegions
-     for region in $AllRegions; do
-         vpcs=($(aws --region $region ec2 describe-vpcs | jq '.Vpcs[].VpcId'))
-         echo "$region: ${#vpcs[*]}"
-     done
-   #+end_src
+    Get the number of VPCs in each region the slow and simple way.
 
-   #+RESULTS:
-   : eu-north-1: 0
-   : ap-south-1: 0
-   : eu-west-3: 0
-   : eu-west-2: 0
-   : eu-west-1: 0
-   : ap-northeast-3: 1
-   : ap-northeast-2: 0
-   : ap-northeast-1: 0
-   : sa-east-1: 0
-   : ca-central-1: 0
-   : ap-southeast-1: 1
-   : ap-southeast-2: 0
-   : eu-central-1: 0
-   : us-east-1: 2
-   : us-east-2: 3
-   : us-west-1: 0
-   : us-west-2: 0
+    #+header: :var regions=AllRegions
+    #+begin_src sh
+      for region in $regions; do
+          vpcs=($(aws --region $region ec2 describe-vpcs | jq '.Vpcs[].VpcId'))
+          echo "$region: ${#vpcs[*]}"
+      done
+    #+end_src
 
-   Get the number of VPCs in each region the 🚀 and 😎 (and 🤮) way by starting
-   a subprocess for each region in parallel. Note that =${#regions[@]}= is bash
-   syntax for the length of the =$regions= array.
+    #+RESULTS:
+    : eu-north-1: 0
+    : ap-south-1: 0
+    : eu-west-3: 0
+    : eu-west-2: 0
+    : eu-west-1: 0
+    : ap-northeast-3: 1
+    : ap-northeast-2: 0
+    : ap-northeast-1: 0
+    : sa-east-1: 0
+    : ca-central-1: 0
+    : ap-southeast-1: 1
+    : ap-southeast-2: 0
+    : eu-central-1: 0
+    : us-east-1: 2
+    : us-east-2: 3
+    : us-west-1: 0
+    : us-west-2: 0
 
-   #+header: :var AllRegions=AllRegions
-   #+begin_src sh
-     script=$(cat <<-"EOF"
-     vpcs=($(aws --region {} ec2 describe-vpcs | jq '.Vpcs[].VpcId'))
-     echo "{}: ${#vpcs[@]}"
-     EOF
-     )
+*** Parallel
 
-     regions=($AllRegions)
-     printf "%s\n" "${regions[@]}" \
-         | xargs -n 1 \
-                 -P ${#regions[*]} \
-                 -I {} \
-                 bash -c "$script"
-   #+end_src
+    Get the number of VPCs in each region the 🚀 and 😎 (and 🤮) way by starting
+    a subprocess for each region in parallel. Note that =${#regions[@]}= is bash
+    syntax for the length of the =$regions= array.
 
-   #+RESULTS:
-   : us-east-2: 8
-   : ca-central-1: 2
-   : eu-south-1: 1
-   : eu-west-3: 1
-   : us-west-2: 3
-   : us-east-1: 97
-   : eu-central-1: 1
-   : us-west-1: 4
-   : eu-north-1: 2
-   : eu-west-2: 3
-   : eu-west-1: 1
-   : sa-east-1: 1
-   : ap-northeast-2: 1
-   : ap-northeast-1: 2
-   : ap-south-1: 1
-   : me-south-1: 1
-   : ap-east-1: 1
-   : ap-northeast-3: 1
-   : af-south-1: 1
-   : ap-southeast-1: 1
-   : ap-southeast-2: 1
+    #+header: :var regions=AllRegions
+    #+begin_src sh
+      script=$(cat <<-"EOF"
+      vpcs=($(aws --region {} ec2 describe-vpcs | jq '.Vpcs[].VpcId'))
+      echo "{}: ${#vpcs[@]}"
+      EOF
+      )
+
+      regions=($regions)
+      printf "%s\n" "${regions[@]}" \
+          | xargs -n 1 \
+                  -P ${#regions[*]} \
+                  -I {} \
+                  bash -c "$script"
+    #+end_src
+
+    #+RESULTS:
+    : us-east-2: 8
+    : ca-central-1: 2
+    : eu-south-1: 1
+    : eu-west-3: 1
+    : us-west-2: 3
+    : us-east-1: 97
+    : eu-central-1: 1
+    : us-west-1: 4
+    : eu-north-1: 2
+    : eu-west-2: 3
+    : eu-west-1: 1
+    : sa-east-1: 1
+    : ap-northeast-2: 1
+    : ap-northeast-1: 2
+    : ap-south-1: 1
+    : me-south-1: 1
+    : ap-east-1: 1
+    : ap-northeast-3: 1
+    : af-south-1: 1
+    : ap-southeast-1: 1
+    : ap-southeast-2: 1
 
 * ACM
 
@@ -248,7 +253,7 @@
    #+begin_src sh :var StackName="test-network-public"
      aws cloudformation describe-stacks \
          --stack-name $StackName \
-        | jq '.Stacks[].Outputs[]'
+         | jq '.Stacks[].Outputs[]'
    #+end_src
 
    Get the value of a single output:
@@ -361,7 +366,7 @@
      aws dynamodb delete-table --table-name {}
      aws dynamodb wait table-not-exists --table-name {}
      EOF
-     )
+           )
      echo ${tables[*]} \
          | xargs -n 1 -P 10 -I {} sh -c "$scrpt"
    #+end_src
@@ -462,6 +467,26 @@
   : us-east-2: ["us-east-2a","us-east-2b","us-east-2c"]
   : us-west-1: ["us-west-1b","us-west-1c"]
   : us-west-2: ["us-west-2a","us-west-2b","us-west-2c","us-west-2d"]
+
+** The Actual AZ
+
+   =us-east-1b= does not mean the same thing in every AWS account. If everyone
+   creates infra in =us-east-1b=, that infra will actually be in several
+   different AZs, depending on which AZ =us-east-1b= maps to for each account.
+   To determine the /real/ AZ, you need to look at the *Zone ID*.
+
+   Print the Zone Name and Zone ID for each AZ in a region:
+
+  #+begin_src sh
+    aws ec2 describe-availability-zones \
+        | jq -c '.AvailabilityZones[]
+                 | {"Name": .ZoneName, "Id": .ZoneId}'
+  #+end_src
+
+  #+RESULTS:
+  : {"Name":"us-east-2a","Id":"use2-az1"}
+  : {"Name":"us-east-2b","Id":"use2-az2"}
+  : {"Name":"us-east-2c","Id":"use2-az3"}
 
 * EC2 KeyPairs
 
@@ -604,7 +629,7 @@
 
 ** List Volumes
 
-   #+NAME: Volumes
+   #+NAME: AllVolumes
    #+header: :var Tag="kubernetes.io/cluster/steger1018test1"
    #+begin_src sh :cache yes
      aws ec2 describe-volumes \
@@ -614,30 +639,59 @@
 
 ** List Unattached Volumes
 
+   #+NAME: UnattachedVolumes
    #+begin_src sh
-     aws ec2 describe-volumes --region us-east-1 \
+     aws ec2 describe-volumes \
          --filters Name=status,Values=available \
-         | jq '.Volumes | length'
+         | jq -r '.Volumes[].VolumeId'
    #+end_src
 
 ** Delete Volumes
 
-  #+begin_src sh :var Volumes=Volumes
-    for volume in $Volumes; do
-        aws ec2 delete-volume --volume-id $volume
-    done
-  #+end_src
+   #+header: :var Volumes=UnattachedVolumes
+   #+begin_src sh
+     for volume in $Volumes; do
+         aws ec2 delete-volume --volume-id $volume
+     done
+   #+end_src
 
 * ECR
 
 ** Log in
 
-   #+begin_src sh :var Account=Account
-     PW=$(aws ecr get-login-password)
+   #+header: :var account=Account
+   #+begin_src sh
+     ecr=$account.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+     pw=$(aws ecr get-login-password)
      docker login \
             --username AWS \
-            --password "$PW" \
-            "https://$Account.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com"
+            --password "$pw" \
+            "https://$ecr"
+   #+end_src
+
+** Add Image
+
+   Tag image for ECR:
+
+   #+header: :var image="k8s.gcr.io/sig-storage/livenessprobe"
+   #+header: :var tag="v2.2.0"
+   #+header: :var account=Account
+   #+header: :var name="sig-storage-livenessprobe"
+   #+begin_src sh
+     ecr=$account.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+     docker tag \
+            $image:$tag \
+            $ecr/$name:$tag
+   #+end_src
+
+   Push it:
+
+   #+header: :var tag="v2.2.0"
+   #+header: :var account=Account
+   #+begin_src sh
+     ecr=$account.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+     docker push \
+            $ecr/$name:$tag
    #+end_src
 
 * ECS
@@ -683,7 +737,7 @@
 
    #+begin_src sh
      aws elasticache describe-replication-groups
-         | jq '.ReplicationGroups'
+             | jq '.ReplicationGroups'
    #+end_src
 
 * ElasticBeanstalk
@@ -939,10 +993,14 @@
 
 ** Get HostedZoneId from Name
 
+   AWS credentials have to be set for the account that actually has this
+   HostedZone.
+
    #+NAME: HostedZoneId
-   #+begin_src sh :var HostedZoneName="irondev.io" :cache yes
+   #+header: :var hostedZoneName="irondev.io"
+   #+begin_src sh :cache yes
      aws route53 list-hosted-zones \
-         | jq -r --arg name $HostedZoneName \
+         | jq -r --arg name $hostedZoneName \
               '.HostedZones[]
                | select(.Name == $name + ".")
                | .Id'
@@ -950,14 +1008,11 @@
 
 ** List Records for a HostedZone
 
-   Records containing a certain string:
-
-   #+begin_src sh :var HostedZoneId=HostedZoneId
+   #+header: :var hostedZoneId=HostedZoneId
+   #+begin_src sh
      aws route53 list-resource-record-sets \
-         --hosted-zone-id $HostedZoneId \
-         | jq '.ResourceRecordSets[]
-               | select(.Name | contains("daily"))
-               | .Name'
+         --hosted-zone-id $hostedZoneId \
+         | jq '.ResourceRecordSets[]'
    #+end_src
 
 * SecretsManager
