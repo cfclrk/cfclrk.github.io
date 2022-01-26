@@ -33,23 +33,28 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org9455144">Account</a></li>
+<li><a href="#orgee583d6">Account</a></li>
 <li><a href="#orgf9a3f98">IP Address Ranges</a>
 <ul>
 <li><a href="#org0b6e61a">Get Region of IP</a></li>
 </ul>
 </li>
-<li><a href="#org384a0ee">All Regions</a>
+<li><a href="#org9a1716c">Regions</a>
 <ul>
 <li><a href="#orgadaf3d4">All Regions in Partition</a></li>
 <li><a href="#org7355c61">All Regions in All Partitions</a></li>
-<li><a href="#orgaca6d6e">Run a Command in All Regions</a></li>
+<li><a href="#orgaca6d6e">Run a Command in All Regions</a>
+<ul>
+<li><a href="#orgcc449bc">Linear</a></li>
+<li><a href="#orge080a7d">Parallel</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#org6622052">ACM</a>
 <ul>
 <li><a href="#orga9d8f9e">List</a></li>
-<li><a href="#org745bfe2">Describe</a></li>
+<li><a href="#org07ae811">Describe</a></li>
 <li><a href="#org8db7a20">Get Certificate</a></li>
 <li><a href="#org671ce03">Get Certificate PEM File</a></li>
 </ul>
@@ -89,11 +94,15 @@
 <li><a href="#orgf3af7df">List Accounts That Can Access AMI</a></li>
 </ul>
 </li>
-<li><a href="#org3f45316">EC2 AZs</a></li>
+<li><a href="#org3f45316">EC2 AZs</a>
+<ul>
+<li><a href="#orgd39896b">The Actual AZ</a></li>
+</ul>
+</li>
 <li><a href="#orgbc46786">EC2 KeyPairs</a>
 <ul>
 <li><a href="#org4a97cf6">Create</a></li>
-<li><a href="#org07ae811">Describe</a></li>
+<li><a href="#org30c2123">Describe</a></li>
 <li><a href="#org878c9b3">Delete</a></li>
 </ul>
 </li>
@@ -129,6 +138,7 @@
 <li><a href="#orgfc156b4">ECR</a>
 <ul>
 <li><a href="#org3708cce">Log in</a></li>
+<li><a href="#org087e3cc">Add Image</a></li>
 </ul>
 </li>
 <li><a href="#orgda46040">ECS</a></li>
@@ -250,15 +260,15 @@
 </div>
 </nav>
 
-<div id="outline-container-org9455144" class="outline-2">
-<h2 id="org9455144"><a href="#org9455144">Account</a></h2>
-<div class="outline-text-2" id="text-org9455144">
+<div id="outline-container-orgee583d6" class="outline-2">
+<h2 id="orgee583d6"><a href="#orgee583d6">Account</a></h2>
+<div class="outline-text-2" id="text-orgee583d6">
 <p>
 Account number:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="org832c923">aws sts get-caller-identity --query <span style="color: #98be65;">'Account'</span> --output text
+<pre class="src src-sh" id="org9455144">aws sts get-caller-identity --query <span style="color: #98be65;">'Account'</span> --output text
 </pre>
 </div>
 </div>
@@ -308,9 +318,9 @@ See: <a href="https://unix.stackexchange.com/questions/274330/check-ip-is-in-ran
 </div>
 </div>
 
-<div id="outline-container-org384a0ee" class="outline-2">
-<h2 id="org384a0ee"><a href="#org384a0ee">All Regions</a></h2>
-<div class="outline-text-2" id="text-org384a0ee">
+<div id="outline-container-org9a1716c" class="outline-2">
+<h2 id="org9a1716c"><a href="#org9a1716c">Regions</a></h2>
+<div class="outline-text-2" id="text-org9a1716c">
 </div>
 <div id="outline-container-orgadaf3d4" class="outline-3">
 <h3 id="orgadaf3d4"><a href="#orgadaf3d4">All Regions in Partition</a></h3>
@@ -381,12 +391,16 @@ document. You have to decide whether "GLOBAL" is a "region" in your situation.
 <div id="outline-container-orgaca6d6e" class="outline-3">
 <h3 id="orgaca6d6e"><a href="#orgaca6d6e">Run a Command in All Regions</a></h3>
 <div class="outline-text-3" id="text-orgaca6d6e">
+</div>
+<div id="outline-container-orgcc449bc" class="outline-4">
+<h4 id="orgcc449bc"><a href="#orgcc449bc">Linear</a></h4>
+<div class="outline-text-4" id="text-orgcc449bc">
 <p>
 Get the number of VPCs in each region the slow and simple way.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #51afef;">for</span> region<span style="color: #51afef;"> in</span> $<span style="color: #dcaeea;">AllRegions</span>; <span style="color: #51afef;">do</span>
+<pre class="src src-sh"><span style="color: #51afef;">for</span> region<span style="color: #51afef;"> in</span> $<span style="color: #dcaeea;">regions</span>; <span style="color: #51afef;">do</span>
     <span style="color: #dcaeea;">vpcs</span>=($(aws --region $<span style="color: #dcaeea;">region</span> ec2 describe-vpcs | jq <span style="color: #98be65;">'.Vpcs[].VpcId'</span>))
     <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"$region: ${#vpcs[*]}"</span>
 <span style="color: #51afef;">done</span>
@@ -412,8 +426,12 @@ us-east-2: 3
 us-west-1: 0
 us-west-2: 0
 </pre>
+</div>
+</div>
 
-
+<div id="outline-container-orge080a7d" class="outline-4">
+<h4 id="orge080a7d"><a href="#orge080a7d">Parallel</a></h4>
+<div class="outline-text-4" id="text-orge080a7d">
 <p>
 Get the number of VPCs in each region the 🚀 and 😎 (and 🤮) way by starting
 a subprocess for each region in parallel. Note that <code>${#regions[@]}</code> is bash
@@ -427,7 +445,7 @@ syntax for the length of the <code>$regions</code> array.
 <span style="color: #98be65;">EOF</span>
 )
 
-<span style="color: #dcaeea;">regions</span>=($<span style="color: #dcaeea;">AllRegions</span>)
+<span style="color: #dcaeea;">regions</span>=($<span style="color: #dcaeea;">regions</span>)
 printf <span style="color: #98be65;">"%s\n"</span> <span style="color: #98be65;">"${regions[@]}"</span> <span style="color: #98be65;">\</span>
     | xargs -n 1 <span style="color: #98be65;">\</span>
             -P ${#<span style="color: #dcaeea;">regions</span>[*]} <span style="color: #98be65;">\</span>
@@ -462,6 +480,7 @@ ap-southeast-2: 1
 </div>
 </div>
 </div>
+</div>
 
 <div id="outline-container-org6622052" class="outline-2">
 <h2 id="org6622052"><a href="#org6622052">ACM</a></h2>
@@ -479,9 +498,9 @@ ap-southeast-2: 1
 </div>
 </div>
 
-<div id="outline-container-org745bfe2" class="outline-3">
-<h3 id="org745bfe2"><a href="#org745bfe2">Describe</a></h3>
-<div class="outline-text-3" id="text-org745bfe2">
+<div id="outline-container-org07ae811" class="outline-3">
+<h3 id="org07ae811"><a href="#org07ae811">Describe</a></h3>
+<div class="outline-text-3" id="text-org07ae811">
 <div class="org-src-container">
 <pre class="src src-sh">aws acm describe-certificate <span style="color: #98be65;">\</span>
     --certificate-arn $<span style="color: #dcaeea;">CertArn</span>
@@ -576,7 +595,7 @@ List only the created stacks
 <div class="org-src-container">
 <pre class="src src-sh">aws cloudformation describe-stacks <span style="color: #98be65;">\</span>
     --stack-name $<span style="color: #dcaeea;">StackName</span> <span style="color: #98be65;">\</span>
-   | jq <span style="color: #98be65;">'.Stacks[].Outputs[]'</span>
+    | jq <span style="color: #98be65;">'.Stacks[].Outputs[]'</span>
 </pre>
 </div>
 
@@ -745,7 +764,7 @@ commands into it using <code>xargs</code>.
 <span style="color: #98be65;">aws dynamodb delete-table --table-name {}</span>
 <span style="color: #98be65;">aws dynamodb wait table-not-exists --table-name {}</span>
 <span style="color: #98be65;">EOF</span>
-)
+      )
 <span style="color: #c678dd;">echo</span> ${<span style="color: #dcaeea;">tables</span>[*]} <span style="color: #98be65;">\</span>
     | xargs -n 1 -P 10 -I {} sh -c <span style="color: #98be65;">"$scrpt"</span>
 </pre>
@@ -888,6 +907,35 @@ us-west-1: ["us-west-1b","us-west-1c"]
 us-west-2: ["us-west-2a","us-west-2b","us-west-2c","us-west-2d"]
 </pre>
 </div>
+
+<div id="outline-container-orgd39896b" class="outline-3">
+<h3 id="orgd39896b"><a href="#orgd39896b">The Actual AZ</a></h3>
+<div class="outline-text-3" id="text-orgd39896b">
+<p>
+<code>us-east-1b</code> does not mean the same thing in every AWS account. If everyone
+creates infra in <code>us-east-1b</code>, that infra will actually be in several
+different AZs, depending on which AZ <code>us-east-1b</code> maps to for each account.
+To determine the <i>real</i> AZ, you need to look at the <b>Zone ID</b>.
+</p>
+
+<p>
+Print the Zone Name and Zone ID for each AZ in a region:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">aws ec2 describe-availability-zones <span style="color: #98be65;">\</span>
+    | jq -c <span style="color: #98be65;">'.AvailabilityZones[]</span>
+<span style="color: #98be65;">             | {"Name": .ZoneName, "Id": .ZoneId}'</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+{"Name":"us-east-2a","Id":"use2-az1"}
+{"Name":"us-east-2b","Id":"use2-az2"}
+{"Name":"us-east-2c","Id":"use2-az3"}
+</pre>
+</div>
+</div>
 </div>
 
 <div id="outline-container-orgbc46786" class="outline-2">
@@ -917,9 +965,9 @@ chmod 0600 $<span style="color: #dcaeea;">KeyFile</span>
 </div>
 </div>
 
-<div id="outline-container-org07ae811" class="outline-3">
-<h3 id="org07ae811"><a href="#org07ae811">Describe</a></h3>
-<div class="outline-text-3" id="text-org07ae811">
+<div id="outline-container-org30c2123" class="outline-3">
+<h3 id="org30c2123"><a href="#org30c2123">Describe</a></h3>
+<div class="outline-text-3" id="text-org30c2123">
 <div class="org-src-container">
 <pre class="src src-sh">aws ec2 describe-key-pairs | jq <span style="color: #98be65;">'.KeyPairs[]'</span>
 </pre>
@@ -1113,7 +1161,7 @@ The names of VPCs that have a <code>Name</code> tag:
 <h3 id="org00561f2"><a href="#org00561f2">List Volumes</a></h3>
 <div class="outline-text-3" id="text-org00561f2">
 <div class="org-src-container">
-<pre class="src src-sh" id="org22a21e7">aws ec2 describe-volumes <span style="color: #98be65;">\</span>
+<pre class="src src-sh" id="org6e900d0">aws ec2 describe-volumes <span style="color: #98be65;">\</span>
     --filters <span style="color: #dcaeea;">Name</span>=tag-key,<span style="color: #dcaeea;">Values</span>=$<span style="color: #dcaeea;">Tag</span> <span style="color: #98be65;">\</span>
     | jq -r <span style="color: #98be65;">'.Volumes[].VolumeId'</span>
 </pre>
@@ -1125,9 +1173,9 @@ The names of VPCs that have a <code>Name</code> tag:
 <h3 id="orgb8112d8"><a href="#orgb8112d8">List Unattached Volumes</a></h3>
 <div class="outline-text-3" id="text-orgb8112d8">
 <div class="org-src-container">
-<pre class="src src-sh">aws ec2 describe-volumes --region us-east-1 <span style="color: #98be65;">\</span>
+<pre class="src src-sh" id="orge04ca44">aws ec2 describe-volumes <span style="color: #98be65;">\</span>
     --filters <span style="color: #dcaeea;">Name</span>=status,<span style="color: #dcaeea;">Values</span>=available <span style="color: #98be65;">\</span>
-    | jq <span style="color: #98be65;">'.Volumes | length'</span>
+    | jq -r <span style="color: #98be65;">'.Volumes[].VolumeId'</span>
 </pre>
 </div>
 </div>
@@ -1154,11 +1202,40 @@ The names of VPCs that have a <code>Name</code> tag:
 <h3 id="org3708cce"><a href="#org3708cce">Log in</a></h3>
 <div class="outline-text-3" id="text-org3708cce">
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #dcaeea;">PW</span>=$(aws ecr get-login-password)
+<pre class="src src-sh"><span style="color: #dcaeea;">ecr</span>=$<span style="color: #dcaeea;">account</span>.dkr.ecr.$<span style="color: #dcaeea;">AWS_DEFAULT_REGION</span>.amazonaws.com
+<span style="color: #dcaeea;">pw</span>=$(aws ecr get-login-password)
 docker login <span style="color: #98be65;">\</span>
        --username AWS <span style="color: #98be65;">\</span>
-       --password <span style="color: #98be65;">"$PW"</span> <span style="color: #98be65;">\</span>
-       <span style="color: #98be65;">"https://$Account.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com"</span>
+       --password <span style="color: #98be65;">"$pw"</span> <span style="color: #98be65;">\</span>
+       <span style="color: #98be65;">"https://$ecr"</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org087e3cc" class="outline-3">
+<h3 id="org087e3cc"><a href="#org087e3cc">Add Image</a></h3>
+<div class="outline-text-3" id="text-org087e3cc">
+<p>
+Tag image for ECR:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #dcaeea;">ecr</span>=$<span style="color: #dcaeea;">account</span>.dkr.ecr.$<span style="color: #dcaeea;">AWS_DEFAULT_REGION</span>.amazonaws.com
+docker tag <span style="color: #98be65;">\</span>
+       $<span style="color: #dcaeea;">image</span>:$<span style="color: #dcaeea;">tag</span> <span style="color: #98be65;">\</span>
+       $<span style="color: #dcaeea;">ecr</span>/$<span style="color: #dcaeea;">name</span>:$<span style="color: #dcaeea;">tag</span>
+</pre>
+</div>
+
+<p>
+Push it:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #dcaeea;">ecr</span>=$<span style="color: #dcaeea;">account</span>.dkr.ecr.$<span style="color: #dcaeea;">AWS_DEFAULT_REGION</span>.amazonaws.com
+docker push <span style="color: #98be65;">\</span>
+       $<span style="color: #dcaeea;">ecr</span>/$<span style="color: #dcaeea;">name</span>:$<span style="color: #dcaeea;">tag</span>
 </pre>
 </div>
 </div>
@@ -1232,7 +1309,7 @@ aws eks update-kubeconfig <span style="color: #98be65;">\</span>
 <div class="outline-text-3" id="text-org63e1a8c">
 <div class="org-src-container">
 <pre class="src src-sh">aws elasticache describe-replication-groups
-    | jq <span style="color: #98be65;">'.ReplicationGroups'</span>
+        | jq <span style="color: #98be65;">'.ReplicationGroups'</span>
 </pre>
 </div>
 </div>
@@ -1619,9 +1696,14 @@ account.
 <div id="outline-container-org54ae2ac" class="outline-3">
 <h3 id="org54ae2ac"><a href="#org54ae2ac">Get HostedZoneId from Name</a></h3>
 <div class="outline-text-3" id="text-org54ae2ac">
+<p>
+AWS credentials have to be set for the account that actually has this
+HostedZone.
+</p>
+
 <div class="org-src-container">
 <pre class="src src-sh" id="org874ca33">aws route53 list-hosted-zones <span style="color: #98be65;">\</span>
-    | jq -r --arg name $<span style="color: #dcaeea;">HostedZoneName</span> <span style="color: #98be65;">\</span>
+    | jq -r --arg name $<span style="color: #dcaeea;">hostedZoneName</span> <span style="color: #98be65;">\</span>
          <span style="color: #98be65;">'.HostedZones[]</span>
 <span style="color: #98be65;">          | select(.Name == $name + ".")</span>
 <span style="color: #98be65;">          | .Id'</span>
@@ -1633,16 +1715,10 @@ account.
 <div id="outline-container-org53ca653" class="outline-3">
 <h3 id="org53ca653"><a href="#org53ca653">List Records for a HostedZone</a></h3>
 <div class="outline-text-3" id="text-org53ca653">
-<p>
-Records containing a certain string:
-</p>
-
 <div class="org-src-container">
 <pre class="src src-sh">aws route53 list-resource-record-sets <span style="color: #98be65;">\</span>
-    --hosted-zone-id $<span style="color: #dcaeea;">HostedZoneId</span> <span style="color: #98be65;">\</span>
-    | jq <span style="color: #98be65;">'.ResourceRecordSets[]</span>
-<span style="color: #98be65;">          | select(.Name | contains("daily"))</span>
-<span style="color: #98be65;">          | .Name'</span>
+    --hosted-zone-id $<span style="color: #dcaeea;">hostedZoneId</span> <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.ResourceRecordSets[]'</span>
 </pre>
 </div>
 </div>
