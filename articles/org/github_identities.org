@@ -36,19 +36,29 @@
 
   Ensure these SSH keys work:
 
+  #+NAME: wrap
+  #+header: :exports none
+  #+begin_src emacs-lisp :var in=""
+    (s-join "\n" (s-slice-at "but " in))
+  #+end_src
+
+  #+header: :post wrap(*this*)
   #+begin_src sh :results output
-    ssh -T github-home 2>&1 || true
+    ssh -i ~/.ssh/github-home -T git@github.com 2>&1 || true
   #+end_src
 
   #+RESULTS:
-  : Hi cfclrk! You've successfully authenticated, but GitHub does not provide shell access.
+  : Hi cfclrk! You've successfully authenticated,
+  : but GitHub does not provide shell access.
 
+  #+header: :post wrap(*this*)
   #+begin_src sh :results output
-    ssh -T github-work 2>&1 || true
+    ssh -i ~/.ssh/github-work -T git@github.com 2>&1 || true
   #+end_src
 
   #+RESULTS:
-  : Hi chrisc-ironnet! You've successfully authenticated, but GitHub does not provide shell access.
+  : Hi chrisc-ironnet! You've successfully authenticated,
+  : but GitHub does not provide shell access.
 
   We don't need to modify the =~/.ssh/config= file. Instead, we'll explicitly
   tell git which SSH keys to use in our git config files.

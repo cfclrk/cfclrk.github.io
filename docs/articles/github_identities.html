@@ -80,7 +80,7 @@ both accounts). Assuming you've <a href="https://docs.github.com/en/github/authe
 look something like:
 </p>
 
-<pre class="example" id="org5a42484">
+<pre class="example" id="org3d39b01">
 $ tree ~/.ssh/
 /Users/cfclrk/.ssh/
 ├── config
@@ -95,22 +95,24 @@ Ensure these SSH keys work:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">ssh -T github-home 2&gt;&amp;1 || true
+<pre class="src src-sh">ssh -i ~/.ssh/github-home -T git@github.com 2&gt;&amp;1 || true
 </pre>
 </div>
 
 <div class="results">#+RESULTS:</div><pre class="example">
-Hi cfclrk! You've successfully authenticated, but GitHub does not provide shell access.
+Hi cfclrk! You've successfully authenticated,
+but GitHub does not provide shell access.
 </pre>
 
 
 <div class="org-src-container">
-<pre class="src src-sh">ssh -T github-work 2&gt;&amp;1 || true
+<pre class="src src-sh">ssh -i ~/.ssh/github-work -T git@github.com 2&gt;&amp;1 || true
 </pre>
 </div>
 
 <div class="results">#+RESULTS:</div><pre class="example">
-Hi chrisc-ironnet! You've successfully authenticated, but GitHub does not provide shell access.
+Hi chrisc-ironnet! You've successfully authenticated,
+but GitHub does not provide shell access.
 </pre>
 
 
