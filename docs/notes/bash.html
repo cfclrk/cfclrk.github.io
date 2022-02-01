@@ -36,8 +36,8 @@
 <li><a href="#orgc74f5f7">Style</a></li>
 <li><a href="#org999133c">Function Parameters</a>
 <ul>
-<li><a href="#org7a70c9a">test</a></li>
-<li><a href="#org61f7b77">new-test</a></li>
+<li><a href="#org3a7b2be">Using <code>[[</code> (new-test)</a></li>
+<li><a href="#org99e77db">Using test</a></li>
 <li><a href="#org6d01d23">if-else</a></li>
 </ul>
 </li>
@@ -107,7 +107,7 @@ Interestingly, says to use <code>#!/bin/bash</code>.
 </p>
 
 <p>
-For like one person's opinions, but I like them.
+One person's opinions, but I like them.
 </p></li>
 </ul>
 </div>
@@ -117,19 +117,104 @@ For like one person's opinions, but I like them.
 <h2 id="org999133c"><a href="#org999133c">Function Parameters</a></h2>
 <div class="outline-text-2" id="text-org999133c">
 <p>
-For more info, see <a href="http://mywiki.wooledge.org/BashFAQ/031">FAQ</a>: "What is the difference between test, [ and [[ ?"
-</p>
-
-<p>
-If there is an error, the function should return a non-zero code. Only functions
-can return; if outside of a function, use "exit 1". See:
-<a href="https://stackoverflow.com/questions/4419952/difference-between-return-and-exit-in-bash-functions">https://stackoverflow.com/questions/4419952/difference-between-return-and-exit-in-bash-functions</a>
+How to specify bash functions with required parameters. When the function is
+applied to the wrong number of arguments, a non-0 exit status should be
+returned.
 </p>
 </div>
 
-<div id="outline-container-org7a70c9a" class="outline-3">
-<h3 id="org7a70c9a"><a href="#org7a70c9a">test</a></h3>
-<div class="outline-text-3" id="text-org7a70c9a">
+<div id="outline-container-org3a7b2be" class="outline-3">
+<h3 id="org3a7b2be"><a href="#org3a7b2be">Using <code>[[</code> (new-test)</a></h3>
+<div class="outline-text-3" id="text-org3a7b2be">
+<p>
+The double-bracket <code>[[</code> syntax is called "new-test".
+</p>
+
+<p>
+<code>-n</code> is a string comparison operator that tests if a string is not null zero-length.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh" id="org0f8b50c"><span style="color: #c678dd;">foo</span>() {
+    [[ -n <span style="color: #98be65;">"$1"</span> ]] || {
+        <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Error: param 1 is required"</span>
+        <span style="color: #51afef;">return</span> 1
+    }
+    <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Param is: $1"</span>
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #c678dd;">foo</span>() {
+    [[ -n <span style="color: #98be65;">"$1"</span> ]] || {
+        <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Error: param 1 is required"</span>
+        <span style="color: #51afef;">return</span> 1
+    }
+    <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Param is: $1"</span>
+}
+foo
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+Error: param 1 is required
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #c678dd;">foo</span>() {
+    [[ -n <span style="color: #98be65;">"$1"</span> ]] || {
+        <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Error: param 1 is required"</span>
+        <span style="color: #51afef;">return</span> 1
+    }
+    <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Param is: $1"</span>
+}
+foo <span style="color: #98be65;">""</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+Error: param 1 is required
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #c678dd;">foo</span>() {
+    [[ -n <span style="color: #98be65;">"$1"</span> ]] || {
+        <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Error: param 1 is required"</span>
+        <span style="color: #51afef;">return</span> 1
+    }
+    <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Param is: $1"</span>
+}
+foo bar
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+Param is: bar
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org99e77db" class="outline-3">
+<h3 id="org99e77db"><a href="#org99e77db">Using test</a></h3>
+<div class="outline-text-3" id="text-org99e77db">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #c678dd;">foo</span>() {
+    [ -n <span style="color: #98be65;">"$1"</span> ] || {
+        <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Error: param 1 is required"</span>
+        <span style="color: #51afef;">return</span> 1
+    }
+}
+</pre>
+</div>
+
+<p>
+Note that <code>[</code> <code>]</code> is an alias for <code>test</code>. For completeness, the above example
+can be written as:
+</p>
+
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #c678dd;">foo</span>() {
     <span style="color: #dcaeea;">a</span>=${<span style="color: #dcaeea;">1</span>-}
@@ -142,57 +227,18 @@ can return; if outside of a function, use "exit 1". See:
 </div>
 
 <p>
-Note that <code>[</code> <code>]</code> is an alias for <code>test</code>, so the same thing can be written
-as:
+For more info, see <a href="http://mywiki.wooledge.org/BashFAQ/031">FAQ</a>: "What is the difference between <code>test</code>, <code>[</code> and <code>[[</code>?"
 </p>
-
-<div class="org-src-container">
-<pre class="src src-sh"><span style="color: #c678dd;">foo</span>() {
-    [ -n <span style="color: #98be65;">"$1"</span> ] || {
-        <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Error: param 1 is zero-length"</span>
-        <span style="color: #51afef;">return</span> 1
-    }
-}
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org61f7b77" class="outline-3">
-<h3 id="org61f7b77"><a href="#org61f7b77">new-test</a></h3>
-<div class="outline-text-3" id="text-org61f7b77">
-<p>
-The double-bracket <code>[[</code> syntax is called "new-test" and can also be used.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh"><span style="color: #c678dd;">foo</span>() {
-    [[ -n <span style="color: #98be65;">"$1"</span> ]] || {
-        <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Error: param 1 is zero-length"</span>
-        <span style="color: #51afef;">return</span> 1
-    }
-}
-</pre>
-</div>
 </div>
 </div>
 
 <div id="outline-container-org6d01d23" class="outline-3">
 <h3 id="org6d01d23"><a href="#org6d01d23">if-else</a></h3>
 <div class="outline-text-3" id="text-org6d01d23">
-<p>
-Can do same thing as for script arguments, but
-</p>
-
-<ul class="org-ul">
-<li>Use a <code>return</code> instead of an <code>exit</code></li>
-<li>Make the variable local</li>
-</ul>
-
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #c678dd;">func</span>() {
     <span style="color: #51afef;">if</span> [ -z ${<span style="color: #dcaeea;">1</span>+x} ]; <span style="color: #51afef;">then</span>
-        <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"arg 1 (a) is required"</span>
+        <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Error: param 1 is required"</span>
         <span style="color: #51afef;">return</span> 1
     <span style="color: #51afef;">else</span>
         local <span style="color: #dcaeea;">a</span>=$<span style="color: #dcaeea;">1</span>
@@ -728,7 +774,7 @@ world
 </pre>
 </div>
 
-<pre class="example" id="org8405868">
+<pre class="example" id="org1b8e9df">
  1	/Users/chris.clark/.rbenv/shims
  2	/usr/local/Cellar/pyenv-virtualenv/1.1.5/shims
  3	/Users/chris.clark/.pyenv/shims

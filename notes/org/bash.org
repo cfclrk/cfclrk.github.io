@@ -10,17 +10,70 @@
 
   - [[https://github.com/azet/community_bash_style_guide][Community Bash Style Guide]]
 
-    For like one person's opinions, but I like them.
+    One person's opinions, but I like them.
 
 * Function Parameters
 
-  For more info, see [[http://mywiki.wooledge.org/BashFAQ/031][FAQ]]: "What is the difference between test, [ and [[ ?"
+  How to specify bash functions with required parameters. When the function is
+  applied to the wrong number of arguments, a non-0 exit status should be
+  returned.
 
-  If there is an error, the function should return a non-zero code. Only functions
-  can return; if outside of a function, use "exit 1". See:
-  https://stackoverflow.com/questions/4419952/difference-between-return-and-exit-in-bash-functions
+** Using =[[= (new-test)
 
-** test
+   The double-bracket =[[= syntax is called "new-test".
+
+   =-n= is a string comparison operator that tests if a string is not null zero-length.
+
+   #+NAME: FuncParam
+   #+begin_src sh
+     foo() {
+         [[ -n "$1" ]] || {
+             echo "Error: param 1 is required"
+             return 1
+         }
+         echo "Param is: $1"
+     }
+   #+end_src
+
+   #+header: :prologue "exec 2>&1" :epilogue "true"
+   #+begin_src sh
+     <<FuncParam>>
+     foo
+   #+end_src
+
+   #+RESULTS:
+   : Error: param 1 is required
+
+   #+header: :prologue "exec 2>&1" :epilogue "true"
+    #+begin_src sh
+     <<FuncParam>>
+     foo ""
+   #+end_src
+
+   #+RESULTS:
+   : Error: param 1 is required
+
+   #+begin_src sh
+     <<FuncParam>>
+     foo bar
+   #+end_src
+
+   #+RESULTS:
+   : Param is: bar
+
+** Using test
+
+   #+begin_src sh
+	 foo() {
+		 [ -n "$1" ] || {
+			 echo "Error: param 1 is required"
+			 return 1
+		 }
+	 }
+   #+end_src
+
+   Note that =[= =]= is an alias for =test=. For completeness, the above example
+   can be written as:
 
    #+begin_src sh
 	 foo() {
@@ -32,42 +85,14 @@
 	 }
    #+end_src
 
-   Note that =[= =]= is an alias for =test=, so the same thing can be written
-   as:
-
-   #+begin_src sh
-	 foo() {
-		 [ -n "$1" ] || {
-			 echo "Error: param 1 is zero-length"
-			 return 1
-		 }
-	 }
-   #+end_src
-
-** new-test
-
-   The double-bracket =[[= syntax is called "new-test" and can also be used.
-
-   #+begin_src sh
-	 foo() {
-		 [[ -n "$1" ]] || {
-			 echo "Error: param 1 is zero-length"
-			 return 1
-		 }
-	 }
-   #+end_src
+   For more info, see [[http://mywiki.wooledge.org/BashFAQ/031][FAQ]]: "What is the difference between =test=, =[= and =[[=?"
 
 ** if-else
-
-   Can do same thing as for script arguments, but
-
-   - Use a =return= instead of an =exit=
-   - Make the variable local
 
    #+begin_src sh
 	 func() {
 		 if [ -z ${1+x} ]; then
-			 echo "arg 1 (a) is required"
+			 echo "Error: param 1 is required"
 			 return 1
 		 else
 			 local a=$1
