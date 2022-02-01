@@ -61,7 +61,7 @@
 </li>
 <li><a href="#org982fff2">Services</a>
 <ul>
-<li><a href="#org0d991fe">Get all services of type NodePort/LoadBalancer/ClusterIP</a></li>
+<li><a href="#org665b2d5">Get Services of Type</a></li>
 </ul>
 </li>
 <li><a href="#orga1cf56c">Deployments</a>
@@ -129,20 +129,19 @@ containerized applications.
 </blockquote>
 
 <p>
-Personally, I would define it more like: Kubernetes is a program for creating
-and managing a <i>computer cluster</i>.
+I think of it more like: Kubernetes is a program for creating and managing a
+<i>computer cluster</i>.
 </p>
 
 <p>
-A cluster is a kind of distributed system in which multiple computers work
-together to behave somewhat like they are one bigger computer. While a
-distributed system is fundamentally different from single computer, cluster
-management software (e.g. Kubernetes) bring these two kinds of systems
-conceptually closer together.
+A cluster is a distributed system in which multiple computers work together to
+behave somewhat like one, bigger computer. While a distributed system is
+fundamentally different from a single computer, cluster management software
+(e.g. Kubernetes) bring these two closer together.
 </p>
 
 <p>
-Running a program on a cluster is different than a running program on a single
+Running a process on a cluster is different from a running program on a single
 computer. Kubernetes provides heavy abstractions for dealing with clusters.
 People started trying to create "clusters" a long time ago (see: <a href="https://en.wikipedia.org/wiki/Beowulf_cluster">beowulf
 clusters</a>). Some of the problems that need to be addressed are:
@@ -162,30 +161,30 @@ different machines?</li>
 <ul class="org-ul">
 <li>When you run a process on the cluster, which specific machine should the
 process actually run on?</li>
-<li>What if certain processes can only run on certain nodes?</li>
+<li>What if certain processes can only run on certain machines?</li>
 </ul></li>
 
 <li>Data
 <ul class="org-ul">
 <li>How can processes share data (on disk) when they might running on
 different machines?</li>
-<li>Should a process have access to the whole filesystem on its host?
-(Probably not.) How can we make process-local disk space?</li>
+<li>Should every process have access to the whole host's filesystem? (Probably
+not.) How can we make process-local disk space?</li>
 </ul></li>
 
 <li>Security
 <ul class="org-ul">
 <li>Should the cluster have some kind of RBAC (authn/authz) separate from that
-of each individual node?</li>
+of each individual machine?</li>
 </ul></li>
 </ul>
 
 <p>
-The first time I heard about Kubernetes, I thought it was mostly a process
-scheduler, but that is actually a small part. In fact, the most crucial part
-of Kubernetes is probably the networking constructs: how an internal network
-is set up and how communication can happen between processes, regardless of
-which nodes they run.
+At first, I thought Kubernetes was mostly about process scheduling, but that
+is actually a very small part of Kubernetes. The most crucial part of
+Kubernetes is probably the networking constructs it provides: how an internal
+network is set up and how communication can happen between processes,
+regardless of the nodes on which they run.
 </p>
 </div>
 </div>
@@ -200,7 +199,7 @@ defined by Kubernetes.
 
 <p>
 A controller monitors a set of resources (resources are just entries in the
-database, representing some kind of "desired state"), and reconciles the
+etcd database, representing some kind of "desired state"), and reconciles the
 database contents with the "actual state" of the system. Whenever the
 controller sees differences between the desired and actual states, it takes
 steps to reduce that difference.
@@ -310,11 +309,19 @@ Note you can also get the master node ip with <code>kubectl cluster-info</code>.
 <div id="outline-container-org1ac95f9" class="outline-3">
 <h3 id="org1ac95f9"><a href="#org1ac95f9">Worker Node IPs</a></h3>
 <div class="outline-text-3" id="text-org1ac95f9">
+<p>
+Without jq:
+</p>
+
 <div class="org-src-container">
 <pre class="src src-sh" id="org78a4615">kubectl get nodes -l <span style="color: #98be65;">"kubernetes.io/role = node"</span> <span style="color: #98be65;">\</span>
         -o <span style="color: #dcaeea;">jsonpath</span>=<span style="color: #98be65;">'{range .items[*]}{.metadata.annotations.flannel\.alpha\.coreos\.com/public-ip}{"\n"}{end}'</span>
 </pre>
 </div>
+
+<p>
+With jq:
+</p>
 
 <div class="org-src-container">
 <pre class="src src-sh">kubectl get nodes -l <span style="color: #98be65;">"kubernetes.io/role = node"</span> -o json <span style="color: #98be65;">\</span>
@@ -391,12 +398,18 @@ Now, <code>ssh user@nodeIp</code>
 <h2 id="org982fff2"><a href="#org982fff2">Services</a></h2>
 <div class="outline-text-2" id="text-org982fff2">
 </div>
-<div id="outline-container-org0d991fe" class="outline-3">
-<h3 id="org0d991fe"><a href="#org0d991fe">Get all services of type NodePort/LoadBalancer/ClusterIP</a></h3>
-<div class="outline-text-3" id="text-org0d991fe">
+<div id="outline-container-org665b2d5" class="outline-3">
+<h3 id="org665b2d5"><a href="#org665b2d5">Get Services of Type</a></h3>
+<div class="outline-text-3" id="text-org665b2d5">
+<p>
+Get all services of type NodePort/LoadBalancer/ClusterIP:
+</p>
+
 <div class="org-src-container">
 <pre class="src src-sh">kubectl get services --all-namespaces -o json <span style="color: #98be65;">\</span>
-    | jq <span style="color: #98be65;">'.items[] | select(.spec.type == "LoadBalancer") | .metadata.name'</span>
+    | jq <span style="color: #98be65;">'.items[]</span>
+<span style="color: #98be65;">          | select(.spec.type == "LoadBalancer")</span>
+<span style="color: #98be65;">          | .metadata.name'</span>
 </pre>
 </div>
 </div>

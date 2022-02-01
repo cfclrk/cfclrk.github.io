@@ -29,12 +29,6 @@
          /Library/Java/JavaVirtualMachines/openjdk-8.jdk
   #+end_src
 
-** Java 7
-
-   #+begin_src sh
-     brew install openjdk@7
-   #+end_src
-
 * Switch Versions
 
   To see installed Java versions (assuming they have been properly symlinked):
