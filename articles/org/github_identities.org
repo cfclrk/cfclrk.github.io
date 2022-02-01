@@ -71,8 +71,6 @@
 
   =~/.config/git/config=
 
-  - Ignore the =[github]= part, that's for [[https://github.com/magit/forge][Emacs forge]].
-
   #+header: :tangle ~/.config/git/config
   #+begin_src gitconfig
     [user]
@@ -91,9 +89,9 @@
         user = cfclrk
   #+end_src
 
-  =~/.config/git/work.gitconfig=
+  Ignore the =[github]= part, that's for [[https://github.com/magit/forge][Emacs forge]].
 
-  - Ignore the =[github]= part, that's for [[https://github.com/magit/forge][Emacs forge]].
+  =~/.config/git/work.gitconfig=
 
   #+header: :tangle ~/.config/git/work.gitconfig
   #+begin_src gitconfig
@@ -106,8 +104,9 @@
         user = chrisc-ironnet
   #+end_src
 
-  Obviously, update values for your name, email address, your work's GitHub
-  organization name, and -- if you're using [[#signed-commits]] -- your PGP key ids.
+  Ignore the =[github]= part, that's for [[https://github.com/magit/forge][Emacs forge]]. And of course, update the
+  values for your name, email address, and -- if you're using [[#signed-commits]] --
+  your PGP key id.
 
   That's it for the git config! Move on to [[#signed-commits]]. The next subsection
   explains the above, if you are interested.

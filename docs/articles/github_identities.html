@@ -80,7 +80,7 @@ both accounts). Assuming you've <a href="https://docs.github.com/en/github/authe
 look something like:
 </p>
 
-<pre class="example" id="org3d39b01">
+<pre class="example" id="org09e11c5">
 $ tree ~/.ssh/
 /Users/cfclrk/.ssh/
 ├── config
@@ -136,10 +136,6 @@ creating the following two files.
 <code>~/.config/git/config</code>
 </p>
 
-<ul class="org-ul">
-<li>Ignore the <code>[github]</code> part, that's for <a href="https://github.com/magit/forge">Emacs forge</a>.</li>
-</ul>
-
 <div class="org-src-container">
 <pre class="src src-gitconfig">[<span style="color: #ECBE7B;">user</span>]
     <span style="color: #dcaeea;">name</span> = Chris Clark
@@ -159,12 +155,12 @@ creating the following two files.
 </div>
 
 <p>
-<code>~/.config/git/work.gitconfig</code>
+Ignore the <code>[github]</code> part, that's for <a href="https://github.com/magit/forge">Emacs forge</a>.
 </p>
 
-<ul class="org-ul">
-<li>Ignore the <code>[github]</code> part, that's for <a href="https://github.com/magit/forge">Emacs forge</a>.</li>
-</ul>
+<p>
+<code>~/.config/git/work.gitconfig</code>
+</p>
 
 <div class="org-src-container">
 <pre class="src src-gitconfig">[<span style="color: #ECBE7B;">user</span>]
@@ -178,8 +174,9 @@ creating the following two files.
 </div>
 
 <p>
-Obviously, update values for your name, email address, your work's GitHub
-organization name, and &#x2013; if you're using <a href="#signed-commits">Signed Commits</a> &#x2013; your PGP key ids.
+Ignore the <code>[github]</code> part, that's for <a href="https://github.com/magit/forge">Emacs forge</a>. And of course, update the
+values for your name, email address, and &#x2013; if you're using <a href="#signed-commits">Signed Commits</a> &#x2013;
+your PGP key id.
 </p>
 
 <p>
