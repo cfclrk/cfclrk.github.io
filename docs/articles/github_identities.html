@@ -41,7 +41,7 @@
 </ul>
 </li>
 <li><a href="#signed-commits">Signed Commits</a></li>
-<li><a href="#org726b2c4">Other Resources</a></li>
+<li><a href="#org5c3cf71">More Resources</a></li>
 </ul>
 </div>
 </nav>
@@ -80,7 +80,7 @@ both accounts). Assuming you've <a href="https://docs.github.com/en/github/authe
 look something like:
 </p>
 
-<pre class="example" id="org09e11c5">
+<pre class="example" id="orgdf4f01d">
 $ tree ~/.ssh/
 /Users/cfclrk/.ssh/
 ├── config
@@ -155,10 +155,6 @@ creating the following two files.
 </div>
 
 <p>
-Ignore the <code>[github]</code> part, that's for <a href="https://github.com/magit/forge">Emacs forge</a>.
-</p>
-
-<p>
 <code>~/.config/git/work.gitconfig</code>
 </p>
 
@@ -174,9 +170,9 @@ Ignore the <code>[github]</code> part, that's for <a href="https://github.com/ma
 </div>
 
 <p>
-Ignore the <code>[github]</code> part, that's for <a href="https://github.com/magit/forge">Emacs forge</a>. And of course, update the
-values for your name, email address, and &#x2013; if you're using <a href="#signed-commits">Signed Commits</a> &#x2013;
-your PGP key id.
+Ignore the <code>[github]</code> sections; those are for <a href="https://github.com/magit/forge">Emacs forge</a>. And of course,
+update the values for your <code>name</code>, <code>email</code>, and &#x2013; if you're using
+<a href="#signed-commits">Signed Commits</a> &#x2013; your PGP <code>signingkey</code> id.
 </p>
 
 <p>
@@ -194,13 +190,11 @@ Git loads <i>all</i> applicable config files. If one option is set multiple time
 </p>
 
 <p>
-For example: consider a <code>~/.config/git/config</code> like this:
+For example: assume you have the git config files above, which has:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-gitconfig">[<span style="color: #ECBE7B;">includeIf</span> <span style="color: #c678dd;">"gitdir:/"</span>]
-    <span style="color: #dcaeea;">path</span> = home.gitconfig
-[<span style="color: #ECBE7B;">includeIf</span> <span style="color: #c678dd;">"gitdir:~/Work/"</span>]
+<pre class="src src-gitconfig">[<span style="color: #ECBE7B;">includeIf</span> <span style="color: #c678dd;">"gitdir:~/Work/"</span>]
     <span style="color: #dcaeea;">path</span> = work.gitconfig
 </pre>
 </div>
@@ -224,15 +218,14 @@ git does something like:
 
 <p>
 Both the default and <i>work</i> config files get loaded. The email address ends
-up being <code>cfclrk@ironnet.com</code> since that was the <b>last</b> value loaded for the
-<code>user.email</code> option. The determining factor is the <i>order in which the
+up being <code>chris.clark@ironnet.com</code> since that was the <b>last</b> value loaded for
+the <code>user.email</code> option. The determining factor is the <i>order in which the
 configuration is defined</i>, and the <i>last value wins</i>.
 </p>
 
 <p>
-So, if you define multiple <code>includeIf</code> directives that overwrite each other,
-you should specify the directives in order from <i>most general</i> to <i>most
-specific</i>.
+If you define multiple <code>includeIf</code> directives that overwrite one another,
+specify them in order from <i>most general</i> to <i>most specific</i>.
 </p>
 </div>
 </div>
@@ -296,9 +289,9 @@ pinentry-program /usr/local/bin/pinentry-mac
 </div>
 </div>
 
-<div id="outline-container-org726b2c4" class="outline-2">
-<h2 id="org726b2c4"><a href="#org726b2c4">Other Resources</a></h2>
-<div class="outline-text-2" id="text-org726b2c4">
+<div id="outline-container-org5c3cf71" class="outline-2">
+<h2 id="org5c3cf71"><a href="#org5c3cf71">More Resources</a></h2>
+<div class="outline-text-2" id="text-org5c3cf71">
 <ul class="org-ul">
 <li><a href="https://yayimorphology.org/ssh-identities-made-easy.html">Managing several SSH identities explained</a></li>
 </ul>

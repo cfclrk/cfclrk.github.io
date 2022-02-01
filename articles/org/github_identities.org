@@ -89,8 +89,6 @@
         user = cfclrk
   #+end_src
 
-  Ignore the =[github]= part, that's for [[https://github.com/magit/forge][Emacs forge]].
-
   =~/.config/git/work.gitconfig=
 
   #+header: :tangle ~/.config/git/work.gitconfig
@@ -104,9 +102,9 @@
         user = chrisc-ironnet
   #+end_src
 
-  Ignore the =[github]= part, that's for [[https://github.com/magit/forge][Emacs forge]]. And of course, update the
-  values for your name, email address, and -- if you're using [[#signed-commits]] --
-  your PGP key id.
+  Ignore the =[github]= sections; those are for [[https://github.com/magit/forge][Emacs forge]]. And of course,
+  update the values for your =name=, =email=, and -- if you're using
+  [[#signed-commits]] -- your PGP =signingkey= id.
 
   That's it for the git config! Move on to [[#signed-commits]]. The next subsection
   explains the above, if you are interested.
@@ -119,11 +117,9 @@
    Git loads /all/ applicable config files. If one option is set multiple times
    (potentially form differnt files), the last value wins.
 
-   For example: consider a =~/.config/git/config= like this:
+   For example: assume you have the git config files above, which has:
 
    #+begin_src gitconfig
-     [includeIf "gitdir:/"]
-         path = home.gitconfig
      [includeIf "gitdir:~/Work/"]
          path = work.gitconfig
    #+end_src
@@ -138,13 +134,12 @@
      - Set =user.email= to =chris.clark@ironnet.com=
 
    Both the default and /work/ config files get loaded. The email address ends
-   up being =cfclrk@ironnet.com= since that was the *last* value loaded for the
-   =user.email= option. The determining factor is the /order in which the
+   up being =chris.clark@ironnet.com= since that was the *last* value loaded for
+   the =user.email= option. The determining factor is the /order in which the
    configuration is defined/, and the /last value wins/.
 
-   So, if you define multiple =includeIf= directives that overwrite each other,
-   you should specify the directives in order from /most general/ to /most
-   specific/.
+   If you define multiple =includeIf= directives that overwrite one another,
+   specify them in order from /most general/ to /most specific/.
 
 * Signed Commits
   :PROPERTIES:
@@ -189,6 +184,6 @@
     pinentry-program /usr/local/bin/pinentry-mac
   #+end_src
 
-* Other Resources
+* More Resources
 
   - [[https://yayimorphology.org/ssh-identities-made-easy.html][Managing several SSH identities explained]]
