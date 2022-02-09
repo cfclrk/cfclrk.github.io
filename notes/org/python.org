@@ -180,9 +180,14 @@
    #+RESULTS:
    : 5
 
-** Convert binary to utf8
+** Decode: convert bytes to UTF-8 string
 
-   Byte strings can only be ASCII. For example, this works:
+   A "byte string" is a byte literal, which is an immutable sequence of bytes
+   (integers). A byte literal can be defined using ASCII characters up
+   through 127. Byte values 128-256 can be specified using an escape sequence or
+   hex codes (see: [[https://docs.python.org/3/library/stdtypes.html#bytes-objects][Bytes Objects]]).
+
+   For example, this works:
 
    #+begin_src python
      foo=b"foo"
@@ -194,10 +199,13 @@
      bar=b"ОФИС"
    #+end_src
 
-   ASCII and "binary" are really the same... there isn't really any encoding or
-   decoding going on.
+   #+begin_example
+       File "<stdin>", line 1
+     SyntaxError: bytes can only contain ASCII literal characters.
+   #+end_example
 
-   So what's going on here?
+   To get a Python 3 string from bytes, you must know what text encoding was
+   used to create the bytes. Usually, it's ASCII:
 
    #+begin_src python
      foo = b"foo"
@@ -207,10 +215,20 @@
    #+RESULTS:
    : foo
 
-   I *think* what's going on is: We attempt to decode =foo= using the ASCII codec.
-   The result is a sequence of ASCII numbers. Python then tries to show us the
-   result, and it looks like a string, so Python interprets it as unicode code
-   points (?)
+   What's going on is:
+
+   - =foo= is a byte literal (array of integers)
+   - For each array item, decode it using the ASCII codec, then encode it with UTF-8
+   - The result is a UTF-8 encoded string
+
+** Encode: convert UTF-8 string to bytes
+
+   #+begin_src python
+     return "foo".encode("ascii")
+   #+end_src
+
+   #+RESULTS:
+   : b'foo'
 
    #+begin_src python
      bar="ОФИС"
@@ -219,6 +237,21 @@
 
    #+RESULTS:
    : b'\xd0\x9e\xd0\xa4\xd0\x98\xd0\xa1'
+
+   #+begin_src python
+     return  "😂".encode("ascii")
+   #+end_src
+
+   Prints:
+
+   #+begin_example
+     >>> "😂".encode("ascii")
+     Traceback (most recent call last):
+       File "<stdin>", line 1, in <module>
+     UnicodeEncodeError: 'ascii' codec can't encode
+     character '\U0001f602' in position 0: ordinal not
+     in range(128)
+   #+end_example
 
 * Random String
 

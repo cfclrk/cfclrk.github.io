@@ -1,0 +1,27 @@
+#+TITLE: Haskell
+#+SETUPFILE: ../setup.org
+
+* New Project
+
+** stack
+
+  #+header: :var projectName="my-project"
+  #+header: :dir ~/Projects/codenotes/haskell
+  #+begin_src sh
+    stack new $projectName
+    cd my-project
+    stack setup
+    stack build
+    stack exec my-project-exe
+  #+end_src
+
+** cabal
+
+   #+header: :var projectName="scratch"
+   #+header: :dir ~/Projects/codenotes/haskell
+   #+begin_src sh
+     mkdir $projectName
+     cabal init --license=None -p $projectName
+   #+end_src
+
+   #+RESULTS:

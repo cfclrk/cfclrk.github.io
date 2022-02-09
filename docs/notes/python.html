@@ -61,7 +61,8 @@
 <li><a href="#org672a6b8">Strings</a>
 <ul>
 <li><a href="#org9b18bfa">Unicode</a></li>
-<li><a href="#org73f76ea">Convert binary to utf8</a></li>
+<li><a href="#org48576a3">Decode: convert bytes to UTF-8 string</a></li>
+<li><a href="#org2beebbf">Encode: convert UTF-8 string to bytes</a></li>
 </ul>
 </li>
 <li><a href="#orge8b61f5">Random String</a></li>
@@ -360,11 +361,18 @@ From: <a href="https://hsivonen.fi/string-length/">https://hsivonen.fi/string-le
 </div>
 </div>
 
-<div id="outline-container-org73f76ea" class="outline-3">
-<h3 id="org73f76ea"><a href="#org73f76ea">Convert binary to utf8</a></h3>
-<div class="outline-text-3" id="text-org73f76ea">
+<div id="outline-container-org48576a3" class="outline-3">
+<h3 id="org48576a3"><a href="#org48576a3">Decode: convert bytes to UTF-8 string</a></h3>
+<div class="outline-text-3" id="text-org48576a3">
 <p>
-Byte strings can only be ASCII. For example, this works:
+A "byte string" is a byte literal, which is an immutable sequence of bytes
+(integers). A byte literal can be defined using ASCII characters up
+through 127. Byte values 128-256 can be specified using an escape sequence or
+hex codes (see: <a href="https://docs.python.org/3/library/stdtypes.html#bytes-objects">Bytes Objects</a>).
+</p>
+
+<p>
+For example, this works:
 </p>
 
 <div class="org-src-container">
@@ -381,13 +389,14 @@ But this does not:
 </pre>
 </div>
 
-<p>
-ASCII and "binary" are really the same&#x2026; there isn't really any encoding or
-decoding going on.
-</p>
+<pre class="example" id="org86f2a59">
+  File "&lt;stdin&gt;", line 1
+SyntaxError: bytes can only contain ASCII literal characters.
+</pre>
 
 <p>
-So what's going on here?
+To get a Python 3 string from bytes, you must know what text encoding was
+used to create the bytes. Usually, it's ASCII:
 </p>
 
 <div class="org-src-container">
@@ -402,11 +411,29 @@ foo
 
 
 <p>
-I <b>think</b> what's going on is: We attempt to decode <code>foo</code> using the ASCII codec.
-The result is a sequence of ASCII numbers. Python then tries to show us the
-result, and it looks like a string, so Python interprets it as unicode code
-points (?)
+What's going on is:
 </p>
+
+<ul class="org-ul">
+<li><code>foo</code> is a byte literal (array of integers)</li>
+<li>For each array item, decode it using the ASCII codec, then encode it with UTF-8</li>
+<li>The result is a UTF-8 encoded string</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org2beebbf" class="outline-3">
+<h3 id="org2beebbf"><a href="#org2beebbf">Encode: convert UTF-8 string to bytes</a></h3>
+<div class="outline-text-3" id="text-org2beebbf">
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #51afef;">return</span> <span style="color: #98be65;">"foo"</span>.encode(<span style="color: #98be65;">"ascii"</span>)
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+b'foo'
+</pre>
+
 
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #dcaeea;">bar</span>=<span style="color: #98be65;">"&#1054;&#1060;&#1048;&#1057;"</span>
@@ -416,6 +443,25 @@ points (?)
 
 <div class="results">#+RESULTS:</div><pre class="example">
 b'\xd0\x9e\xd0\xa4\xd0\x98\xd0\xa1'
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #51afef;">return</span>  <span style="color: #98be65;">"&#128514;"</span>.encode(<span style="color: #98be65;">"ascii"</span>)
+</pre>
+</div>
+
+<p>
+Prints:
+</p>
+
+<pre class="example" id="org0043040">
+&gt;&gt;&gt; "😂".encode("ascii")
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+UnicodeEncodeError: 'ascii' codec can't encode
+character '\U0001f602' in position 0: ordinal not
+in range(128)
 </pre>
 </div>
 </div>

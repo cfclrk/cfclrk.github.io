@@ -69,3 +69,7 @@
 
   - In diff, =<return>= to visit the file
   - =M-x magit-find-file-other-window=, branch, =<RET>=
+
+* Cherry pick
+
+  =A A=. I always forget about this.

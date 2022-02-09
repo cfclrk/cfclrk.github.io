@@ -12,6 +12,7 @@
 - [[file:git_log.org][Git Log]]
 - [[file:go.org][Go]]
 - [[file:groovy.org][Groovy]]
+- [[file:haskell.org][Haskell]]
 - [[file:hobebrew.org][Homebrew]]
 - [[file:jmespath.org][JMESPath]]
 - [[file:jwt.org][JSON Web Tokens]]

@@ -18,7 +18,7 @@
   applied to the wrong number of arguments, a non-0 exit status should be
   returned.
 
-** Using =[[= (new-test)
+** Using [[ (new-test)
 
    The double-bracket =[[= syntax is called "new-test".
 
@@ -266,7 +266,7 @@
 	: hello
 	: $foo
 
-* Verify Environment variables
+* Verify Environment Variables
 
   Verify some environment variables exist.
 
@@ -283,7 +283,7 @@
    - /The Open Group/ has some excellent [[https://pubs.opengroup.org/onlinepubs/9699919799][POSIX documentation]] with a section on
      [[http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02][parameter expansion]]
 
-** =:-=
+** :-
 
    [[https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02][Docs]] for =${parameter:-[word]}=
 
@@ -315,7 +315,7 @@
 
    #+RESULTS:
 
-** =+=
+** +
 
    [[https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02][Docs]] for =${parameter:+[word]}=
 
@@ -375,27 +375,53 @@
 
 * Arrays
 
+** * vs @
+
+   See [[https://stackoverflow.com/a/3355375/340613][this StackOverflow answer]].
+
+   #+begin_quote
+   The difference between =[@]= and =[*]=-expanded arrays in double-quotes is
+   that ="${myarray[@]}"= leads to each element of the array being treated as a
+   separate shell-word, while ="${myarray[*]}"= results in a single shell-word
+   with all of the elements of the array separated by spaces (or whatever the
+   first character of =IFS= is).
+
+   Usually, the =[@]= behavior is what you want.
+   #+end_quote
+
 ** Basic
 
   #+begin_src sh
     arr=("foo" "bar" "baz")
-    echo ${arr[*]}
+    echo ${arr[@]}
   #+end_src
 
   #+RESULTS:
   : foo bar baz
 
+  #+begin_src sh
+    arr=("foo" "bar" "baz")
+    for x in ${arr[@]}; do
+        echo $x
+    done
+  #+end_src
+
+  #+RESULTS:
+  : foo
+  : bar
+  : baz
+
 ** Length
 
    #+begin_src sh
      arr=("foo" "bar" "baz")
-     echo ${#arr[*]}
+     echo ${#arr[@]}
    #+end_src
 
    #+RESULTS:
    : 3
 
-** Pipe Array to =xargs=
+** Pipe array to xargs
 
    Start a subprocess per element in an array, where each subprocess runs =$script=.
 
@@ -405,7 +431,11 @@
     EOF
     )
     arr=("foo" "bar" "baz")
-    echo ${arr[*]} | xargs -n 1 -P ${#arr[*]} -I {} bash -c "$script"
+    printf "%s\n" "${arr[@]}" \
+        | xargs -n 1 \
+                -P ${#arr[@]} \
+                -I {} \
+                bash -c "$script"
   #+end_src
 
   #+RESULTS:
@@ -423,7 +453,7 @@
 
 * Strings, Echo, and Printf
 
-** Echo Adds Newline
+** Echo adds a newline
 
   Notice that =echo= adds a newline.
 
@@ -435,6 +465,8 @@
   : 0000000    f   o   o  \n
   : 0000004
 
+  While =printf= does not.
+
   #+begin_src sh
     printf "foo" | od -c
   #+end_src
@@ -443,10 +475,10 @@
   : 0000000    f   o   o
   : 0000003
 
-** Print Multiline String
+** Print a multiline string
 
-   Notice that =echo $a= prints everything on one line, while =echo "$a"=
-   preserves newlines. Why is that?
+   =echo $a= prints everything on one line, while =echo "$a"= preserves
+   newlines. Why is that?
 
 	#+begin_src sh
       a=$(cat <<EOF
@@ -455,14 +487,15 @@
       EOF
       )
       echo $a
+      echo "---"
       echo "$a"
 	#+end_src
 
     #+RESULTS:
     : hello world
+    : ---
     : hello
     : world
-    : -e hello world
 
 * Numbered List
 

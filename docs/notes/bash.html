@@ -36,7 +36,7 @@
 <li><a href="#orgc74f5f7">Style</a></li>
 <li><a href="#org999133c">Function Parameters</a>
 <ul>
-<li><a href="#org3a7b2be">Using <code>[[</code> (new-test)</a></li>
+<li><a href="#org19fd21d">Using [[ (new-test)</a></li>
 <li><a href="#org99e77db">Using test</a></li>
 <li><a href="#org6d01d23">if-else</a></li>
 </ul>
@@ -63,26 +63,27 @@
 </li>
 </ul>
 </li>
-<li><a href="#org0f43c41">Verify Environment variables</a></li>
+<li><a href="#org656ddc1">Verify Environment Variables</a></li>
 <li><a href="#org65330f7">Parameter Expansion</a>
 <ul>
 <li><a href="#orgccfeacd">Resources</a></li>
-<li><a href="#org0516e18"><code>:-</code></a></li>
-<li><a href="#orgf98cb5e"><code>+</code></a></li>
+<li><a href="#orgcf690e1">:-</a></li>
+<li><a href="#orge881a39">+</a></li>
 </ul>
 </li>
 <li><a href="#org1473bcd">Arrays</a>
 <ul>
+<li><a href="#org8437018">* vs @</a></li>
 <li><a href="#org8c70ae2">Basic</a></li>
 <li><a href="#org2850804">Length</a></li>
-<li><a href="#org31ebf48">Pipe Array to <code>xargs</code></a></li>
+<li><a href="#org49e06a6">Pipe array to xargs</a></li>
 </ul>
 </li>
 <li><a href="#org3010f4b">Range</a></li>
 <li><a href="#org28d5216">Strings, Echo, and Printf</a>
 <ul>
-<li><a href="#org6842aa4">Echo Adds Newline</a></li>
-<li><a href="#org0dc04ad">Print Multiline String</a></li>
+<li><a href="#org4e45543">Echo adds a newline</a></li>
+<li><a href="#org01d9b26">Print a multiline string</a></li>
 </ul>
 </li>
 <li><a href="#orgd035194">Numbered List</a></li>
@@ -123,9 +124,9 @@ returned.
 </p>
 </div>
 
-<div id="outline-container-org3a7b2be" class="outline-3">
-<h3 id="org3a7b2be"><a href="#org3a7b2be">Using <code>[[</code> (new-test)</a></h3>
-<div class="outline-text-3" id="text-org3a7b2be">
+<div id="outline-container-org19fd21d" class="outline-3">
+<h3 id="org19fd21d"><a href="#org19fd21d">Using [[ (new-test)</a></h3>
+<div class="outline-text-3" id="text-org19fd21d">
 <p>
 The double-bracket <code>[[</code> syntax is called "new-test".
 </p>
@@ -477,9 +478,9 @@ $foo
 </div>
 </div>
 
-<div id="outline-container-org0f43c41" class="outline-2">
-<h2 id="org0f43c41"><a href="#org0f43c41">Verify Environment variables</a></h2>
-<div class="outline-text-2" id="text-org0f43c41">
+<div id="outline-container-org656ddc1" class="outline-2">
+<h2 id="org656ddc1"><a href="#org656ddc1">Verify Environment Variables</a></h2>
+<div class="outline-text-2" id="text-org656ddc1">
 <p>
 Verify some environment variables exist.
 </p>
@@ -507,9 +508,9 @@ Verify some environment variables exist.
 </div>
 </div>
 
-<div id="outline-container-org0516e18" class="outline-3">
-<h3 id="org0516e18"><a href="#org0516e18"><code>:-</code></a></h3>
-<div class="outline-text-3" id="text-org0516e18">
+<div id="outline-container-orgcf690e1" class="outline-3">
+<h3 id="orgcf690e1"><a href="#orgcf690e1">:-</a></h3>
+<div class="outline-text-3" id="text-orgcf690e1">
 <p>
 <a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02">Docs</a> for <code>${parameter:-[word]}</code>
 </p>
@@ -548,9 +549,9 @@ var is set to ''
 </div>
 </div>
 
-<div id="outline-container-orgf98cb5e" class="outline-3">
-<h3 id="orgf98cb5e"><a href="#orgf98cb5e"><code>+</code></a></h3>
-<div class="outline-text-3" id="text-orgf98cb5e">
+<div id="outline-container-orge881a39" class="outline-3">
+<h3 id="orge881a39"><a href="#orge881a39">+</a></h3>
+<div class="outline-text-3" id="text-orge881a39">
 <p>
 <a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02">Docs</a> for <code>${parameter:+[word]}</code>
 </p>
@@ -635,17 +636,55 @@ empty argument, and this prints out <code>var is unset</code>.
 <h2 id="org1473bcd"><a href="#org1473bcd">Arrays</a></h2>
 <div class="outline-text-2" id="text-org1473bcd">
 </div>
+<div id="outline-container-org8437018" class="outline-3">
+<h3 id="org8437018"><a href="#org8437018">* vs @</a></h3>
+<div class="outline-text-3" id="text-org8437018">
+<p>
+See <a href="https://stackoverflow.com/a/3355375/340613">this StackOverflow answer</a>.
+</p>
+
+<blockquote>
+<p>
+The difference between <code>[@]</code> and <code>[*]</code>-expanded arrays in double-quotes is
+that <code>"${myarray[@]}"</code> leads to each element of the array being treated as a
+separate shell-word, while <code>"${myarray[*]}"</code> results in a single shell-word
+with all of the elements of the array separated by spaces (or whatever the
+first character of <code>IFS</code> is).
+</p>
+
+<p>
+Usually, the <code>[@]</code> behavior is what you want.
+</p>
+</blockquote>
+</div>
+</div>
+
 <div id="outline-container-org8c70ae2" class="outline-3">
 <h3 id="org8c70ae2"><a href="#org8c70ae2">Basic</a></h3>
 <div class="outline-text-3" id="text-org8c70ae2">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #dcaeea;">arr</span>=(<span style="color: #98be65;">"foo"</span> <span style="color: #98be65;">"bar"</span> <span style="color: #98be65;">"baz"</span>)
-<span style="color: #c678dd;">echo</span> ${<span style="color: #dcaeea;">arr</span>[*]}
+<span style="color: #c678dd;">echo</span> ${<span style="color: #dcaeea;">arr</span>[@]}
 </pre>
 </div>
 
 <div class="results">#+RESULTS:</div><pre class="example">
 foo bar baz
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #dcaeea;">arr</span>=(<span style="color: #98be65;">"foo"</span> <span style="color: #98be65;">"bar"</span> <span style="color: #98be65;">"baz"</span>)
+<span style="color: #51afef;">for</span> x<span style="color: #51afef;"> in</span> ${<span style="color: #dcaeea;">arr</span>[@]}; <span style="color: #51afef;">do</span>
+    <span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">x</span>
+<span style="color: #51afef;">done</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+foo
+bar
+baz
 </pre>
 </div>
 </div>
@@ -655,7 +694,7 @@ foo bar baz
 <div class="outline-text-3" id="text-org2850804">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #dcaeea;">arr</span>=(<span style="color: #98be65;">"foo"</span> <span style="color: #98be65;">"bar"</span> <span style="color: #98be65;">"baz"</span>)
-<span style="color: #c678dd;">echo</span> ${#<span style="color: #dcaeea;">arr</span>[*]}
+<span style="color: #c678dd;">echo</span> ${#<span style="color: #dcaeea;">arr</span>[@]}
 </pre>
 </div>
 
@@ -665,9 +704,9 @@ foo bar baz
 </div>
 </div>
 
-<div id="outline-container-org31ebf48" class="outline-3">
-<h3 id="org31ebf48"><a href="#org31ebf48">Pipe Array to <code>xargs</code></a></h3>
-<div class="outline-text-3" id="text-org31ebf48">
+<div id="outline-container-org49e06a6" class="outline-3">
+<h3 id="org49e06a6"><a href="#org49e06a6">Pipe array to xargs</a></h3>
+<div class="outline-text-3" id="text-org49e06a6">
 <p>
 Start a subprocess per element in an array, where each subprocess runs <code>$script</code>.
 </p>
@@ -678,7 +717,11 @@ Start a subprocess per element in an array, where each subprocess runs <code>$sc
 <span style="color: #98be65;">EOF</span>
 )
 <span style="color: #dcaeea;">arr</span>=(<span style="color: #98be65;">"foo"</span> <span style="color: #98be65;">"bar"</span> <span style="color: #98be65;">"baz"</span>)
-<span style="color: #c678dd;">echo</span> ${<span style="color: #dcaeea;">arr</span>[*]} | xargs -n 1 -P ${#<span style="color: #dcaeea;">arr</span>[*]} -I {} bash -c <span style="color: #98be65;">"$script"</span>
+printf <span style="color: #98be65;">"%s\n"</span> <span style="color: #98be65;">"${arr[@]}"</span> <span style="color: #98be65;">\</span>
+    | xargs -n 1 <span style="color: #98be65;">\</span>
+            -P ${#<span style="color: #dcaeea;">arr</span>[@]} <span style="color: #98be65;">\</span>
+            -I {} <span style="color: #98be65;">\</span>
+            bash -c <span style="color: #98be65;">"$script"</span>
 </pre>
 </div>
 
@@ -707,9 +750,9 @@ baz
 <h2 id="org28d5216"><a href="#org28d5216">Strings, Echo, and Printf</a></h2>
 <div class="outline-text-2" id="text-org28d5216">
 </div>
-<div id="outline-container-org6842aa4" class="outline-3">
-<h3 id="org6842aa4"><a href="#org6842aa4">Echo Adds Newline</a></h3>
-<div class="outline-text-3" id="text-org6842aa4">
+<div id="outline-container-org4e45543" class="outline-3">
+<h3 id="org4e45543"><a href="#org4e45543">Echo adds a newline</a></h3>
+<div class="outline-text-3" id="text-org4e45543">
 <p>
 Notice that <code>echo</code> adds a newline.
 </p>
@@ -725,6 +768,10 @@ Notice that <code>echo</code> adds a newline.
 </pre>
 
 
+<p>
+While <code>printf</code> does not.
+</p>
+
 <div class="org-src-container">
 <pre class="src src-sh">printf <span style="color: #98be65;">"foo"</span> | od -c
 </pre>
@@ -737,12 +784,12 @@ Notice that <code>echo</code> adds a newline.
 </div>
 </div>
 
-<div id="outline-container-org0dc04ad" class="outline-3">
-<h3 id="org0dc04ad"><a href="#org0dc04ad">Print Multiline String</a></h3>
-<div class="outline-text-3" id="text-org0dc04ad">
+<div id="outline-container-org01d9b26" class="outline-3">
+<h3 id="org01d9b26"><a href="#org01d9b26">Print a multiline string</a></h3>
+<div class="outline-text-3" id="text-org01d9b26">
 <p>
-Notice that <code>echo $a</code> prints everything on one line, while <code>echo "$a"</code>
-preserves newlines. Why is that?
+<code>echo $a</code> prints everything on one line, while <code>echo "$a"</code> preserves
+newlines. Why is that?
 </p>
 
 <div class="org-src-container">
@@ -752,15 +799,16 @@ preserves newlines. Why is that?
 <span style="color: #98be65;">EOF</span>
 )
 <span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">a</span>
+<span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"---"</span>
 <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"$a"</span>
 </pre>
 </div>
 
 <div class="results">#+RESULTS:</div><pre class="example">
 hello world
+---
 hello
 world
--e hello world
 </pre>
 </div>
 </div>
@@ -774,7 +822,7 @@ world
 </pre>
 </div>
 
-<pre class="example" id="org1b8e9df">
+<pre class="example" id="org618cdf3">
  1	/Users/chris.clark/.rbenv/shims
  2	/usr/local/Cellar/pyenv-virtualenv/1.1.5/shims
  3	/Users/chris.clark/.pyenv/shims

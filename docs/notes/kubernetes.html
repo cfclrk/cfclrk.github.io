@@ -44,6 +44,20 @@
 </li>
 <li><a href="#org42438e2">Completely Delete a Cluster</a></li>
 <li><a href="#orgc5adc9b">Kubeconfig, Context and Namespace</a></li>
+<li><a href="#org2212622">Cluster ID</a></li>
+<li><a href="#orgae9b313">Affinity, Taints, and Tolerations</a>
+<ul>
+<li><a href="#orgee68518">Affinity</a></li>
+<li><a href="#org9f2d0a9">Taints</a></li>
+<li><a href="#org241eb24">Tolerations</a></li>
+</ul>
+</li>
+<li><a href="#org90a2acf">ConfigMaps</a></li>
+<li><a href="#orga1cf56c">Deployments</a>
+<ul>
+<li><a href="#org40c7d8f">Scaling a deployment</a></li>
+</ul>
+</li>
 <li><a href="#org2e53394">Nodes</a>
 <ul>
 <li><a href="#orgb3a8b26">Master Node IP</a></li>
@@ -59,16 +73,6 @@
 <li><a href="#org9f80995">What Node is this Pod on?</a></li>
 </ul>
 </li>
-<li><a href="#org982fff2">Services</a>
-<ul>
-<li><a href="#org665b2d5">Get Services of Type</a></li>
-</ul>
-</li>
-<li><a href="#orga1cf56c">Deployments</a>
-<ul>
-<li><a href="#org40c7d8f">Scaling a deployment</a></li>
-</ul>
-</li>
 <li><a href="#orgb18be80">Secrets</a>
 <ul>
 <li><a href="#org4d815fd">Create Docker Registry Secret</a></li>
@@ -76,16 +80,13 @@
 <li><a href="#org0987caa">Update a Secret</a></li>
 </ul>
 </li>
-<li><a href="#org2b770ad">Service Accounts</a></li>
-<li><a href="#org90a2acf">ConfigMaps</a></li>
-<li><a href="#orgae9b313">Affinity, Taints, and Tolerations</a>
+<li><a href="#org982fff2">Services</a>
 <ul>
-<li><a href="#orgee68518">Affinity</a></li>
-<li><a href="#org9f2d0a9">Taints</a></li>
-<li><a href="#org241eb24">Tolerations</a></li>
+<li><a href="#org665b2d5">Get Services of Type</a></li>
 </ul>
 </li>
-<li><a href="#org2212622">Cluster ID</a></li>
+<li><a href="#org2b770ad">Service Accounts</a></li>
+<li><a href="#org39b3c97">StorageClass</a></li>
 <li><a href="#org5aedb36">Running Commands in Cluster</a>
 <ul>
 <li><a href="#orga85fc39">Create a temporary pod</a></li>
@@ -277,6 +278,102 @@ Set namespace for the current context
 </div>
 </div>
 
+<div id="outline-container-org2212622" class="outline-2">
+<h2 id="org2212622"><a href="#org2212622">Cluster ID</a></h2>
+<div class="outline-text-2" id="text-org2212622">
+<p>
+Clusters don't really have an identifier. Best idea I have seen is to use the
+kube-system namespace UID. For a discussion, see: <a href="https://groups.google.com/forum/#!msg/kubernetes-sig-architecture/mVGobfD4TpY/nkdbkX1iBwAJ">Cluster ID API</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">kubectl get ns kube-system <span style="color: #98be65;">\</span>
+        -o <span style="color: #dcaeea;">jsonpath</span>=<span style="color: #98be65;">'{.metadata.uid}'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgae9b313" class="outline-2">
+<h2 id="orgae9b313"><a href="#orgae9b313">Affinity, Taints, and Tolerations</a></h2>
+<div class="outline-text-2" id="text-orgae9b313">
+<p>
+Kubernetes supports a way to indicate that specific nodes have a certain
+quality. Pods must opt-in to using those nodes.
+</p>
+
+<p>
+That is, some nodes can say "hey, I'm a little bit different", and then some
+pods can say "I tolerate that difference".
+</p>
+
+<p>
+An example is Azure's serverless pods. You can have physical nodes and virtual
+(i.e. serverless) nodes. By default, your pods will get scheduled to your
+physical nodes, but you could mark some pods as "tolerating" the Azure
+serverless nodes.
+</p>
+</div>
+
+<div id="outline-container-orgee68518" class="outline-3">
+<h3 id="orgee68518"><a href="#orgee68518">Affinity</a></h3>
+<div class="outline-text-3" id="text-orgee68518">
+<p>
+A Pod can specify an affinity for certain nodes. Can either be a preference or a
+requirement.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org9f2d0a9" class="outline-3">
+<h3 id="org9f2d0a9"><a href="#org9f2d0a9">Taints</a></h3>
+<div class="outline-text-3" id="text-org9f2d0a9">
+<p>
+A Node can have a taint that will not allow Pods to be scheduled to it unless
+the Pod can tolerate the taint.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org241eb24" class="outline-3">
+<h3 id="org241eb24"><a href="#org241eb24">Tolerations</a></h3>
+<div class="outline-text-3" id="text-org241eb24">
+<p>
+A Pod can specify a toleration which allows it (but does not require it) to be
+scheduled to nodes with a matching taint.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org90a2acf" class="outline-2">
+<h2 id="org90a2acf"><a href="#org90a2acf">ConfigMaps</a></h2>
+<div class="outline-text-2" id="text-org90a2acf">
+<div class="org-src-container">
+<pre class="src src-sh">kubectl get cm aws-auth <span style="color: #98be65;">\</span>
+        -n kube-system <span style="color: #98be65;">\</span>
+        --output=json <span style="color: #98be65;">\</span>
+    | jq -r <span style="color: #98be65;">'.data'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga1cf56c" class="outline-2">
+<h2 id="orga1cf56c"><a href="#orga1cf56c">Deployments</a></h2>
+<div class="outline-text-2" id="text-orga1cf56c">
+</div>
+<div id="outline-container-org40c7d8f" class="outline-3">
+<h3 id="org40c7d8f"><a href="#org40c7d8f">Scaling a deployment</a></h3>
+<div class="outline-text-3" id="text-org40c7d8f">
+<div class="org-src-container">
+<pre class="src src-sh">kubectl scale deployment &lt;deployment-name&gt; --replicas=1
+</pre>
+</div>
+</div>
+</div>
+</div>
+
 <div id="outline-container-org2e53394" class="outline-2">
 <h2 id="org2e53394"><a href="#org2e53394">Nodes</a></h2>
 <div class="outline-text-2" id="text-org2e53394">
@@ -324,7 +421,9 @@ With jq:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">kubectl get nodes -l <span style="color: #98be65;">"kubernetes.io/role = node"</span> -o json <span style="color: #98be65;">\</span>
+<pre class="src src-sh">kubectl get nodes <span style="color: #98be65;">\</span>
+        -l <span style="color: #98be65;">"kubernetes.io/role = node"</span> <span style="color: #98be65;">\</span>
+        -o json <span style="color: #98be65;">\</span>
     | jq -r <span style="color: #98be65;">'.items[].metadata.annotations["flannel.alpha.coreos.com/public-ip"]'</span>
 </pre>
 </div>
@@ -394,43 +493,6 @@ Now, <code>ssh user@nodeIp</code>
 </div>
 </div>
 
-<div id="outline-container-org982fff2" class="outline-2">
-<h2 id="org982fff2"><a href="#org982fff2">Services</a></h2>
-<div class="outline-text-2" id="text-org982fff2">
-</div>
-<div id="outline-container-org665b2d5" class="outline-3">
-<h3 id="org665b2d5"><a href="#org665b2d5">Get Services of Type</a></h3>
-<div class="outline-text-3" id="text-org665b2d5">
-<p>
-Get all services of type NodePort/LoadBalancer/ClusterIP:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">kubectl get services --all-namespaces -o json <span style="color: #98be65;">\</span>
-    | jq <span style="color: #98be65;">'.items[]</span>
-<span style="color: #98be65;">          | select(.spec.type == "LoadBalancer")</span>
-<span style="color: #98be65;">          | .metadata.name'</span>
-</pre>
-</div>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orga1cf56c" class="outline-2">
-<h2 id="orga1cf56c"><a href="#orga1cf56c">Deployments</a></h2>
-<div class="outline-text-2" id="text-orga1cf56c">
-</div>
-<div id="outline-container-org40c7d8f" class="outline-3">
-<h3 id="org40c7d8f"><a href="#org40c7d8f">Scaling a deployment</a></h3>
-<div class="outline-text-3" id="text-org40c7d8f">
-<div class="org-src-container">
-<pre class="src src-sh">kubectl scale deployment &lt;deployment-name&gt; --replicas=1
-</pre>
-</div>
-</div>
-</div>
-</div>
-
 <div id="outline-container-orgb18be80" class="outline-2">
 <h2 id="orgb18be80"><a href="#orgb18be80">Secrets</a></h2>
 <div class="outline-text-2" id="text-orgb18be80">
@@ -479,6 +541,28 @@ TODO: also decode <code>=.auths["registry.ironnet.cloud"].auth</code>
 </div>
 </div>
 
+<div id="outline-container-org982fff2" class="outline-2">
+<h2 id="org982fff2"><a href="#org982fff2">Services</a></h2>
+<div class="outline-text-2" id="text-org982fff2">
+</div>
+<div id="outline-container-org665b2d5" class="outline-3">
+<h3 id="org665b2d5"><a href="#org665b2d5">Get Services of Type</a></h3>
+<div class="outline-text-3" id="text-org665b2d5">
+<p>
+Get all services of type NodePort/LoadBalancer/ClusterIP:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">kubectl get services --all-namespaces -o json <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.items[]</span>
+<span style="color: #98be65;">          | select(.spec.type == "LoadBalancer")</span>
+<span style="color: #98be65;">          | .metadata.name'</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
 <div id="outline-container-org2b770ad" class="outline-2">
 <h2 id="org2b770ad"><a href="#org2b770ad">Service Accounts</a></h2>
 <div class="outline-text-2" id="text-org2b770ad">
@@ -495,84 +579,44 @@ Get the default service account:
 </div>
 </div>
 
-<div id="outline-container-org90a2acf" class="outline-2">
-<h2 id="org90a2acf"><a href="#org90a2acf">ConfigMaps</a></h2>
-<div class="outline-text-2" id="text-org90a2acf">
-<div class="org-src-container">
-<pre class="src src-sh">kubectl get cm aws-auth <span style="color: #98be65;">\</span>
-        -n kube-system <span style="color: #98be65;">\</span>
-        --output=json <span style="color: #98be65;">\</span>
-    | jq -r <span style="color: #98be65;">'.data'</span>
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orgae9b313" class="outline-2">
-<h2 id="orgae9b313"><a href="#orgae9b313">Affinity, Taints, and Tolerations</a></h2>
-<div class="outline-text-2" id="text-orgae9b313">
+<div id="outline-container-org39b3c97" class="outline-2">
+<h2 id="org39b3c97"><a href="#org39b3c97">StorageClass</a></h2>
+<div class="outline-text-2" id="text-org39b3c97">
 <p>
-Kubernetes supports a way to indicate that specific nodes have a certain
-quality. Pods must opt-in to using those nodes.
-</p>
-
-<p>
-That is, some nodes can say "hey, I'm a little bit different", and then some
-pods can say "I tolerate that difference".
-</p>
-
-<p>
-An example is Azure's serverless pods. You can have physical nodes and virtual
-(i.e. serverless) nodes. By default, your pods will get scheduled to your
-physical nodes, but you could mark some pods as "tolerating" the Azure
-serverless nodes.
-</p>
-</div>
-
-<div id="outline-container-orgee68518" class="outline-3">
-<h3 id="orgee68518"><a href="#orgee68518">Affinity</a></h3>
-<div class="outline-text-3" id="text-orgee68518">
-<p>
-A Pod can specify an affinity for certain nodes. Can either be a preference or a
-requirement.
-</p>
-</div>
-</div>
-
-<div id="outline-container-org9f2d0a9" class="outline-3">
-<h3 id="org9f2d0a9"><a href="#org9f2d0a9">Taints</a></h3>
-<div class="outline-text-3" id="text-org9f2d0a9">
-<p>
-A Node can have a taint that will not allow Pods to be scheduled to it unless
-the Pod can tolerate the taint.
-</p>
-</div>
-</div>
-
-<div id="outline-container-org241eb24" class="outline-3">
-<h3 id="org241eb24"><a href="#org241eb24">Tolerations</a></h3>
-<div class="outline-text-3" id="text-org241eb24">
-<p>
-A Pod can specify a toleration which allows it (but does not require it) to be
-scheduled to nodes with a matching taint.
-</p>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org2212622" class="outline-2">
-<h2 id="org2212622"><a href="#org2212622">Cluster ID</a></h2>
-<div class="outline-text-2" id="text-org2212622">
-<p>
-Best idea I have come across is to use the kube-system namespace UID. For a
-discussion, see:
-<a href="https://groups.google.com/forum/#!msg/kubernetes-sig-architecture/mVGobfD4TpY/nkdbkX1iBwAJ">https://groups.google.com/forum/#!msg/kubernetes-sig-architecture/mVGobfD4TpY/nkdbkX1iBwAJ</a>
+Get the default StorageClass:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">kubectl get ns kube-system -o <span style="color: #dcaeea;">jsonpath</span>=<span style="color: #98be65;">'{.metadata.uid}'</span>
+<pre class="src src-sh">kubectl get sc <span style="color: #98be65;">\</span>
+        -o json <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.items[].metadata</span>
+<span style="color: #98be65;">          | select(.annotations."storageclass.kubernetes.io/is-default-class" == "true")</span>
+<span style="color: #98be65;">          | .name'</span>
 </pre>
 </div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+kops-ssd-1-17
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-sh">kubectl get sc <span style="color: #98be65;">\</span>
+        -o json <span style="color: #98be65;">\</span>
+    | jq -c <span style="color: #98be65;">'.items[].metadata</span>
+<span style="color: #98be65;">             | { "name": .name,</span>
+<span style="color: #98be65;">                 "default?": .annotations."storageclass.kubernetes.io/is-default-class" }'</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+{"name":"default","default?":null}
+{"name":"gp2","default?":"false"}
+{"name":"gp3-250","default?":null}
+{"name":"kops-ssd-1-17","default?":"true"}
+{"name":"local","default?":"false"}
+{"name":"st1","default?":"false"}
+</pre>
 </div>
 </div>
 

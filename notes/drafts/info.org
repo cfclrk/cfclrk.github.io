@@ -24,9 +24,7 @@
 
   =d= Go to top-level node.
 
-* About
+* Alternatives?
 
-  Example of what an Info file looks like.
-
-  Discussion of other possible formats and proposals to change the Emacs help
-  system to use a different format.
+  Info is an emacs-only format. There are other possible formats, and there have
+  been proposals to change the Emacs help system to use a different format.

@@ -669,6 +669,15 @@
             "https://$ecr"
    #+end_src
 
+** Create Repository
+
+   #+header: :var repoName="foo"
+   #+begin_src sh
+     aws ecr create-repository \
+         --repository-name $repoName \
+         --tags "Key=Foo,Value=True"
+   #+end_src
+
 ** Add Image
 
    Tag image for ECR:

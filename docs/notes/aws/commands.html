@@ -33,7 +33,7 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org1ea3255">Account</a></li>
+<li><a href="#org38e5620">Account</a></li>
 <li><a href="#orgf9a3f98">IP Address Ranges</a>
 <ul>
 <li><a href="#org0b6e61a">Get Region of IP</a></li>
@@ -54,7 +54,7 @@
 <li><a href="#org6622052">ACM</a>
 <ul>
 <li><a href="#orga9d8f9e">List</a></li>
-<li><a href="#org30c2123">Describe</a></li>
+<li><a href="#org1df0a48">Describe</a></li>
 <li><a href="#org8db7a20">Get Certificate</a></li>
 <li><a href="#org671ce03">Get Certificate PEM File</a></li>
 </ul>
@@ -102,7 +102,7 @@
 <li><a href="#orgbc46786">EC2 KeyPairs</a>
 <ul>
 <li><a href="#org4a97cf6">Create</a></li>
-<li><a href="#org1df0a48">Describe</a></li>
+<li><a href="#org678a1f2">Describe</a></li>
 <li><a href="#org878c9b3">Delete</a></li>
 </ul>
 </li>
@@ -138,6 +138,7 @@
 <li><a href="#orgfc156b4">ECR</a>
 <ul>
 <li><a href="#org3708cce">Log in</a></li>
+<li><a href="#org265c9f4">Create Repository</a></li>
 <li><a href="#org087e3cc">Add Image</a></li>
 </ul>
 </li>
@@ -260,15 +261,15 @@
 </div>
 </nav>
 
-<div id="outline-container-org1ea3255" class="outline-2">
-<h2 id="org1ea3255"><a href="#org1ea3255">Account</a></h2>
-<div class="outline-text-2" id="text-org1ea3255">
+<div id="outline-container-org38e5620" class="outline-2">
+<h2 id="org38e5620"><a href="#org38e5620">Account</a></h2>
+<div class="outline-text-2" id="text-org38e5620">
 <p>
 Account number:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="orgee583d6">aws sts get-caller-identity --query <span style="color: #98be65;">'Account'</span> --output text
+<pre class="src src-sh" id="org1ea3255">aws sts get-caller-identity --query <span style="color: #98be65;">'Account'</span> --output text
 </pre>
 </div>
 </div>
@@ -498,9 +499,9 @@ ap-southeast-2: 1
 </div>
 </div>
 
-<div id="outline-container-org30c2123" class="outline-3">
-<h3 id="org30c2123"><a href="#org30c2123">Describe</a></h3>
-<div class="outline-text-3" id="text-org30c2123">
+<div id="outline-container-org1df0a48" class="outline-3">
+<h3 id="org1df0a48"><a href="#org1df0a48">Describe</a></h3>
+<div class="outline-text-3" id="text-org1df0a48">
 <div class="org-src-container">
 <pre class="src src-sh">aws acm describe-certificate <span style="color: #98be65;">\</span>
     --certificate-arn $<span style="color: #dcaeea;">CertArn</span>
@@ -965,9 +966,9 @@ chmod 0600 $<span style="color: #dcaeea;">KeyFile</span>
 </div>
 </div>
 
-<div id="outline-container-org1df0a48" class="outline-3">
-<h3 id="org1df0a48"><a href="#org1df0a48">Describe</a></h3>
-<div class="outline-text-3" id="text-org1df0a48">
+<div id="outline-container-org678a1f2" class="outline-3">
+<h3 id="org678a1f2"><a href="#org678a1f2">Describe</a></h3>
+<div class="outline-text-3" id="text-org678a1f2">
 <div class="org-src-container">
 <pre class="src src-sh">aws ec2 describe-key-pairs | jq <span style="color: #98be65;">'.KeyPairs[]'</span>
 </pre>
@@ -1208,6 +1209,18 @@ docker login <span style="color: #98be65;">\</span>
        --username AWS <span style="color: #98be65;">\</span>
        --password <span style="color: #98be65;">"$pw"</span> <span style="color: #98be65;">\</span>
        <span style="color: #98be65;">"https://$ecr"</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org265c9f4" class="outline-3">
+<h3 id="org265c9f4"><a href="#org265c9f4">Create Repository</a></h3>
+<div class="outline-text-3" id="text-org265c9f4">
+<div class="org-src-container">
+<pre class="src src-sh">aws ecr create-repository <span style="color: #98be65;">\</span>
+    --repository-name $<span style="color: #dcaeea;">repoName</span> <span style="color: #98be65;">\</span>
+    --tags <span style="color: #98be65;">"Key=Foo,Value=True"</span>
 </pre>
 </div>
 </div>

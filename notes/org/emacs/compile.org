@@ -31,88 +31,7 @@
     ./autogen.sh
   #+end_src
 
-* Native Compilation
-
-  #+begin_quote
-  NOTE 1: After a lot of struggle, I got this sort of working, but eventually gave
-  up on native compilation. Some of the beauty if interpreted languages is...
-  not having to deal with compilation.
-  #+end_quote
-
-  #+begin_quote
-  NOTE 2: Next time, probably best to use: https://github.com/jimeh/build-emacs-for-macos
-  #+end_quote
-
-  Do things in this section if you want to compile Emacs
-  =--with-native-compilation=.
-
-  Get libgccjit:
-
-  #+begin_src sh
-    brew install libgccjit
-  #+end_src
-
-  Upgate the homebrew formula for =gcc= as described here: https://gist.github.com/AllenDang/f019593e65572a8e0aefc96058a2d23e
-
-  Then, Install =gcc= (I've heard =clang= works as well).
-
-  #+begin_src sh
-    brew install gcc --build-from-source --force
-  #+end_src
-
-  You will now have a program on you =$PATH= called =gcc-11=. For some reason
-  (why?) =brew= does not link =gcc= to =gcc-11=.
-
-  - Do *NOT* manually create that link (say, by doing something like =ln -s
-    /usr/local/bin/gcc-11 /usr/local/bin/gcc=). When I tried, it caused the
-    following error during the =./configure= step of building Emacs:
-
-    #+begin_example
-      checking for AppKit/AppKit.h... no
-      configure: error: The include files (AppKit/AppKit.h etc) that
-      are required for a Nextstep build are missing or cannot be compiled.
-      Either fix this, or re-configure with the option '--without-ns'.
-    #+end_example
-
-    Why does that happen?
-
-  Now, we have to tell Emacs which =gcc= to use and link some extra stuff.
-
-  #+begin_src sh
-    gccVersion=$(brew info gcc --json | jq -r '.[].installed[].version')
-    gccMajorVersion=$(echo $gccVersion | cut -d "." -f 1)
-    export CFLAGS="-I/usr/local/Cellar/gcc/$gccVersion/include"
-    export CC="/usr/local/bin/gcc-$gccMajorVersion"
-    export LDFLAGS="-I/usr/local/Cellar/gcc/$gccVersion/lib/gcc/$gccMajorVersion -I/usr/local/Cellar/gcc/$gccVersion/include"
-    export LIBRARY_PATH="/usr/local/Cellar/gcc/$gccVersion/lib/gcc/$gccMajorVersion"
-  #+end_src
-
-  Now when running =./configure= in the next section, add the
-  =--with-native-compilation= flag.
-
-  When opening Emacs, the =LIBRARY_PATH= env var has to be set /inside of
-  Emacs/. That means, start Emacs from the same terminal window where you set
-  that =$LIBRARY_PATH= env var, so Emacs inherits it. If, instead, you start
-  Emacs from a pinned Dock icon, Emacs won't have =LIBRARY_PATH= set, and you'll
-  see an error like:
-
-  #+begin_example
-  ld: library not found for -lgcc_ext.10.5
-  libgccjit.so: error: error invoking gcc driver
-  #+end_example
-
-** Notes/Questions
-
-   I think the =LIBRARY_PATH= env var only needs to be set in Emacs the first
-   time it starts (?). Try pulling new packages and see if they are properly
-   compiled when that env var isn't set.
-
-   Does =LIBRARY_PATH= need to be set when compiling Emacs, or only when
-   starting Emacs?
-
-   Does this stuff have to happen before running the =./autogen.sh= script?
-
-* Compile
+* Configure
 
   The =configure= script provides many options (run =./configure --help= to see
   them all). You can just run =./configure= and it will choose sensible
@@ -132,9 +51,11 @@
      --with-json
   #+end_src
 
-  Now run =make bootstrap= (what exactly does this do?). The =-j= is optional;
-  it allows =make= to run recipies in parllel, which speeds things up. This
-  command will take 10-15 minutes.
+* Compile
+
+  Now run =make bootstrap=. The =-j= is optional; it allows =make= to run
+  recipies in parllel, which speeds things up. This command will take 10-15
+  minutes.
 
   #+begin_src sh
     make bootstrap -j
@@ -213,3 +134,84 @@
 
   EmacsWiki Building Emacs on MacOS
   https://www.emacswiki.org/emacs?action=browse;oldid=EmacsOnMacOS;id=EmacsForMacOS
+
+* ARCHIVED: Native Compilation
+
+  Do things in this section if you want to compile Emacs
+  =--with-native-compilation=.
+
+  #+begin_quote
+  NOTE 1: After a lot of struggle, I got this sort of working, but eventually
+  gave up on native compilation. Some of the beauty of hacking on interpreted
+  languages is not having to deal with compilation.
+  #+end_quote
+
+  #+begin_quote
+  NOTE 2: Next time, probably best to use: https://github.com/jimeh/build-emacs-for-macos
+  #+end_quote
+
+  Get libgccjit:
+
+  #+begin_src sh
+    brew install libgccjit
+  #+end_src
+
+  Upgate the homebrew formula for =gcc= as described here: https://gist.github.com/AllenDang/f019593e65572a8e0aefc96058a2d23e
+
+  Then, Install =gcc= (I've heard =clang= works as well).
+
+  #+begin_src sh
+    brew install gcc --build-from-source --force
+  #+end_src
+
+  You will now have a program on you =$PATH= called =gcc-11=. For some reason
+  (why?) =brew= does not link =gcc= to =gcc-11=.
+
+  - Do *NOT* manually create that link (say, by doing something like =ln -s
+    /usr/local/bin/gcc-11 /usr/local/bin/gcc=). When I tried, it caused the
+    following error during the =./configure= step of building Emacs:
+
+    #+begin_example
+      checking for AppKit/AppKit.h... no
+      configure: error: The include files (AppKit/AppKit.h etc) that
+      are required for a Nextstep build are missing or cannot be compiled.
+      Either fix this, or re-configure with the option '--without-ns'.
+    #+end_example
+
+    Why does that happen?
+
+  Now, we have to tell Emacs which =gcc= to use and link some extra stuff.
+
+  #+begin_src sh
+    gccVersion=$(brew info gcc --json | jq -r '.[].installed[].version')
+    gccMajorVersion=$(echo $gccVersion | cut -d "." -f 1)
+    export CFLAGS="-I/usr/local/Cellar/gcc/$gccVersion/include"
+    export CC="/usr/local/bin/gcc-$gccMajorVersion"
+    export LDFLAGS="-I/usr/local/Cellar/gcc/$gccVersion/lib/gcc/$gccMajorVersion -I/usr/local/Cellar/gcc/$gccVersion/include"
+    export LIBRARY_PATH="/usr/local/Cellar/gcc/$gccVersion/lib/gcc/$gccMajorVersion"
+  #+end_src
+
+  Now when running =./configure= in the next section, add the
+  =--with-native-compilation= flag.
+
+  When opening Emacs, the =LIBRARY_PATH= env var has to be set /inside of
+  Emacs/. That means, start Emacs from the same terminal window where you set
+  that =$LIBRARY_PATH= env var, so Emacs inherits it. If, instead, you start
+  Emacs from a pinned Dock icon, Emacs won't have =LIBRARY_PATH= set, and you'll
+  see an error like:
+
+  #+begin_example
+  ld: library not found for -lgcc_ext.10.5
+  libgccjit.so: error: error invoking gcc driver
+  #+end_example
+
+** Notes/Questions
+
+   I think the =LIBRARY_PATH= env var only needs to be set in Emacs the first
+   time it starts (?). Try pulling new packages and see if they are properly
+   compiled when that env var isn't set.
+
+   Does =LIBRARY_PATH= need to be set when compiling Emacs, or only when
+   starting Emacs?
+
+   Does this stuff have to happen before running the =./autogen.sh= script?

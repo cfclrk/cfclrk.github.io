@@ -6,10 +6,10 @@
   #+NAME: Env
   | Env Var            | Value                                  |
   |--------------------+----------------------------------------|
-  | CLUSTER_NAME       | steger1018test1                        |
+  | CLUSTER_NAME       | zzf.irondev.io                         |
   | KUBECONFIG         | ~/.kube/ironnet_clusters/$CLUSTER_NAME |
-  | AWS_PROFILE        | devsaas                                |
-  | AWS_DEFAULT_REGION | us-east-2                              |
+  | AWS_PROFILE        | dev                                    |
+  | AWS_DEFAULT_REGION | us-west-2                              |
 
   #+begin_src emacs-lisp :var env=Env
     (setenv-file-export-pairs env)
@@ -121,6 +121,61 @@
             --namespace default
   #+end_src
 
+* Cluster ID
+
+  Clusters don't really have an identifier. Best idea I have seen is to use the
+  kube-system namespace UID. For a discussion, see: [[https://groups.google.com/forum/#!msg/kubernetes-sig-architecture/mVGobfD4TpY/nkdbkX1iBwAJ][Cluster ID API]].
+
+  #+begin_src sh
+    kubectl get ns kube-system \
+            -o jsonpath='{.metadata.uid}'
+  #+end_src
+
+* Affinity, Taints, and Tolerations
+
+  Kubernetes supports a way to indicate that specific nodes have a certain
+  quality. Pods must opt-in to using those nodes.
+
+  That is, some nodes can say "hey, I'm a little bit different", and then some
+  pods can say "I tolerate that difference".
+
+  An example is Azure's serverless pods. You can have physical nodes and virtual
+  (i.e. serverless) nodes. By default, your pods will get scheduled to your
+  physical nodes, but you could mark some pods as "tolerating" the Azure
+  serverless nodes.
+
+** Affinity
+
+   A Pod can specify an affinity for certain nodes. Can either be a preference or a
+   requirement.
+
+** Taints
+
+   A Node can have a taint that will not allow Pods to be scheduled to it unless
+   the Pod can tolerate the taint.
+
+** Tolerations
+
+   A Pod can specify a toleration which allows it (but does not require it) to be
+   scheduled to nodes with a matching taint.
+
+* ConfigMaps
+
+  #+begin_src sh
+    kubectl get cm aws-auth \
+            -n kube-system \
+            --output=json \
+        | jq -r '.data'
+  #+end_src
+
+* Deployments
+
+** Scaling a deployment
+
+   #+begin_src sh
+     kubectl scale deployment <deployment-name> --replicas=1
+   #+end_src
+
 * Nodes
 
 ** Master Node IP
@@ -152,7 +207,9 @@
    With jq:
 
    #+begin_src sh
-     kubectl get nodes -l "kubernetes.io/role = node" -o json \
+     kubectl get nodes \
+             -l "kubernetes.io/role = node" \
+             -o json \
          | jq -r '.items[].metadata.annotations["flannel.alpha.coreos.com/public-ip"]'
    #+end_src
 
@@ -196,27 +253,6 @@
          | sed -n 2p
    #+end_src
 
-* Services
-
-** Get Services of Type
-
-   Get all services of type NodePort/LoadBalancer/ClusterIP:
-
-   #+begin_src sh
-     kubectl get services --all-namespaces -o json \
-         | jq '.items[]
-               | select(.spec.type == "LoadBalancer")
-               | .metadata.name'
-   #+end_src
-
-* Deployments
-
-** Scaling a deployment
-
-   #+begin_src sh
-     kubectl scale deployment <deployment-name> --replicas=1
-   #+end_src
-
 * Secrets
 
 ** Create Docker Registry Secret
@@ -257,6 +293,19 @@
              --dry-run=client -o yaml | kubectl apply -f -
    #+end_src
 
+* Services
+
+** Get Services of Type
+
+   Get all services of type NodePort/LoadBalancer/ClusterIP:
+
+   #+begin_src sh
+     kubectl get services --all-namespaces -o json \
+         | jq '.items[]
+               | select(.spec.type == "LoadBalancer")
+               | .metadata.name'
+   #+end_src
+
 * Service Accounts
 
   Get the default service account:
@@ -267,52 +316,36 @@
               | select(.metadata.annotations["kubernetes.io/service-account.name"] == "default")'
   #+end_src
 
-* ConfigMaps
+* StorageClass
+
+  Get the default StorageClass:
 
   #+begin_src sh
-    kubectl get cm aws-auth \
-            -n kube-system \
-            --output=json \
-        | jq -r '.data'
+    kubectl get sc \
+            -o json \
+        | jq '.items[].metadata
+              | select(.annotations."storageclass.kubernetes.io/is-default-class" == "true")
+              | .name'
   #+end_src
 
-* Affinity, Taints, and Tolerations
+  #+RESULTS:
+  : kops-ssd-1-17
 
-  Kubernetes supports a way to indicate that specific nodes have a certain
-  quality. Pods must opt-in to using those nodes.
-
-  That is, some nodes can say "hey, I'm a little bit different", and then some
-  pods can say "I tolerate that difference".
-
-  An example is Azure's serverless pods. You can have physical nodes and virtual
-  (i.e. serverless) nodes. By default, your pods will get scheduled to your
-  physical nodes, but you could mark some pods as "tolerating" the Azure
-  serverless nodes.
-
-** Affinity
-
-   A Pod can specify an affinity for certain nodes. Can either be a preference or a
-   requirement.
-
-** Taints
-
-   A Node can have a taint that will not allow Pods to be scheduled to it unless
-   the Pod can tolerate the taint.
-
-** Tolerations
-
-   A Pod can specify a toleration which allows it (but does not require it) to be
-   scheduled to nodes with a matching taint.
-
-* Cluster ID
-
-  Best idea I have come across is to use the kube-system namespace UID. For a
-  discussion, see:
-  https://groups.google.com/forum/#!msg/kubernetes-sig-architecture/mVGobfD4TpY/nkdbkX1iBwAJ
-
-  #+begin_src sh
-    kubectl get ns kube-system -o jsonpath='{.metadata.uid}'
+  #+begin_src sh :results output
+    kubectl get sc \
+            -o json \
+        | jq -c '.items[].metadata
+                 | { "name": .name,
+                     "default?": .annotations."storageclass.kubernetes.io/is-default-class" }'
   #+end_src
+
+  #+RESULTS:
+  : {"name":"default","default?":null}
+  : {"name":"gp2","default?":"false"}
+  : {"name":"gp3-250","default?":null}
+  : {"name":"kops-ssd-1-17","default?":"true"}
+  : {"name":"local","default?":"false"}
+  : {"name":"st1","default?":"false"}
 
 * Running Commands in Cluster
 

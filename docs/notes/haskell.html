@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Haskell</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Haskell</h1>
+</header><nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgc062094">New Project</a>
+<ul>
+<li><a href="#orge6d9c2c">stack</a></li>
+<li><a href="#org348a7ec">cabal</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-orgc062094" class="outline-2">
+<h2 id="orgc062094"><a href="#orgc062094">New Project</a></h2>
+<div class="outline-text-2" id="text-orgc062094">
+</div>
+<div id="outline-container-orge6d9c2c" class="outline-3">
+<h3 id="orge6d9c2c"><a href="#orge6d9c2c">stack</a></h3>
+<div class="outline-text-3" id="text-orge6d9c2c">
+<div class="org-src-container">
+<pre class="src src-sh">stack new $<span style="color: #dcaeea;">projectName</span>
+<span style="color: #c678dd;">cd</span> my-project
+stack setup
+stack build
+stack exec my-project-exe
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org348a7ec" class="outline-3">
+<h3 id="org348a7ec"><a href="#org348a7ec">cabal</a></h3>
+<div class="outline-text-3" id="text-org348a7ec">
+<div class="org-src-container">
+<pre class="src src-sh">mkdir $<span style="color: #dcaeea;">projectName</span>
+cabal init --license=None -p $<span style="color: #dcaeea;">projectName</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

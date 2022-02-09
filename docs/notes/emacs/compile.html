@@ -37,16 +37,17 @@
 <li><a href="#orgff38ba2">Install Prerequisites</a></li>
 <li><a href="#org2557317">Provide path to libxml headers</a></li>
 <li><a href="#org6581c18">Autogen</a></li>
-<li><a href="#orgb50cf74">Native Compilation</a>
-<ul>
-<li><a href="#org032b6c0">Notes/Questions</a></li>
-</ul>
-</li>
+<li><a href="#orgaa8aaab">Configure</a></li>
 <li><a href="#org4777628">Compile</a></li>
 <li><a href="#org504eabb">Add Icon to Dock</a></li>
 <li><a href="#org802afce">Verify Features</a></li>
 <li><a href="#orgfb01276">Debugging</a></li>
 <li><a href="#org084eac0">Resources</a></li>
+<li><a href="#orgbf13a94">ARCHIVED: Native Compilation</a>
+<ul>
+<li><a href="#org032b6c0">Notes/Questions</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </nav>
@@ -99,131 +100,9 @@ Assuming you have already run <code>brew install libxml2</code> from above:
 </div>
 </div>
 
-<div id="outline-container-orgb50cf74" class="outline-2">
-<h2 id="orgb50cf74"><a href="#orgb50cf74">Native Compilation</a></h2>
-<div class="outline-text-2" id="text-orgb50cf74">
-<blockquote>
-<p>
-NOTE 1: After a lot of struggle, I got this sort of working, but eventually gave
-up on native compilation. Some of the beauty if interpreted languages is&#x2026;
-not having to deal with compilation.
-</p>
-</blockquote>
-
-<blockquote>
-<p>
-NOTE 2: Next time, probably best to use: <a href="https://github.com/jimeh/build-emacs-for-macos">https://github.com/jimeh/build-emacs-for-macos</a>
-</p>
-</blockquote>
-
-<p>
-Do things in this section if you want to compile Emacs
-<code>--with-native-compilation</code>.
-</p>
-
-<p>
-Get libgccjit:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">brew install libgccjit
-</pre>
-</div>
-
-<p>
-Upgate the homebrew formula for <code>gcc</code> as described here: <a href="https://gist.github.com/AllenDang/f019593e65572a8e0aefc96058a2d23e">https://gist.github.com/AllenDang/f019593e65572a8e0aefc96058a2d23e</a>
-</p>
-
-<p>
-Then, Install <code>gcc</code> (I've heard <code>clang</code> works as well).
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">brew install gcc --build-from-source --force
-</pre>
-</div>
-
-<p>
-You will now have a program on you <code>$PATH</code> called <code>gcc-11</code>. For some reason
-(why?) <code>brew</code> does not link <code>gcc</code> to <code>gcc-11</code>.
-</p>
-
-<ul class="org-ul">
-<li><p>
-Do <b>NOT</b> manually create that link (say, by doing something like <code>ln -s
-    /usr/local/bin/gcc-11 /usr/local/bin/gcc</code>). When I tried, it caused the
-following error during the <code>./configure</code> step of building Emacs:
-</p>
-
-<pre class="example" id="orgb783cd8">
-checking for AppKit/AppKit.h... no
-configure: error: The include files (AppKit/AppKit.h etc) that
-are required for a Nextstep build are missing or cannot be compiled.
-Either fix this, or re-configure with the option '--without-ns'.
-</pre>
-
-<p>
-Why does that happen?
-</p></li>
-</ul>
-
-<p>
-Now, we have to tell Emacs which <code>gcc</code> to use and link some extra stuff.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh"><span style="color: #dcaeea;">gccVersion</span>=$(brew info gcc --json | jq -r <span style="color: #98be65;">'.[].installed[].version'</span>)
-<span style="color: #dcaeea;">gccMajorVersion</span>=$(<span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">gccVersion</span> | cut -d <span style="color: #98be65;">"."</span> -f 1)
-<span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">CFLAGS</span>=<span style="color: #98be65;">"-I/usr/local/Cellar/gcc/$gccVersion/include"</span>
-<span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">CC</span>=<span style="color: #98be65;">"/usr/local/bin/gcc-$gccMajorVersion"</span>
-<span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">LDFLAGS</span>=<span style="color: #98be65;">"-I/usr/local/Cellar/gcc/$gccVersion/lib/gcc/$gccMajorVersion -I/usr/local/Cellar/gcc/$gccVersion/include"</span>
-<span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">LIBRARY_PATH</span>=<span style="color: #98be65;">"/usr/local/Cellar/gcc/$gccVersion/lib/gcc/$gccMajorVersion"</span>
-</pre>
-</div>
-
-<p>
-Now when running <code>./configure</code> in the next section, add the
-<code>--with-native-compilation</code> flag.
-</p>
-
-<p>
-When opening Emacs, the <code>LIBRARY_PATH</code> env var has to be set <i>inside of
-Emacs</i>. That means, start Emacs from the same terminal window where you set
-that <code>$LIBRARY_PATH</code> env var, so Emacs inherits it. If, instead, you start
-Emacs from a pinned Dock icon, Emacs won't have <code>LIBRARY_PATH</code> set, and you'll
-see an error like:
-</p>
-
-<pre class="example" id="orgb1ffc34">
-ld: library not found for -lgcc_ext.10.5
-libgccjit.so: error: error invoking gcc driver
-</pre>
-</div>
-
-<div id="outline-container-org032b6c0" class="outline-3">
-<h3 id="org032b6c0"><a href="#org032b6c0">Notes/Questions</a></h3>
-<div class="outline-text-3" id="text-org032b6c0">
-<p>
-I think the <code>LIBRARY_PATH</code> env var only needs to be set in Emacs the first
-time it starts (?). Try pulling new packages and see if they are properly
-compiled when that env var isn't set.
-</p>
-
-<p>
-Does <code>LIBRARY_PATH</code> need to be set when compiling Emacs, or only when
-starting Emacs?
-</p>
-
-<p>
-Does this stuff have to happen before running the <code>./autogen.sh</code> script?
-</p>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org4777628" class="outline-2">
-<h2 id="org4777628"><a href="#org4777628">Compile</a></h2>
-<div class="outline-text-2" id="text-org4777628">
+<div id="outline-container-orgaa8aaab" class="outline-2">
+<h2 id="orgaa8aaab"><a href="#orgaa8aaab">Configure</a></h2>
+<div class="outline-text-2" id="text-orgaa8aaab">
 <p>
 The <code>configure</code> script provides many options (run <code>./configure --help</code> to see
 them all). You can just run <code>./configure</code> and it will choose sensible
@@ -248,11 +127,16 @@ features for displaying images in Emacs.
  --with-json
 </pre>
 </div>
+</div>
+</div>
 
+<div id="outline-container-org4777628" class="outline-2">
+<h2 id="org4777628"><a href="#org4777628">Compile</a></h2>
+<div class="outline-text-2" id="text-org4777628">
 <p>
-Now run <code>make bootstrap</code> (what exactly does this do?). The <code>-j</code> is optional;
-it allows <code>make</code> to run recipies in parllel, which speeds things up. This
-command will take 10-15 minutes.
+Now run <code>make bootstrap</code>. The <code>-j</code> is optional; it allows <code>make</code> to run
+recipies in parllel, which speeds things up. This command will take 10-15
+minutes.
 </p>
 
 <div class="org-src-container">
@@ -336,7 +220,7 @@ t
 <div id="outline-container-orgfb01276" class="outline-2">
 <h2 id="orgfb01276"><a href="#orgfb01276">Debugging</a></h2>
 <div class="outline-text-2" id="text-orgfb01276">
-<pre class="example" id="org48afed9">
+<pre class="example" id="org91f1fc8">
 $ lldb
 (lldb) target create "nextstep/Emacs.app/Contents/MacOS/Emacs"
 Current executable set to '/Users/chris.clark/Projects/emacs/nextstep/Emacs.app/Contents/MacOS/Emacs' (x86_64).
@@ -376,6 +260,128 @@ Homebrew emacs-plus formula, which has a few more patches
 EmacsWiki Building Emacs on MacOS
 <a href="https://www.emacswiki.org/emacs?action=browse;oldid=EmacsOnMacOS;id=EmacsForMacOS">https://www.emacswiki.org/emacs?action=browse;oldid=EmacsOnMacOS;id=EmacsForMacOS</a>
 </p>
+</div>
+</div>
+
+<div id="outline-container-orgbf13a94" class="outline-2">
+<h2 id="orgbf13a94"><a href="#orgbf13a94">ARCHIVED: Native Compilation</a></h2>
+<div class="outline-text-2" id="text-orgbf13a94">
+<p>
+Do things in this section if you want to compile Emacs
+<code>--with-native-compilation</code>.
+</p>
+
+<blockquote>
+<p>
+NOTE 1: After a lot of struggle, I got this sort of working, but eventually
+gave up on native compilation. Some of the beauty of hacking on interpreted
+languages is not having to deal with compilation.
+</p>
+</blockquote>
+
+<blockquote>
+<p>
+NOTE 2: Next time, probably best to use: <a href="https://github.com/jimeh/build-emacs-for-macos">https://github.com/jimeh/build-emacs-for-macos</a>
+</p>
+</blockquote>
+
+<p>
+Get libgccjit:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">brew install libgccjit
+</pre>
+</div>
+
+<p>
+Upgate the homebrew formula for <code>gcc</code> as described here: <a href="https://gist.github.com/AllenDang/f019593e65572a8e0aefc96058a2d23e">https://gist.github.com/AllenDang/f019593e65572a8e0aefc96058a2d23e</a>
+</p>
+
+<p>
+Then, Install <code>gcc</code> (I've heard <code>clang</code> works as well).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">brew install gcc --build-from-source --force
+</pre>
+</div>
+
+<p>
+You will now have a program on you <code>$PATH</code> called <code>gcc-11</code>. For some reason
+(why?) <code>brew</code> does not link <code>gcc</code> to <code>gcc-11</code>.
+</p>
+
+<ul class="org-ul">
+<li><p>
+Do <b>NOT</b> manually create that link (say, by doing something like <code>ln -s
+    /usr/local/bin/gcc-11 /usr/local/bin/gcc</code>). When I tried, it caused the
+following error during the <code>./configure</code> step of building Emacs:
+</p>
+
+<pre class="example" id="org78c8255">
+checking for AppKit/AppKit.h... no
+configure: error: The include files (AppKit/AppKit.h etc) that
+are required for a Nextstep build are missing or cannot be compiled.
+Either fix this, or re-configure with the option '--without-ns'.
+</pre>
+
+<p>
+Why does that happen?
+</p></li>
+</ul>
+
+<p>
+Now, we have to tell Emacs which <code>gcc</code> to use and link some extra stuff.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #dcaeea;">gccVersion</span>=$(brew info gcc --json | jq -r <span style="color: #98be65;">'.[].installed[].version'</span>)
+<span style="color: #dcaeea;">gccMajorVersion</span>=$(<span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">gccVersion</span> | cut -d <span style="color: #98be65;">"."</span> -f 1)
+<span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">CFLAGS</span>=<span style="color: #98be65;">"-I/usr/local/Cellar/gcc/$gccVersion/include"</span>
+<span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">CC</span>=<span style="color: #98be65;">"/usr/local/bin/gcc-$gccMajorVersion"</span>
+<span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">LDFLAGS</span>=<span style="color: #98be65;">"-I/usr/local/Cellar/gcc/$gccVersion/lib/gcc/$gccMajorVersion -I/usr/local/Cellar/gcc/$gccVersion/include"</span>
+<span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">LIBRARY_PATH</span>=<span style="color: #98be65;">"/usr/local/Cellar/gcc/$gccVersion/lib/gcc/$gccMajorVersion"</span>
+</pre>
+</div>
+
+<p>
+Now when running <code>./configure</code> in the next section, add the
+<code>--with-native-compilation</code> flag.
+</p>
+
+<p>
+When opening Emacs, the <code>LIBRARY_PATH</code> env var has to be set <i>inside of
+Emacs</i>. That means, start Emacs from the same terminal window where you set
+that <code>$LIBRARY_PATH</code> env var, so Emacs inherits it. If, instead, you start
+Emacs from a pinned Dock icon, Emacs won't have <code>LIBRARY_PATH</code> set, and you'll
+see an error like:
+</p>
+
+<pre class="example" id="orgd698884">
+ld: library not found for -lgcc_ext.10.5
+libgccjit.so: error: error invoking gcc driver
+</pre>
+</div>
+
+<div id="outline-container-org032b6c0" class="outline-3">
+<h3 id="org032b6c0"><a href="#org032b6c0">Notes/Questions</a></h3>
+<div class="outline-text-3" id="text-org032b6c0">
+<p>
+I think the <code>LIBRARY_PATH</code> env var only needs to be set in Emacs the first
+time it starts (?). Try pulling new packages and see if they are properly
+compiled when that env var isn't set.
+</p>
+
+<p>
+Does <code>LIBRARY_PATH</code> need to be set when compiling Emacs, or only when
+starting Emacs?
+</p>
+
+<p>
+Does this stuff have to happen before running the <code>./autogen.sh</code> script?
+</p>
+</div>
 </div>
 </div>
 </div>

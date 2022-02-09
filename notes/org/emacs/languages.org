@@ -1,6 +1,13 @@
 #+TITLE: Programming Languages
 #+SETUPFILE: ../../setup.org
 
+* Haskell
+
+  The =haskell-language-server= should be built for the specific GHC version it
+  will be used with. So, usually you download a bunch of
+  =haskell-language-server= binaries, then use =haskell-language-server-wrapper=
+  to appropriately choose the right version.
+
 * Python
 
 ** Goals
