@@ -93,7 +93,7 @@ problem:
   To understand how to change this, we need to understand how Projectile detects
   projects.
 
-* Project Detection
+* About Projectile Project Detection
 
   The relevant documentation is here: [[https://docs.projectile.mx/projectile/projects.html#customizing-project-detection][Customizing Project Detection]]. Projectile
   has a few strategies for finding a project root, and tries each one in order.
@@ -267,11 +267,23 @@ problem:
    for me to demarcate a small Python example (like a GitHub Gist) that maybe
    doesn't warrant a whole =setup.py=.
 
+   #+name: MyProjectRootFiles
    #+begin_src emacs-lisp :results silent
-     (setq my-project-root-files
-           (-concat '("go.mod" "requirements.txt")
-                    projectile-project-root-files-bottom-up
-                    projectile-project-root-files))
+     (setq
+      my-project-root-files
+      (-concat
+       projectile-project-root-files-bottom-up
+       projectile-project-root-files))
+
+     ;; Python
+     (add-to-list
+      'my-project-root-files
+      "requirements.txt")
+
+     ;; Go
+     (add-to-list
+      'my-project-root-files
+      "go.mod")
    #+end_src
 
    That creates a pretty complete list of marker files that can indicate project
@@ -332,35 +344,42 @@ problem:
 
   #+header: :tangle (expand-file-name "~/Projects/dotfiles/emacs/projectile-discovery.el")
   #+begin_src emacs-lisp :results silent
-    (setq my-project-root-files
-          (-concat '("go.mod" "requirements.txt")
-                   projectile-project-root-files-bottom-up
-                   projectile-project-root-files))
+    <<MyProjectRootFiles>>
   #+end_src
 
-  Define a new discovery function.
+  Define a new discovery function. In keeping with how exsting projectile
+  project discovery functions work, allow elements to be predicates.
 
   #+header: :tangle (expand-file-name "~/Projects/dotfiles/emacs/projectile-discovery.el")
   #+begin_src emacs-lisp :results silent
     (defun any-file-exists? (files dir)
-      "True if any of the filenames in FILES is in DIR.
-    FILES is a list of filenames. DIR is a path to a directory."
+      "True if any of FILES exist in DIR.
+    FILES is a list of file names and/or predicates.
+
+    An element of FILES can also be a predicate taking one
+    argument (a directory) and returning a non-nil value if that
+    directory is the one we're looking for.
+
+    DIR is a path to a directory."
       (cl-some
-       (lambda (filename) (f-exists? (f-expand filename dir)))
+       (lambda (name)
+         (if (stringp name)
+             (f-exists? (f-expand name dir))
+           (funcall name dir)))
        files))
   #+end_src
 
   #+header: :tangle (expand-file-name "~/Projects/dotfiles/emacs/projectile-discovery.el")
   #+begin_src emacs-lisp :results silent
-    (defun my-project-root (dir &optional list)
+    (defun projectile-root-bottom-up-unprioritized (dir &optional list)
       "Identify a project root.
     Perform a bottom-up search for files in LIST starting from DIR.
     Always return the lowest directory that has any file in LIST. If
     LIST is nil, use `my-project-root-files' instead. Return the
     first (bottommost) matched directory or nil."
       (let ((marker-files (or list my-project-root-files)))
-        (f--traverse-upwards (any-file-exists? marker-files it)
-                             dir)))
+        (f--traverse-upwards
+         (any-file-exists? marker-files it) dir)))
   #+end_src
 
   Insert our new lookup function into =projectile-project-root-functions=.
@@ -370,7 +389,7 @@ problem:
     (setq projectile-project-root-functions
           '(projectile-root-local
             projectile-root-bottom-up
-            my-project-root  ;;  Our new function
+            projectile-root-bottom-up-unprioritized  ;;  Our new function
             projectile-root-top-down
             projectile-root-top-down-recurring))
   #+end_src

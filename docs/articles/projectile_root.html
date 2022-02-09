@@ -35,7 +35,7 @@
 <ul>
 <li><a href="#orgd27d485">The Problem</a></li>
 <li><a href="#org5cc0960">Example of the Problem</a></li>
-<li><a href="#org86839b3">Project Detection</a></li>
+<li><a href="#orgbf0ccdc">About Projectile Project Detection</a></li>
 <li><a href="#orgddd5dc0">Project Detection Issues</a>
 <ul>
 <li><a href="#org6b9e820">Marker Files</a></li>
@@ -149,9 +149,9 @@ projects.
 </div>
 </div>
 
-<div id="outline-container-org86839b3" class="outline-2">
-<h2 id="org86839b3"><a href="#org86839b3">Project Detection</a></h2>
-<div class="outline-text-2" id="text-org86839b3">
+<div id="outline-container-orgbf0ccdc" class="outline-2">
+<h2 id="orgbf0ccdc"><a href="#orgbf0ccdc">About Projectile Project Detection</a></h2>
+<div class="outline-text-2" id="text-orgbf0ccdc">
 <p>
 The relevant documentation is here: <a href="https://docs.projectile.mx/projectile/projects.html#customizing-project-detection">Customizing Project Detection</a>. Projectile
 has a few strategies for finding a project root, and tries each one in order.
@@ -538,10 +538,21 @@ doesn't warrant a whole <code>setup.py</code>.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> my-project-root-files
-      <span style="color: #c678dd;">(</span>-concat '<span style="color: #98be65;">(</span><span style="color: #98be65;">"go.mod"</span> <span style="color: #98be65;">"requirements.txt"</span><span style="color: #98be65;">)</span>
-               projectile-project-root-files-bottom-up
-               projectile-project-root-files<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp" id="org7f530b0"><span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span>
+ my-project-root-files
+ <span style="color: #c678dd;">(</span>-concat
+  projectile-project-root-files-bottom-up
+  projectile-project-root-files<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+
+<span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Python</span>
+<span style="color: #51afef;">(</span>add-to-list
+ 'my-project-root-files
+ <span style="color: #98be65;">"requirements.txt"</span><span style="color: #51afef;">)</span>
+
+<span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Go</span>
+<span style="color: #51afef;">(</span>add-to-list
+ 'my-project-root-files
+ <span style="color: #98be65;">"go.mod"</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
 
@@ -600,37 +611,58 @@ variable with the marker files that indicate a project root.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> my-project-root-files
-      <span style="color: #c678dd;">(</span>-concat '<span style="color: #98be65;">(</span><span style="color: #98be65;">"go.mod"</span> <span style="color: #98be65;">"requirements.txt"</span><span style="color: #98be65;">)</span>
-               projectile-project-root-files-bottom-up
-               projectile-project-root-files<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span>
+ my-project-root-files
+ <span style="color: #c678dd;">(</span>-concat
+  projectile-project-root-files-bottom-up
+  projectile-project-root-files<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+
+<span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Python</span>
+<span style="color: #51afef;">(</span>add-to-list
+ 'my-project-root-files
+ <span style="color: #98be65;">"requirements.txt"</span><span style="color: #51afef;">)</span>
+
+<span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Go</span>
+<span style="color: #51afef;">(</span>add-to-list
+ 'my-project-root-files
+ <span style="color: #98be65;">"go.mod"</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
 
 <p>
-Define a new discovery function.
+Define a new discovery function. In keeping with how exsting projectile
+project discovery functions work, allow elements to be predicates.
 </p>
 
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">any-file-exists?</span> <span style="color: #c678dd;">(</span>files dir<span style="color: #c678dd;">)</span>
-  <span style="color: #83898d;">"True if any of the filenames in FILES is in DIR.</span>
-<span style="color: #83898d;">FILES is a list of filenames. DIR is a path to a directory."</span>
+  <span style="color: #83898d;">"True if any of FILES exist in DIR.</span>
+<span style="color: #83898d;">FILES is a list of file names and/or predicates.</span>
+
+<span style="color: #83898d;">An element of FILES can also be a predicate taking one</span>
+<span style="color: #83898d;">argument (a directory) and returning a non-nil value if that</span>
+<span style="color: #83898d;">directory is the one we're looking for.</span>
+
+<span style="color: #83898d;">DIR is a path to a directory."</span>
   <span style="color: #c678dd;">(</span>cl-some
-   <span style="color: #98be65;">(</span><span style="color: #51afef;">lambda</span> <span style="color: #a9a1e1;">(</span>filename<span style="color: #a9a1e1;">)</span> <span style="color: #a9a1e1;">(</span>f-exists? <span style="color: #4db5bd;">(</span>f-expand filename dir<span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
+   <span style="color: #98be65;">(</span><span style="color: #51afef;">lambda</span> <span style="color: #a9a1e1;">(</span>name<span style="color: #a9a1e1;">)</span>
+     <span style="color: #a9a1e1;">(</span><span style="color: #51afef;">if</span> <span style="color: #4db5bd;">(</span>stringp name<span style="color: #4db5bd;">)</span>
+         <span style="color: #4db5bd;">(</span>f-exists? <span style="color: #51afef;">(</span>f-expand name dir<span style="color: #51afef;">)</span><span style="color: #4db5bd;">)</span>
+       <span style="color: #4db5bd;">(</span>funcall name dir<span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
    files<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">my-project-root</span> <span style="color: #c678dd;">(</span>dir <span style="color: #ECBE7B;">&amp;optional</span> list<span style="color: #c678dd;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">projectile-root-bottom-up-unprioritized</span> <span style="color: #c678dd;">(</span>dir <span style="color: #ECBE7B;">&amp;optional</span> list<span style="color: #c678dd;">)</span>
   <span style="color: #83898d;">"Identify a project root.</span>
 <span style="color: #83898d;">Perform a bottom-up search for files in LIST starting from DIR.</span>
 <span style="color: #83898d;">Always return the lowest directory that has any file in LIST. If</span>
 <span style="color: #83898d;">LIST is nil, use `</span><span style="color: #a9a1e1;">my-project-root-files</span><span style="color: #83898d;">' instead. Return the</span>
 <span style="color: #83898d;">first (bottommost) matched directory or nil."</span>
   <span style="color: #c678dd;">(</span><span style="color: #51afef;">let</span> <span style="color: #98be65;">(</span><span style="color: #a9a1e1;">(</span>marker-files <span style="color: #4db5bd;">(</span><span style="color: #51afef;">or</span> list my-project-root-files<span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
-    <span style="color: #98be65;">(</span><span style="color: #51afef;">f--traverse-upwards</span> <span style="color: #a9a1e1;">(</span>any-file-exists? marker-files <span style="color: #dcaeea;">it</span><span style="color: #a9a1e1;">)</span>
-                         dir<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+    <span style="color: #98be65;">(</span><span style="color: #51afef;">f--traverse-upwards</span>
+     <span style="color: #a9a1e1;">(</span>any-file-exists? marker-files <span style="color: #dcaeea;">it</span><span style="color: #a9a1e1;">)</span> dir<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
 
@@ -642,7 +674,7 @@ Insert our new lookup function into <code>projectile-project-root-functions</cod
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> projectile-project-root-functions
       '<span style="color: #c678dd;">(</span>projectile-root-local
         projectile-root-bottom-up
-        my-project-root  <span style="color: #5B6268;">;;  </span><span style="color: #5B6268;">Our new function</span>
+        projectile-root-bottom-up-unprioritized  <span style="color: #5B6268;">;;  </span><span style="color: #5B6268;">Our new function</span>
         projectile-root-top-down
         projectile-root-top-down-recurring<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
