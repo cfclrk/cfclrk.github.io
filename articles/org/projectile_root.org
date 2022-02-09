@@ -20,8 +20,8 @@ problem:
 
   Instead: when I'm working in, say, a python project that happens to be in a
   monorepo, I want Projectile to operate on that python project. One could still
-  use Projectile on the whole monorepo by navigating to file at the root of the
-  monorepo.
+  use Projectile on the whole monorepo by navigating to a file at the root of
+  the monorepo.
 
   To jump to the solution, go to [[#solution]]. Or, see the Elisp file generated
   from this document [[https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-discovery.el][on GitHub]] (which I use in my personal Emacs config).
@@ -225,8 +225,8 @@ problem:
      doesn't have =go.mod= or =setup.py= in it.
   2. *Lookup Behavior*: Even if Projectile knows to look for =setup.py= and
      =go.mod=, the contents of directories above our project affects lookup.
-     Projectile can find marker files at a higher level before looking for
-     =go.mod= or =setup.py=.
+     Projectile might find some other, totally unrelated file at a higher level
+     before even looking for =go.mod= or =setup.py=.
 
   Let's examine each problem.
 
