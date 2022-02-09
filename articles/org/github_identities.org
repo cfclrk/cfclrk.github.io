@@ -4,7 +4,11 @@
 * The Problem
 
   You have multiple GitHub accounts, and you want git to automatically use the
-  "right" GitHub account depending on the local directory you're working in.
+  "right" GitHub account.
+
+  A good way to do that is to put all work-related stuff under a single
+  directory, like =~/Work=. Then, configure git to use your *work* account for
+  projects under your =~/Work= directory.
 
   In this article I set things up so that:
 

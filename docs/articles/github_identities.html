@@ -51,7 +51,13 @@
 <div class="outline-text-2" id="text-org50f6963">
 <p>
 You have multiple GitHub accounts, and you want git to automatically use the
-"right" GitHub account depending on the local directory you're working in.
+"right" GitHub account.
+</p>
+
+<p>
+A good way to do that is to put all work-related stuff under a single
+directory, like <code>~/Work</code>. Then, configure git to use your <b>work</b> account for
+projects under your <code>~/Work</code> directory.
 </p>
 
 <p>
@@ -80,7 +86,7 @@ both accounts). Assuming you've <a href="https://docs.github.com/en/github/authe
 look something like:
 </p>
 
-<pre class="example" id="orgdf4f01d">
+<pre class="example" id="org612a01c">
 $ tree ~/.ssh/
 /Users/cfclrk/.ssh/
 ├── config

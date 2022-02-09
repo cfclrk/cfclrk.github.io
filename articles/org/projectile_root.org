@@ -23,8 +23,8 @@ problem:
   use Projectile on the whole monorepo by navigating to file at the root of the
   monorepo.
 
-  To jump to my solution, go to [[#solution]], or see the Elisp file I use,
-  generated from this document, [[https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-discovery.el][on GitHub]].
+  To jump to the solution, go to [[#solution]]. Or, see the Elisp file generated
+  from this document [[https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-discovery.el][on GitHub]] (which I use in my personal Emacs config).
 
 * Example of the Problem
 
