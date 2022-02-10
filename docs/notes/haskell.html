@@ -52,10 +52,6 @@
 <div class="outline-text-3" id="text-orge6d9c2c">
 <div class="org-src-container">
 <pre class="src src-sh">stack new $<span style="color: #dcaeea;">projectName</span>
-<span style="color: #c678dd;">cd</span> my-project
-stack setup
-stack build
-stack exec my-project-exe
 </pre>
 </div>
 </div>
@@ -64,11 +60,20 @@ stack exec my-project-exe
 <div id="outline-container-org348a7ec" class="outline-3">
 <h3 id="org348a7ec"><a href="#org348a7ec">cabal</a></h3>
 <div class="outline-text-3" id="text-org348a7ec">
+<p>
+A minimal cabal project is much more simple.
+</p>
+
 <div class="org-src-container">
 <pre class="src src-sh">mkdir $<span style="color: #dcaeea;">projectName</span>
 cabal init --license=None -p $<span style="color: #dcaeea;">projectName</span>
 </pre>
 </div>
+
+<p>
+Emacs note: projectile doesn't detect <code>.cabal</code> files by default. I added that
+ability in my Emacs config (e.g. <a href="https://github.com/cfclrk/dotfiles/blob/2522f4eb6b6a048bcf80645adce202d4883912a2/emacs/cfclrk/init.el#L851-L856">here</a>).
+</p>
 </div>
 </div>
 </div>

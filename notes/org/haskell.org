@@ -9,13 +9,11 @@
   #+header: :dir ~/Projects/codenotes/haskell
   #+begin_src sh
     stack new $projectName
-    cd my-project
-    stack setup
-    stack build
-    stack exec my-project-exe
   #+end_src
 
 ** cabal
+
+   A minimal cabal project is much more simple.
 
    #+header: :var projectName="scratch"
    #+header: :dir ~/Projects/codenotes/haskell
@@ -24,4 +22,5 @@
      cabal init --license=None -p $projectName
    #+end_src
 
-   #+RESULTS:
+   Emacs note: projectile doesn't detect =.cabal= files by default. I added that
+   ability in my Emacs config (e.g. [[https://github.com/cfclrk/dotfiles/blob/2522f4eb6b6a048bcf80645adce202d4883912a2/emacs/cfclrk/init.el#L851-L856][here]]).
