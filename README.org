@@ -20,21 +20,23 @@ is called "=docs=".
 
 * Local Server
 
-  Use a program like [[https://www.npmjs.com/package/serve][serve]] (`serve .`) or =python -m http.server= for viewing
-  locally (which makes relative links work correctly).
+  In the =docs= directory: use a program like [[https://www.npmjs.com/package/serve][serve]] (=serve .=) or =python -m
+  http.server= for viewing the site locally (which makes relative links work
+  correctly).
 
 * Notes / TODO
 
   - [ ] Create build script
   - [ ] Live reload HTML if I start an Emacs web server
-  - [ ] Exclude README.org from HTML export (from site project?)
-  - [ ] Different layouts for index pages vs content pages
+  - [ ] Exclude README.org from HTML export
+  - [ ] Layouts: One for index pages, one for content pages
 
 ** Structure and Content
 
   - [ ] Persistent links to sections
   - [ ] Remove "home" from links on sitemap pages.
   - [ ] Move html-head to file
+  - [ ] Content Pages: Move TOC to right side
 
 ** Themes?
 

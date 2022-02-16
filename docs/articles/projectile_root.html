@@ -654,7 +654,7 @@ project discovery functions work, allow elements to be predicates.
 </div>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">projectile-root-bottom-up-unprioritized</span> <span style="color: #c678dd;">(</span>dir <span style="color: #ECBE7B;">&amp;optional</span> list<span style="color: #c678dd;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">my/projectile-root-bottom-up</span> <span style="color: #c678dd;">(</span>dir <span style="color: #ECBE7B;">&amp;optional</span> list<span style="color: #c678dd;">)</span>
   <span style="color: #83898d;">"Identify a project root.</span>
 <span style="color: #83898d;">Perform a bottom-up search for files in LIST starting from DIR.</span>
 <span style="color: #83898d;">Always return the lowest directory that has any file in LIST. If</span>
@@ -671,10 +671,12 @@ Insert our new lookup function into <code>projectile-project-root-functions</cod
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> projectile-project-root-functions
+<pre class="src src-emacs-lisp"><span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Add my new function into Projectile's hierarchy of project</span>
+<span style="color: #5B6268;">;; </span><span style="color: #5B6268;">discovery functions.</span>
+<span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> projectile-project-root-functions
       '<span style="color: #c678dd;">(</span>projectile-root-local
         projectile-root-bottom-up
-        projectile-root-bottom-up-unprioritized  <span style="color: #5B6268;">;;  </span><span style="color: #5B6268;">Our new function</span>
+        my/projectile-root-bottom-up  <span style="color: #5B6268;">;;  </span><span style="color: #5B6268;">New function</span>
         projectile-root-top-down
         projectile-root-top-down-recurring<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
@@ -683,11 +685,13 @@ Insert our new lookup function into <code>projectile-project-root-functions</cod
 <p>
 Restrict Projectile's original bottom-up discovery to only work for
 <code>.projectile</code> files. This allows us to force a project root to a higher level
-by creating a <code>.projectile</code> file.
+by creating a <code>.projectile</code> file in a parent directory.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> projectile-project-root-files-bottom-up
+<pre class="src src-emacs-lisp"><span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Only allow a .projectile file to force project</span>
+<span style="color: #5B6268;">;; </span><span style="color: #5B6268;">roots to higher levels.</span>
+<span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> projectile-project-root-files-bottom-up
       '<span style="color: #c678dd;">(</span><span style="color: #98be65;">".projectile"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
 </div>

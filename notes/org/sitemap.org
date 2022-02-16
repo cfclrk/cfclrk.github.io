@@ -40,6 +40,7 @@
   - [[file:azure/service_principals.org][Service Principals]]
 - emacs
   - [[file:emacs/compile.org][Comiling Emacs on MacOS]]
+  - [[file:emacs/cons.org][Cons Cells]]
   - [[file:emacs/dap.org][Dap Mode]]
   - [[file:emacs/edebug.org][Debugging Elisp]]
   - [[file:emacs/diagrams.org][Diagrams in Org Files]]

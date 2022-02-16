@@ -62,7 +62,12 @@
 <ul>
 <li><a href="#orgb3a8b26">Master Node IP</a></li>
 <li><a href="#orgf81c7cf">Worker Nodes</a></li>
-<li><a href="#org1ac95f9">Worker Node IPs</a></li>
+<li><a href="#org1ac95f9">Worker Node IPs</a>
+<ul>
+<li><a href="#orgc5ffc2b">Private IP</a></li>
+<li><a href="#orga295bfe">Public IPs</a></li>
+</ul>
+</li>
 <li><a href="#org07312e8">All Pods on a Node</a></li>
 <li><a href="#orgacafcb2">SSH to a Pod's Node</a></li>
 </ul>
@@ -397,7 +402,8 @@ Note you can also get the master node ip with <code>kubectl cluster-info</code>.
 <h3 id="orgf81c7cf"><a href="#orgf81c7cf">Worker Nodes</a></h3>
 <div class="outline-text-3" id="text-orgf81c7cf">
 <div class="org-src-container">
-<pre class="src src-sh">kubectl get nodes -l <span style="color: #98be65;">"kubernetes.io/role = node"</span>
+<pre class="src src-sh">kubectl get nodes <span style="color: #98be65;">\</span>
+        -l <span style="color: #98be65;">"kubernetes.io/role = node"</span>
 </pre>
 </div>
 </div>
@@ -406,13 +412,18 @@ Note you can also get the master node ip with <code>kubectl cluster-info</code>.
 <div id="outline-container-org1ac95f9" class="outline-3">
 <h3 id="org1ac95f9"><a href="#org1ac95f9">Worker Node IPs</a></h3>
 <div class="outline-text-3" id="text-org1ac95f9">
+</div>
+<div id="outline-container-orgc5ffc2b" class="outline-4">
+<h4 id="orgc5ffc2b"><a href="#orgc5ffc2b">Private IP</a></h4>
+<div class="outline-text-4" id="text-orgc5ffc2b">
 <p>
 Without jq:
 </p>
 
 <div class="org-src-container">
 <pre class="src src-sh" id="org78a4615">kubectl get nodes -l <span style="color: #98be65;">"kubernetes.io/role = node"</span> <span style="color: #98be65;">\</span>
-        -o <span style="color: #dcaeea;">jsonpath</span>=<span style="color: #98be65;">'{range .items[*]}{.metadata.annotations.flannel\.alpha\.coreos\.com/public-ip}{"\n"}{end}'</span>
+        -o <span style="color: #dcaeea;">jsonpath</span>=<span style="color: #98be65;">'{range .items[*]}{.metadata.annotations.flannel\.alpha\.coreos\.com/public-ip}</span>
+<span style="color: #98be65;">{end}'</span>
 </pre>
 </div>
 
@@ -424,8 +435,25 @@ With jq:
 <pre class="src src-sh">kubectl get nodes <span style="color: #98be65;">\</span>
         -l <span style="color: #98be65;">"kubernetes.io/role = node"</span> <span style="color: #98be65;">\</span>
         -o json <span style="color: #98be65;">\</span>
-    | jq -r <span style="color: #98be65;">'.items[].metadata.annotations["flannel.alpha.coreos.com/public-ip"]'</span>
+    | jq -r <span style="color: #98be65;">'.items[]</span>
+<span style="color: #98be65;">             .metadata</span>
+<span style="color: #98be65;">             .annotations["flannel.alpha.coreos.com/public-ip"]'</span>
 </pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga295bfe" class="outline-4">
+<h4 id="orga295bfe"><a href="#orga295bfe">Public IPs</a></h4>
+<div class="outline-text-4" id="text-orga295bfe">
+<div class="org-src-container">
+<pre class="src src-sh">kubectl get nodes -o json <span style="color: #98be65;">\</span>
+        -l <span style="color: #98be65;">"kubernetes.io/role = node"</span> <span style="color: #98be65;">\</span>
+    | jq -r <span style="color: #98be65;">'.items[].status.addresses[]</span>
+<span style="color: #98be65;">             | select(.type == "ExternalIP")</span>
+<span style="color: #98be65;">             | .address'</span>
+</pre>
+</div>
 </div>
 </div>
 </div>

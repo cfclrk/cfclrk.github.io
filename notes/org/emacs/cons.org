@@ -1,0 +1,61 @@
+#+TITLE: Cons Cells
+
+Because cons is weird.
+
+* Terms
+
+  - =cons= means "construct"
+
+  - =car=: address register
+
+  - =cdr=: document register
+
+* Examples
+
+  Recursively construct a list in order:
+
+  #+begin_src emacs-lisp
+    (cons 1 (cons 2 (cons 3 nil)))
+  #+end_src
+
+  #+RESULTS:
+  | 1 | 2 | 3 |
+
+  Cons a list with another list:
+
+  #+begin_src emacs-lisp
+    (cons '(1 2) '(3 4))
+  #+end_src
+
+  #+RESULTS:
+  | (1 2) | 3 | 4 |
+
+  Cons two cons cells:
+
+  #+begin_src emacs-lisp
+    (cons (cons 1 2) (cons 3 4))
+  #+end_src
+
+  #+RESULTS:
+  : ((1 . 2) 3 . 4)
+
+  #+begin_src emacs-lisp
+    (cons (cons 1 (cons 2 3)) 4)
+  #+end_src
+
+  #+RESULTS:
+  : ((1 2 . 3) . 4)
+
+  #+begin_src emacs-lisp
+    (cons (cons 1 2) (cons (cons 3 4) nil))
+  #+end_src
+
+  #+RESULTS:
+  : ((1 . 2) (3 . 4))
+
+  #+begin_src emacs-lisp
+    (cons 1 (cons 2 (cons 3 4)))
+  #+end_src
+
+  #+RESULTS:
+  : (1 2 3 . 4)

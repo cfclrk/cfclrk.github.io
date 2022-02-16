@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cons Cells</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Cons Cells</h1>
+</header><nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org00749ad">Terms</a></li>
+<li><a href="#orgfe6bfbe">Examples</a></li>
+</ul>
+</div>
+</nav>
+<p>
+Because cons is weird.
+</p>
+
+<div id="outline-container-org00749ad" class="outline-2">
+<h2 id="org00749ad"><a href="#org00749ad">Terms</a></h2>
+<div class="outline-text-2" id="text-org00749ad">
+<ul class="org-ul">
+<li><code>cons</code> means "construct"</li>
+
+<li><code>car</code>: address register</li>
+
+<li><code>cdr</code>: document register</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgfe6bfbe" class="outline-2">
+<h2 id="orgfe6bfbe"><a href="#orgfe6bfbe">Examples</a></h2>
+<div class="outline-text-2" id="text-orgfe6bfbe">
+<p>
+Recursively construct a list in order:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>cons 1 <span style="color: #c678dd;">(</span>cons 2 <span style="color: #98be65;">(</span>cons 3 nil<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<table>
+
+
+<colgroup>
+<col  class="org-right">
+
+<col  class="org-right">
+
+<col  class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">1</td>
+<td class="org-right">2</td>
+<td class="org-right">3</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Cons a list with another list:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>cons '<span style="color: #c678dd;">(</span>1 2<span style="color: #c678dd;">)</span> '<span style="color: #c678dd;">(</span>3 4<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-right">
+
+<col  class="org-right">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">(1 2)</td>
+<td class="org-right">3</td>
+<td class="org-right">4</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Cons two cons cells:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>cons <span style="color: #c678dd;">(</span>cons 1 2<span style="color: #c678dd;">)</span> <span style="color: #c678dd;">(</span>cons 3 4<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+((1 . 2) 3 . 4)
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>cons <span style="color: #c678dd;">(</span>cons 1 <span style="color: #98be65;">(</span>cons 2 3<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span> 4<span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+((1 2 . 3) . 4)
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>cons <span style="color: #c678dd;">(</span>cons 1 2<span style="color: #c678dd;">)</span> <span style="color: #c678dd;">(</span>cons <span style="color: #98be65;">(</span>cons 3 4<span style="color: #98be65;">)</span> nil<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+((1 . 2) (3 . 4))
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>cons 1 <span style="color: #c678dd;">(</span>cons 2 <span style="color: #98be65;">(</span>cons 3 4<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+(1 2 3 . 4)
+</pre>
+</div>
+</div>
+</div>
+</body>
+</html>

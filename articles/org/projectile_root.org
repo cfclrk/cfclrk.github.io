@@ -371,7 +371,7 @@ problem:
 
   #+header: :tangle (expand-file-name "~/Projects/dotfiles/emacs/projectile-discovery.el")
   #+begin_src emacs-lisp :results silent
-    (defun projectile-root-bottom-up-unprioritized (dir &optional list)
+    (defun my/projectile-root-bottom-up (dir &optional list)
       "Identify a project root.
     Perform a bottom-up search for files in LIST starting from DIR.
     Always return the lowest directory that has any file in LIST. If
@@ -386,20 +386,24 @@ problem:
 
   #+header: :tangle (expand-file-name "~/Projects/dotfiles/emacs/projectile-discovery.el")
   #+begin_src emacs-lisp :results silent
+    ;; Add my new function into Projectile's hierarchy of project
+    ;; discovery functions.
     (setq projectile-project-root-functions
           '(projectile-root-local
             projectile-root-bottom-up
-            projectile-root-bottom-up-unprioritized  ;;  Our new function
+            my/projectile-root-bottom-up  ;;  New function
             projectile-root-top-down
             projectile-root-top-down-recurring))
   #+end_src
 
   Restrict Projectile's original bottom-up discovery to only work for
   =.projectile= files. This allows us to force a project root to a higher level
-  by creating a =.projectile= file.
+  by creating a =.projectile= file in a parent directory.
 
   #+header: :tangle (expand-file-name "~/Projects/dotfiles/emacs/projectile-discovery.el")
   #+begin_src emacs-lisp :results silent
+    ;; Only allow a .projectile file to force project
+    ;; roots to higher levels.
     (setq projectile-project-root-files-bottom-up
           '(".projectile"))
   #+end_src

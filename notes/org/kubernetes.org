@@ -191,17 +191,21 @@
 ** Worker Nodes
 
    #+begin_src sh
-     kubectl get nodes -l "kubernetes.io/role = node"
+     kubectl get nodes \
+             -l "kubernetes.io/role = node"
    #+end_src
 
 ** Worker Node IPs
+
+*** Private IP
 
    Without jq:
 
    #+NAME: NodeIps
    #+begin_src sh
      kubectl get nodes -l "kubernetes.io/role = node" \
-             -o jsonpath='{range .items[*]}{.metadata.annotations.flannel\.alpha\.coreos\.com/public-ip}{"\n"}{end}'
+             -o jsonpath='{range .items[*]}{.metadata.annotations.flannel\.alpha\.coreos\.com/public-ip}
+     {end}'
    #+end_src
 
    With jq:
@@ -210,8 +214,20 @@
      kubectl get nodes \
              -l "kubernetes.io/role = node" \
              -o json \
-         | jq -r '.items[].metadata.annotations["flannel.alpha.coreos.com/public-ip"]'
+         | jq -r '.items[]
+                  .metadata
+                  .annotations["flannel.alpha.coreos.com/public-ip"]'
    #+end_src
+
+*** Public IPs
+
+    #+begin_src sh
+      kubectl get nodes -o json \
+              -l "kubernetes.io/role = node" \
+          | jq -r '.items[].status.addresses[]
+                   | select(.type == "ExternalIP")
+                   | .address'
+    #+end_src
 
 ** All Pods on a Node
 

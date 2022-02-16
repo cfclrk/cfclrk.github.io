@@ -519,7 +519,7 @@
      aws ec2 delete-key-pair --key-name $KeyName
    #+end_src
 
-* EC2 Instance
+* EC2 Instances
 
 ** Get Running Instances
 
@@ -549,7 +549,8 @@
 
    With just a specific Tag key:
 
-   #+begin_src sh :var TagName="Project" TagValue="bps-ve-cloud"
+   #+header: :var TagName="Name" TagValue="nodes.zzh.cfc.ironk8s.net"
+   #+begin_src sh
      aws ec2 describe-instances \
          --filter "Name=tag:$TagName,Values=$TagValue" \
          | jq -r '.Reservations[].Instances[].Tags[]
