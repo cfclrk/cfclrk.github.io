@@ -5,22 +5,47 @@
 
 ** stack
 
-  #+header: :var projectName="my-project"
+  #+header: :var name="my-stack-project"
   #+header: :dir ~/Projects/codenotes/haskell
   #+begin_src sh
-    stack new $projectName
+    stack new $name
   #+end_src
 
 ** cabal
 
-   A minimal cabal project is much more simple.
+   A minimal cabal project is simpler than a stack project.
 
-   #+header: :var projectName="scratch"
+   #+header: :var name="algorithms"
    #+header: :dir ~/Projects/codenotes/haskell
-   #+begin_src sh
-     mkdir $projectName
-     cabal init --license=None -p $projectName
+   #+begin_src sh :results output
+     mkdir $name && cd $name
+     cabal init \
+           --minimal \
+           --simple \
+           --license=NONE \
+           --synopsis "Test project" \
+           --package-name $name
+
+     rm CHANGELOG.md
+     sed -i "" '/^extra-source-files/d' $name.cabal
    #+end_src
+
+   Generates a project like this:
+
+   #+header: :dir ~/Projects/codenotes/haskell/mylib
+   #+begin_src sh :results output
+     tree
+   #+end_src
+
+   #+RESULTS:
+   : .
+   : ├── app
+   : │   └── Main.hs
+   : ├── mylib.cabal
+   : └── src
+   :     └── MyLib.hs
+   :
+   : 2 directories, 3 files
 
    Emacs note: projectile doesn't detect =.cabal= files by default. I added that
    ability in my Emacs config (e.g. [[https://github.com/cfclrk/dotfiles/blob/2522f4eb6b6a048bcf80645adce202d4883912a2/emacs/cfclrk/init.el#L851-L856][here]]).

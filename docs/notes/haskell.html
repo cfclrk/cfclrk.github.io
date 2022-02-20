@@ -51,7 +51,7 @@
 <h3 id="orge6d9c2c"><a href="#orge6d9c2c">stack</a></h3>
 <div class="outline-text-3" id="text-orge6d9c2c">
 <div class="org-src-container">
-<pre class="src src-sh">stack new $<span style="color: #dcaeea;">projectName</span>
+<pre class="src src-sh">stack new $<span style="color: #dcaeea;">name</span>
 </pre>
 </div>
 </div>
@@ -61,14 +61,43 @@
 <h3 id="org348a7ec"><a href="#org348a7ec">cabal</a></h3>
 <div class="outline-text-3" id="text-org348a7ec">
 <p>
-A minimal cabal project is much more simple.
+A minimal cabal project is simpler than a stack project.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">mkdir $<span style="color: #dcaeea;">projectName</span>
-cabal init --license=None -p $<span style="color: #dcaeea;">projectName</span>
+<pre class="src src-sh">mkdir $<span style="color: #dcaeea;">name</span> &amp;&amp; <span style="color: #c678dd;">cd</span> $<span style="color: #dcaeea;">name</span>
+cabal init <span style="color: #98be65;">\</span>
+      --minimal <span style="color: #98be65;">\</span>
+      --simple <span style="color: #98be65;">\</span>
+      --license=NONE <span style="color: #98be65;">\</span>
+      --synopsis <span style="color: #98be65;">"Test project"</span> <span style="color: #98be65;">\</span>
+      --package-name $<span style="color: #dcaeea;">name</span>
+
+rm CHANGELOG.md
+sed -i <span style="color: #98be65;">""</span> <span style="color: #98be65;">'/^extra-source-files/d'</span> $<span style="color: #dcaeea;">name</span>.cabal
 </pre>
 </div>
+
+<p>
+Generates a project like this:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">tree
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+.
+├── app
+│   └── Main.hs
+├── mylib.cabal
+└── src
+    └── MyLib.hs
+
+2 directories, 3 files
+</pre>
+
 
 <p>
 Emacs note: projectile doesn't detect <code>.cabal</code> files by default. I added that
