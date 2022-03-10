@@ -94,22 +94,22 @@ Consider the following monorepo:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">tree -a /tmp/repo
+<pre class="src src-sh">tree -F -a /tmp/repo
 </pre>
 </div>
 
 <div class="results">#+RESULTS:</div><pre class="example">
-/tmp/repo
+/tmp/repo/
 ├── .git
-├── go
-│   ├── projectA
+├── go/
+│   ├── projectA/
 │   │   └── go.mod
-│   └── projectB
+│   └── projectB/
 │       └── go.mod
-└── python
-    ├── projectC
+└── python/
+    ├── projectC/
     │   └── setup.py
-    └── projectD
+    └── projectD/
         └── setup.py
 
 6 directories, 5 files
@@ -362,10 +362,14 @@ directory).
 </p>
 
 <p>
-The existing behavior of the <code>(projectile-root-bottom-up)</code> function is useful
-in one situation: if you want to force a project root to a <i>higher</i> level. For
-example, if we wanted <code>/tmp/</code> to be the project root for some reason, we could
-just put a <code>.projectile</code> there.
+That behavior of the <code>(projectile-root-bottom-up)</code> function is useful in one
+situation: when you want to force a project root to a <i>higher</i> level,
+<i>despite</i> the presence of marker files in the current directory.
+</p>
+
+<p>
+For example: if we wanted <code>/tmp/</code> to be the project root for some reason, we
+could just put a <code>.projectile</code> file there.
 </p>
 
 <div class="org-src-container">
@@ -385,7 +389,7 @@ just put a <code>.projectile</code> there.
 
 
 <p>
-That works! We should probably try to keep that behavior.
+That works! Ok, we should try to retain that behavior.
 </p>
 </div>
 </div>

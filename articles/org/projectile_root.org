@@ -30,6 +30,7 @@ problem:
 
   Consider the following monorepo:
 
+  #+header: :prologue (delete-directory "/tmp/repo" 'recursive)
   #+begin_src sh :exports none
     NotesProject=/tmp/repo
     mkdir -p $NotesProject
@@ -53,21 +54,21 @@ problem:
   #+RESULTS:
 
   #+begin_src sh :results output
-    tree -a /tmp/repo
+    tree -F -a /tmp/repo
   #+end_src
 
   #+RESULTS:
-  : /tmp/repo
+  : /tmp/repo/
   : ├── .git
-  : ├── go
-  : │   ├── projectA
+  : ├── go/
+  : │   ├── projectA/
   : │   │   └── go.mod
-  : │   └── projectB
+  : │   └── projectB/
   : │       └── go.mod
-  : └── python
-  :     ├── projectC
+  : └── python/
+  :     ├── projectC/
   :     │   └── setup.py
-  :     └── projectD
+  :     └── projectD/
   :         └── setup.py
   :
   : 6 directories, 5 files
@@ -192,10 +193,12 @@ problem:
   files several directories up could be discovered before files in the current
   directory).
 
-  The existing behavior of the =(projectile-root-bottom-up)= function is useful
-  in one situation: if you want to force a project root to a /higher/ level. For
-  example, if we wanted =/tmp/= to be the project root for some reason, we could
-  just put a =.projectile= there.
+  That behavior of the =(projectile-root-bottom-up)= function is useful in one
+  situation: when you want to force a project root to a /higher/ level,
+  /despite/ the presence of marker files in the current directory.
+
+  For example: if we wanted =/tmp/= to be the project root for some reason, we
+  could just put a =.projectile= file there.
 
   #+begin_src sh :results silent
     touch /tmp/.projectile
@@ -210,7 +213,7 @@ problem:
   #+RESULTS:
   : /private/tmp/
 
-  That works! We should probably try to keep that behavior.
+  That works! Ok, we should try to retain that behavior.
 
   #+begin_src sh :results silent :exports none
     rm /tmp/.projectile
