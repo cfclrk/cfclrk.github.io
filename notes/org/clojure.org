@@ -61,11 +61,19 @@
      clj -m core
    #+end_src
 
-** Using deps-new
+** Leiningen
+
+   #+header: :dir ~/Projects/codenotes/clojure
+   #+header: :var projectName="minesweeper"
+   #+begin_src sh :results output
+     lein new app cfclrk/$projectName
+   #+end_src
+
+** deps-new
 
    First, make sure [[https://github.com/seancorfield/deps-new][deps-new]] is installed:
 
-   #+begin_src sh
+   #+begin_src sh :results output
      clojure -Ttools install \
          io.github.seancorfield/deps-new \
          '{:git/tag "v0.4.9"}' :as new
@@ -73,8 +81,8 @@
 
    Create a new app:
 
-   #+header: :dir ~/Projects/codenotes/rundoc
-   #+header: :var projectName="rundoc-server"
+   #+header: :dir ~/Projects/codenotes/clojure
+   #+header: :var projectName="ring-compojure"
    #+begin_src sh
      clojure -Tnew app :name cfclrk/$projectName
    #+end_src
@@ -93,8 +101,10 @@
   - =M-x cider-jack-in=
   - Load a project file using =C-c C-k= (=cider-load-buffer=)
   - In the =*cider-repl= buffer, you know call the fully-qualified functions in
-    that file. Or, =(in-ns <ns-name>)= to call functions in that file without
-    namespace qualification.
+    that file.
+    - Or, =(in-ns 'the.ns.name)= to call functions in that file without
+      namespace qualification.
+    - Then also =(use 'clojure.core)= and =(use 'clojure.repl)='
   - Edit a function, and =C-c C-e= on that function to reload it.
 
 ** Tips
@@ -126,7 +136,7 @@
 
 * Symbols vs Keywords
 
-  What's the difference between a symbol and a keyword?
+  What's the difference between a quoted symbol and a keyword?
 
   Excerpt from "Clojure in Action, Second Edition" by Amit Rathore Francis
   Avila:
@@ -141,37 +151,37 @@
   colon.
   #+end_quote
 
-* How to (+ 1 2)
+* How to (+ 1 2 3)
 
-  A few ways to add 1 and 2, in increasing complexity.
+  A few ways to add 1, 2, and 3.
 
   #+begin_src clojure
-  (+ 1 2)
+  (+ 1 2 3)
   #+end_src
 
   #+RESULTS:
-  : 3
+  : 6
 
   #+begin_src clojure
-    (apply + [1 2])
+    (apply + [1 2 3])
   #+end_src
 
   #+RESULTS:
-  : 3
+  : 6
 
   #+begin_src clojure
-    (reduce + [1 2])
+    (reduce + [1 2 3])
   #+end_src
 
   #+RESULTS:
-  : 3
+  : 6
 
   #+begin_src clojure
-    (reduce (fn [acc i] (+ acc i)) [1 2])
+    (reduce (fn [x y] (+ x y)) [1 2 3])
   #+end_src
 
   #+RESULTS:
-  : 3
+  : 6
 
 * core.async
 

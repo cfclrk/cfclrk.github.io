@@ -39,7 +39,8 @@
 <li><a href="#orgc264fe2">Project Creation</a>
 <ul>
 <li><a href="#org60a1998">Minimal</a></li>
-<li><a href="#org96e3037">Using deps-new</a></li>
+<li><a href="#org65509fc">Leiningen</a></li>
+<li><a href="#orgf23f57f">deps-new</a></li>
 </ul>
 </li>
 <li><a href="#orgf048057">Emacs Cider</a>
@@ -55,7 +56,7 @@
 </ul>
 </li>
 <li><a href="#org288a348">Symbols vs Keywords</a></li>
-<li><a href="#org71a8376">How to (+ 1 2)</a></li>
+<li><a href="#org4b20e97">How to (+ 1 2 3)</a></li>
 <li><a href="#orgcfa36c4">core.async</a></li>
 </ul>
 </div>
@@ -154,9 +155,19 @@ clj -m core
 </div>
 </div>
 
-<div id="outline-container-org96e3037" class="outline-3">
-<h3 id="org96e3037"><a href="#org96e3037">Using deps-new</a></h3>
-<div class="outline-text-3" id="text-org96e3037">
+<div id="outline-container-org65509fc" class="outline-3">
+<h3 id="org65509fc"><a href="#org65509fc">Leiningen</a></h3>
+<div class="outline-text-3" id="text-org65509fc">
+<div class="org-src-container">
+<pre class="src src-sh">lein new app cfclrk/$<span style="color: #dcaeea;">projectName</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf23f57f" class="outline-3">
+<h3 id="orgf23f57f"><a href="#orgf23f57f">deps-new</a></h3>
+<div class="outline-text-3" id="text-orgf23f57f">
 <p>
 First, make sure <a href="https://github.com/seancorfield/deps-new">deps-new</a> is installed:
 </p>
@@ -201,8 +212,12 @@ Basic workflow is described <a href="https://docs.cider.mx/cider/usage/cider_mod
 <li><code>M-x cider-jack-in</code></li>
 <li>Load a project file using <code>C-c C-k</code> (<code>cider-load-buffer</code>)</li>
 <li>In the <code>*cider-repl</code> buffer, you know call the fully-qualified functions in
-that file. Or, <code>(in-ns &lt;ns-name&gt;)</code> to call functions in that file without
+that file.
+<ul class="org-ul">
+<li>Or, <code>(in-ns 'the.ns.name)</code> to call functions in that file without
 namespace qualification.</li>
+<li>Then also <code>(use 'clojure.core)</code> and <code>(use 'clojure.repl)</code>'</li>
+</ul></li>
 <li>Edit a function, and <code>C-c C-e</code> on that function to reload it.</li>
 </ul>
 </div>
@@ -262,7 +277,7 @@ Use test-runner, which handles test discovery and running tests.
 <h2 id="org288a348"><a href="#org288a348">Symbols vs Keywords</a></h2>
 <div class="outline-text-2" id="text-org288a348">
 <p>
-What's the difference between a symbol and a keyword?
+What's the difference between a quoted symbol and a keyword?
 </p>
 
 <p>
@@ -284,50 +299,50 @@ colon.
 </div>
 </div>
 
-<div id="outline-container-org71a8376" class="outline-2">
-<h2 id="org71a8376"><a href="#org71a8376">How to (+ 1 2)</a></h2>
-<div class="outline-text-2" id="text-org71a8376">
+<div id="outline-container-org4b20e97" class="outline-2">
+<h2 id="org4b20e97"><a href="#org4b20e97">How to (+ 1 2 3)</a></h2>
+<div class="outline-text-2" id="text-org4b20e97">
 <p>
-A few ways to add 1 and 2, in increasing complexity.
+A few ways to add 1, 2, and 3.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-clojure"><span style="color: #51afef;">(</span>+ 1 2<span style="color: #51afef;">)</span>
+<pre class="src src-clojure"><span style="color: #51afef;">(</span>+ 1 2 3<span style="color: #51afef;">)</span>
 </pre>
 </div>
 
 <div class="results">#+RESULTS:</div><pre class="example">
-3
+6
 </pre>
 
 
 <div class="org-src-container">
-<pre class="src src-clojure"><span style="color: #51afef;">(</span>apply + <span style="color: #c678dd;">[</span>1 2<span style="color: #c678dd;">]</span><span style="color: #51afef;">)</span>
+<pre class="src src-clojure"><span style="color: #51afef;">(</span>apply + <span style="color: #c678dd;">[</span>1 2 3<span style="color: #c678dd;">]</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
 
 <div class="results">#+RESULTS:</div><pre class="example">
-3
+6
 </pre>
 
 
 <div class="org-src-container">
-<pre class="src src-clojure"><span style="color: #51afef;">(</span>reduce + <span style="color: #c678dd;">[</span>1 2<span style="color: #c678dd;">]</span><span style="color: #51afef;">)</span>
+<pre class="src src-clojure"><span style="color: #51afef;">(</span>reduce + <span style="color: #c678dd;">[</span>1 2 3<span style="color: #c678dd;">]</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
 
 <div class="results">#+RESULTS:</div><pre class="example">
-3
+6
 </pre>
 
 
 <div class="org-src-container">
-<pre class="src src-clojure"><span style="color: #51afef;">(</span>reduce <span style="color: #c678dd;">(</span><span style="color: #51afef;">fn</span> <span style="color: #98be65;">[</span>acc i<span style="color: #98be65;">]</span> <span style="color: #98be65;">(</span>+ acc i<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">[</span>1 2<span style="color: #c678dd;">]</span><span style="color: #51afef;">)</span>
+<pre class="src src-clojure"><span style="color: #51afef;">(</span>reduce <span style="color: #c678dd;">(</span><span style="color: #51afef;">fn</span> <span style="color: #98be65;">[</span>x y<span style="color: #98be65;">]</span> <span style="color: #98be65;">(</span>+ x y<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">[</span>1 2 3<span style="color: #c678dd;">]</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
 
 <div class="results">#+RESULTS:</div><pre class="example">
-3
+6
 </pre>
 </div>
 </div>
