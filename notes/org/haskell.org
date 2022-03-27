@@ -1,6 +1,17 @@
 #+TITLE: Haskell
 #+SETUPFILE: ../setup.org
 
+* Installation
+
+  Use [[https://www.haskell.org/ghcup/][ghcup]]. I tried using brew, but it seems that "brew install
+  haskell-language-server" does not install the haskell-language-server-wrapper.
+
+  #+begin_src sh
+    curl --proto '=https' --tlsv1.2 -sSf \
+         https://get-ghcup.haskell.org \
+        | sh
+  #+end_src
+
 * New Project
 
 ** stack
@@ -13,7 +24,7 @@
 
 ** cabal
 
-   A minimal cabal project is simpler than a stack project.
+   A minimal cabal project is much more simple than a stack project.
 
    #+header: :var name="algorithms"
    #+header: :dir ~/Projects/codenotes/haskell
@@ -32,12 +43,11 @@
 
    Generates a project like this:
 
-   #+header: :dir ~/Projects/codenotes/haskell/mylib
+   #+header: :dir ~/Projects/codenotes/haskell/myfirstapp
    #+begin_src sh :results output
-     tree
+     tree -F
    #+end_src
 
-   #+RESULTS:
    : .
    : ├── app
    : │   └── Main.hs

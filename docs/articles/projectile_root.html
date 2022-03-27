@@ -33,21 +33,21 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgd27d485">The Problem</a></li>
-<li><a href="#org5cc0960">Example of the Problem</a></li>
-<li><a href="#orgbf0ccdc">About Projectile Project Detection</a></li>
-<li><a href="#orgddd5dc0">Project Detection Issues</a>
+<li><a href="#org8a79582">The Problem</a></li>
+<li><a href="#orgea6771c">Example of the Problem</a></li>
+<li><a href="#orge24e00d">About Projectile Project Detection</a></li>
+<li><a href="#orgfc36b81">Project Detection Issues</a>
 <ul>
-<li><a href="#org6b9e820">Marker Files</a></li>
-<li><a href="#org2db5392">Lookup Behavior</a></li>
+<li><a href="#org531e4d1">Marker Files</a></li>
+<li><a href="#org47285c4">Lookup Behavior</a></li>
 </ul>
 </li>
 <li><a href="#solution">Solution</a></li>
-<li><a href="#org79672a4">Test</a>
+<li><a href="#orgbfa1244">Test</a>
 <ul>
-<li><a href="#org458e1d8">Go</a></li>
-<li><a href="#org99a870f">Python</a></li>
-<li><a href="#org9236176">Force Root Higher</a></li>
+<li><a href="#org96f85be">Go</a></li>
+<li><a href="#org76ed682">Python</a></li>
+<li><a href="#org2a57636">Force Root Higher</a></li>
 </ul>
 </li>
 </ul>
@@ -64,9 +64,9 @@ A minor annoyance (the bane of an Emacs user) had been nagging me. Here was the
 problem:
 </p>
 
-<div id="outline-container-orgd27d485" class="outline-2">
-<h2 id="orgd27d485"><a href="#orgd27d485">The Problem</a></h2>
-<div class="outline-text-2" id="text-orgd27d485">
+<div id="outline-container-org8a79582" class="outline-2">
+<h2 id="org8a79582"><a href="#org8a79582">The Problem</a></h2>
+<div class="outline-text-2" id="text-org8a79582">
 <p>
 In monorepos, Projectile determines the project root to be the <i>monorepo</i>, not
 the subproject that you're in.
@@ -86,9 +86,9 @@ from this document <a href="https://github.com/cfclrk/dotfiles/blob/master/emacs
 </div>
 </div>
 
-<div id="outline-container-org5cc0960" class="outline-2">
-<h2 id="org5cc0960"><a href="#org5cc0960">Example of the Problem</a></h2>
-<div class="outline-text-2" id="text-org5cc0960">
+<div id="outline-container-orgea6771c" class="outline-2">
+<h2 id="orgea6771c"><a href="#orgea6771c">Example of the Problem</a></h2>
+<div class="outline-text-2" id="text-orgea6771c">
 <p>
 Consider the following monorepo:
 </p>
@@ -149,9 +149,9 @@ projects.
 </div>
 </div>
 
-<div id="outline-container-orgbf0ccdc" class="outline-2">
-<h2 id="orgbf0ccdc"><a href="#orgbf0ccdc">About Projectile Project Detection</a></h2>
-<div class="outline-text-2" id="text-orgbf0ccdc">
+<div id="outline-container-orge24e00d" class="outline-2">
+<h2 id="orge24e00d"><a href="#orge24e00d">About Projectile Project Detection</a></h2>
+<div class="outline-text-2" id="text-orge24e00d">
 <p>
 The relevant documentation is here: <a href="https://docs.projectile.mx/projectile/projects.html#customizing-project-detection">Customizing Project Detection</a>. Projectile
 has a few strategies for finding a project root, and tries each one in order.
@@ -394,9 +394,9 @@ That works! Ok, we should try to retain that behavior.
 </div>
 </div>
 
-<div id="outline-container-orgddd5dc0" class="outline-2">
-<h2 id="orgddd5dc0"><a href="#orgddd5dc0">Project Detection Issues</a></h2>
-<div class="outline-text-2" id="text-orgddd5dc0">
+<div id="outline-container-orgfc36b81" class="outline-2">
+<h2 id="orgfc36b81"><a href="#orgfc36b81">Project Detection Issues</a></h2>
+<div class="outline-text-2" id="text-orgfc36b81">
 <p>
 So, there are two issues preventing Projectile from finding subprojects in
 our monorepo:
@@ -416,9 +416,9 @@ Let's examine each problem.
 </p>
 </div>
 
-<div id="outline-container-org6b9e820" class="outline-3">
-<h3 id="org6b9e820"><a href="#org6b9e820">Marker Files</a></h3>
-<div class="outline-text-3" id="text-org6b9e820">
+<div id="outline-container-org531e4d1" class="outline-3">
+<h3 id="org531e4d1"><a href="#org531e4d1">Marker Files</a></h3>
+<div class="outline-text-3" id="text-org531e4d1">
 <p>
 The problem was:
 </p>
@@ -542,7 +542,7 @@ doesn't warrant a whole <code>setup.py</code>.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="org7f530b0"><span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span>
+<pre class="src src-emacs-lisp" id="org8641886"><span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span>
  my-project-root-files
  <span style="color: #c678dd;">(</span>-concat
   projectile-project-root-files-bottom-up
@@ -567,9 +567,9 @@ roots.
 </div>
 </div>
 
-<div id="outline-container-org2db5392" class="outline-3">
-<h3 id="org2db5392"><a href="#org2db5392">Lookup Behavior</a></h3>
-<div class="outline-text-3" id="text-org2db5392">
+<div id="outline-container-org47285c4" class="outline-3">
+<h3 id="org47285c4"><a href="#org47285c4">Lookup Behavior</a></h3>
+<div class="outline-text-3" id="text-org47285c4">
 <p>
 The problem was:
 </p>
@@ -702,18 +702,18 @@ by creating a <code>.projectile</code> file in a parent directory.
 </div>
 </div>
 
-<div id="outline-container-org79672a4" class="outline-2">
-<h2 id="org79672a4"><a href="#org79672a4">Test</a></h2>
-<div class="outline-text-2" id="text-org79672a4">
+<div id="outline-container-orgbfa1244" class="outline-2">
+<h2 id="orgbfa1244"><a href="#orgbfa1244">Test</a></h2>
+<div class="outline-text-2" id="text-orgbfa1244">
 <p>
 After applying the functions above, let's see what Projectile says the project
 roots are for our monorepo.
 </p>
 </div>
 
-<div id="outline-container-org458e1d8" class="outline-3">
-<h3 id="org458e1d8"><a href="#org458e1d8">Go</a></h3>
-<div class="outline-text-3" id="text-org458e1d8">
+<div id="outline-container-org96f85be" class="outline-3">
+<h3 id="org96f85be"><a href="#org96f85be">Go</a></h3>
+<div class="outline-text-3" id="text-org96f85be">
 <p>
 Can we correctly identify a Go project?
 </p>
@@ -735,9 +735,9 @@ Can we correctly identify a Go project?
 </div>
 </div>
 
-<div id="outline-container-org99a870f" class="outline-3">
-<h3 id="org99a870f"><a href="#org99a870f">Python</a></h3>
-<div class="outline-text-3" id="text-org99a870f">
+<div id="outline-container-org76ed682" class="outline-3">
+<h3 id="org76ed682"><a href="#org76ed682">Python</a></h3>
+<div class="outline-text-3" id="text-org76ed682">
 <p>
 Can we correctly identify a Python project?
 </p>
@@ -759,9 +759,9 @@ Can we correctly identify a Python project?
 </div>
 </div>
 
-<div id="outline-container-org9236176" class="outline-3">
-<h3 id="org9236176"><a href="#org9236176">Force Root Higher</a></h3>
-<div class="outline-text-3" id="text-org9236176">
+<div id="outline-container-org2a57636" class="outline-3">
+<h3 id="org2a57636"><a href="#org2a57636">Force Root Higher</a></h3>
+<div class="outline-text-3" id="text-org2a57636">
 <p>
 Can we force the project root to a higher level by creating a <code>.projectile</code>
 file?

@@ -33,23 +33,41 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgc062094">New Project</a>
+<li><a href="#org3226e47">Installation</a></li>
+<li><a href="#org933456f">New Project</a>
 <ul>
-<li><a href="#orge6d9c2c">stack</a></li>
-<li><a href="#org348a7ec">cabal</a></li>
+<li><a href="#org1c27f78">stack</a></li>
+<li><a href="#org62f8b5f">cabal</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-orgc062094" class="outline-2">
-<h2 id="orgc062094"><a href="#orgc062094">New Project</a></h2>
-<div class="outline-text-2" id="text-orgc062094">
+<div id="outline-container-org3226e47" class="outline-2">
+<h2 id="org3226e47"><a href="#org3226e47">Installation</a></h2>
+<div class="outline-text-2" id="text-org3226e47">
+<p>
+Use <a href="https://www.haskell.org/ghcup/">ghcup</a>. I tried using brew, but it seems that "brew install
+haskell-language-server" does not install the haskell-language-server-wrapper.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">curl --proto <span style="color: #98be65;">'=https'</span> --tlsv1.2 -sSf <span style="color: #98be65;">\</span>
+     https://get-ghcup.haskell.org <span style="color: #98be65;">\</span>
+    | sh
+</pre>
 </div>
-<div id="outline-container-orge6d9c2c" class="outline-3">
-<h3 id="orge6d9c2c"><a href="#orge6d9c2c">stack</a></h3>
-<div class="outline-text-3" id="text-orge6d9c2c">
+</div>
+</div>
+
+<div id="outline-container-org933456f" class="outline-2">
+<h2 id="org933456f"><a href="#org933456f">New Project</a></h2>
+<div class="outline-text-2" id="text-org933456f">
+</div>
+<div id="outline-container-org1c27f78" class="outline-3">
+<h3 id="org1c27f78"><a href="#org1c27f78">stack</a></h3>
+<div class="outline-text-3" id="text-org1c27f78">
 <div class="org-src-container">
 <pre class="src src-sh">stack new $<span style="color: #dcaeea;">name</span>
 </pre>
@@ -57,11 +75,11 @@
 </div>
 </div>
 
-<div id="outline-container-org348a7ec" class="outline-3">
-<h3 id="org348a7ec"><a href="#org348a7ec">cabal</a></h3>
-<div class="outline-text-3" id="text-org348a7ec">
+<div id="outline-container-org62f8b5f" class="outline-3">
+<h3 id="org62f8b5f"><a href="#org62f8b5f">cabal</a></h3>
+<div class="outline-text-3" id="text-org62f8b5f">
 <p>
-A minimal cabal project is simpler than a stack project.
+A minimal cabal project is much more simple than a stack project.
 </p>
 
 <div class="org-src-container">
@@ -83,7 +101,7 @@ Generates a project like this:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">tree
+<pre class="src src-sh">tree -F
 </pre>
 </div>
 

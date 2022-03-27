@@ -33,38 +33,38 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orga86e242">Resources</a></li>
-<li><a href="#org8e1634c">Local Parsing</a>
+<li><a href="#org8f450c6">Resources</a></li>
+<li><a href="#orgf728d91">Local Parsing</a>
 <ul>
-<li><a href="#org2d248a3">org-element-at-point</a></li>
-<li><a href="#org6f892db">org-element-context</a></li>
-<li><a href="#org3953ad4">Examining Element</a></li>
+<li><a href="#org1cb3b7d">org-element-at-point</a></li>
+<li><a href="#org0de71de">org-element-context</a></li>
+<li><a href="#orge15d8ce">Examining Element</a></li>
 </ul>
 </li>
-<li><a href="#org08e3cc3">Global Parsing</a>
+<li><a href="#org538b488">Global Parsing</a>
 <ul>
-<li><a href="#org4ff16ac">Accessors</a></li>
-<li><a href="#org5f09abf">This Heading</a></li>
+<li><a href="#org2c76ccc">Accessors</a></li>
+<li><a href="#org7a93841">This Heading</a></li>
 </ul>
 </li>
-<li><a href="#org743b2dd">Get Title</a></li>
-<li><a href="#org3ee2c5d">Get List of H1</a></li>
+<li><a href="#org9132ac6">Get Title</a></li>
+<li><a href="#orgec7538d">Get List of H1</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-orga86e242" class="outline-2">
-<h2 id="orga86e242"><a href="#orga86e242">Resources</a></h2>
-<div class="outline-text-2" id="text-orga86e242">
+<div id="outline-container-org8f450c6" class="outline-2">
+<h2 id="org8f450c6"><a href="#org8f450c6">Resources</a></h2>
+<div class="outline-text-2" id="text-org8f450c6">
 <p>
 Good doc here: <a href="https://orgmode.org/worg/dev/org-element-api.html">https://orgmode.org/worg/dev/org-element-api.html</a>
 </p>
 </div>
 </div>
 
-<div id="outline-container-org8e1634c" class="outline-2">
-<h2 id="org8e1634c"><a href="#org8e1634c">Local Parsing</a></h2>
-<div class="outline-text-2" id="text-org8e1634c">
+<div id="outline-container-orgf728d91" class="outline-2">
+<h2 id="orgf728d91"><a href="#orgf728d91">Local Parsing</a></h2>
+<div class="outline-text-2" id="text-orgf728d91">
 <p>
 Local parsing gives information about the element at point. Local parsing
 gives you information, but you cannot alter the structure of the AST.
@@ -80,9 +80,9 @@ Two functions you can use:
 </ol>
 </div>
 
-<div id="outline-container-org2d248a3" class="outline-3">
-<h3 id="org2d248a3"><a href="#org2d248a3">org-element-at-point</a></h3>
-<div class="outline-text-3" id="text-org2d248a3">
+<div id="outline-container-org1cb3b7d" class="outline-3">
+<h3 id="org1cb3b7d"><a href="#org1cb3b7d">org-element-at-point</a></h3>
+<div class="outline-text-3" id="text-org1cb3b7d">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>pprint <span style="color: #c678dd;">(</span>org-element-at-point<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
@@ -109,9 +109,9 @@ Two functions you can use:
 </div>
 </div>
 
-<div id="outline-container-org6f892db" class="outline-3">
-<h3 id="org6f892db"><a href="#org6f892db">org-element-context</a></h3>
-<div class="outline-text-3" id="text-org6f892db">
+<div id="outline-container-org0de71de" class="outline-3">
+<h3 id="org0de71de"><a href="#org0de71de">org-element-context</a></h3>
+<div class="outline-text-3" id="text-org0de71de">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>pprint <span style="color: #c678dd;">(</span>org-element-context<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
@@ -149,9 +149,9 @@ Two functions you can use:
 </div>
 </div>
 
-<div id="outline-container-org3953ad4" class="outline-3">
-<h3 id="org3953ad4"><a href="#org3953ad4">Examining Element</a></h3>
-<div class="outline-text-3" id="text-org3953ad4">
+<div id="outline-container-orge15d8ce" class="outline-3">
+<h3 id="orge15d8ce"><a href="#orge15d8ce">Examining Element</a></h3>
+<div class="outline-text-3" id="text-orge15d8ce">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>org-element-type <span style="color: #c678dd;">(</span>org-element-at-point<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
@@ -184,9 +184,9 @@ Note: You can't use <code>org-element-contents</code> with local parsing.
 </div>
 </div>
 
-<div id="outline-container-org08e3cc3" class="outline-2">
-<h2 id="org08e3cc3"><a href="#org08e3cc3">Global Parsing</a></h2>
-<div class="outline-text-2" id="text-org08e3cc3">
+<div id="outline-container-org538b488" class="outline-2">
+<h2 id="org538b488"><a href="#org538b488">Global Parsing</a></h2>
+<div class="outline-text-2" id="text-org538b488">
 <p>
 Use <code>org-element-parse-buffer</code> to return a full AST of the buffer. You may
 modify this AST using setters.
@@ -229,9 +229,9 @@ modify this AST using setters.
 </div>
 </div>
 
-<div id="outline-container-org4ff16ac" class="outline-3">
-<h3 id="org4ff16ac"><a href="#org4ff16ac">Accessors</a></h3>
-<div class="outline-text-3" id="text-org4ff16ac">
+<div id="outline-container-org2c76ccc" class="outline-3">
+<h3 id="org2c76ccc"><a href="#org2c76ccc">Accessors</a></h3>
+<div class="outline-text-3" id="text-org2c76ccc">
 <p>
 Three functions:
 </p>
@@ -250,9 +250,9 @@ Three functions:
 </div>
 </div>
 
-<div id="outline-container-org5f09abf" class="outline-3">
-<h3 id="org5f09abf"><a href="#org5f09abf">This Heading</a></h3>
-<div class="outline-text-3" id="text-org5f09abf">
+<div id="outline-container-org7a93841" class="outline-3">
+<h3 id="org7a93841"><a href="#org7a93841">This Heading</a></h3>
+<div class="outline-text-3" id="text-org7a93841">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>org-heading-components<span style="color: #51afef;">)</span>
 </pre>
@@ -289,9 +289,9 @@ Three functions:
 </div>
 </div>
 
-<div id="outline-container-org743b2dd" class="outline-2">
-<h2 id="org743b2dd"><a href="#org743b2dd">Get Title</a></h2>
-<div class="outline-text-2" id="text-org743b2dd">
+<div id="outline-container-org9132ac6" class="outline-2">
+<h2 id="org9132ac6"><a href="#org9132ac6">Get Title</a></h2>
+<div class="outline-text-2" id="text-org9132ac6">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>cadar <span style="color: #c678dd;">(</span>org-collect-keywords '<span style="color: #98be65;">(</span><span style="color: #98be65;">"TITLE"</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
@@ -313,9 +313,9 @@ Three functions:
 </div>
 </div>
 
-<div id="outline-container-org3ee2c5d" class="outline-2">
-<h2 id="org3ee2c5d"><a href="#org3ee2c5d">Get List of H1</a></h2>
-<div class="outline-text-2" id="text-org3ee2c5d">
+<div id="outline-container-orgec7538d" class="outline-2">
+<h2 id="orgec7538d"><a href="#orgec7538d">Get List of H1</a></h2>
+<div class="outline-text-2" id="text-orgec7538d">
 <p>
 See: <a href="https://stackoverflow.com/a/70366787/340613">https://stackoverflow.com/a/70366787/340613</a>
 </p>

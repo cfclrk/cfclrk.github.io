@@ -33,15 +33,15 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org272f0b0">Hello World</a></li>
-<li><a href="#org2f1a0d3">Lifetimes</a></li>
+<li><a href="#org527d205">Hello World</a></li>
+<li><a href="#org8660927">Lifetimes</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-org272f0b0" class="outline-2">
-<h2 id="org272f0b0"><a href="#org272f0b0">Hello World</a></h2>
-<div class="outline-text-2" id="text-org272f0b0">
+<div id="outline-container-org527d205" class="outline-2">
+<h2 id="org527d205"><a href="#org527d205">Hello World</a></h2>
+<div class="outline-text-2" id="text-org527d205">
 <div class="org-src-container">
 <pre class="src src-rust"><span style="color: #51afef;">fn</span> <span style="color: #c678dd;">main</span>() {
     <span style="color: #c678dd;">println!</span>(<span style="color: #98be65;">"Hello world"</span>);
@@ -55,9 +55,9 @@ Hello world
 </div>
 </div>
 
-<div id="outline-container-org2f1a0d3" class="outline-2">
-<h2 id="org2f1a0d3"><a href="#org2f1a0d3">Lifetimes</a></h2>
-<div class="outline-text-2" id="text-org2f1a0d3">
+<div id="outline-container-org8660927" class="outline-2">
+<h2 id="org8660927"><a href="#org8660927">Lifetimes</a></h2>
+<div class="outline-text-2" id="text-org8660927">
 <div class="org-src-container">
 <pre class="src src-rust"><span style="color: #51afef;">fn</span> <span style="color: #c678dd;">main</span>() {
     <span style="color: #51afef;">let</span> <span style="color: #dcaeea;">s1</span> = <span style="color: #98be65;">"abcd"</span>;
@@ -68,7 +68,7 @@ Hello world
     }
 }
 
-<span style="color: #51afef;">fn</span> <span style="color: #c678dd;">longest</span>&lt;'<span style="color: #dcaeea;">a</span>&gt;(<span style="color: #dcaeea;">x</span>: &amp;'<span style="color: #dcaeea;">a</span> <span style="color: #ECBE7B;">str</span>, <span style="color: #dcaeea;">y</span>: &amp;'<span style="color: #dcaeea;">a</span> <span style="color: #ECBE7B;">str</span>) -&gt; &amp;'<span style="color: #dcaeea;">a</span> <span style="color: #ECBE7B;">str</span> {
+<span style="color: #51afef;">fn</span> <span style="color: #c678dd;">longest</span>&lt;'<span style="color: #dcaeea;">a</span>&gt;(<span style="color: #dcaeea;">x</span>: <span style="color: #bbc2cf; background-color: #282c34;">&amp;</span>'<span style="color: #dcaeea;">a</span> <span style="color: #ECBE7B;">str</span>, <span style="color: #dcaeea;">y</span>: <span style="color: #bbc2cf; background-color: #282c34;">&amp;</span>'<span style="color: #dcaeea;">a</span> <span style="color: #ECBE7B;">str</span>) -&gt; <span style="color: #bbc2cf; background-color: #282c34;">&amp;</span>'<span style="color: #dcaeea;">a</span> <span style="color: #ECBE7B;">str</span> {
     <span style="color: #51afef;">if</span> x.len() &gt; y.len() {
         x
     } <span style="color: #51afef;">else</span> {

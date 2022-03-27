@@ -33,31 +33,41 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org50f6963">The Problem</a></li>
+<li><a href="#org554f29d">The Problem</a></li>
 <li><a href="#the-ssh-config">The SSH Config</a></li>
-<li><a href="#org892bdab">The Git Config</a>
+<li><a href="#org44f48c7">The Git Config</a>
 <ul>
 <li><a href="#config-loading">More about Git Config Loading</a></li>
 </ul>
 </li>
-<li><a href="#signed-commits">Signed Commits</a></li>
-<li><a href="#org5c3cf71">More Resources</a></li>
+<li><a href="#signed-commits">Signed Commits</a>
+<ul>
+<li><a href="#org2bf1fcd">Rationale</a></li>
+<li><a href="#org83c743b">Prerequisites</a></li>
+<li><a href="#org14882d8">Create PGP key</a></li>
+<li><a href="#org33c1c2e">Add key ID to git config</a></li>
+<li><a href="#org97fc0db">Update gpg-agent.conf</a></li>
+<li><a href="#org88089ab">Make a git commit</a></li>
+<li><a href="#orgdd14d4a">Add public key to GitHub</a></li>
+</ul>
+</li>
+<li><a href="#org6714193">More Resources</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-org50f6963" class="outline-2">
-<h2 id="org50f6963"><a href="#org50f6963">The Problem</a></h2>
-<div class="outline-text-2" id="text-org50f6963">
+<div id="outline-container-org554f29d" class="outline-2">
+<h2 id="org554f29d"><a href="#org554f29d">The Problem</a></h2>
+<div class="outline-text-2" id="text-org554f29d">
 <p>
 You have multiple GitHub accounts, and you want git to automatically use the
 "right" GitHub account.
 </p>
 
 <p>
-A good way to do that is to put all work-related stuff under a single
-directory, like <code>~/Work</code>. Then, configure git to use your <b>work</b> account for
-projects under your <code>~/Work</code> directory.
+A good way to do that is to put work-related stuff under a single directory,
+say, <code>~/Work</code>. Then, configure git to use your <b>work</b> account any project in
+your <code>~/Work</code> directory.
 </p>
 
 <p>
@@ -79,14 +89,13 @@ My git configuration <a href="https://github.com/cfclrk/dotfiles/tree/master/xdg
 <h2 id="the-ssh-config"><a href="#the-ssh-config">The SSH Config</a></h2>
 <div class="outline-text-2" id="text-the-ssh-config">
 <p>
-Assuming you use the <code>git</code> protocol to clone repositories (not <code>https</code> like
-some kind of animal), you must create at least two SSH keys for GitHub &#x2013; one
-for each GitHub account (GitHub will not allow you to use the same SSH key for
-both accounts). Assuming you've <a href="https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh">created</a> those, your <code>~/.ssh</code> directory should
-look something like:
+Assuming you use the <code>git</code> protocol to clone repositories (not <code>https</code>), you
+must create at least two SSH keys for GitHub &#x2013; one for each GitHub account
+(GitHub will not allow you to use the same SSH key for both accounts). Once
+you've <a href="https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh">created</a> those, your <code>~/.ssh</code> directory should look something like:
 </p>
 
-<pre class="example" id="org612a01c">
+<pre class="example" id="orga7ca5e9">
 $ tree ~/.ssh/
 /Users/cfclrk/.ssh/
 ├── config
@@ -129,9 +138,9 @@ tell git which SSH keys to use in our git config files.
 </div>
 </div>
 
-<div id="outline-container-org892bdab" class="outline-2">
-<h2 id="org892bdab"><a href="#org892bdab">The Git Config</a></h2>
-<div class="outline-text-2" id="text-org892bdab">
+<div id="outline-container-org44f48c7" class="outline-2">
+<h2 id="org44f48c7"><a href="#org44f48c7">The Git Config</a></h2>
+<div class="outline-text-2" id="text-org44f48c7">
 <p>
 First, tell git to use different git configurations depending on the directory
 a project is in. Git supports this with the <a href="https://git-scm.com/docs/git-config#_conditional_includes">includeIf</a> directive. Do this by
@@ -146,7 +155,7 @@ creating the following two files.
 <pre class="src src-gitconfig">[<span style="color: #ECBE7B;">user</span>]
     <span style="color: #dcaeea;">name</span> = Chris Clark
     <span style="color: #dcaeea;">email</span> = cfclrk@gmail.com
-    <span style="color: #dcaeea;">signingkey</span> = 279B742AFFA518D5
+    <span style="color: #dcaeea;">signingkey</span> = 80027A20FC0B6207
 [<span style="color: #ECBE7B;">core</span>]
     <span style="color: #dcaeea;">sshCommand</span> = <span style="color: #98be65;">"ssh -i ~/.ssh/github-home"</span>
 [<span style="color: #ECBE7B;">commit</span>]
@@ -240,30 +249,48 @@ specify them in order from <i>most general</i> to <i>most specific</i>.
 <div id="outline-container-signed-commits" class="outline-2">
 <h2 id="signed-commits"><a href="#signed-commits">Signed Commits</a></h2>
 <div class="outline-text-2" id="text-signed-commits">
+</div>
+
+<div id="outline-container-org2bf1fcd" class="outline-3">
+<h3 id="org2bf1fcd"><a href="#org2bf1fcd">Rationale</a></h3>
+<div class="outline-text-3" id="text-org2bf1fcd">
+<p>
+Why sign commits?
+</p>
+
 <p>
 The value of <code>user.email</code> is the only piece of information GitHub uses when
 determining what profile picture to display next to a commit. You can set that
 email address to anything! E.g. set it to <code>torvalds@linux-foundation.org</code>, and
 GitHub will happily put Linus Torvalds' picture next to your git commits. And
-to be sure, <a href="https://news.ycombinator.com/item?id=10005577">that happens</a>. You can <i>partially</i> mitigate this problem of
-attribution by using <a href="https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work">signed commits</a>.
+to be sure, <a href="https://news.ycombinator.com/item?id=10005577">that happens</a>.
+</p>
+
+<p>
+If you don't want other people impersonating you, you can <i>partially</i> mitigate
+this problem of attribution by using <a href="https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work">signed commits</a>.
 </p>
 
 <p>
 GitHub allows you to upload a PGP key to your GitHub account, and GitHub
 displays a "Verified" badge on commits that proprely verify (i.e. <code>git
-  verify-commit</code> works). For a commit to verify,
+  verify-commit &lt;commit&gt;</code> works). For a commit to verify,
 </p>
 
 <ol class="org-ol">
 <li>The email address in the commit must match your GitHub account email
 address</li>
-<li>The commit must be signed with a key that has been uploaded to your GitHub
-account</li>
+<li>The commit must be signed by a PGP key that has been uploaded to
+your GitHub account</li>
 </ol>
+</div>
+</div>
 
+<div id="outline-container-org83c743b" class="outline-3">
+<h3 id="org83c743b"><a href="#org83c743b">Prerequisites</a></h3>
+<div class="outline-text-3" id="text-org83c743b">
 <p>
-To set up commit signing, first install the necessary tools:
+First install the necessary tools:
 </p>
 
 <div class="org-src-container">
@@ -273,17 +300,118 @@ brew install pinentry-mac
 </div>
 
 <p>
-<code>pinentry-mac</code> saves the passphrases in the MacOS keyring.
+<code>pinentry-mac</code> saves passphrases in the MacOS keychain.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org14882d8" class="outline-3">
+<h3 id="org14882d8"><a href="#org14882d8">Create PGP key</a></h3>
+<div class="outline-text-3" id="text-org14882d8">
+<p>
+Although GitHub <a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key">has some instructions</a> for creating a PGP key, I prefer using
+<a href="https://keybase.io/">keybase</a>. By using keybase, you ensure you don't lose your keys, and it can
+make moving to a new computer much easier.
 </p>
 
 <p>
-Follow GitHub's <a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key">instructions</a> for creating PGP keys. Create one for each GitHub
-account.
+To use keybase, first install the <a href="https://keybase.io/download">native app</a> (this installs the <code>keybase</code> CLI
+program).
 </p>
 
 <p>
-Now add this to <code>~/.gnupg/gpg-agent.conf</code> to allow for automatic signing (on
-MacOS anyway).
+You could import existing PGP keys from keybase, but it's a better idea to
+create a new PGP key for every device. So, create two new PGP keys.
+</p>
+
+<p>
+TODO: Can I just use one key, and add two email addresses to it as <a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/associating-an-email-with-your-gpg-key">described
+here</a>? Or does GitHub make you use different keys for different accounts?
+</p>
+
+<p>
+Home key:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">keybase pgp gen --multi
+</pre>
+</div>
+
+<p>
+Work key:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">keybase pgp gen --multi
+</pre>
+</div>
+
+<p>
+TODO: Should we update the trust level on each key to ultimate?
+</p>
+
+<p>
+For completeness, if you <span class="underline">do</span> want to import a key instead of creating a new one:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #5B6268;"># </span><span style="color: #5B6268;">Import your public pgp key</span>
+keybase pgp export -q $<span style="color: #dcaeea;">keyid</span> <span style="color: #98be65;">\</span>
+    | gpg --import
+<span style="color: #5B6268;"># </span><span style="color: #5B6268;">Import your private pgp key</span>
+keybase pgp export -q $<span style="color: #dcaeea;">keyid</span> <span style="color: #98be65;">\</span>
+        --secret <span style="color: #98be65;">\</span>
+    | gpg --allow-secret-key <span style="color: #98be65;">\</span>
+          --import
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org33c1c2e" class="outline-3">
+<h3 id="org33c1c2e"><a href="#org33c1c2e">Add key ID to git config</a></h3>
+<div class="outline-text-3" id="text-org33c1c2e">
+<p>
+Get the GPG key ID of your PGP key. To get the key ID:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">gpg --list-secret-keys --keyid-format=long
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+/Users/cfclrk/.gnupg/pubring.kbx
+--------------------------------
+sec   rsa4096/80027A20FC0B6207 2022-03-14 [SC] [expires: 2038-03-10]
+      2DEF144646C3152AE294CC5D80027A20FC0B6207
+uid                 [ultimate] Chris Clark &lt;cfclrk@gmail.com&gt;
+ssb   rsa4096/799C916E01D155A3 2022-03-14 [E] [expires: 2038-03-10]
+</pre>
+
+
+<p>
+In the above, the key ID is <code>80027A20FC0B6207</code> (is there some command that
+prints out the key id?). Update your git config like so:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-gitconfig">[<span style="color: #ECBE7B;">user</span>]
+    <span style="color: #dcaeea;">signingkey</span> = 80027A20FC0B6207
+[<span style="color: #ECBE7B;">commit</span>]
+    <span style="color: #dcaeea;">gpgsign</span> = <span style="color: #51afef;">true</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org97fc0db" class="outline-3">
+<h3 id="org97fc0db"><a href="#org97fc0db">Update gpg-agent.conf</a></h3>
+<div class="outline-text-3" id="text-org97fc0db">
+<p>
+Add the following to <code>~/.gnupg/gpg-agent.conf</code>. This allows for automatic
+signing (on MacOS anyway).
 </p>
 
 <div class="org-src-container">
@@ -295,9 +423,50 @@ pinentry-program /usr/local/bin/pinentry-mac
 </div>
 </div>
 
-<div id="outline-container-org5c3cf71" class="outline-2">
-<h2 id="org5c3cf71"><a href="#org5c3cf71">More Resources</a></h2>
-<div class="outline-text-2" id="text-org5c3cf71">
+<div id="outline-container-org88089ab" class="outline-3">
+<h3 id="org88089ab"><a href="#org88089ab">Make a git commit</a></h3>
+<div class="outline-text-3" id="text-org88089ab">
+<p>
+If you used a passphrase on your PGP key, your first git commit will probably
+fail. For your first git commit:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">GPG_TTY</span>=$(tty)
+</pre>
+</div>
+
+<p>
+Now, when you make a git commit, it should prompt you for the PGP key's
+passphrase. After you do this once, you should never have to do it again.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgdd14d4a" class="outline-3">
+<h3 id="orgdd14d4a"><a href="#orgdd14d4a">Add public key to GitHub</a></h3>
+<div class="outline-text-3" id="text-orgdd14d4a">
+<p>
+TODO: <code>keybase pgp export $keyid</code> and <code>gpg --armor --export $keyid</code> create
+different things. Do they both work? Which is more appropriate to put in
+GitHub?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">keybase pgp export -q $<span style="color: #dcaeea;">keyid</span> | pbcopy
+</pre>
+</div>
+
+<p>
+Add this key to GitHub.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6714193" class="outline-2">
+<h2 id="org6714193"><a href="#org6714193">More Resources</a></h2>
+<div class="outline-text-2" id="text-org6714193">
 <ul class="org-ul">
 <li><a href="https://yayimorphology.org/ssh-identities-made-easy.html">Managing several SSH identities explained</a></li>
 </ul>

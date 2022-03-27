@@ -14,6 +14,7 @@
     brew install libxml2
     brew install librsvg
     brew install imagemagick
+    brew install jansson
   #+end_src
 
 * Provide path to libxml headers

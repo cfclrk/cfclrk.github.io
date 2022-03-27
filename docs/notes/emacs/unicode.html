@@ -33,50 +33,50 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org01f48b8">Characters</a>
+<li><a href="#orgaa1aedd">Characters</a>
 <ul>
-<li><a href="#org872159d">Characters are Integers</a></li>
-<li><a href="#org0c11b4a">Converting Between Chars and Integers</a></li>
-<li><a href="#orgaba8d06">Why Have Two Representations?</a></li>
+<li><a href="#org1692853">Characters are Integers</a></li>
+<li><a href="#org72d8aa8">Converting Between Chars and Integers</a></li>
+<li><a href="#org61ae808">Why Have Two Representations?</a></li>
 </ul>
 </li>
-<li><a href="#org662a767">Unicode Escape Sequences</a></li>
-<li><a href="#orgdb22f1d">Convert Unicode Code Point to Character</a></li>
-<li><a href="#orga0b7c5b">Convert Unicode name to character</a></li>
-<li><a href="#org87617a7">Encode a string</a>
+<li><a href="#org3819306">Unicode Escape Sequences</a></li>
+<li><a href="#org4baea9f">Convert Unicode Code Point to Character</a></li>
+<li><a href="#org3d43bea">Convert Unicode name to character</a></li>
+<li><a href="#orgf6f4b65">Encode a string</a>
 <ul>
-<li><a href="#orga9cc29a">toggle-enable-multibyte-characters</a></li>
+<li><a href="#orgbb6bdd0">toggle-enable-multibyte-characters</a></li>
 </ul>
 </li>
-<li><a href="#org72ef75c">Decode</a></li>
-<li><a href="#org30b8f23">Code Points</a>
+<li><a href="#orgb75da4a">Decode</a></li>
+<li><a href="#org5a5c34d">Code Points</a>
 <ul>
-<li><a href="#org751d82d">Unicode name</a></li>
-<li><a href="#org74eacec">Unicode number</a></li>
+<li><a href="#orgc45e7e6">Unicode name</a></li>
+<li><a href="#org93ba3a6">Unicode number</a></li>
 </ul>
 </li>
-<li><a href="#org9be8441">Normalize a string</a></li>
-<li><a href="#orge763e87">Elisp</a></li>
-<li><a href="#org75c0cbf">Unicode table</a></li>
-<li><a href="#org867a25a">Datasets</a></li>
-<li><a href="#org7c93ecc">Resources</a></li>
-<li><a href="#orgb032923">TODO</a></li>
+<li><a href="#org338cf16">Normalize a string</a></li>
+<li><a href="#orge0ae72b">Elisp</a></li>
+<li><a href="#orga9c417f">Unicode table</a></li>
+<li><a href="#orgc3bb640">Datasets</a></li>
+<li><a href="#org3a5d1a6">Resources</a></li>
+<li><a href="#orgc24fde0">TODO</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-org01f48b8" class="outline-2">
-<h2 id="org01f48b8"><a href="#org01f48b8">Characters</a></h2>
-<div class="outline-text-2" id="text-org01f48b8">
+<div id="outline-container-orgaa1aedd" class="outline-2">
+<h2 id="orgaa1aedd"><a href="#orgaa1aedd">Characters</a></h2>
+<div class="outline-text-2" id="text-orgaa1aedd">
 <p>
 Emacs lisp has a special read syntax for characters: the <code>?</code> question mark.
 Such syntax is necessary to distinguish the character <code>à</code> from the symbol <code>à</code>.
 </p>
 </div>
 
-<div id="outline-container-org872159d" class="outline-3">
-<h3 id="org872159d"><a href="#org872159d">Characters are Integers</a></h3>
-<div class="outline-text-3" id="text-org872159d">
+<div id="outline-container-org1692853" class="outline-3">
+<h3 id="org1692853"><a href="#org1692853">Characters are Integers</a></h3>
+<div class="outline-text-3" id="text-org1692853">
 <p>
 Characters evaluate to integers:
 </p>
@@ -126,9 +126,9 @@ t
 </div>
 </div>
 
-<div id="outline-container-org0c11b4a" class="outline-3">
-<h3 id="org0c11b4a"><a href="#org0c11b4a">Converting Between Chars and Integers</a></h3>
-<div class="outline-text-3" id="text-org0c11b4a">
+<div id="outline-container-org72d8aa8" class="outline-3">
+<h3 id="org72d8aa8"><a href="#org72d8aa8">Converting Between Chars and Integers</a></h3>
+<div class="outline-text-3" id="text-org72d8aa8">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>string-to-char <span style="color: #98be65;">"&#224;"</span><span style="color: #51afef;">)</span>
 </pre>
@@ -188,9 +188,9 @@ Or, as a character using hex notation:
 </div>
 </div>
 
-<div id="outline-container-orgaba8d06" class="outline-3">
-<h3 id="orgaba8d06"><a href="#orgaba8d06">Why Have Two Representations?</a></h3>
-<div class="outline-text-3" id="text-orgaba8d06">
+<div id="outline-container-org61ae808" class="outline-3">
+<h3 id="org61ae808"><a href="#org61ae808">Why Have Two Representations?</a></h3>
+<div class="outline-text-3" id="text-org61ae808">
 <p>
 The reader syntax <code>?</code> simply allows you to express a number using a
 character. Sometimes that is very helpful and provides clarity (when you are
@@ -304,9 +304,9 @@ given position in a&#x2026; what?
 </div>
 </div>
 
-<div id="outline-container-org662a767" class="outline-2">
-<h2 id="org662a767"><a href="#org662a767">Unicode Escape Sequences</a></h2>
-<div class="outline-text-2" id="text-org662a767">
+<div id="outline-container-org3819306" class="outline-2">
+<h2 id="org3819306"><a href="#org3819306">Unicode Escape Sequences</a></h2>
+<div class="outline-text-2" id="text-org3819306">
 <p>
 A character can be defined using a unicode escape sequence. There are two
 forms for Unicode escape sequences:
@@ -370,9 +370,9 @@ Also, evaluating a string with a Unicode escape sequence returns a string:
 </div>
 </div>
 
-<div id="outline-container-orgdb22f1d" class="outline-2">
-<h2 id="orgdb22f1d"><a href="#orgdb22f1d">Convert Unicode Code Point to Character</a></h2>
-<div class="outline-text-2" id="text-orgdb22f1d">
+<div id="outline-container-org4baea9f" class="outline-2">
+<h2 id="org4baea9f"><a href="#org4baea9f">Convert Unicode Code Point to Character</a></h2>
+<div class="outline-text-2" id="text-org4baea9f">
 <p>
 The function <code>(char-to-string CHAR)</code> returns the character at the decimal code
 point <code>CHAR</code>. Unicode code points in the "U+2388" format are hex, so they must
@@ -424,9 +424,9 @@ Examples using <a href="https://www.compart.com/en/unicode/U+2388">Unicode Chara
 </div>
 </div>
 
-<div id="outline-container-orga0b7c5b" class="outline-2">
-<h2 id="orga0b7c5b"><a href="#orga0b7c5b">Convert Unicode name to character</a></h2>
-<div class="outline-text-2" id="text-orga0b7c5b">
+<div id="outline-container-org3d43bea" class="outline-2">
+<h2 id="org3d43bea"><a href="#org3d43bea">Convert Unicode name to character</a></h2>
+<div class="outline-text-2" id="text-org3d43bea">
 <p>
 In a string, the <code>"?\N{NAME}"</code> syntax allows you to specify a Unicode character
 by its name:
@@ -443,16 +443,16 @@ by its name:
 </div>
 </div>
 
-<div id="outline-container-org87617a7" class="outline-2">
-<h2 id="org87617a7"><a href="#org87617a7">Encode a string</a></h2>
-<div class="outline-text-2" id="text-org87617a7">
+<div id="outline-container-orgf6f4b65" class="outline-2">
+<h2 id="orgf6f4b65"><a href="#orgf6f4b65">Encode a string</a></h2>
+<div class="outline-text-2" id="text-orgf6f4b65">
 <p>
 Encoding a string means translating a string of Unicode code points (integers)
 into new integers, according to some encoding scheme (like UTF-8). This is
 necessary in order to tell where one number ends and the next begins:
 </p>
 
-<pre class="example" id="orgd33e951">
+<pre class="example" id="org6e8cebe">
 1224
 </pre>
 
@@ -502,9 +502,9 @@ s
 </pre>
 </div>
 
-<div id="outline-container-orga9cc29a" class="outline-3">
-<h3 id="orga9cc29a"><a href="#orga9cc29a">toggle-enable-multibyte-characters</a></h3>
-<div class="outline-text-3" id="text-orga9cc29a">
+<div id="outline-container-orgbb6bdd0" class="outline-3">
+<h3 id="orgbb6bdd0"><a href="#orgbb6bdd0">toggle-enable-multibyte-characters</a></h3>
+<div class="outline-text-3" id="text-orgbb6bdd0">
 <p>
 Another way to see this is to write multibyte strings to a file, then run <code>M-x
    toggle-enable-multibyte-characters</code>.
@@ -513,9 +513,9 @@ Another way to see this is to write multibyte strings to a file, then run <code>
 </div>
 </div>
 
-<div id="outline-container-org72ef75c" class="outline-2">
-<h2 id="org72ef75c"><a href="#org72ef75c">Decode</a></h2>
-<div class="outline-text-2" id="text-org72ef75c">
+<div id="outline-container-orgb75da4a" class="outline-2">
+<h2 id="orgb75da4a"><a href="#orgb75da4a">Decode</a></h2>
+<div class="outline-text-2" id="text-orgb75da4a">
 <p>
 Decoding a string returns the multibyte equivalent of the string.
 </p>
@@ -541,9 +541,9 @@ naïve
 </div>
 </div>
 
-<div id="outline-container-org30b8f23" class="outline-2">
-<h2 id="org30b8f23"><a href="#org30b8f23">Code Points</a></h2>
-<div class="outline-text-2" id="text-org30b8f23">
+<div id="outline-container-org5a5c34d" class="outline-2">
+<h2 id="org5a5c34d"><a href="#org5a5c34d">Code Points</a></h2>
+<div class="outline-text-2" id="text-org5a5c34d">
 <p>
 Range is 0 to #x10FFFF (hex).
 </p>
@@ -561,9 +561,9 @@ Decode integer a string
 </p>
 </div>
 
-<div id="outline-container-org751d82d" class="outline-3">
-<h3 id="org751d82d"><a href="#org751d82d">Unicode name</a></h3>
-<div class="outline-text-3" id="text-org751d82d">
+<div id="outline-container-orgc45e7e6" class="outline-3">
+<h3 id="orgc45e7e6"><a href="#orgc45e7e6">Unicode name</a></h3>
+<div class="outline-text-3" id="text-orgc45e7e6">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>char-from-name <span style="color: #98be65;">"LATIN SMALL LETTER A WITH GRAVE"</span><span style="color: #51afef;">)</span>
 </pre>
@@ -575,9 +575,9 @@ Decode integer a string
 </div>
 </div>
 
-<div id="outline-container-org74eacec" class="outline-3">
-<h3 id="org74eacec"><a href="#org74eacec">Unicode number</a></h3>
-<div class="outline-text-3" id="text-org74eacec">
+<div id="outline-container-org93ba3a6" class="outline-3">
+<h3 id="org93ba3a6"><a href="#org93ba3a6">Unicode number</a></h3>
+<div class="outline-text-3" id="text-org93ba3a6">
 <p>
 Unicode number as decimal:
 </p>
@@ -622,9 +622,9 @@ As octal
 </div>
 </div>
 
-<div id="outline-container-org9be8441" class="outline-2">
-<h2 id="org9be8441"><a href="#org9be8441">Normalize a string</a></h2>
-<div class="outline-text-2" id="text-org9be8441">
+<div id="outline-container-org338cf16" class="outline-2">
+<h2 id="org338cf16"><a href="#org338cf16">Normalize a string</a></h2>
+<div class="outline-text-2" id="text-org338cf16">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>ucs-normalize-NFD-string <span style="color: #98be65;">"nai\u0308ve"</span><span style="color: #51afef;">)</span>
 </pre>
@@ -636,9 +636,9 @@ As octal
 </div>
 </div>
 
-<div id="outline-container-orge763e87" class="outline-2">
-<h2 id="orge763e87"><a href="#orge763e87">Elisp</a></h2>
-<div class="outline-text-2" id="text-orge763e87">
+<div id="outline-container-orge0ae72b" class="outline-2">
+<h2 id="orge0ae72b"><a href="#orge0ae72b">Elisp</a></h2>
+<div class="outline-text-2" id="text-orge0ae72b">
 <p>
 A character in Emacs Lisp is nothing more than an integer:
 </p>
@@ -654,9 +654,9 @@ Characters in strings and buffers are currently limited to the range of 0 to
 </div>
 </div>
 
-<div id="outline-container-org75c0cbf" class="outline-2">
-<h2 id="org75c0cbf"><a href="#org75c0cbf">Unicode table</a></h2>
-<div class="outline-text-2" id="text-org75c0cbf">
+<div id="outline-container-orga9c417f" class="outline-2">
+<h2 id="orga9c417f"><a href="#orga9c417f">Unicode table</a></h2>
+<div class="outline-text-2" id="text-orga9c417f">
 <p>
 The variable <code>ucs-names</code> (in <code>mule.el</code>) holds a hash table.
 </p>
@@ -667,18 +667,18 @@ The function <code>ucs-names</code> returns the fully expanded table of unicode 
 </div>
 </div>
 
-<div id="outline-container-org867a25a" class="outline-2">
-<h2 id="org867a25a"><a href="#org867a25a">Datasets</a></h2>
-<div class="outline-text-2" id="text-org867a25a">
+<div id="outline-container-orgc3bb640" class="outline-2">
+<h2 id="orgc3bb640"><a href="#orgc3bb640">Datasets</a></h2>
+<div class="outline-text-2" id="text-orgc3bb640">
 <p>
 <a href="https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt">https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt</a>
 </p>
 </div>
 </div>
 
-<div id="outline-container-org7c93ecc" class="outline-2">
-<h2 id="org7c93ecc"><a href="#org7c93ecc">Resources</a></h2>
-<div class="outline-text-2" id="text-org7c93ecc">
+<div id="outline-container-org3a5d1a6" class="outline-2">
+<h2 id="org3a5d1a6"><a href="#org3a5d1a6">Resources</a></h2>
+<div class="outline-text-2" id="text-org3a5d1a6">
 <ul class="org-ul">
 <li><a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Character-Type.html">https://www.gnu.org/software/emacs/manual/html_node/elisp/Character-Type.html</a></li>
 <li><a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Non_002dASCII-Characters.html">https://www.gnu.org/software/emacs/manual/html_node/elisp/Non_002dASCII-Characters.html</a></li>
@@ -690,9 +690,9 @@ The function <code>ucs-names</code> returns the fully expanded table of unicode 
 </div>
 </div>
 
-<div id="outline-container-orgb032923" class="outline-2">
-<h2 id="orgb032923"><a href="#orgb032923">TODO</a></h2>
-<div class="outline-text-2" id="text-orgb032923">
+<div id="outline-container-orgc24fde0" class="outline-2">
+<h2 id="orgc24fde0"><a href="#orgc24fde0">TODO</a></h2>
+<div class="outline-text-2" id="text-orgc24fde0">
 <p>
 Does a character evaluate to different numbers under different coding systems?
 </p>

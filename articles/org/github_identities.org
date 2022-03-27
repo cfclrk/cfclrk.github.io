@@ -6,9 +6,9 @@
   You have multiple GitHub accounts, and you want git to automatically use the
   "right" GitHub account.
 
-  A good way to do that is to put all work-related stuff under a single
-  directory, like =~/Work=. Then, configure git to use your *work* account for
-  projects under your =~/Work= directory.
+  A good way to do that is to put work-related stuff under a single directory,
+  say, =~/Work=. Then, configure git to use your *work* account any project in
+  your =~/Work= directory.
 
   In this article I set things up so that:
 
@@ -22,11 +22,10 @@
   :CUSTOM_ID: the-ssh-config
   :END:
 
-  Assuming you use the =git= protocol to clone repositories (not =https= like
-  some kind of animal), you must create at least two SSH keys for GitHub -- one
-  for each GitHub account (GitHub will not allow you to use the same SSH key for
-  both accounts). Assuming you've [[https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh][created]] those, your =~/.ssh= directory should
-  look something like:
+  Assuming you use the =git= protocol to clone repositories (not =https=), you
+  must create at least two SSH keys for GitHub -- one for each GitHub account
+  (GitHub will not allow you to use the same SSH key for both accounts). Once
+  you've [[https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh][created]] those, your =~/.ssh= directory should look something like:
 
   #+begin_example
     $ tree ~/.ssh/
@@ -80,7 +79,7 @@
     [user]
         name = Chris Clark
         email = cfclrk@gmail.com
-        signingkey = 279B742AFFA518D5
+        signingkey = 80027A20FC0B6207
     [core]
         sshCommand = "ssh -i ~/.ssh/github-home"
     [commit]
@@ -150,36 +149,111 @@
   :CUSTOM_ID: signed-commits
   :END:
 
+** Rationale
+
+  Why sign commits?
+
   The value of =user.email= is the only piece of information GitHub uses when
   determining what profile picture to display next to a commit. You can set that
   email address to anything! E.g. set it to =torvalds@linux-foundation.org=, and
   GitHub will happily put Linus Torvalds' picture next to your git commits. And
-  to be sure, [[https://news.ycombinator.com/item?id=10005577][that happens]]. You can /partially/ mitigate this problem of
-  attribution by using [[https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work][signed commits]].
+  to be sure, [[https://news.ycombinator.com/item?id=10005577][that happens]].
+
+  If you don't want other people impersonating you, you can /partially/ mitigate
+  this problem of attribution by using [[https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work][signed commits]].
 
   GitHub allows you to upload a PGP key to your GitHub account, and GitHub
   displays a "Verified" badge on commits that proprely verify (i.e. =git
-  verify-commit= works). For a commit to verify,
+  verify-commit <commit>= works). For a commit to verify,
 
   1. The email address in the commit must match your GitHub account email
      address
-  2. The commit must be signed with a key that has been uploaded to your GitHub
-     account
+  2. The commit must be signed by a PGP key that has been uploaded to
+     your GitHub account
 
-  To set up commit signing, first install the necessary tools:
+** Prerequisites
+
+  First install the necessary tools:
 
   #+begin_src sh
     brew install gnupg
     brew install pinentry-mac
   #+end_src
 
-  =pinentry-mac= saves the passphrases in the MacOS keyring.
+  =pinentry-mac= saves passphrases in the MacOS keychain.
 
-  Follow GitHub's [[https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key][instructions]] for creating PGP keys. Create one for each GitHub
-  account.
+** Create PGP key
 
-  Now add this to =~/.gnupg/gpg-agent.conf= to allow for automatic signing (on
-  MacOS anyway).
+  Although GitHub [[https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key][has some instructions]] for creating a PGP key, I prefer using
+  [[https://keybase.io/][keybase]]. By using keybase, you ensure you don't lose your keys, and it can
+  make moving to a new computer much easier.
+
+  To use keybase, first install the [[https://keybase.io/download][native app]] (this installs the =keybase= CLI
+  program).
+
+  You could import existing PGP keys from keybase, but it's a better idea to
+  create a new PGP key for every device. So, create two new PGP keys.
+
+  TODO: Can I just use one key, and add two email addresses to it as [[https://docs.github.com/en/authentication/managing-commit-signature-verification/associating-an-email-with-your-gpg-key][described
+  here]]? Or does GitHub make you use different keys for different accounts?
+
+  Home key:
+
+  #+begin_src sh
+    keybase pgp gen --multi
+  #+end_src
+
+  Work key:
+
+  #+begin_src sh
+    keybase pgp gen --multi
+  #+end_src
+
+  TODO: Should we update the trust level on each key to ultimate?
+
+  For completeness, if you _do_ want to import a key instead of creating a new one:
+
+  #+begin_src sh
+    # Import your public pgp key
+    keybase pgp export -q $keyid \
+        | gpg --import
+    # Import your private pgp key
+    keybase pgp export -q $keyid \
+            --secret \
+        | gpg --allow-secret-key \
+              --import
+  #+end_src
+
+** Add key ID to git config
+
+  Get the GPG key ID of your PGP key. To get the key ID:
+
+  #+begin_src sh :results output
+    gpg --list-secret-keys --keyid-format=long
+  #+end_src
+
+  #+RESULTS:
+  : /Users/cfclrk/.gnupg/pubring.kbx
+  : --------------------------------
+  : sec   rsa4096/80027A20FC0B6207 2022-03-14 [SC] [expires: 2038-03-10]
+  :       2DEF144646C3152AE294CC5D80027A20FC0B6207
+  : uid                 [ultimate] Chris Clark <cfclrk@gmail.com>
+  : ssb   rsa4096/799C916E01D155A3 2022-03-14 [E] [expires: 2038-03-10]
+
+  In the above, the key ID is =80027A20FC0B6207= (is there some command that
+  prints out the key id?). Update your git config like so:
+
+  #+begin_src gitconfig
+    [user]
+        signingkey = 80027A20FC0B6207
+    [commit]
+        gpgsign = true
+  #+end_src
+
+** Update gpg-agent.conf
+
+  Add the following to =~/.gnupg/gpg-agent.conf=. This allows for automatic
+  signing (on MacOS anyway).
 
   #+header: :tangle ~/.gnupg/gpg-agent.conf
   #+begin_src conf
@@ -187,6 +261,30 @@
     # automatic key signing.
     pinentry-program /usr/local/bin/pinentry-mac
   #+end_src
+
+** Make a git commit
+
+   If you used a passphrase on your PGP key, your first git commit will probably
+   fail. For your first git commit:
+
+   #+begin_src bash
+     export GPG_TTY=$(tty)
+   #+end_src
+
+   Now, when you make a git commit, it should prompt you for the PGP key's
+   passphrase. After you do this once, you should never have to do it again.
+
+** Add public key to GitHub
+
+   TODO: =keybase pgp export $keyid= and =gpg --armor --export $keyid= create
+   different things. Do they both work? Which is more appropriate to put in
+   GitHub?
+
+   #+begin_src sh
+     keybase pgp export -q $keyid | pbcopy
+   #+end_src
+
+   Add this key to GitHub.
 
 * More Resources
 
