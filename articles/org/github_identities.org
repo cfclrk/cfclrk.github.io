@@ -185,25 +185,40 @@
 ** Create PGP key
 
   Although GitHub [[https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key][has some instructions]] for creating a PGP key, I prefer using
-  [[https://keybase.io/][keybase]]. By using keybase, you ensure you don't lose your keys, and it can
-  make moving to a new computer much easier.
+  [[https://keybase.io/][keybase]].
 
   To use keybase, first install the [[https://keybase.io/download][native app]] (this installs the =keybase= CLI
   program).
 
-  You could import existing PGP keys from keybase, but it's a better idea to
-  create a new PGP key for every device. So, create two new PGP keys.
+  You /can/ import preexisting PGP keys from keybase, but it's a better idea to
+  create a new PGP key for every device. To view your existing PGP keys in
+  keybase:
+
+  #+begin_src sh
+    keybase pgp list
+  #+end_src
+
+  And to list your local PGP keys (this may be empty):
+
+  #+begin_src sh
+    gpg --list-secret-keys --keyid-format=long
+  #+end_src
+
+  Now, create two new PGP keys.
 
   TODO: Can I just use one key, and add two email addresses to it as [[https://docs.github.com/en/authentication/managing-commit-signature-verification/associating-an-email-with-your-gpg-key][described
   here]]? Or does GitHub make you use different keys for different accounts?
 
   Home key:
 
-  #+begin_src sh
+  #+begin_src sh :results output
     keybase pgp gen --multi
   #+end_src
 
-  Work key:
+  It will prompt you for email addresses. Add both your home and work email
+  addresses.
+
+  Add a passphrase.
 
   #+begin_src sh
     keybase pgp gen --multi
