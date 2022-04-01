@@ -33,22 +33,22 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgb70fed8">Get IP Address(es) for DNS Name</a></li>
-<li><a href="#org911f240">View Records</a>
+<li><a href="#org0448f54">Get IP Address(es) for DNS Name</a></li>
+<li><a href="#org924410a">View Records</a>
 <ul>
-<li><a href="#org29f904f">NS</a></li>
-<li><a href="#orge97768b">TXT</a></li>
-<li><a href="#org8d9680c">CNAME</a></li>
+<li><a href="#org6dcd478">NS</a></li>
+<li><a href="#org29523f3">TXT</a></li>
+<li><a href="#org38279ef">CNAME</a></li>
 </ul>
 </li>
-<li><a href="#org422304d">NS Delegation in AWS</a></li>
+<li><a href="#orgf5b77e3">NS Delegation in AWS</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-orgb70fed8" class="outline-2">
-<h2 id="orgb70fed8"><a href="#orgb70fed8">Get IP Address(es) for DNS Name</a></h2>
-<div class="outline-text-2" id="text-orgb70fed8">
+<div id="outline-container-org0448f54" class="outline-2">
+<h2 id="org0448f54"><a href="#org0448f54">Get IP Address(es) for DNS Name</a></h2>
+<div class="outline-text-2" id="text-org0448f54">
 <p>
 Get the IP address for a name. This won't work for a name that, say, only has
 NS records associated with it, since that doesn't actually map a name to an
@@ -62,13 +62,13 @@ IP.
 </div>
 </div>
 
-<div id="outline-container-org911f240" class="outline-2">
-<h2 id="org911f240"><a href="#org911f240">View Records</a></h2>
-<div class="outline-text-2" id="text-org911f240">
+<div id="outline-container-org924410a" class="outline-2">
+<h2 id="org924410a"><a href="#org924410a">View Records</a></h2>
+<div class="outline-text-2" id="text-org924410a">
 </div>
-<div id="outline-container-org29f904f" class="outline-3">
-<h3 id="org29f904f"><a href="#org29f904f">NS</a></h3>
-<div class="outline-text-3" id="text-org29f904f">
+<div id="outline-container-org6dcd478" class="outline-3">
+<h3 id="org6dcd478"><a href="#org6dcd478">NS</a></h3>
+<div class="outline-text-3" id="text-org6dcd478">
 <p>
 dig:
 </p>
@@ -89,9 +89,9 @@ host:
 </div>
 </div>
 
-<div id="outline-container-orge97768b" class="outline-3">
-<h3 id="orge97768b"><a href="#orge97768b">TXT</a></h3>
-<div class="outline-text-3" id="text-orge97768b">
+<div id="outline-container-org29523f3" class="outline-3">
+<h3 id="org29523f3"><a href="#org29523f3">TXT</a></h3>
+<div class="outline-text-3" id="text-org29523f3">
 <div class="org-src-container">
 <pre class="src src-sh">dig -t txt <span style="color: #98be65;">'\@.lenaclarklegal.com'</span> +short
 </pre>
@@ -104,9 +104,9 @@ host:
 </div>
 </div>
 
-<div id="outline-container-org8d9680c" class="outline-3">
-<h3 id="org8d9680c"><a href="#org8d9680c">CNAME</a></h3>
-<div class="outline-text-3" id="text-org8d9680c">
+<div id="outline-container-org38279ef" class="outline-3">
+<h3 id="org38279ef"><a href="#org38279ef">CNAME</a></h3>
+<div class="outline-text-3" id="text-org38279ef">
 <div class="org-src-container">
 <pre class="src src-sh">dig $<span style="color: #dcaeea;">DnsName</span> CNAME +short
 </pre>
@@ -115,9 +115,9 @@ host:
 </div>
 </div>
 
-<div id="outline-container-org422304d" class="outline-2">
-<h2 id="org422304d"><a href="#org422304d">NS Delegation in AWS</a></h2>
-<div class="outline-text-2" id="text-org422304d">
+<div id="outline-container-orgf5b77e3" class="outline-2">
+<h2 id="orgf5b77e3"><a href="#orgf5b77e3">NS Delegation in AWS</a></h2>
+<div class="outline-text-2" id="text-orgf5b77e3">
 <p>
 See notes in <code>Projects/codenotes/aws/route53_dns_delegation.org</code>.
 </p>

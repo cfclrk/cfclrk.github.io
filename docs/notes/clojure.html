@@ -33,48 +33,53 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orge5d8209">Installation</a></li>
-<li><a href="#orgd703106">clj vs clojure</a></li>
-<li><a href="#org70c1485">Cmd Execution and REPL</a></li>
-<li><a href="#orgc264fe2">Project Creation</a>
+<li><a href="#org1ec3ca0">Installation</a></li>
+<li><a href="#orgdecc67a">clj vs clojure</a></li>
+<li><a href="#org6e70f25">Cmd Execution and REPL</a></li>
+<li><a href="#org3385fbb">Project Creation</a>
 <ul>
-<li><a href="#org60a1998">Minimal</a></li>
-<li><a href="#org65509fc">Leiningen</a></li>
-<li><a href="#orgf23f57f">deps-new</a></li>
+<li><a href="#org5f9f88c">Minimal</a></li>
+<li><a href="#orgf7f553c">Leiningen</a></li>
+<li><a href="#orge34443f">deps-new</a></li>
 </ul>
 </li>
-<li><a href="#orgf048057">Emacs Cider</a>
+<li><a href="#org96ab6bc">Emacs Cider</a>
 <ul>
-<li><a href="#org53e30ee">Tips</a></li>
-<li><a href="#orgcfad32c">Doc</a></li>
+<li><a href="#org4f02911">Tips</a></li>
+<li><a href="#org10e514e">Doc</a></li>
 </ul>
 </li>
-<li><a href="#orge6a1db3">Testing</a>
+<li><a href="#org106e00f">Testing</a>
 <ul>
-<li><a href="#org2e14185">Run all tests in namespace</a></li>
-<li><a href="#org829c15b">Run a single test</a></li>
+<li><a href="#org8c4169e">Run all tests in namespace</a></li>
+<li><a href="#org8a6790f">Run a single test</a></li>
 </ul>
 </li>
-<li><a href="#org288a348">Symbols vs Keywords</a></li>
-<li><a href="#org4b20e97">How to (+ 1 2 3)</a></li>
-<li><a href="#orgcfa36c4">core.async</a></li>
+<li><a href="#orgea9bdd7">Symbols vs Keywords</a></li>
+<li><a href="#orgaff9517">How to (+ 1 2 3)</a></li>
+<li><a href="#orgf4cf461">core.async</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-orge5d8209" class="outline-2">
-<h2 id="orge5d8209"><a href="#orge5d8209">Installation</a></h2>
-<div class="outline-text-2" id="text-orge5d8209">
+<div id="outline-container-org1ec3ca0" class="outline-2">
+<h2 id="org1ec3ca0"><a href="#org1ec3ca0">Installation</a></h2>
+<div class="outline-text-2" id="text-org1ec3ca0">
+<p>
+The clojure site <a href="https://clojure.org/guides/getting_started#_clojure_installer_and_cli_tools">suggests</a> using the following, but <code>brew install clojure</code> also
+works just fine.
+</p>
+
 <div class="org-src-container">
-<pre class="src src-sh">brew install clojure
+<pre class="src src-sh">brew install clojure/tools/clojure
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgd703106" class="outline-2">
-<h2 id="orgd703106"><a href="#orgd703106">clj vs clojure</a></h2>
-<div class="outline-text-2" id="text-orgd703106">
+<div id="outline-container-orgdecc67a" class="outline-2">
+<h2 id="orgdecc67a"><a href="#orgdecc67a">clj vs clojure</a></h2>
+<div class="outline-text-2" id="text-orgdecc67a">
 <p>
 <code>clj</code> is just a program that wraps <code>clojure</code> with <code>readline</code> support.
 </p>
@@ -103,9 +108,9 @@ So, <code>clj</code> just provides better interactivity in the terminal REPL.
 </div>
 </div>
 
-<div id="outline-container-org70c1485" class="outline-2">
-<h2 id="org70c1485"><a href="#org70c1485">Cmd Execution and REPL</a></h2>
-<div class="outline-text-2" id="text-org70c1485">
+<div id="outline-container-org6e70f25" class="outline-2">
+<h2 id="org6e70f25"><a href="#org6e70f25">Cmd Execution and REPL</a></h2>
+<div class="outline-text-2" id="text-org6e70f25">
 <p>
 Call a single function
 </p>
@@ -133,13 +138,13 @@ Start a REPL that I can attach to from Emacs.
 </div>
 </div>
 
-<div id="outline-container-orgc264fe2" class="outline-2">
-<h2 id="orgc264fe2"><a href="#orgc264fe2">Project Creation</a></h2>
-<div class="outline-text-2" id="text-orgc264fe2">
+<div id="outline-container-org3385fbb" class="outline-2">
+<h2 id="org3385fbb"><a href="#org3385fbb">Project Creation</a></h2>
+<div class="outline-text-2" id="text-org3385fbb">
 </div>
-<div id="outline-container-org60a1998" class="outline-3">
-<h3 id="org60a1998"><a href="#org60a1998">Minimal</a></h3>
-<div class="outline-text-3" id="text-org60a1998">
+<div id="outline-container-org5f9f88c" class="outline-3">
+<h3 id="org5f9f88c"><a href="#org5f9f88c">Minimal</a></h3>
+<div class="outline-text-3" id="text-org5f9f88c">
 <p>
 All you need is a project directory with a <code>deps.edn</code> and a <code>src/foo.clj</code>.
 However it should be namespaced properly (TODO: work on this).
@@ -155,9 +160,9 @@ clj -m core
 </div>
 </div>
 
-<div id="outline-container-org65509fc" class="outline-3">
-<h3 id="org65509fc"><a href="#org65509fc">Leiningen</a></h3>
-<div class="outline-text-3" id="text-org65509fc">
+<div id="outline-container-orgf7f553c" class="outline-3">
+<h3 id="orgf7f553c"><a href="#orgf7f553c">Leiningen</a></h3>
+<div class="outline-text-3" id="text-orgf7f553c">
 <div class="org-src-container">
 <pre class="src src-sh">lein new app cfclrk/$<span style="color: #dcaeea;">projectName</span>
 </pre>
@@ -165,9 +170,9 @@ clj -m core
 </div>
 </div>
 
-<div id="outline-container-orgf23f57f" class="outline-3">
-<h3 id="orgf23f57f"><a href="#orgf23f57f">deps-new</a></h3>
-<div class="outline-text-3" id="text-orgf23f57f">
+<div id="outline-container-orge34443f" class="outline-3">
+<h3 id="orge34443f"><a href="#orge34443f">deps-new</a></h3>
+<div class="outline-text-3" id="text-orge34443f">
 <p>
 First, make sure <a href="https://github.com/seancorfield/deps-new">deps-new</a> is installed:
 </p>
@@ -200,9 +205,9 @@ Create a new lib:
 </div>
 </div>
 
-<div id="outline-container-orgf048057" class="outline-2">
-<h2 id="orgf048057"><a href="#orgf048057">Emacs Cider</a></h2>
-<div class="outline-text-2" id="text-orgf048057">
+<div id="outline-container-org96ab6bc" class="outline-2">
+<h2 id="org96ab6bc"><a href="#org96ab6bc">Emacs Cider</a></h2>
+<div class="outline-text-2" id="text-org96ab6bc">
 <p>
 Basic workflow is described <a href="https://docs.cider.mx/cider/usage/cider_mode.html#basic-workflow">in the cider docs here</a>.
 </p>
@@ -222,9 +227,9 @@ namespace qualification.</li>
 </ul>
 </div>
 
-<div id="outline-container-org53e30ee" class="outline-3">
-<h3 id="org53e30ee"><a href="#org53e30ee">Tips</a></h3>
-<div class="outline-text-3" id="text-org53e30ee">
+<div id="outline-container-org4f02911" class="outline-3">
+<h3 id="org4f02911"><a href="#org4f02911">Tips</a></h3>
+<div class="outline-text-3" id="text-org4f02911">
 <ul class="org-ul">
 <li>From source file, <code>C-u C-c C-z</code> to jump to cider buffer already namespaced
 to the source file.</li>
@@ -233,9 +238,9 @@ to the source file.</li>
 </div>
 </div>
 
-<div id="outline-container-orgcfad32c" class="outline-3">
-<h3 id="orgcfad32c"><a href="#orgcfad32c">Doc</a></h3>
-<div class="outline-text-3" id="text-orgcfad32c">
+<div id="outline-container-org10e514e" class="outline-3">
+<h3 id="org10e514e"><a href="#org10e514e">Doc</a></h3>
+<div class="outline-text-3" id="text-org10e514e">
 <p>
 Function doc: <code>C-c C-d C-d</code> (<code>cider-doc</code>)
 </p>
@@ -243,18 +248,18 @@ Function doc: <code>C-c C-d C-d</code> (<code>cider-doc</code>)
 </div>
 </div>
 
-<div id="outline-container-orge6a1db3" class="outline-2">
-<h2 id="orge6a1db3"><a href="#orge6a1db3">Testing</a></h2>
-<div class="outline-text-2" id="text-orge6a1db3">
+<div id="outline-container-org106e00f" class="outline-2">
+<h2 id="org106e00f"><a href="#org106e00f">Testing</a></h2>
+<div class="outline-text-2" id="text-org106e00f">
 <p>
 Use test-runner, which handles test discovery and running tests.
 <a href="https://github.com/cognitect-labs/test-runner">https://github.com/cognitect-labs/test-runner</a>
 </p>
 </div>
 
-<div id="outline-container-org2e14185" class="outline-3">
-<h3 id="org2e14185"><a href="#org2e14185">Run all tests in namespace</a></h3>
-<div class="outline-text-3" id="text-org2e14185">
+<div id="outline-container-org8c4169e" class="outline-3">
+<h3 id="org8c4169e"><a href="#org8c4169e">Run all tests in namespace</a></h3>
+<div class="outline-text-3" id="text-org8c4169e">
 <div class="org-src-container">
 <pre class="src src-sh">clj -A:test -n cfclrk.sicp-test
 </pre>
@@ -262,9 +267,9 @@ Use test-runner, which handles test discovery and running tests.
 </div>
 </div>
 
-<div id="outline-container-org829c15b" class="outline-3">
-<h3 id="org829c15b"><a href="#org829c15b">Run a single test</a></h3>
-<div class="outline-text-3" id="text-org829c15b">
+<div id="outline-container-org8a6790f" class="outline-3">
+<h3 id="org8a6790f"><a href="#org8a6790f">Run a single test</a></h3>
+<div class="outline-text-3" id="text-org8a6790f">
 <div class="org-src-container">
 <pre class="src src-sh">clj -A:test -v cfclrk.sicp-test/a-test
 </pre>
@@ -273,9 +278,9 @@ Use test-runner, which handles test discovery and running tests.
 </div>
 </div>
 
-<div id="outline-container-org288a348" class="outline-2">
-<h2 id="org288a348"><a href="#org288a348">Symbols vs Keywords</a></h2>
-<div class="outline-text-2" id="text-org288a348">
+<div id="outline-container-orgea9bdd7" class="outline-2">
+<h2 id="orgea9bdd7"><a href="#orgea9bdd7">Symbols vs Keywords</a></h2>
+<div class="outline-text-2" id="text-orgea9bdd7">
 <p>
 What's the difference between a quoted symbol and a keyword?
 </p>
@@ -299,9 +304,9 @@ colon.
 </div>
 </div>
 
-<div id="outline-container-org4b20e97" class="outline-2">
-<h2 id="org4b20e97"><a href="#org4b20e97">How to (+ 1 2 3)</a></h2>
-<div class="outline-text-2" id="text-org4b20e97">
+<div id="outline-container-orgaff9517" class="outline-2">
+<h2 id="orgaff9517"><a href="#orgaff9517">How to (+ 1 2 3)</a></h2>
+<div class="outline-text-2" id="text-orgaff9517">
 <p>
 A few ways to add 1, 2, and 3.
 </p>
@@ -347,9 +352,9 @@ A few ways to add 1, 2, and 3.
 </div>
 </div>
 
-<div id="outline-container-orgcfa36c4" class="outline-2">
-<h2 id="orgcfa36c4"><a href="#orgcfa36c4">core.async</a></h2>
-<div class="outline-text-2" id="text-orgcfa36c4">
+<div id="outline-container-orgf4cf461" class="outline-2">
+<h2 id="orgf4cf461"><a href="#orgf4cf461">core.async</a></h2>
+<div class="outline-text-2" id="text-orgf4cf461">
 <p>
 There are some great examples from O'Reilly <a href="https://resources.oreilly.com/examples/0636920041474/">here</a>, which is supplemental
 content for their excellent video course <a href="https://learning.oreilly.com/videos/communicating-sequential-processes/9781771374293/">Communicating Sequential Processes

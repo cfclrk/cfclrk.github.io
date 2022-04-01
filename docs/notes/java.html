@@ -33,63 +33,67 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org0ed41eb">Installation</a>
+<li><a href="#org2778a86">Installation</a>
 <ul>
-<li><a href="#orga908454">Latest</a></li>
-<li><a href="#orge691cd4">Java 8</a></li>
+<li><a href="#orgadf9d26">Latest</a></li>
+<li><a href="#org514ed88">Older java versions</a></li>
 </ul>
 </li>
-<li><a href="#org028f3ce">Switch Versions</a></li>
+<li><a href="#orge0a1003">Switch Versions</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-org0ed41eb" class="outline-2">
-<h2 id="org0ed41eb"><a href="#org0ed41eb">Installation</a></h2>
-<div class="outline-text-2" id="text-org0ed41eb">
+<div id="outline-container-org2778a86" class="outline-2">
+<h2 id="org2778a86"><a href="#org2778a86">Installation</a></h2>
+<div class="outline-text-2" id="text-org2778a86">
 <p>
 Best resource I've found is <a href="https://mkyong.com/java/how-to-install-java-on-mac-osx/">How to install Java JDK on macOS</a>.
 </p>
 </div>
 
-<div id="outline-container-orga908454" class="outline-3">
-<h3 id="orga908454"><a href="#orga908454">Latest</a></h3>
-<div class="outline-text-3" id="text-orga908454">
+<div id="outline-container-orgadf9d26" class="outline-3">
+<h3 id="orgadf9d26"><a href="#orgadf9d26">Latest</a></h3>
+<div class="outline-text-3" id="text-orgadf9d26">
 <div class="org-src-container">
 <pre class="src src-sh">brew install java
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-sh">sudo ln -sfn <span style="color: #98be65;">\</span>
-     /usr/local/opt/openjdk/libexec/openjdk.jdk <span style="color: #98be65;">\</span>
+<pre class="src src-sh">sudo ln -svfn <span style="color: #98be65;">\</span>
+     $(brew --prefix)/opt/openjdk/libexec/openjdk.jdk <span style="color: #98be65;">\</span>
      /Library/Java/JavaVirtualMachines/openjdk.jdk
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orge691cd4" class="outline-3">
-<h3 id="orge691cd4"><a href="#orge691cd4">Java 8</a></h3>
-<div class="outline-text-3" id="text-orge691cd4">
+<div id="outline-container-org514ed88" class="outline-3">
+<h3 id="org514ed88"><a href="#org514ed88">Older java versions</a></h3>
+<div class="outline-text-3" id="text-org514ed88">
+<p>
+Older java packages may not work on Apple Silicon.
+</p>
+
 <div class="org-src-container">
-<pre class="src src-sh">brew install openjdk@8
+<pre class="src src-sh">brew install openjdk@17
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-sh">sudo ln -sfn <span style="color: #98be65;">\</span>
-     /usr/local/opt/openjdk@8/libexec/openjdk.jdk <span style="color: #98be65;">\</span>
-     /Library/Java/JavaVirtualMachines/openjdk-8.jdk
+<pre class="src src-sh">sudo ln -svfn <span style="color: #98be65;">\</span>
+     $(brew --prefix)/opt/openjdk@17/libexec/openjdk.jdk <span style="color: #98be65;">\</span>
+     /Library/Java/JavaVirtualMachines/openjdk-17.jdk
 </pre>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org028f3ce" class="outline-2">
-<h2 id="org028f3ce"><a href="#org028f3ce">Switch Versions</a></h2>
-<div class="outline-text-2" id="text-org028f3ce">
+<div id="outline-container-orge0a1003" class="outline-2">
+<h2 id="orge0a1003"><a href="#orge0a1003">Switch Versions</a></h2>
+<div class="outline-text-2" id="text-orge0a1003">
 <p>
 To see installed Java versions (assuming they have been properly symlinked):
 </p>

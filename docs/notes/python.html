@@ -33,57 +33,57 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org71605a4">Pyenv</a>
+<li><a href="#orgbe7c725">Pyenv</a>
 <ul>
-<li><a href="#org5974d4f">Latest Version</a></li>
+<li><a href="#org023ad48">Latest Version</a></li>
 </ul>
 </li>
-<li><a href="#org8a626e9">Using a src directory</a></li>
-<li><a href="#orgf4fbf12">Packaging</a>
+<li><a href="#org622b1a9">Using a src directory</a></li>
+<li><a href="#orgdace107">Packaging</a>
 <ul>
-<li><a href="#org01a5b8e">Kinds of Packages</a>
+<li><a href="#org08a401d">Kinds of Packages</a>
 <ul>
-<li><a href="#orgb2c5e70">wheel (.whl)</a></li>
-<li><a href="#org43fffbc">Source Tree (git)</a></li>
-<li><a href="#orge0582ad">Source Distribution (sdist)</a></li>
+<li><a href="#orgf0f364a">wheel (.whl)</a></li>
+<li><a href="#org03393e7">Source Tree (git)</a></li>
+<li><a href="#org511af89">Source Distribution (sdist)</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org99e12e1">Package summary info</a>
+<li><a href="#orgb325975">Package summary info</a>
 <ul>
-<li><a href="#orgbf7218f">sys.path</a></li>
-<li><a href="#org9af9156">site</a></li>
+<li><a href="#org3972f6a">sys.path</a></li>
+<li><a href="#org2d18e6b">site</a></li>
 </ul>
 </li>
-<li><a href="#org8a4f8c5">Class attributes</a></li>
-<li><a href="#org6a01032">Require zip of github repo</a></li>
-<li><a href="#orgef29f09">Strings</a>
+<li><a href="#org6eb4df5">Class attributes</a></li>
+<li><a href="#org40e7576">Require zip of github repo</a></li>
+<li><a href="#orgb948bba">Strings</a>
 <ul>
-<li><a href="#org662ad81">Unicode</a></li>
-<li><a href="#org56be7ea">Decode: convert bytes to UTF-8 string</a></li>
-<li><a href="#org69e41b4">Encode: convert UTF-8 string to bytes</a></li>
+<li><a href="#orgcb121ef">Unicode</a></li>
+<li><a href="#orgcedc9fd">Decode: convert bytes to UTF-8 string</a></li>
+<li><a href="#org48f6bb4">Encode: convert UTF-8 string to bytes</a></li>
 </ul>
 </li>
-<li><a href="#org419be53">Random String</a></li>
-<li><a href="#org895c053">How I Set Up Python</a></li>
+<li><a href="#org42aafc1">Random String</a></li>
+<li><a href="#orgd2a491d">How I Set Up Python</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-org71605a4" class="outline-2">
-<h2 id="org71605a4"><a href="#org71605a4">Pyenv</a></h2>
-<div class="outline-text-2" id="text-org71605a4">
+<div id="outline-container-orgbe7c725" class="outline-2">
+<h2 id="orgbe7c725"><a href="#orgbe7c725">Pyenv</a></h2>
+<div class="outline-text-2" id="text-orgbe7c725">
 </div>
-<div id="outline-container-org5974d4f" class="outline-3">
-<h3 id="org5974d4f"><a href="#org5974d4f">Latest Version</a></h3>
-<div class="outline-text-3" id="text-org5974d4f">
+<div id="outline-container-org023ad48" class="outline-3">
+<h3 id="org023ad48"><a href="#org023ad48">Latest Version</a></h3>
+<div class="outline-text-3" id="text-org023ad48">
 <p>
 In fish, you don't need the <code>\</code> in <code>dev\|rc</code>.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="orgd6124d9">python-build --definitions <span style="color: #98be65;">\</span>
+<pre class="src src-sh" id="orgc2c9e6b">python-build --definitions <span style="color: #98be65;">\</span>
     | grep <span style="color: #98be65;">"^3"</span> <span style="color: #98be65;">\</span>
     | grep -v <span style="color: #98be65;">"dev\|rc"</span> <span style="color: #98be65;">\</span>
     | tail -n 1
@@ -97,9 +97,9 @@ In fish, you don't need the <code>\</code> in <code>dev\|rc</code>.
 </div>
 </div>
 
-<div id="outline-container-org8a626e9" class="outline-2">
-<h2 id="org8a626e9"><a href="#org8a626e9">Using a src directory</a></h2>
-<div class="outline-text-2" id="text-org8a626e9">
+<div id="outline-container-org622b1a9" class="outline-2">
+<h2 id="org622b1a9"><a href="#org622b1a9">Using a src directory</a></h2>
+<div class="outline-text-2" id="text-org622b1a9">
 <ul class="org-ul">
 <li><a href="https://blog.ionelmc.ro/2014/05/25/python-packaging/">Packaging a python library</a> (Ionel Cristian Mărieș)</li>
 <li><a href="https://hynek.me/articles/testing-packaging/">Testing &amp; Packaging</a> (Hynek Schlawack)</li>
@@ -119,21 +119,21 @@ and a more similar <code>setup.cfg</code>.</li>
 </div>
 </div>
 
-<div id="outline-container-orgf4fbf12" class="outline-2">
-<h2 id="orgf4fbf12"><a href="#orgf4fbf12">Packaging</a></h2>
-<div class="outline-text-2" id="text-orgf4fbf12">
+<div id="outline-container-orgdace107" class="outline-2">
+<h2 id="orgdace107"><a href="#orgdace107">Packaging</a></h2>
+<div class="outline-text-2" id="text-orgdace107">
 </div>
-<div id="outline-container-org01a5b8e" class="outline-3">
-<h3 id="org01a5b8e"><a href="#org01a5b8e">Kinds of Packages</a></h3>
-<div class="outline-text-3" id="text-org01a5b8e">
+<div id="outline-container-org08a401d" class="outline-3">
+<h3 id="org08a401d"><a href="#org08a401d">Kinds of Packages</a></h3>
+<div class="outline-text-3" id="text-org08a401d">
 <p>
 From: <a href="https://bernat.tech/posts/pep-517-and-python-packaging/">https://bernat.tech/posts/pep-517-and-python-packaging/</a>
 </p>
 </div>
 
-<div id="outline-container-orgb2c5e70" class="outline-4">
-<h4 id="orgb2c5e70"><a href="#orgb2c5e70">wheel (.whl)</a></h4>
-<div class="outline-text-4" id="text-orgb2c5e70">
+<div id="outline-container-orgf0f364a" class="outline-4">
+<h4 id="orgf0f364a"><a href="#orgf0f364a">wheel (.whl)</a></h4>
+<div class="outline-text-4" id="text-orgf0f364a">
 <p>
 The project is built and then zipped up. Building usually means executing
 setuptools, which in turn may call build scripts in the project.
@@ -152,18 +152,18 @@ extract the zip in the right location.
 </div>
 </div>
 
-<div id="outline-container-org43fffbc" class="outline-4">
-<h4 id="org43fffbc"><a href="#org43fffbc">Source Tree (git)</a></h4>
-<div class="outline-text-4" id="text-org43fffbc">
+<div id="outline-container-org03393e7" class="outline-4">
+<h4 id="org03393e7"><a href="#org03393e7">Source Tree (git)</a></h4>
+<div class="outline-text-4" id="text-org03393e7">
 <p>
 Every file in the project's VC repository.
 </p>
 </div>
 </div>
 
-<div id="outline-container-orge0582ad" class="outline-4">
-<h4 id="orge0582ad"><a href="#orge0582ad">Source Distribution (sdist)</a></h4>
-<div class="outline-text-4" id="text-orge0582ad">
+<div id="outline-container-org511af89" class="outline-4">
+<h4 id="org511af89"><a href="#org511af89">Source Distribution (sdist)</a></h4>
+<div class="outline-text-4" id="text-org511af89">
 <p>
 A zip of the project source code. It may not include <i>all</i> files in the
 repository, like the <code>.git/</code>, <code>.github/</code>, <code>Jenkinsfile</code>, and tests (but I
@@ -190,13 +190,13 @@ The installing user must:
 </div>
 </div>
 
-<div id="outline-container-org99e12e1" class="outline-2">
-<h2 id="org99e12e1"><a href="#org99e12e1">Package summary info</a></h2>
-<div class="outline-text-2" id="text-org99e12e1">
+<div id="outline-container-orgb325975" class="outline-2">
+<h2 id="orgb325975"><a href="#orgb325975">Package summary info</a></h2>
+<div class="outline-text-2" id="text-orgb325975">
 </div>
-<div id="outline-container-orgbf7218f" class="outline-3">
-<h3 id="orgbf7218f"><a href="#orgbf7218f">sys.path</a></h3>
-<div class="outline-text-3" id="text-orgbf7218f">
+<div id="outline-container-org3972f6a" class="outline-3">
+<h3 id="org3972f6a"><a href="#org3972f6a">sys.path</a></h3>
+<div class="outline-text-3" id="text-org3972f6a">
 <p>
 As explained in the <a href="https://docs.python.org/3/library/sys.html#sys.path">docs</a>, the first element of <code>sys.path</code> is often the empty
 string.
@@ -219,9 +219,9 @@ which directs Python to search modules in the current directory first.
 </div>
 </div>
 
-<div id="outline-container-org9af9156" class="outline-3">
-<h3 id="org9af9156"><a href="#org9af9156">site</a></h3>
-<div class="outline-text-3" id="text-org9af9156">
+<div id="outline-container-org2d18e6b" class="outline-3">
+<h3 id="org2d18e6b"><a href="#org2d18e6b">site</a></h3>
+<div class="outline-text-3" id="text-org2d18e6b">
 <p>
 Print a summary including <code>sys.path</code> and some other stuff.
 </p>
@@ -246,9 +246,9 @@ site._script()
 </div>
 </div>
 
-<div id="outline-container-org8a4f8c5" class="outline-2">
-<h2 id="org8a4f8c5"><a href="#org8a4f8c5">Class attributes</a></h2>
-<div class="outline-text-2" id="text-org8a4f8c5">
+<div id="outline-container-org6eb4df5" class="outline-2">
+<h2 id="org6eb4df5"><a href="#org6eb4df5">Class attributes</a></h2>
+<div class="outline-text-2" id="text-org6eb4df5">
 <p>
 Define a class:
 </p>
@@ -309,9 +309,9 @@ yes, get<sub>size</sub>: no)</li>
 </div>
 </div>
 
-<div id="outline-container-org6a01032" class="outline-2">
-<h2 id="org6a01032"><a href="#org6a01032">Require zip of github repo</a></h2>
-<div class="outline-text-2" id="text-org6a01032">
+<div id="outline-container-org40e7576" class="outline-2">
+<h2 id="org40e7576"><a href="#org40e7576">Require zip of github repo</a></h2>
+<div class="outline-text-2" id="text-org40e7576">
 <p>
 You can get a tarball or zipball of a repo as documented here:
 <a href="https://developer.github.com/v3/repos/contents/#get-archive-link">https://developer.github.com/v3/repos/contents/#get-archive-link</a>
@@ -329,13 +329,13 @@ e.g. see:
 </div>
 </div>
 
-<div id="outline-container-orgef29f09" class="outline-2">
-<h2 id="orgef29f09"><a href="#orgef29f09">Strings</a></h2>
-<div class="outline-text-2" id="text-orgef29f09">
+<div id="outline-container-orgb948bba" class="outline-2">
+<h2 id="orgb948bba"><a href="#orgb948bba">Strings</a></h2>
+<div class="outline-text-2" id="text-orgb948bba">
 </div>
-<div id="outline-container-org662ad81" class="outline-3">
-<h3 id="org662ad81"><a href="#org662ad81">Unicode</a></h3>
-<div class="outline-text-3" id="text-org662ad81">
+<div id="outline-container-orgcb121ef" class="outline-3">
+<h3 id="orgcb121ef"><a href="#orgcb121ef">Unicode</a></h3>
+<div class="outline-text-3" id="text-orgcb121ef">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #51afef;">return</span> <span style="color: #c678dd;">len</span>(<span style="color: #98be65;">"&#128514;"</span>)
 </pre>
@@ -361,9 +361,9 @@ From: <a href="https://hsivonen.fi/string-length/">https://hsivonen.fi/string-le
 </div>
 </div>
 
-<div id="outline-container-org56be7ea" class="outline-3">
-<h3 id="org56be7ea"><a href="#org56be7ea">Decode: convert bytes to UTF-8 string</a></h3>
-<div class="outline-text-3" id="text-org56be7ea">
+<div id="outline-container-orgcedc9fd" class="outline-3">
+<h3 id="orgcedc9fd"><a href="#orgcedc9fd">Decode: convert bytes to UTF-8 string</a></h3>
+<div class="outline-text-3" id="text-orgcedc9fd">
 <p>
 A "byte string" is a byte literal, which is an immutable sequence of bytes
 (integers). A byte literal can be defined using ASCII characters up
@@ -389,7 +389,7 @@ But this does not:
 </pre>
 </div>
 
-<pre class="example" id="org2374812">
+<pre class="example" id="orgae52bc4">
   File "&lt;stdin&gt;", line 1
 SyntaxError: bytes can only contain ASCII literal characters.
 </pre>
@@ -422,9 +422,9 @@ What's going on is:
 </div>
 </div>
 
-<div id="outline-container-org69e41b4" class="outline-3">
-<h3 id="org69e41b4"><a href="#org69e41b4">Encode: convert UTF-8 string to bytes</a></h3>
-<div class="outline-text-3" id="text-org69e41b4">
+<div id="outline-container-org48f6bb4" class="outline-3">
+<h3 id="org48f6bb4"><a href="#org48f6bb4">Encode: convert UTF-8 string to bytes</a></h3>
+<div class="outline-text-3" id="text-org48f6bb4">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #51afef;">return</span> <span style="color: #98be65;">"foo"</span>.encode(<span style="color: #98be65;">"ascii"</span>)
 </pre>
@@ -455,7 +455,7 @@ b'\xd0\x9e\xd0\xa4\xd0\x98\xd0\xa1'
 Prints:
 </p>
 
-<pre class="example" id="org2f20d96">
+<pre class="example" id="orgdcf12b1">
 &gt;&gt;&gt; "😂".encode("ascii")
 Traceback (most recent call last):
   File "&lt;stdin&gt;", line 1, in &lt;module&gt;
@@ -467,9 +467,9 @@ in range(128)
 </div>
 </div>
 
-<div id="outline-container-org419be53" class="outline-2">
-<h2 id="org419be53"><a href="#org419be53">Random String</a></h2>
-<div class="outline-text-2" id="text-org419be53">
+<div id="outline-container-org42aafc1" class="outline-2">
+<h2 id="org42aafc1"><a href="#org42aafc1">Random String</a></h2>
+<div class="outline-text-2" id="text-org42aafc1">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #51afef;">import</span> random
 <span style="color: #51afef;">import</span> string
@@ -483,9 +483,9 @@ knMyinMG
 </div>
 </div>
 
-<div id="outline-container-org895c053" class="outline-2">
-<h2 id="org895c053"><a href="#org895c053">How I Set Up Python</a></h2>
-<div class="outline-text-2" id="text-org895c053">
+<div id="outline-container-orgd2a491d" class="outline-2">
+<h2 id="orgd2a491d"><a href="#orgd2a491d">How I Set Up Python</a></h2>
+<div class="outline-text-2" id="text-orgd2a491d">
 <p>
 Use <code>pyenv</code> to install python versions, and <code>pyenv-virtualenv</code> to create
 virtual environments per project.
@@ -518,7 +518,7 @@ Global virtual environment name:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="org667a792"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">LatestPython</span> | sed s/<span style="color: #98be65;">\\</span>.//g
+<pre class="src src-sh" id="org0931d1b"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">LatestPython</span> | sed s/<span style="color: #98be65;">\\</span>.//g
 </pre>
 </div>
 

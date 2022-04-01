@@ -1,6 +1,12 @@
 #+TITLE: Go
 #+SETUPFILE: ../setup.org
 
+* Installation
+
+  #+begin_src sh
+    brew install go
+  #+end_src
+
 * New Project
 
   #+begin_src sh :results output :dir ~/Projects/use

@@ -33,32 +33,32 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgd120857">Print Error of Code Block</a>
+<li><a href="#orgb6d5e62">Print Error of Code Block</a>
 <ul>
-<li><a href="#org9645a3d">Shell</a>
+<li><a href="#orgf321fe0">Shell</a>
 <ul>
-<li><a href="#org19de802">NOT WORKING</a></li>
+<li><a href="#org8218ccc">NOT WORKING</a></li>
 </ul>
 </li>
-<li><a href="#orge4222ec">Python</a></li>
+<li><a href="#org64151bb">Python</a></li>
 </ul>
 </li>
-<li><a href="#org8c040c5">Emacs Lisp</a></li>
-<li><a href="#orgb266eaf">TRAMP</a>
+<li><a href="#org1dfcfc3">Emacs Lisp</a></li>
+<li><a href="#org91a5053">TRAMP</a>
 <ul>
-<li><a href="#orgde272a4">Single Hop</a></li>
-<li><a href="#org330dd83">Double-Hop (Use a Bastion)</a></li>
+<li><a href="#org8eab29b">Single Hop</a></li>
+<li><a href="#orgcb9f87c">Double-Hop (Use a Bastion)</a></li>
 </ul>
 </li>
-<li><a href="#org7e30a01">Copy File to Remote Machine</a></li>
-<li><a href="#orgcd64358">IP Address Variable</a></li>
+<li><a href="#orgd6c7620">Copy File to Remote Machine</a></li>
+<li><a href="#org6f8a6a9">IP Address Variable</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-orgd120857" class="outline-2">
-<h2 id="orgd120857"><a href="#orgd120857">Print Error of Code Block</a></h2>
-<div class="outline-text-2" id="text-orgd120857">
+<div id="outline-container-orgb6d5e62" class="outline-2">
+<h2 id="orgb6d5e62"><a href="#orgb6d5e62">Print Error of Code Block</a></h2>
+<div class="outline-text-2" id="text-orgb6d5e62">
 <p>
 Relevant SO questions:
 </p>
@@ -69,9 +69,9 @@ Relevant SO questions:
 </ul>
 </div>
 
-<div id="outline-container-org9645a3d" class="outline-3">
-<h3 id="org9645a3d"><a href="#org9645a3d">Shell</a></h3>
-<div class="outline-text-3" id="text-org9645a3d">
+<div id="outline-container-orgf321fe0" class="outline-3">
+<h3 id="orgf321fe0"><a href="#orgf321fe0">Shell</a></h3>
+<div class="outline-text-3" id="text-orgf321fe0">
 <div class="org-src-container">
 <pre class="src src-bash">ls --foo
 </pre>
@@ -83,9 +83,9 @@ Try 'ls --help' for more information.
 </pre>
 </div>
 
-<div id="outline-container-org19de802" class="outline-4">
-<h4 id="org19de802"><a href="#org19de802">NOT WORKING</a></h4>
-<div class="outline-text-4" id="text-org19de802">
+<div id="outline-container-org8218ccc" class="outline-4">
+<h4 id="org8218ccc"><a href="#org8218ccc">NOT WORKING</a></h4>
+<div class="outline-text-4" id="text-org8218ccc">
 <p>
 Doesn't work:
 </p>
@@ -124,9 +124,9 @@ Hi chrisc-ironnet! You've successfully authenticated, but GitHub does not provid
 </div>
 </div>
 
-<div id="outline-container-orge4222ec" class="outline-3">
-<h3 id="orge4222ec"><a href="#orge4222ec">Python</a></h3>
-<div class="outline-text-3" id="text-orge4222ec">
+<div id="outline-container-org64151bb" class="outline-3">
+<h3 id="org64151bb"><a href="#org64151bb">Python</a></h3>
+<div class="outline-text-3" id="text-org64151bb">
 <div class="org-src-container">
 <pre class="src src-sh">python -c <span style="color: #98be65;">'bar=b"&#1054;&#1060;&#1048;&#1057;"''</span>
 </pre>
@@ -135,15 +135,15 @@ Hi chrisc-ironnet! You've successfully authenticated, but GitHub does not provid
 </div>
 </div>
 
-<div id="outline-container-org8c040c5" class="outline-2">
-<h2 id="org8c040c5"><a href="#org8c040c5">Emacs Lisp</a></h2>
-<div class="outline-text-2" id="text-org8c040c5">
+<div id="outline-container-org1dfcfc3" class="outline-2">
+<h2 id="org1dfcfc3"><a href="#org1dfcfc3">Emacs Lisp</a></h2>
+<div class="outline-text-2" id="text-org1dfcfc3">
 <p>
 To print data structure, use <code>:results value pp</code>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="orgbc733d2">'<span style="color: #51afef;">(</span><span style="color: #c678dd;">(</span><span style="color: #98be65;">"DeploymentName"</span> <span style="color: #98be65;">"webserver"</span><span style="color: #c678dd;">)</span>
+<pre class="src src-emacs-lisp" id="orgb1cc0aa">'<span style="color: #51afef;">(</span><span style="color: #c678dd;">(</span><span style="color: #98be65;">"DeploymentName"</span> <span style="color: #98be65;">"webserver"</span><span style="color: #c678dd;">)</span>
   <span style="color: #c678dd;">(</span><span style="color: #98be65;">"KeyName"</span> <span style="color: #98be65;">"cfc"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
@@ -160,32 +160,32 @@ To print data structure, use <code>:results value pp</code>
 </div>
 </div>
 
-<div id="outline-container-orgb266eaf" class="outline-2">
-<h2 id="orgb266eaf"><a href="#orgb266eaf">TRAMP</a></h2>
-<div class="outline-text-2" id="text-orgb266eaf">
+<div id="outline-container-org91a5053" class="outline-2">
+<h2 id="org91a5053"><a href="#org91a5053">TRAMP</a></h2>
+<div class="outline-text-2" id="text-org91a5053">
 </div>
-<div id="outline-container-orgde272a4" class="outline-3">
-<h3 id="orgde272a4"><a href="#orgde272a4">Single Hop</a></h3>
-<div class="outline-text-3" id="text-orgde272a4">
-<pre class="example" id="org4ef8b8b">
+<div id="outline-container-org8eab29b" class="outline-3">
+<h3 id="org8eab29b"><a href="#org8eab29b">Single Hop</a></h3>
+<div class="outline-text-3" id="text-org8eab29b">
+<pre class="example" id="org388818f">
 :dir /ssh:ec2-user@1.2.3.4:/
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org330dd83" class="outline-3">
-<h3 id="org330dd83"><a href="#org330dd83">Double-Hop (Use a Bastion)</a></h3>
-<div class="outline-text-3" id="text-org330dd83">
-<pre class="example" id="org91bf35c">
+<div id="outline-container-orgcb9f87c" class="outline-3">
+<h3 id="orgcb9f87c"><a href="#orgcb9f87c">Double-Hop (Use a Bastion)</a></h3>
+<div class="outline-text-3" id="text-orgcb9f87c">
+<pre class="example" id="org2a8b913">
 :dir /ssh:ec2-user@1.2.3.4|ssh:ec2-user@10.192.1.2:/
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org7e30a01" class="outline-2">
-<h2 id="org7e30a01"><a href="#org7e30a01">Copy File to Remote Machine</a></h2>
-<div class="outline-text-2" id="text-org7e30a01">
+<div id="outline-container-orgd6c7620" class="outline-2">
+<h2 id="orgd6c7620"><a href="#orgd6c7620">Copy File to Remote Machine</a></h2>
+<div class="outline-text-2" id="text-orgd6c7620">
 <p>
 This leverages my <code>host</code> function.
 </p>
@@ -197,9 +197,9 @@ This leverages my <code>host</code> function.
 </div>
 </div>
 
-<div id="outline-container-orgcd64358" class="outline-2">
-<h2 id="orgcd64358"><a href="#orgcd64358">IP Address Variable</a></h2>
-<div class="outline-text-2" id="text-orgcd64358">
+<div id="outline-container-org6f8a6a9" class="outline-2">
+<h2 id="org6f8a6a9"><a href="#org6f8a6a9">IP Address Variable</a></h2>
+<div class="outline-text-2" id="text-org6f8a6a9">
 <p>
 Because you don't want to hard-code IP addresses in your source blocks like
 some kind of animal!
@@ -221,7 +221,7 @@ some kind of animal!
 Then set variables at the top of a file, and use something like:
 </p>
 
-<pre class="example" id="org15bb9eb">
+<pre class="example" id="org75f35ea">
 #+begin_src bash :dir (host (getenv "HOST") (getenv "USER") "/home/ec2-user")
   pwd
 #+end_src

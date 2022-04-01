@@ -33,49 +33,49 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org7cf9d8e">yarn</a>
+<li><a href="#org9b9866f">yarn</a>
 <ul>
-<li><a href="#orgf825776">Global Packages</a>
+<li><a href="#orgfdab57a">Global Packages</a>
 <ul>
-<li><a href="#orge4e4d4c">Install</a></li>
-<li><a href="#orgff02226">List</a></li>
-<li><a href="#org35b5b11">Upgrade</a></li>
+<li><a href="#org5eac91d">Install</a></li>
+<li><a href="#org2c18046">List</a></li>
+<li><a href="#org77eafda">Upgrade</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orga51e600">npm</a>
+<li><a href="#orgb36f320">npm</a>
 <ul>
-<li><a href="#org850dcff">Global Packages</a>
+<li><a href="#orgad8fe37">Global Packages</a>
 <ul>
-<li><a href="#orgfd482e9">List</a></li>
-<li><a href="#orge762427">Delete Them All</a></li>
+<li><a href="#org588aa15">List</a></li>
+<li><a href="#org6fa2cc4">Delete Them All</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgf3774c5">Strings</a></li>
-<li><a href="#org46e5622">Scripts</a></li>
+<li><a href="#org9c9d5b0">Strings</a></li>
+<li><a href="#org9c85140">Scripts</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-org7cf9d8e" class="outline-2">
-<h2 id="org7cf9d8e"><a href="#org7cf9d8e">yarn</a></h2>
-<div class="outline-text-2" id="text-org7cf9d8e">
+<div id="outline-container-org9b9866f" class="outline-2">
+<h2 id="org9b9866f"><a href="#org9b9866f">yarn</a></h2>
+<div class="outline-text-2" id="text-org9b9866f">
 </div>
-<div id="outline-container-orgf825776" class="outline-3">
-<h3 id="orgf825776"><a href="#orgf825776">Global Packages</a></h3>
-<div class="outline-text-3" id="text-orgf825776">
+<div id="outline-container-orgfdab57a" class="outline-3">
+<h3 id="orgfdab57a"><a href="#orgfdab57a">Global Packages</a></h3>
+<div class="outline-text-3" id="text-orgfdab57a">
 <p>
 Global packages are installed to <code>$(yarn global dir)/node_modules/</code> and
 symlinks are placed in <code>$(yarn global bin)</code>.
 </p>
 </div>
 
-<div id="outline-container-orge4e4d4c" class="outline-4">
-<h4 id="orge4e4d4c"><a href="#orge4e4d4c">Install</a></h4>
-<div class="outline-text-4" id="text-orge4e4d4c">
+<div id="outline-container-org5eac91d" class="outline-4">
+<h4 id="org5eac91d"><a href="#org5eac91d">Install</a></h4>
+<div class="outline-text-4" id="text-org5eac91d">
 <div class="org-src-container">
 <pre class="src src-sh">yarn global add $<span style="color: #dcaeea;">package</span>
 </pre>
@@ -83,9 +83,9 @@ symlinks are placed in <code>$(yarn global bin)</code>.
 </div>
 </div>
 
-<div id="outline-container-orgff02226" class="outline-4">
-<h4 id="orgff02226"><a href="#orgff02226">List</a></h4>
-<div class="outline-text-4" id="text-orgff02226">
+<div id="outline-container-org2c18046" class="outline-4">
+<h4 id="org2c18046"><a href="#org2c18046">List</a></h4>
+<div class="outline-text-4" id="text-org2c18046">
 <div class="org-src-container">
 <pre class="src src-sh">yarn global list
 </pre>
@@ -93,9 +93,9 @@ symlinks are placed in <code>$(yarn global bin)</code>.
 </div>
 </div>
 
-<div id="outline-container-org35b5b11" class="outline-4">
-<h4 id="org35b5b11"><a href="#org35b5b11">Upgrade</a></h4>
-<div class="outline-text-4" id="text-org35b5b11">
+<div id="outline-container-org77eafda" class="outline-4">
+<h4 id="org77eafda"><a href="#org77eafda">Upgrade</a></h4>
+<div class="outline-text-4" id="text-org77eafda">
 <div class="org-src-container">
 <pre class="src src-sh">yarn global upgrade $<span style="color: #dcaeea;">package</span> --latest
 </pre>
@@ -119,17 +119,17 @@ Without <code>--latest</code>, yarn will respect semver specs in <code>$(yarn gl
 </div>
 </div>
 
-<div id="outline-container-orga51e600" class="outline-2">
-<h2 id="orga51e600"><a href="#orga51e600">npm</a></h2>
-<div class="outline-text-2" id="text-orga51e600">
+<div id="outline-container-orgb36f320" class="outline-2">
+<h2 id="orgb36f320"><a href="#orgb36f320">npm</a></h2>
+<div class="outline-text-2" id="text-orgb36f320">
 </div>
-<div id="outline-container-org850dcff" class="outline-3">
-<h3 id="org850dcff"><a href="#org850dcff">Global Packages</a></h3>
-<div class="outline-text-3" id="text-org850dcff">
+<div id="outline-container-orgad8fe37" class="outline-3">
+<h3 id="orgad8fe37"><a href="#orgad8fe37">Global Packages</a></h3>
+<div class="outline-text-3" id="text-orgad8fe37">
 </div>
-<div id="outline-container-orgfd482e9" class="outline-4">
-<h4 id="orgfd482e9"><a href="#orgfd482e9">List</a></h4>
-<div class="outline-text-4" id="text-orgfd482e9">
+<div id="outline-container-org588aa15" class="outline-4">
+<h4 id="org588aa15"><a href="#org588aa15">List</a></h4>
+<div class="outline-text-4" id="text-org588aa15">
 <div class="org-src-container">
 <pre class="src src-sh">npm -g list --depth 0
 </pre>
@@ -137,9 +137,9 @@ Without <code>--latest</code>, yarn will respect semver specs in <code>$(yarn gl
 </div>
 </div>
 
-<div id="outline-container-orge762427" class="outline-4">
-<h4 id="orge762427"><a href="#orge762427">Delete Them All</a></h4>
-<div class="outline-text-4" id="text-orge762427">
+<div id="outline-container-org6fa2cc4" class="outline-4">
+<h4 id="org6fa2cc4"><a href="#org6fa2cc4">Delete Them All</a></h4>
+<div class="outline-text-4" id="text-org6fa2cc4">
 <div class="org-src-container">
 <pre class="src src-sh">npm list -gp --depth=0 <span style="color: #98be65;">\</span>
     | awk -F/ <span style="color: #98be65;">'/node_modules/ &amp;&amp; !/\/npm$/ {print $NF}'</span> <span style="color: #98be65;">\</span>
@@ -151,9 +151,9 @@ Without <code>--latest</code>, yarn will respect semver specs in <code>$(yarn gl
 </div>
 </div>
 
-<div id="outline-container-orgf3774c5" class="outline-2">
-<h2 id="orgf3774c5"><a href="#orgf3774c5">Strings</a></h2>
-<div class="outline-text-2" id="text-orgf3774c5">
+<div id="outline-container-org9c9d5b0" class="outline-2">
+<h2 id="org9c9d5b0"><a href="#org9c9d5b0">Strings</a></h2>
+<div class="outline-text-2" id="text-org9c9d5b0">
 <div class="org-src-container">
 <pre class="src src-js"><span style="color: #51afef;">return</span> <span style="color: #98be65;">"&#128514;"</span>.length
 </pre>
@@ -179,9 +179,9 @@ From: <a href="https://hsivonen.fi/string-length/">https://hsivonen.fi/string-le
 </div>
 </div>
 
-<div id="outline-container-org46e5622" class="outline-2">
-<h2 id="org46e5622"><a href="#org46e5622">Scripts</a></h2>
-<div class="outline-text-2" id="text-org46e5622">
+<div id="outline-container-org9c85140" class="outline-2">
+<h2 id="org9c85140"><a href="#org9c85140">Scripts</a></h2>
+<div class="outline-text-2" id="text-org9c85140">
 <div class="org-src-container">
 <pre class="src src-js"><span style="color: #51afef;">const</span> <span style="color: #dcaeea;">fs</span> = require(<span style="color: #98be65;">'fs'</span>);
 console.log(<span style="color: #98be65;">"hello"</span>)

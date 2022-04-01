@@ -31,26 +31,26 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgd5203e2">Secrets Using Keychain</a>
+<li><a href="#org153c9d6">Secrets Using Keychain</a>
 <ul>
-<li><a href="#org98ff8eb">Add a secret</a></li>
-<li><a href="#org3cc88dd">Delete Secret</a></li>
-<li><a href="#org0e6e707">Retrieve Secret</a></li>
+<li><a href="#org7b04611">Add a secret</a></li>
+<li><a href="#org322e911">Delete Secret</a></li>
+<li><a href="#org83ccba5">Retrieve Secret</a></li>
 </ul>
 </li>
-<li><a href="#orgfdc5883">Certificates</a></li>
-<li><a href="#org67675a2">Temp Files</a></li>
-<li><a href="#org0168ca1">Cache Files</a></li>
+<li><a href="#org0e79080">Certificates</a></li>
+<li><a href="#org32e897b">Temp Files</a></li>
+<li><a href="#org900dc1b">Cache Files</a></li>
 </ul>
 </div>
 </nav>
-<div id="outline-container-orgd5203e2" class="outline-2">
-<h2 id="orgd5203e2"><a href="#orgd5203e2">Secrets Using Keychain</a></h2>
-<div class="outline-text-2" id="text-orgd5203e2">
+<div id="outline-container-org153c9d6" class="outline-2">
+<h2 id="org153c9d6"><a href="#org153c9d6">Secrets Using Keychain</a></h2>
+<div class="outline-text-2" id="text-org153c9d6">
 </div>
-<div id="outline-container-org98ff8eb" class="outline-3">
-<h3 id="org98ff8eb"><a href="#org98ff8eb">Add a secret</a></h3>
-<div class="outline-text-3" id="text-org98ff8eb">
+<div id="outline-container-org7b04611" class="outline-3">
+<h3 id="org7b04611"><a href="#org7b04611">Add a secret</a></h3>
+<div class="outline-text-3" id="text-org7b04611">
 <div class="org-src-container">
 <pre class="src src-sh">security add-generic-password <span style="color: #98be65;">\</span>
          -a ${<span style="color: #dcaeea;">USER</span>} <span style="color: #98be65;">\</span>
@@ -61,9 +61,9 @@
 </div>
 </div>
 
-<div id="outline-container-org3cc88dd" class="outline-3">
-<h3 id="org3cc88dd"><a href="#org3cc88dd">Delete Secret</a></h3>
-<div class="outline-text-3" id="text-org3cc88dd">
+<div id="outline-container-org322e911" class="outline-3">
+<h3 id="org322e911"><a href="#org322e911">Delete Secret</a></h3>
+<div class="outline-text-3" id="text-org322e911">
 <div class="org-src-container">
 <pre class="src src-sh">security delete-generic-password -a ${<span style="color: #dcaeea;">USER</span>} -s $<span style="color: #dcaeea;">1</span> &gt;/dev/null
 </pre>
@@ -71,9 +71,9 @@
 </div>
 </div>
 
-<div id="outline-container-org0e6e707" class="outline-3">
-<h3 id="org0e6e707"><a href="#org0e6e707">Retrieve Secret</a></h3>
-<div class="outline-text-3" id="text-org0e6e707">
+<div id="outline-container-org83ccba5" class="outline-3">
+<h3 id="org83ccba5"><a href="#org83ccba5">Retrieve Secret</a></h3>
+<div class="outline-text-3" id="text-org83ccba5">
 <div class="org-src-container">
 <pre class="src src-sh">security find-generic-password -a ${<span style="color: #dcaeea;">USER</span>} -s $<span style="color: #dcaeea;">1</span> -w
 </pre>
@@ -82,9 +82,9 @@
 </div>
 </div>
 
-<div id="outline-container-orgfdc5883" class="outline-2">
-<h2 id="orgfdc5883"><a href="#orgfdc5883">Certificates</a></h2>
-<div class="outline-text-2" id="text-orgfdc5883">
+<div id="outline-container-org0e79080" class="outline-2">
+<h2 id="org0e79080"><a href="#org0e79080">Certificates</a></h2>
+<div class="outline-text-2" id="text-org0e79080">
 <p>
 Get system root certificates.
 </p>
@@ -103,9 +103,9 @@ security find-certificate <span style="color: #98be65;">\</span>
 </div>
 </div>
 
-<div id="outline-container-org67675a2" class="outline-2">
-<h2 id="org67675a2"><a href="#org67675a2">Temp Files</a></h2>
-<div class="outline-text-2" id="text-org67675a2">
+<div id="outline-container-org32e897b" class="outline-2">
+<h2 id="org32e897b"><a href="#org32e897b">Temp Files</a></h2>
+<div class="outline-text-2" id="text-org32e897b">
 <div class="org-src-container">
 <pre class="src src-sh">getconf DARWIN_USER_TEMP_DIR
 </pre>
@@ -117,9 +117,9 @@ security find-certificate <span style="color: #98be65;">\</span>
 </div>
 </div>
 
-<div id="outline-container-org0168ca1" class="outline-2">
-<h2 id="org0168ca1"><a href="#org0168ca1">Cache Files</a></h2>
-<div class="outline-text-2" id="text-org0168ca1">
+<div id="outline-container-org900dc1b" class="outline-2">
+<h2 id="org900dc1b"><a href="#org900dc1b">Cache Files</a></h2>
+<div class="outline-text-2" id="text-org900dc1b">
 <div class="org-src-container">
 <pre class="src src-sh">getconf DARWIN_USER_CACHE_DIR
 </pre>

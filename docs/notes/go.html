@@ -33,20 +33,31 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgbb21e08">New Project</a>
+<li><a href="#orgf382430">Installation</a></li>
+<li><a href="#orgf0176f1">New Project</a>
 <ul>
-<li><a href="#orgee7918b">Repo Structure</a></li>
+<li><a href="#org335d7bf">Repo Structure</a></li>
 </ul>
 </li>
-<li><a href="#org9e1e313">Cobra</a></li>
-<li><a href="#org5cf795e">Docker</a></li>
+<li><a href="#org2eeb8a5">Cobra</a></li>
+<li><a href="#orga8199c3">Docker</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-orgbb21e08" class="outline-2">
-<h2 id="orgbb21e08"><a href="#orgbb21e08">New Project</a></h2>
-<div class="outline-text-2" id="text-orgbb21e08">
+<div id="outline-container-orgf382430" class="outline-2">
+<h2 id="orgf382430"><a href="#orgf382430">Installation</a></h2>
+<div class="outline-text-2" id="text-orgf382430">
+<div class="org-src-container">
+<pre class="src src-sh">brew install go
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf0176f1" class="outline-2">
+<h2 id="orgf0176f1"><a href="#orgf0176f1">New Project</a></h2>
+<div class="outline-text-2" id="text-orgf0176f1">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #dcaeea;">projectName</span>=$(basename $(<span style="color: #c678dd;">pwd</span>))
 go mod init github.com/cfclrk/$<span style="color: #dcaeea;">projectName</span>
@@ -55,9 +66,9 @@ go mod tidy
 </div>
 </div>
 
-<div id="outline-container-orgee7918b" class="outline-3">
-<h3 id="orgee7918b"><a href="#orgee7918b">Repo Structure</a></h3>
-<div class="outline-text-3" id="text-orgee7918b">
+<div id="outline-container-org335d7bf" class="outline-3">
+<h3 id="org335d7bf"><a href="#org335d7bf">Repo Structure</a></h3>
+<div class="outline-text-3" id="text-org335d7bf">
 <p>
 See: <a href="http://peter.bourgon.org/go-best-practices-2016/#repository-structure">http://peter.bourgon.org/go-best-practices-2016/#repository-structure</a>
 </p>
@@ -65,9 +76,9 @@ See: <a href="http://peter.bourgon.org/go-best-practices-2016/#repository-struct
 </div>
 </div>
 
-<div id="outline-container-org9e1e313" class="outline-2">
-<h2 id="org9e1e313"><a href="#org9e1e313">Cobra</a></h2>
-<div class="outline-text-2" id="text-org9e1e313">
+<div id="outline-container-org2eeb8a5" class="outline-2">
+<h2 id="org2eeb8a5"><a href="#org2eeb8a5">Cobra</a></h2>
+<div class="outline-text-2" id="text-org2eeb8a5">
 <p>
 Create a new cobra project:
 </p>
@@ -93,9 +104,9 @@ Your Cobra applicaton is ready at
 </div>
 </div>
 
-<div id="outline-container-org5cf795e" class="outline-2">
-<h2 id="org5cf795e"><a href="#org5cf795e">Docker</a></h2>
-<div class="outline-text-2" id="text-org5cf795e">
+<div id="outline-container-orga8199c3" class="outline-2">
+<h2 id="orga8199c3"><a href="#orga8199c3">Docker</a></h2>
+<div class="outline-text-2" id="text-orga8199c3">
 <p>
 Run golang container for interactive use:
 </p>

@@ -33,96 +33,96 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org27ac499">What is Kubernetes?</a></li>
-<li><a href="#orgebed4e5">Operators</a></li>
-<li><a href="#org4af5042">Describing a Cluster</a>
+<li><a href="#org9bc8684">What is Kubernetes?</a></li>
+<li><a href="#orgca21f50">Operators</a></li>
+<li><a href="#org56a8f6a">Describing a Cluster</a>
 <ul>
-<li><a href="#org0bf4b72">Version</a></li>
-<li><a href="#org35b61ce">Master node address</a></li>
-<li><a href="#orgb171ac5">View all available resources</a></li>
+<li><a href="#orgfe1380c">Version</a></li>
+<li><a href="#org90660f4">Master node address</a></li>
+<li><a href="#orgc016df6">View all available resources</a></li>
 </ul>
 </li>
-<li><a href="#orgbb0b051">Completely Delete a Cluster</a></li>
-<li><a href="#org5b9933c">Kubeconfig, Context and Namespace</a></li>
-<li><a href="#org160d60e">Cluster ID</a></li>
-<li><a href="#orge732955">Affinity, Taints, and Tolerations</a>
+<li><a href="#org11642c4">Completely Delete a Cluster</a></li>
+<li><a href="#orge9a7f07">Kubeconfig, Context and Namespace</a></li>
+<li><a href="#orgf77af57">Cluster ID</a></li>
+<li><a href="#orgb5a08f0">Affinity, Taints, and Tolerations</a>
 <ul>
-<li><a href="#org5fedd9f">Affinity</a></li>
-<li><a href="#org524cb8f">Taints</a></li>
-<li><a href="#org7aca736">Tolerations</a></li>
+<li><a href="#orge6d1814">Affinity</a></li>
+<li><a href="#org2268c8d">Taints</a></li>
+<li><a href="#org70e2cb0">Tolerations</a></li>
 </ul>
 </li>
-<li><a href="#orgcb2ddf6">ConfigMaps</a></li>
-<li><a href="#org3723e24">Deployments</a>
+<li><a href="#org511ccf0">ConfigMaps</a></li>
+<li><a href="#org9f5e1ee">Deployments</a>
 <ul>
-<li><a href="#orgbc73bd4">Scaling a deployment</a></li>
+<li><a href="#org2b3aa77">Scaling a deployment</a></li>
 </ul>
 </li>
-<li><a href="#orgdd48688">Nodes</a>
+<li><a href="#orgb822ac7">Nodes</a>
 <ul>
-<li><a href="#orgd515ff3">Master Node IP</a></li>
-<li><a href="#orgedb6123">Worker Nodes</a></li>
-<li><a href="#orgbe4ca62">Worker Node IPs</a>
+<li><a href="#org345c4ee">Master Node IP</a></li>
+<li><a href="#orgdc7e49b">Worker Nodes</a></li>
+<li><a href="#org1af89c6">Worker Node IPs</a>
 <ul>
-<li><a href="#org97dc6fa">Private IP</a></li>
-<li><a href="#org168518a">Public IPs</a></li>
+<li><a href="#orgc1638f4">Private IP</a></li>
+<li><a href="#org0bd7214">Public IPs</a></li>
 </ul>
 </li>
-<li><a href="#orgfc397d4">All Pods on a Node</a></li>
-<li><a href="#org6a69325">SSH to a Pod's Node</a></li>
+<li><a href="#orgea476b3">All Pods on a Node</a></li>
+<li><a href="#org404ff36">SSH to a Pod's Node</a></li>
 </ul>
 </li>
-<li><a href="#org9ad62fb">Pods</a>
+<li><a href="#org34b2ece">Pods</a>
 <ul>
-<li><a href="#orgb9bf892">List Containers in a Pod</a></li>
-<li><a href="#orgbb91d47">What Node is this Pod on?</a></li>
+<li><a href="#org0ec7144">List Containers in a Pod</a></li>
+<li><a href="#org2254ea3">What Node is this Pod on?</a></li>
 </ul>
 </li>
-<li><a href="#orgaba1171">Secrets</a>
+<li><a href="#orgeec15c3">Secrets</a>
 <ul>
-<li><a href="#org6e91b01">Create Docker Registry Secret</a></li>
-<li><a href="#orgd7b8897">Decode Docker Registry Secret</a></li>
-<li><a href="#orgae003de">Update a Secret</a></li>
+<li><a href="#orgdba11f2">Create Docker Registry Secret</a></li>
+<li><a href="#org7c4bffd">Decode Docker Registry Secret</a></li>
+<li><a href="#org10b5e1a">Update a Secret</a></li>
 </ul>
 </li>
-<li><a href="#org406ba03">Services</a>
+<li><a href="#orgabf2143">Services</a>
 <ul>
-<li><a href="#org987f840">Get Services of Type</a></li>
+<li><a href="#orgb54ed81">Get Services of Type</a></li>
 </ul>
 </li>
-<li><a href="#org8cfa95f">Service Accounts</a></li>
-<li><a href="#orgc519080">StorageClass</a></li>
-<li><a href="#org724d4fc">Running Commands in Cluster</a>
+<li><a href="#org3c8e55c">Service Accounts</a></li>
+<li><a href="#org00d8bab">StorageClass</a></li>
+<li><a href="#org0dd690b">Running Commands in Cluster</a>
 <ul>
-<li><a href="#org116e482">Create a temporary pod</a></li>
-<li><a href="#org11df49e">Exec in an existing pod</a></li>
-<li><a href="#orge31dfa9">Port forwarding with kubectl</a></li>
+<li><a href="#org0e1f62f">Create a temporary pod</a></li>
+<li><a href="#org6240f57">Exec in an existing pod</a></li>
+<li><a href="#org385f648">Port forwarding with kubectl</a></li>
 </ul>
 </li>
-<li><a href="#orge74035d">Using the API directily</a></li>
-<li><a href="#orgce6c22a">Debugging</a>
+<li><a href="#orgc4df0a1">Using the API directily</a></li>
+<li><a href="#orgf506754">Debugging</a>
 <ul>
-<li><a href="#orgc3d316e">Startig a busybox pod</a></li>
+<li><a href="#orgab581ff">Startig a busybox pod</a></li>
 </ul>
 </li>
-<li><a href="#org85069bd">etcd</a></li>
-<li><a href="#orgbc8d4a8">Autoscaling</a>
+<li><a href="#org953709b">etcd</a></li>
+<li><a href="#org3635b24">Autoscaling</a>
 <ul>
-<li><a href="#org8268299">Scaling Pods</a>
+<li><a href="#org4d2bbfc">Scaling Pods</a>
 <ul>
-<li><a href="#org1650b82">Horizontal Pod Autoscaler</a></li>
+<li><a href="#org5425ff4">Horizontal Pod Autoscaler</a></li>
 </ul>
 </li>
-<li><a href="#orgec38b65">Scaling Nodes</a></li>
+<li><a href="#orga2eb473">Scaling Nodes</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-org27ac499" class="outline-2">
-<h2 id="org27ac499"><a href="#org27ac499">What is Kubernetes?</a></h2>
-<div class="outline-text-2" id="text-org27ac499">
+<div id="outline-container-org9bc8684" class="outline-2">
+<h2 id="org9bc8684"><a href="#org9bc8684">What is Kubernetes?</a></h2>
+<div class="outline-text-2" id="text-org9bc8684">
 <p>
 According to kubernetes.com, Kubernetes is&#x2026;
 </p>
@@ -195,9 +195,9 @@ regardless of the nodes on which they run.
 </div>
 </div>
 
-<div id="outline-container-orgebed4e5" class="outline-2">
-<h2 id="orgebed4e5"><a href="#orgebed4e5">Operators</a></h2>
-<div class="outline-text-2" id="text-orgebed4e5">
+<div id="outline-container-orgca21f50" class="outline-2">
+<h2 id="orgca21f50"><a href="#orgca21f50">Operators</a></h2>
+<div class="outline-text-2" id="text-orgca21f50">
 <p>
 An operator is just a controller that monitors a CRD instead of a resource
 defined by Kubernetes.
@@ -213,13 +213,13 @@ steps to reduce that difference.
 </div>
 </div>
 
-<div id="outline-container-org4af5042" class="outline-2">
-<h2 id="org4af5042"><a href="#org4af5042">Describing a Cluster</a></h2>
-<div class="outline-text-2" id="text-org4af5042">
+<div id="outline-container-org56a8f6a" class="outline-2">
+<h2 id="org56a8f6a"><a href="#org56a8f6a">Describing a Cluster</a></h2>
+<div class="outline-text-2" id="text-org56a8f6a">
 </div>
-<div id="outline-container-org0bf4b72" class="outline-3">
-<h3 id="org0bf4b72"><a href="#org0bf4b72">Version</a></h3>
-<div class="outline-text-3" id="text-org0bf4b72">
+<div id="outline-container-orgfe1380c" class="outline-3">
+<h3 id="orgfe1380c"><a href="#orgfe1380c">Version</a></h3>
+<div class="outline-text-3" id="text-orgfe1380c">
 <div class="org-src-container">
 <pre class="src src-sh">kubectl version --short
 </pre>
@@ -227,9 +227,9 @@ steps to reduce that difference.
 </div>
 </div>
 
-<div id="outline-container-org35b61ce" class="outline-3">
-<h3 id="org35b61ce"><a href="#org35b61ce">Master node address</a></h3>
-<div class="outline-text-3" id="text-org35b61ce">
+<div id="outline-container-org90660f4" class="outline-3">
+<h3 id="org90660f4"><a href="#org90660f4">Master node address</a></h3>
+<div class="outline-text-3" id="text-org90660f4">
 <p>
 Display address of master node
 </p>
@@ -241,9 +241,9 @@ Display address of master node
 </div>
 </div>
 
-<div id="outline-container-orgb171ac5" class="outline-3">
-<h3 id="orgb171ac5"><a href="#orgb171ac5">View all available resources</a></h3>
-<div class="outline-text-3" id="text-orgb171ac5">
+<div id="outline-container-orgc016df6" class="outline-3">
+<h3 id="orgc016df6"><a href="#orgc016df6">View all available resources</a></h3>
+<div class="outline-text-3" id="text-orgc016df6">
 <div class="org-src-container">
 <pre class="src src-sh">kubectl api-resources
 </pre>
@@ -252,9 +252,9 @@ Display address of master node
 </div>
 </div>
 
-<div id="outline-container-orgbb0b051" class="outline-2">
-<h2 id="orgbb0b051"><a href="#orgbb0b051">Completely Delete a Cluster</a></h2>
-<div class="outline-text-2" id="text-orgbb0b051">
+<div id="outline-container-org11642c4" class="outline-2">
+<h2 id="org11642c4"><a href="#org11642c4">Completely Delete a Cluster</a></h2>
+<div class="outline-text-2" id="text-org11642c4">
 <div class="org-src-container">
 <pre class="src src-sh">kubectl delete --all all
 kubectl delete secret --all
@@ -267,9 +267,9 @@ kubectl delete crds --all
 </div>
 </div>
 
-<div id="outline-container-org5b9933c" class="outline-2">
-<h2 id="org5b9933c"><a href="#org5b9933c">Kubeconfig, Context and Namespace</a></h2>
-<div class="outline-text-2" id="text-org5b9933c">
+<div id="outline-container-orge9a7f07" class="outline-2">
+<h2 id="orge9a7f07"><a href="#orge9a7f07">Kubeconfig, Context and Namespace</a></h2>
+<div class="outline-text-2" id="text-orge9a7f07">
 <p>
 Set namespace for the current context
 </p>
@@ -283,9 +283,9 @@ Set namespace for the current context
 </div>
 </div>
 
-<div id="outline-container-org160d60e" class="outline-2">
-<h2 id="org160d60e"><a href="#org160d60e">Cluster ID</a></h2>
-<div class="outline-text-2" id="text-org160d60e">
+<div id="outline-container-orgf77af57" class="outline-2">
+<h2 id="orgf77af57"><a href="#orgf77af57">Cluster ID</a></h2>
+<div class="outline-text-2" id="text-orgf77af57">
 <p>
 Clusters don't really have an identifier. Best idea I have seen is to use the
 kube-system namespace UID. For a discussion, see: <a href="https://groups.google.com/forum/#!msg/kubernetes-sig-architecture/mVGobfD4TpY/nkdbkX1iBwAJ">Cluster ID API</a>.
@@ -299,9 +299,9 @@ kube-system namespace UID. For a discussion, see: <a href="https://groups.google
 </div>
 </div>
 
-<div id="outline-container-orge732955" class="outline-2">
-<h2 id="orge732955"><a href="#orge732955">Affinity, Taints, and Tolerations</a></h2>
-<div class="outline-text-2" id="text-orge732955">
+<div id="outline-container-orgb5a08f0" class="outline-2">
+<h2 id="orgb5a08f0"><a href="#orgb5a08f0">Affinity, Taints, and Tolerations</a></h2>
+<div class="outline-text-2" id="text-orgb5a08f0">
 <p>
 Kubernetes supports a way to indicate that specific nodes have a certain
 quality. Pods must opt-in to using those nodes.
@@ -320,9 +320,9 @@ serverless nodes.
 </p>
 </div>
 
-<div id="outline-container-org5fedd9f" class="outline-3">
-<h3 id="org5fedd9f"><a href="#org5fedd9f">Affinity</a></h3>
-<div class="outline-text-3" id="text-org5fedd9f">
+<div id="outline-container-orge6d1814" class="outline-3">
+<h3 id="orge6d1814"><a href="#orge6d1814">Affinity</a></h3>
+<div class="outline-text-3" id="text-orge6d1814">
 <p>
 A Pod can specify an affinity for certain nodes. Can either be a preference or a
 requirement.
@@ -330,9 +330,9 @@ requirement.
 </div>
 </div>
 
-<div id="outline-container-org524cb8f" class="outline-3">
-<h3 id="org524cb8f"><a href="#org524cb8f">Taints</a></h3>
-<div class="outline-text-3" id="text-org524cb8f">
+<div id="outline-container-org2268c8d" class="outline-3">
+<h3 id="org2268c8d"><a href="#org2268c8d">Taints</a></h3>
+<div class="outline-text-3" id="text-org2268c8d">
 <p>
 A Node can have a taint that will not allow Pods to be scheduled to it unless
 the Pod can tolerate the taint.
@@ -340,9 +340,9 @@ the Pod can tolerate the taint.
 </div>
 </div>
 
-<div id="outline-container-org7aca736" class="outline-3">
-<h3 id="org7aca736"><a href="#org7aca736">Tolerations</a></h3>
-<div class="outline-text-3" id="text-org7aca736">
+<div id="outline-container-org70e2cb0" class="outline-3">
+<h3 id="org70e2cb0"><a href="#org70e2cb0">Tolerations</a></h3>
+<div class="outline-text-3" id="text-org70e2cb0">
 <p>
 A Pod can specify a toleration which allows it (but does not require it) to be
 scheduled to nodes with a matching taint.
@@ -351,9 +351,9 @@ scheduled to nodes with a matching taint.
 </div>
 </div>
 
-<div id="outline-container-orgcb2ddf6" class="outline-2">
-<h2 id="orgcb2ddf6"><a href="#orgcb2ddf6">ConfigMaps</a></h2>
-<div class="outline-text-2" id="text-orgcb2ddf6">
+<div id="outline-container-org511ccf0" class="outline-2">
+<h2 id="org511ccf0"><a href="#org511ccf0">ConfigMaps</a></h2>
+<div class="outline-text-2" id="text-org511ccf0">
 <div class="org-src-container">
 <pre class="src src-sh">kubectl get cm aws-auth <span style="color: #98be65;">\</span>
         -n kube-system <span style="color: #98be65;">\</span>
@@ -364,13 +364,13 @@ scheduled to nodes with a matching taint.
 </div>
 </div>
 
-<div id="outline-container-org3723e24" class="outline-2">
-<h2 id="org3723e24"><a href="#org3723e24">Deployments</a></h2>
-<div class="outline-text-2" id="text-org3723e24">
+<div id="outline-container-org9f5e1ee" class="outline-2">
+<h2 id="org9f5e1ee"><a href="#org9f5e1ee">Deployments</a></h2>
+<div class="outline-text-2" id="text-org9f5e1ee">
 </div>
-<div id="outline-container-orgbc73bd4" class="outline-3">
-<h3 id="orgbc73bd4"><a href="#orgbc73bd4">Scaling a deployment</a></h3>
-<div class="outline-text-3" id="text-orgbc73bd4">
+<div id="outline-container-org2b3aa77" class="outline-3">
+<h3 id="org2b3aa77"><a href="#org2b3aa77">Scaling a deployment</a></h3>
+<div class="outline-text-3" id="text-org2b3aa77">
 <div class="org-src-container">
 <pre class="src src-sh">kubectl scale deployment &lt;deployment-name&gt; --replicas=1
 </pre>
@@ -379,28 +379,28 @@ scheduled to nodes with a matching taint.
 </div>
 </div>
 
-<div id="outline-container-orgdd48688" class="outline-2">
-<h2 id="orgdd48688"><a href="#orgdd48688">Nodes</a></h2>
-<div class="outline-text-2" id="text-orgdd48688">
+<div id="outline-container-orgb822ac7" class="outline-2">
+<h2 id="orgb822ac7"><a href="#orgb822ac7">Nodes</a></h2>
+<div class="outline-text-2" id="text-orgb822ac7">
 </div>
-<div id="outline-container-orgd515ff3" class="outline-3">
-<h3 id="orgd515ff3"><a href="#orgd515ff3">Master Node IP</a></h3>
-<div class="outline-text-3" id="text-orgd515ff3">
+<div id="outline-container-org345c4ee" class="outline-3">
+<h3 id="org345c4ee"><a href="#org345c4ee">Master Node IP</a></h3>
+<div class="outline-text-3" id="text-org345c4ee">
 <p>
 Note you can also get the master node ip with <code>kubectl cluster-info</code>.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="org7bbd2aa">kubectl get node -lnode-role.kubernetes.io/master <span style="color: #98be65;">\</span>
+<pre class="src src-sh" id="org358404d">kubectl get node -lnode-role.kubernetes.io/master <span style="color: #98be65;">\</span>
         -o <span style="color: #dcaeea;">jsonpath</span>=<span style="color: #98be65;">'{ $.items[*].status.addresses[?(@.type=="ExternalIP")].address }'</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgedb6123" class="outline-3">
-<h3 id="orgedb6123"><a href="#orgedb6123">Worker Nodes</a></h3>
-<div class="outline-text-3" id="text-orgedb6123">
+<div id="outline-container-orgdc7e49b" class="outline-3">
+<h3 id="orgdc7e49b"><a href="#orgdc7e49b">Worker Nodes</a></h3>
+<div class="outline-text-3" id="text-orgdc7e49b">
 <div class="org-src-container">
 <pre class="src src-sh">kubectl get nodes <span style="color: #98be65;">\</span>
         -l <span style="color: #98be65;">"kubernetes.io/role = node"</span>
@@ -409,19 +409,19 @@ Note you can also get the master node ip with <code>kubectl cluster-info</code>.
 </div>
 </div>
 
-<div id="outline-container-orgbe4ca62" class="outline-3">
-<h3 id="orgbe4ca62"><a href="#orgbe4ca62">Worker Node IPs</a></h3>
-<div class="outline-text-3" id="text-orgbe4ca62">
+<div id="outline-container-org1af89c6" class="outline-3">
+<h3 id="org1af89c6"><a href="#org1af89c6">Worker Node IPs</a></h3>
+<div class="outline-text-3" id="text-org1af89c6">
 </div>
-<div id="outline-container-org97dc6fa" class="outline-4">
-<h4 id="org97dc6fa"><a href="#org97dc6fa">Private IP</a></h4>
-<div class="outline-text-4" id="text-org97dc6fa">
+<div id="outline-container-orgc1638f4" class="outline-4">
+<h4 id="orgc1638f4"><a href="#orgc1638f4">Private IP</a></h4>
+<div class="outline-text-4" id="text-orgc1638f4">
 <p>
 Without jq:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="org199886f">kubectl get nodes -l <span style="color: #98be65;">"kubernetes.io/role = node"</span> <span style="color: #98be65;">\</span>
+<pre class="src src-sh" id="org5f67f3b">kubectl get nodes -l <span style="color: #98be65;">"kubernetes.io/role = node"</span> <span style="color: #98be65;">\</span>
         -o <span style="color: #dcaeea;">jsonpath</span>=<span style="color: #98be65;">'{range .items[*]}{.metadata.annotations.flannel\.alpha\.coreos\.com/public-ip}</span>
 <span style="color: #98be65;">{end}'</span>
 </pre>
@@ -443,9 +443,9 @@ With jq:
 </div>
 </div>
 
-<div id="outline-container-org168518a" class="outline-4">
-<h4 id="org168518a"><a href="#org168518a">Public IPs</a></h4>
-<div class="outline-text-4" id="text-org168518a">
+<div id="outline-container-org0bd7214" class="outline-4">
+<h4 id="org0bd7214"><a href="#org0bd7214">Public IPs</a></h4>
+<div class="outline-text-4" id="text-org0bd7214">
 <div class="org-src-container">
 <pre class="src src-sh">kubectl get nodes -o json <span style="color: #98be65;">\</span>
         -l <span style="color: #98be65;">"kubernetes.io/role = node"</span> <span style="color: #98be65;">\</span>
@@ -458,9 +458,9 @@ With jq:
 </div>
 </div>
 
-<div id="outline-container-orgfc397d4" class="outline-3">
-<h3 id="orgfc397d4"><a href="#orgfc397d4">All Pods on a Node</a></h3>
-<div class="outline-text-3" id="text-orgfc397d4">
+<div id="outline-container-orgea476b3" class="outline-3">
+<h3 id="orgea476b3"><a href="#orgea476b3">All Pods on a Node</a></h3>
+<div class="outline-text-3" id="text-orgea476b3">
 <div class="org-src-container">
 <pre class="src src-sh">kubectl describe node $<span style="color: #dcaeea;">NodeName</span>
 </pre>
@@ -474,9 +474,9 @@ With jq:
 </div>
 </div>
 
-<div id="outline-container-org6a69325" class="outline-3">
-<h3 id="org6a69325"><a href="#org6a69325">SSH to a Pod's Node</a></h3>
-<div class="outline-text-3" id="text-org6a69325">
+<div id="outline-container-org404ff36" class="outline-3">
+<h3 id="org404ff36"><a href="#org404ff36">SSH to a Pod's Node</a></h3>
+<div class="outline-text-3" id="text-org404ff36">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #dcaeea;">node</span>=$(kubectl get pod <span style="color: #98be65;">\</span>
                -o=custom-columns=NODE:.spec.nodeName $<span style="color: #dcaeea;">applianceConfigPod</span> <span style="color: #98be65;">\</span>
@@ -493,13 +493,13 @@ Now, <code>ssh user@nodeIp</code>
 </div>
 </div>
 
-<div id="outline-container-org9ad62fb" class="outline-2">
-<h2 id="org9ad62fb"><a href="#org9ad62fb">Pods</a></h2>
-<div class="outline-text-2" id="text-org9ad62fb">
+<div id="outline-container-org34b2ece" class="outline-2">
+<h2 id="org34b2ece"><a href="#org34b2ece">Pods</a></h2>
+<div class="outline-text-2" id="text-org34b2ece">
 </div>
-<div id="outline-container-orgb9bf892" class="outline-3">
-<h3 id="orgb9bf892"><a href="#orgb9bf892">List Containers in a Pod</a></h3>
-<div class="outline-text-3" id="text-orgb9bf892">
+<div id="outline-container-org0ec7144" class="outline-3">
+<h3 id="org0ec7144"><a href="#org0ec7144">List Containers in a Pod</a></h3>
+<div class="outline-text-3" id="text-org0ec7144">
 <div class="org-src-container">
 <pre class="src src-sh">kubectl get pod $<span style="color: #dcaeea;">pod</span> -o json | jq -r <span style="color: #98be65;">'.spec.containers[].name'</span>
 </pre>
@@ -507,9 +507,9 @@ Now, <code>ssh user@nodeIp</code>
 </div>
 </div>
 
-<div id="outline-container-orgbb91d47" class="outline-3">
-<h3 id="orgbb91d47"><a href="#orgbb91d47">What Node is this Pod on?</a></h3>
-<div class="outline-text-3" id="text-orgbb91d47">
+<div id="outline-container-org2254ea3" class="outline-3">
+<h3 id="org2254ea3"><a href="#org2254ea3">What Node is this Pod on?</a></h3>
+<div class="outline-text-3" id="text-org2254ea3">
 <div class="org-src-container">
 <pre class="src src-sh">kubectl get pod <span style="color: #98be65;">\</span>
         -o custom-columns=NODE:.spec.nodeName <span style="color: #98be65;">\</span>
@@ -521,13 +521,13 @@ Now, <code>ssh user@nodeIp</code>
 </div>
 </div>
 
-<div id="outline-container-orgaba1171" class="outline-2">
-<h2 id="orgaba1171"><a href="#orgaba1171">Secrets</a></h2>
-<div class="outline-text-2" id="text-orgaba1171">
+<div id="outline-container-orgeec15c3" class="outline-2">
+<h2 id="orgeec15c3"><a href="#orgeec15c3">Secrets</a></h2>
+<div class="outline-text-2" id="text-orgeec15c3">
 </div>
-<div id="outline-container-org6e91b01" class="outline-3">
-<h3 id="org6e91b01"><a href="#org6e91b01">Create Docker Registry Secret</a></h3>
-<div class="outline-text-3" id="text-org6e91b01">
+<div id="outline-container-orgdba11f2" class="outline-3">
+<h3 id="orgdba11f2"><a href="#orgdba11f2">Create Docker Registry Secret</a></h3>
+<div class="outline-text-3" id="text-orgdba11f2">
 <div class="org-src-container">
 <pre class="src src-sh">kubectl create secret docker-registry $<span style="color: #dcaeea;">SecretName</span> <span style="color: #98be65;">\</span>
         --docker-server=$<span style="color: #dcaeea;">Server</span> <span style="color: #98be65;">\</span>
@@ -538,9 +538,9 @@ Now, <code>ssh user@nodeIp</code>
 </div>
 </div>
 
-<div id="outline-container-orgd7b8897" class="outline-3">
-<h3 id="orgd7b8897"><a href="#orgd7b8897">Decode Docker Registry Secret</a></h3>
-<div class="outline-text-3" id="text-orgd7b8897">
+<div id="outline-container-org7c4bffd" class="outline-3">
+<h3 id="org7c4bffd"><a href="#org7c4bffd">Decode Docker Registry Secret</a></h3>
+<div class="outline-text-3" id="text-org7c4bffd">
 <p>
 TODO: also decode <code>=.auths["registry.ironnet.cloud"].auth</code>
 </p>
@@ -554,9 +554,9 @@ TODO: also decode <code>=.auths["registry.ironnet.cloud"].auth</code>
 </div>
 </div>
 
-<div id="outline-container-orgae003de" class="outline-3">
-<h3 id="orgae003de"><a href="#orgae003de">Update a Secret</a></h3>
-<div class="outline-text-3" id="text-orgae003de">
+<div id="outline-container-org10b5e1a" class="outline-3">
+<h3 id="org10b5e1a"><a href="#org10b5e1a">Update a Secret</a></h3>
+<div class="outline-text-3" id="text-org10b5e1a">
 <div class="org-src-container">
 <pre class="src src-sh">kubectl create secret docker-registry $<span style="color: #dcaeea;">SecretName</span> <span style="color: #98be65;">\</span>
         --docker-server=$<span style="color: #dcaeea;">Server</span> <span style="color: #98be65;">\</span>
@@ -569,13 +569,13 @@ TODO: also decode <code>=.auths["registry.ironnet.cloud"].auth</code>
 </div>
 </div>
 
-<div id="outline-container-org406ba03" class="outline-2">
-<h2 id="org406ba03"><a href="#org406ba03">Services</a></h2>
-<div class="outline-text-2" id="text-org406ba03">
+<div id="outline-container-orgabf2143" class="outline-2">
+<h2 id="orgabf2143"><a href="#orgabf2143">Services</a></h2>
+<div class="outline-text-2" id="text-orgabf2143">
 </div>
-<div id="outline-container-org987f840" class="outline-3">
-<h3 id="org987f840"><a href="#org987f840">Get Services of Type</a></h3>
-<div class="outline-text-3" id="text-org987f840">
+<div id="outline-container-orgb54ed81" class="outline-3">
+<h3 id="orgb54ed81"><a href="#orgb54ed81">Get Services of Type</a></h3>
+<div class="outline-text-3" id="text-orgb54ed81">
 <p>
 Get all services of type NodePort/LoadBalancer/ClusterIP:
 </p>
@@ -591,9 +591,9 @@ Get all services of type NodePort/LoadBalancer/ClusterIP:
 </div>
 </div>
 
-<div id="outline-container-org8cfa95f" class="outline-2">
-<h2 id="org8cfa95f"><a href="#org8cfa95f">Service Accounts</a></h2>
-<div class="outline-text-2" id="text-org8cfa95f">
+<div id="outline-container-org3c8e55c" class="outline-2">
+<h2 id="org3c8e55c"><a href="#org3c8e55c">Service Accounts</a></h2>
+<div class="outline-text-2" id="text-org3c8e55c">
 <p>
 Get the default service account:
 </p>
@@ -607,9 +607,9 @@ Get the default service account:
 </div>
 </div>
 
-<div id="outline-container-orgc519080" class="outline-2">
-<h2 id="orgc519080"><a href="#orgc519080">StorageClass</a></h2>
-<div class="outline-text-2" id="text-orgc519080">
+<div id="outline-container-org00d8bab" class="outline-2">
+<h2 id="org00d8bab"><a href="#org00d8bab">StorageClass</a></h2>
+<div class="outline-text-2" id="text-org00d8bab">
 <p>
 Get the default StorageClass:
 </p>
@@ -648,13 +648,13 @@ kops-ssd-1-17
 </div>
 </div>
 
-<div id="outline-container-org724d4fc" class="outline-2">
-<h2 id="org724d4fc"><a href="#org724d4fc">Running Commands in Cluster</a></h2>
-<div class="outline-text-2" id="text-org724d4fc">
+<div id="outline-container-org0dd690b" class="outline-2">
+<h2 id="org0dd690b"><a href="#org0dd690b">Running Commands in Cluster</a></h2>
+<div class="outline-text-2" id="text-org0dd690b">
 </div>
-<div id="outline-container-org116e482" class="outline-3">
-<h3 id="org116e482"><a href="#org116e482">Create a temporary pod</a></h3>
-<div class="outline-text-3" id="text-org116e482">
+<div id="outline-container-org0e1f62f" class="outline-3">
+<h3 id="org0e1f62f"><a href="#org0e1f62f">Create a temporary pod</a></h3>
+<div class="outline-text-3" id="text-org0e1f62f">
 <p>
 Start a shell in a temporary pod in the namespace you want to test:
 </p>
@@ -667,9 +667,9 @@ apk add curl
 </div>
 </div>
 
-<div id="outline-container-org11df49e" class="outline-3">
-<h3 id="org11df49e"><a href="#org11df49e">Exec in an existing pod</a></h3>
-<div class="outline-text-3" id="text-org11df49e">
+<div id="outline-container-org6240f57" class="outline-3">
+<h3 id="org6240f57"><a href="#org6240f57">Exec in an existing pod</a></h3>
+<div class="outline-text-3" id="text-org6240f57">
 <p>
 If the pod has multiple containers, use <code>-c $containerName</code> as well.
 </p>
@@ -681,9 +681,9 @@ If the pod has multiple containers, use <code>-c $containerName</code> as well.
 </div>
 </div>
 
-<div id="outline-container-orge31dfa9" class="outline-3">
-<h3 id="orge31dfa9"><a href="#orge31dfa9">Port forwarding with kubectl</a></h3>
-<div class="outline-text-3" id="text-orge31dfa9">
+<div id="outline-container-org385f648" class="outline-3">
+<h3 id="org385f648"><a href="#org385f648">Port forwarding with kubectl</a></h3>
+<div class="outline-text-3" id="text-org385f648">
 <div class="org-src-container">
 <pre class="src src-sh">kubectl port-forward $<span style="color: #dcaeea;">podName</span> 8000:8000 -n $<span style="color: #dcaeea;">namespace</span>
 </pre>
@@ -692,9 +692,9 @@ If the pod has multiple containers, use <code>-c $containerName</code> as well.
 </div>
 </div>
 
-<div id="outline-container-orge74035d" class="outline-2">
-<h2 id="orge74035d"><a href="#orge74035d">Using the API directily</a></h2>
-<div class="outline-text-2" id="text-orge74035d">
+<div id="outline-container-orgc4df0a1" class="outline-2">
+<h2 id="orgc4df0a1"><a href="#orgc4df0a1">Using the API directily</a></h2>
+<div class="outline-text-2" id="text-orgc4df0a1">
 <p>
 <a href="https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-api/#without-kubectl-proxy">https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-api/#without-kubectl-proxy</a>
 </p>
@@ -712,13 +712,13 @@ curl $<span style="color: #dcaeea;">APISERVER</span>/api --header <span style="c
 </div>
 </div>
 
-<div id="outline-container-orgce6c22a" class="outline-2">
-<h2 id="orgce6c22a"><a href="#orgce6c22a">Debugging</a></h2>
-<div class="outline-text-2" id="text-orgce6c22a">
+<div id="outline-container-orgf506754" class="outline-2">
+<h2 id="orgf506754"><a href="#orgf506754">Debugging</a></h2>
+<div class="outline-text-2" id="text-orgf506754">
 </div>
-<div id="outline-container-orgc3d316e" class="outline-3">
-<h3 id="orgc3d316e"><a href="#orgc3d316e">Startig a busybox pod</a></h3>
-<div class="outline-text-3" id="text-orgc3d316e">
+<div id="outline-container-orgab581ff" class="outline-3">
+<h3 id="orgab581ff"><a href="#orgab581ff">Startig a busybox pod</a></h3>
+<div class="outline-text-3" id="text-orgab581ff">
 <div class="org-src-container">
 <pre class="src src-sh">kubectl run -i -t busybox --image=busybox --restart=Never
 </pre>
@@ -736,9 +736,9 @@ Get a shell on that pod
 </div>
 </div>
 
-<div id="outline-container-org85069bd" class="outline-2">
-<h2 id="org85069bd"><a href="#org85069bd">etcd</a></h2>
-<div class="outline-text-2" id="text-org85069bd">
+<div id="outline-container-org953709b" class="outline-2">
+<h2 id="org953709b"><a href="#org953709b">etcd</a></h2>
+<div class="outline-text-2" id="text-org953709b">
 <p>
 Pod to help with connecting
 </p>
@@ -763,9 +763,9 @@ Try looking at a secret at /registry/secrets/default/mysecret
 </div>
 </div>
 
-<div id="outline-container-orgbc8d4a8" class="outline-2">
-<h2 id="orgbc8d4a8"><a href="#orgbc8d4a8">Autoscaling</a></h2>
-<div class="outline-text-2" id="text-orgbc8d4a8">
+<div id="outline-container-org3635b24" class="outline-2">
+<h2 id="org3635b24"><a href="#org3635b24">Autoscaling</a></h2>
+<div class="outline-text-2" id="text-org3635b24">
 <p>
 There are two kinds of autoscaling in Kubernetes:
 </p>
@@ -776,13 +776,13 @@ There are two kinds of autoscaling in Kubernetes:
 </ol>
 </div>
 
-<div id="outline-container-org8268299" class="outline-3">
-<h3 id="org8268299"><a href="#org8268299">Scaling Pods</a></h3>
-<div class="outline-text-3" id="text-org8268299">
+<div id="outline-container-org4d2bbfc" class="outline-3">
+<h3 id="org4d2bbfc"><a href="#org4d2bbfc">Scaling Pods</a></h3>
+<div class="outline-text-3" id="text-org4d2bbfc">
 </div>
-<div id="outline-container-org1650b82" class="outline-4">
-<h4 id="org1650b82"><a href="#org1650b82">Horizontal Pod Autoscaler</a></h4>
-<div class="outline-text-4" id="text-org1650b82">
+<div id="outline-container-org5425ff4" class="outline-4">
+<h4 id="org5425ff4"><a href="#org5425ff4">Horizontal Pod Autoscaler</a></h4>
+<div class="outline-text-4" id="text-org5425ff4">
 <p>
 Kubernetes has a built-in autoscaling mechanism called the Horizontal Pod
 Autoscaler. An HPA can be created and configured using standard Kubernetes
@@ -812,8 +812,8 @@ metrics-server pod running in your cluster.
 </div>
 </div>
 
-<div id="outline-container-orgec38b65" class="outline-3">
-<h3 id="orgec38b65"><a href="#orgec38b65">Scaling Nodes</a></h3>
+<div id="outline-container-orga2eb473" class="outline-3">
+<h3 id="orga2eb473"><a href="#orga2eb473">Scaling Nodes</a></h3>
 </div>
 </div>
 </div>

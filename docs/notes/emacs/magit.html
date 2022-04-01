@@ -33,21 +33,21 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgd672efc">Diff a PR</a></li>
-<li><a href="#org5984fe1">Rebase and move branch pointers</a></li>
-<li><a href="#orgad3953a">View File History</a></li>
-<li><a href="#org6918090">Previous Version of File</a></li>
-<li><a href="#org92def88">View PR Diff</a></li>
-<li><a href="#orgcba38a9">Visit File from Diff</a></li>
-<li><a href="#orgcd28768">View Current and Previous File Version from Diff</a></li>
-<li><a href="#orgedeb661">Cherry pick</a></li>
+<li><a href="#orge04b9cc">Diff a PR</a></li>
+<li><a href="#orgcbdca77">Rebase and move branch pointers</a></li>
+<li><a href="#org2ebc0e7">View File History</a></li>
+<li><a href="#org2ff0eaf">Previous Version of File</a></li>
+<li><a href="#org7b005b5">View PR Diff</a></li>
+<li><a href="#org53e3248">Visit File from Diff</a></li>
+<li><a href="#orga5cf761">View Current and Previous File Version from Diff</a></li>
+<li><a href="#org9ef3ed8">Cherry pick</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-orgd672efc" class="outline-2">
-<h2 id="orgd672efc"><a href="#orgd672efc">Diff a PR</a></h2>
-<div class="outline-text-2" id="text-orgd672efc">
+<div id="outline-container-orge04b9cc" class="outline-2">
+<h2 id="orge04b9cc"><a href="#orge04b9cc">Diff a PR</a></h2>
+<div class="outline-text-2" id="text-orge04b9cc">
 <p>
 From the <i>status page</i>:
 </p>
@@ -70,9 +70,9 @@ This runs a diff between <code>origin/dev...refs/pullreqs/&lt;PR number&gt;</cod
 </div>
 </div>
 
-<div id="outline-container-org5984fe1" class="outline-2">
-<h2 id="org5984fe1"><a href="#org5984fe1">Rebase and move branch pointers</a></h2>
-<div class="outline-text-2" id="text-org5984fe1">
+<div id="outline-container-orgcbdca77" class="outline-2">
+<h2 id="orgcbdca77"><a href="#orgcbdca77">Rebase and move branch pointers</a></h2>
+<div class="outline-text-2" id="text-orgcbdca77">
 <p>
 Do the rebase. The same commits will have different SHAs. Old branches will
 still be at previous SHAs.
@@ -90,18 +90,18 @@ still be at previous SHAs.
 </div>
 </div>
 
-<div id="outline-container-orgad3953a" class="outline-2">
-<h2 id="orgad3953a"><a href="#orgad3953a">View File History</a></h2>
-<div class="outline-text-2" id="text-orgad3953a">
+<div id="outline-container-org2ebc0e7" class="outline-2">
+<h2 id="org2ebc0e7"><a href="#org2ebc0e7">View File History</a></h2>
+<div class="outline-text-2" id="text-org2ebc0e7">
 <ul class="org-ul">
 <li><code>M-x magit-log-buffer-file</code></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org6918090" class="outline-2">
-<h2 id="org6918090"><a href="#org6918090">Previous Version of File</a></h2>
-<div class="outline-text-2" id="text-org6918090">
+<div id="outline-container-org2ff0eaf" class="outline-2">
+<h2 id="org2ff0eaf"><a href="#org2ff0eaf">Previous Version of File</a></h2>
+<div class="outline-text-2" id="text-org2ff0eaf">
 <p>
 The function <code>magit-find-file</code> is to "View FILE from REV". Running <code>M-x
   magit-find-file</code> will first prompt for a revision (completes with a list of
@@ -120,9 +120,9 @@ From a specific file:
 </div>
 </div>
 
-<div id="outline-container-org92def88" class="outline-2">
-<h2 id="org92def88"><a href="#org92def88">View PR Diff</a></h2>
-<div class="outline-text-2" id="text-org92def88">
+<div id="outline-container-org7b005b5" class="outline-2">
+<h2 id="org7b005b5"><a href="#org7b005b5">View PR Diff</a></h2>
+<div class="outline-text-2" id="text-org7b005b5">
 <p>
 Requires <a href="https://github.com/magit/forge">forge</a>.
 </p>
@@ -138,9 +138,9 @@ want to diff against (i.e. the branch the PR will be merged into, probably
 </div>
 </div>
 
-<div id="outline-container-orgcba38a9" class="outline-2">
-<h2 id="orgcba38a9"><a href="#orgcba38a9">Visit File from Diff</a></h2>
-<div class="outline-text-2" id="text-orgcba38a9">
+<div id="outline-container-org53e3248" class="outline-2">
+<h2 id="org53e3248"><a href="#org53e3248">Visit File from Diff</a></h2>
+<div class="outline-text-2" id="text-org53e3248">
 <p>
 Just press <code>&lt;return&gt;</code> on a chunk in the diff. Buuut, if you want it to use
 another window:
@@ -156,9 +156,9 @@ another window:
 </div>
 </div>
 
-<div id="outline-container-orgcd28768" class="outline-2">
-<h2 id="orgcd28768"><a href="#orgcd28768">View Current and Previous File Version from Diff</a></h2>
-<div class="outline-text-2" id="text-orgcd28768">
+<div id="outline-container-orga5cf761" class="outline-2">
+<h2 id="orga5cf761"><a href="#orga5cf761">View Current and Previous File Version from Diff</a></h2>
+<div class="outline-text-2" id="text-orga5cf761">
 <ul class="org-ul">
 <li>In diff, <code>&lt;return&gt;</code> to visit the file</li>
 <li><code>M-x magit-find-file-other-window</code>, branch, <code>&lt;RET&gt;</code></li>
@@ -166,9 +166,9 @@ another window:
 </div>
 </div>
 
-<div id="outline-container-orgedeb661" class="outline-2">
-<h2 id="orgedeb661"><a href="#orgedeb661">Cherry pick</a></h2>
-<div class="outline-text-2" id="text-orgedeb661">
+<div id="outline-container-org9ef3ed8" class="outline-2">
+<h2 id="org9ef3ed8"><a href="#org9ef3ed8">Cherry pick</a></h2>
+<div class="outline-text-2" id="text-org9ef3ed8">
 <p>
 <code>A A</code>. I always forget about this.
 </p>

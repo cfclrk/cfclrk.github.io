@@ -4,7 +4,7 @@
 * Installation
 
   #+begin_src sh
-    brew install mvn
+    brew install maven
   #+end_src
 
 * New Project

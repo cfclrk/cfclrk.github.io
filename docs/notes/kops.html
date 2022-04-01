@@ -33,24 +33,24 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org281cff3">Clusters</a>
+<li><a href="#orgfd0f1f2">Clusters</a>
 <ul>
-<li><a href="#orge190a76">List Clusters</a></li>
-<li><a href="#org3e731b4">Cluster Spec</a></li>
+<li><a href="#orgc7bdd49">List Clusters</a></li>
+<li><a href="#orga02bdea">Cluster Spec</a></li>
 </ul>
 </li>
-<li><a href="#org58aa163">InstanceGroups</a></li>
+<li><a href="#org8888417">InstanceGroups</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-org281cff3" class="outline-2">
-<h2 id="org281cff3"><a href="#org281cff3">Clusters</a></h2>
-<div class="outline-text-2" id="text-org281cff3">
+<div id="outline-container-orgfd0f1f2" class="outline-2">
+<h2 id="orgfd0f1f2"><a href="#orgfd0f1f2">Clusters</a></h2>
+<div class="outline-text-2" id="text-orgfd0f1f2">
 </div>
-<div id="outline-container-orge190a76" class="outline-3">
-<h3 id="orge190a76"><a href="#orge190a76">List Clusters</a></h3>
-<div class="outline-text-3" id="text-orge190a76">
+<div id="outline-container-orgc7bdd49" class="outline-3">
+<h3 id="orgc7bdd49"><a href="#orgc7bdd49">List Clusters</a></h3>
+<div class="outline-text-3" id="text-orgc7bdd49">
 <div class="org-src-container">
 <pre class="src src-sh">kops --state $<span style="color: #dcaeea;">bucket</span> get clusters
 </pre>
@@ -58,9 +58,9 @@
 </div>
 </div>
 
-<div id="outline-container-org3e731b4" class="outline-3">
-<h3 id="org3e731b4"><a href="#org3e731b4">Cluster Spec</a></h3>
-<div class="outline-text-3" id="text-org3e731b4">
+<div id="outline-container-orga02bdea" class="outline-3">
+<h3 id="orga02bdea"><a href="#orga02bdea">Cluster Spec</a></h3>
+<div class="outline-text-3" id="text-orga02bdea">
 <div class="org-src-container">
 <pre class="src src-sh">kops --state $<span style="color: #dcaeea;">bucket</span> get clusters <span style="color: #98be65;">\</span>
      --name $<span style="color: #dcaeea;">CLUSTER_NAME</span> -o yaml
@@ -70,9 +70,9 @@
 </div>
 </div>
 
-<div id="outline-container-org58aa163" class="outline-2">
-<h2 id="org58aa163"><a href="#org58aa163">InstanceGroups</a></h2>
-<div class="outline-text-2" id="text-org58aa163">
+<div id="outline-container-org8888417" class="outline-2">
+<h2 id="org8888417"><a href="#org8888417">InstanceGroups</a></h2>
+<div class="outline-text-2" id="text-org8888417">
 <div class="org-src-container">
 <pre class="src src-sh">kops --state $<span style="color: #dcaeea;">bucket</span> get instancegroup
 </pre>

@@ -12,21 +12,23 @@
   #+end_src
 
   #+begin_src sh
-    sudo ln -sfn \
-         /usr/local/opt/openjdk/libexec/openjdk.jdk \
+    sudo ln -svfn \
+         $(brew --prefix)/opt/openjdk/libexec/openjdk.jdk \
          /Library/Java/JavaVirtualMachines/openjdk.jdk
   #+end_src
 
-** Java 8
+** Older java versions
+
+   Older java packages may not work on Apple Silicon.
 
   #+begin_src sh
-    brew install openjdk@8
+    brew install openjdk@17
   #+end_src
 
   #+begin_src sh
-    sudo ln -sfn \
-         /usr/local/opt/openjdk@8/libexec/openjdk.jdk \
-         /Library/Java/JavaVirtualMachines/openjdk-8.jdk
+    sudo ln -svfn \
+         $(brew --prefix)/opt/openjdk@17/libexec/openjdk.jdk \
+         /Library/Java/JavaVirtualMachines/openjdk-17.jdk
   #+end_src
 
 * Switch Versions

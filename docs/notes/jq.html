@@ -33,29 +33,29 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org89470ff">Period in Key</a></li>
-<li><a href="#orgdabce5a">Multiline</a></li>
-<li><a href="#org4c180ae">Variable as Argument</a></li>
-<li><a href="#org671126f">Select</a>
+<li><a href="#org08188ac">Period in Key</a></li>
+<li><a href="#org7b64c34">Multiline</a></li>
+<li><a href="#org788227e">Variable as Argument</a></li>
+<li><a href="#orge21fd31">Select</a>
 <ul>
-<li><a href="#orgb47da47">Name Contains</a></li>
-<li><a href="#org61dff59">Name Starts With</a></li>
+<li><a href="#orgb3aa0f4">Name Contains</a></li>
+<li><a href="#org43e5d91">Name Starts With</a></li>
 </ul>
 </li>
-<li><a href="#org9a13831">AWS Resources with Tag</a>
+<li><a href="#orgba2e275">AWS Resources with Tag</a>
 <ul>
-<li><a href="#orgd749365">Use <code>aws --filter</code></a></li>
+<li><a href="#orgdc76ddd">Use <code>aws --filter</code></a></li>
 </ul>
 </li>
-<li><a href="#org005b01c">Sorting</a></li>
+<li><a href="#orgf7683d2">Sorting</a></li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-org89470ff" class="outline-2">
-<h2 id="org89470ff"><a href="#org89470ff">Period in Key</a></h2>
-<div class="outline-text-2" id="text-org89470ff">
-<pre class="example" id="orge5c666c">
+<div id="outline-container-org08188ac" class="outline-2">
+<h2 id="org08188ac"><a href="#org08188ac">Period in Key</a></h2>
+<div class="outline-text-2" id="text-org08188ac">
+<pre class="example" id="org694eba4">
 {
     "apiVersion": "v1",
     "data": {
@@ -78,9 +78,9 @@ Zm9vCg==
 </div>
 </div>
 
-<div id="outline-container-orgdabce5a" class="outline-2">
-<h2 id="orgdabce5a"><a href="#orgdabce5a">Multiline</a></h2>
-<div class="outline-text-2" id="text-orgdabce5a">
+<div id="outline-container-org7b64c34" class="outline-2">
+<h2 id="org7b64c34"><a href="#org7b64c34">Multiline</a></h2>
+<div class="outline-text-2" id="text-org7b64c34">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">GithubRelease</span> <span style="color: #98be65;">\</span>
     | jq <span style="color: #98be65;">'.assets[]</span>
@@ -95,9 +95,9 @@ py-demo-Darwin-x86_64
 </div>
 </div>
 
-<div id="outline-container-org4c180ae" class="outline-2">
-<h2 id="org4c180ae"><a href="#org4c180ae">Variable as Argument</a></h2>
-<div class="outline-text-2" id="text-org4c180ae">
+<div id="outline-container-org788227e" class="outline-2">
+<h2 id="org788227e"><a href="#org788227e">Variable as Argument</a></h2>
+<div class="outline-text-2" id="text-org788227e">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">GithubRelease</span> <span style="color: #98be65;">\</span>
     | jq --arg name <span style="color: #98be65;">"py-demo-Darwin"</span> <span style="color: #98be65;">\</span>
@@ -113,14 +113,14 @@ py-demo-Darwin-x86_64
 </div>
 </div>
 
-<div id="outline-container-org671126f" class="outline-2">
-<h2 id="org671126f"><a href="#org671126f">Select</a></h2>
-<div class="outline-text-2" id="text-org671126f">
+<div id="outline-container-orge21fd31" class="outline-2">
+<h2 id="orge21fd31"><a href="#orge21fd31">Select</a></h2>
+<div class="outline-text-2" id="text-orge21fd31">
 </div>
-<div id="outline-container-orgb47da47" class="outline-3">
-<h3 id="orgb47da47"><a href="#orgb47da47">Name Contains</a></h3>
-<div class="outline-text-3" id="text-orgb47da47">
-<pre class="example" id="org5f89068">
+<div id="outline-container-orgb3aa0f4" class="outline-3">
+<h3 id="orgb3aa0f4"><a href="#orgb3aa0f4">Name Contains</a></h3>
+<div class="outline-text-3" id="text-orgb3aa0f4">
+<pre class="example" id="org712504f">
 [
   {"name": "This is item1"},
   {"name": "This is item2"},
@@ -140,9 +140,9 @@ py-demo-Darwin-x86_64
 </div>
 </div>
 
-<div id="outline-container-org61dff59" class="outline-3">
-<h3 id="org61dff59"><a href="#org61dff59">Name Starts With</a></h3>
-<div class="outline-text-3" id="text-org61dff59">
+<div id="outline-container-org43e5d91" class="outline-3">
+<h3 id="org43e5d91"><a href="#org43e5d91">Name Starts With</a></h3>
+<div class="outline-text-3" id="text-org43e5d91">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">Items</span> <span style="color: #98be65;">\</span>
     | jq -c <span style="color: #98be65;">'.[] | select(.name | startswith("This is"))'</span>
@@ -157,13 +157,13 @@ py-demo-Darwin-x86_64
 </div>
 </div>
 
-<div id="outline-container-org9a13831" class="outline-2">
-<h2 id="org9a13831"><a href="#org9a13831">AWS Resources with Tag</a></h2>
-<div class="outline-text-2" id="text-org9a13831">
+<div id="outline-container-orgba2e275" class="outline-2">
+<h2 id="orgba2e275"><a href="#orgba2e275">AWS Resources with Tag</a></h2>
+<div class="outline-text-2" id="text-orgba2e275">
 </div>
-<div id="outline-container-orgd749365" class="outline-3">
-<h3 id="orgd749365"><a href="#orgd749365">Use <code>aws --filter</code></a></h3>
-<div class="outline-text-3" id="text-orgd749365">
+<div id="outline-container-orgdc76ddd" class="outline-3">
+<h3 id="orgdc76ddd"><a href="#orgdc76ddd">Use <code>aws --filter</code></a></h3>
+<div class="outline-text-3" id="text-orgdc76ddd">
 <p>
 Some AWS commands provide a <code>--filter</code> option that allows filtering by tag.
 </p>
@@ -177,9 +177,9 @@ Some AWS commands provide a <code>--filter</code> option that allows filtering b
 </div>
 </div>
 
-<div id="outline-container-org005b01c" class="outline-2">
-<h2 id="org005b01c"><a href="#org005b01c">Sorting</a></h2>
-<div class="outline-text-2" id="text-org005b01c">
+<div id="outline-container-orgf7683d2" class="outline-2">
+<h2 id="orgf7683d2"><a href="#orgf7683d2">Sorting</a></h2>
+<div class="outline-text-2" id="text-orgf7683d2">
 <div class="org-src-container">
 <pre class="src src-sh">aws s3api list-objects-v2 <span style="color: #98be65;">\</span>
     --bucket $<span style="color: #dcaeea;">BUCKET</span> <span style="color: #98be65;">\</span>

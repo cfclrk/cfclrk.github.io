@@ -3,9 +3,12 @@
 
 * Installation
 
+  The clojure site [[https://clojure.org/guides/getting_started#_clojure_installer_and_cli_tools][suggests]] using the following, but =brew install clojure= also
+  works just fine.
+
   #+header: :tangle ~/Projects/dotfiles/langs/clojure.sh
   #+begin_src sh
-    brew install clojure
+    brew install clojure/tools/clojure
   #+end_src
 
 * clj vs clojure

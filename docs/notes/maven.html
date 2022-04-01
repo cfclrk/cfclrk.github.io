@@ -33,38 +33,38 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org925e187">Installation</a></li>
-<li><a href="#orgb7bf000">New Project</a></li>
-<li><a href="#orgfa2b38e">Download Single Dependency</a></li>
-<li><a href="#org40ee6e4">Versions</a>
+<li><a href="#org25e0f56">Installation</a></li>
+<li><a href="#org8ee540d">New Project</a></li>
+<li><a href="#org209ad2e">Download Single Dependency</a></li>
+<li><a href="#orgf216a9e">Versions</a>
 <ul>
-<li><a href="#org3d556b8">Show Dependency Version</a></li>
-<li><a href="#orgad69cd3">Show Outdated Dependencies</a></li>
+<li><a href="#org8c9a71f">Show Dependency Version</a></li>
+<li><a href="#orgb0d73ed">Show Outdated Dependencies</a></li>
 </ul>
 </li>
-<li><a href="#orgb53d5c5">Effective POM</a></li>
-<li><a href="#org5fd5c3e">Archetypes</a>
+<li><a href="#org6ec67d5">Effective POM</a></li>
+<li><a href="#orgf302a9f">Archetypes</a>
 <ul>
-<li><a href="#org82a84db">List Archetypes</a></li>
+<li><a href="#orgc47517a">List Archetypes</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </nav>
 
-<div id="outline-container-org925e187" class="outline-2">
-<h2 id="org925e187"><a href="#org925e187">Installation</a></h2>
-<div class="outline-text-2" id="text-org925e187">
+<div id="outline-container-org25e0f56" class="outline-2">
+<h2 id="org25e0f56"><a href="#org25e0f56">Installation</a></h2>
+<div class="outline-text-2" id="text-org25e0f56">
 <div class="org-src-container">
-<pre class="src src-sh">brew install mvn
+<pre class="src src-sh">brew install maven
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgb7bf000" class="outline-2">
-<h2 id="orgb7bf000"><a href="#orgb7bf000">New Project</a></h2>
-<div class="outline-text-2" id="text-orgb7bf000">
+<div id="outline-container-org8ee540d" class="outline-2">
+<h2 id="org8ee540d"><a href="#org8ee540d">New Project</a></h2>
+<div class="outline-text-2" id="text-org8ee540d">
 <p>
 See: <a href="https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html#creating-a-project">Creating a Project</a>.
 </p>
@@ -81,9 +81,9 @@ See: <a href="https://maven.apache.org/guides/getting-started/maven-in-five-minu
 </div>
 </div>
 
-<div id="outline-container-orgfa2b38e" class="outline-2">
-<h2 id="orgfa2b38e"><a href="#orgfa2b38e">Download Single Dependency</a></h2>
-<div class="outline-text-2" id="text-orgfa2b38e">
+<div id="outline-container-org209ad2e" class="outline-2">
+<h2 id="org209ad2e"><a href="#org209ad2e">Download Single Dependency</a></h2>
+<div class="outline-text-2" id="text-org209ad2e">
 <div class="org-src-container">
 <pre class="src src-sh">mvn org.apache.maven.plugins:maven-dependency-plugin:3.2.0:get <span style="color: #98be65;">\</span>
     -Dartifact=com.amazonaws:aws-java-sdk-ec2:1.11.281
@@ -92,13 +92,13 @@ See: <a href="https://maven.apache.org/guides/getting-started/maven-in-five-minu
 </div>
 </div>
 
-<div id="outline-container-org40ee6e4" class="outline-2">
-<h2 id="org40ee6e4"><a href="#org40ee6e4">Versions</a></h2>
-<div class="outline-text-2" id="text-org40ee6e4">
+<div id="outline-container-orgf216a9e" class="outline-2">
+<h2 id="orgf216a9e"><a href="#orgf216a9e">Versions</a></h2>
+<div class="outline-text-2" id="text-orgf216a9e">
 </div>
-<div id="outline-container-org3d556b8" class="outline-3">
-<h3 id="org3d556b8"><a href="#org3d556b8">Show Dependency Version</a></h3>
-<div class="outline-text-3" id="text-org3d556b8">
+<div id="outline-container-org8c9a71f" class="outline-3">
+<h3 id="org8c9a71f"><a href="#org8c9a71f">Show Dependency Version</a></h3>
+<div class="outline-text-3" id="text-org8c9a71f">
 <p>
 For a Maven plugin:
 </p>
@@ -122,9 +122,9 @@ For an application dependency:
 </div>
 </div>
 
-<div id="outline-container-orgad69cd3" class="outline-3">
-<h3 id="orgad69cd3"><a href="#orgad69cd3">Show Outdated Dependencies</a></h3>
-<div class="outline-text-3" id="text-orgad69cd3">
+<div id="outline-container-orgb0d73ed" class="outline-3">
+<h3 id="orgb0d73ed"><a href="#orgb0d73ed">Show Outdated Dependencies</a></h3>
+<div class="outline-text-3" id="text-orgb0d73ed">
 <p>
 Uses the <a href="https://www.mojohaus.org/versions-maven-plugin/">versions-maven-plugin</a>.
 </p>
@@ -142,9 +142,9 @@ Uses the <a href="https://www.mojohaus.org/versions-maven-plugin/">versions-mave
 </div>
 </div>
 
-<div id="outline-container-orgb53d5c5" class="outline-2">
-<h2 id="orgb53d5c5"><a href="#orgb53d5c5">Effective POM</a></h2>
-<div class="outline-text-2" id="text-orgb53d5c5">
+<div id="outline-container-org6ec67d5" class="outline-2">
+<h2 id="org6ec67d5"><a href="#org6ec67d5">Effective POM</a></h2>
+<div class="outline-text-2" id="text-org6ec67d5">
 <p>
 The effective pom is the current POM combined with it's parents all the way up
 to the super pom.
@@ -157,18 +157,18 @@ to the super pom.
 </div>
 </div>
 
-<div id="outline-container-org5fd5c3e" class="outline-2">
-<h2 id="org5fd5c3e"><a href="#org5fd5c3e">Archetypes</a></h2>
-<div class="outline-text-2" id="text-org5fd5c3e">
+<div id="outline-container-orgf302a9f" class="outline-2">
+<h2 id="orgf302a9f"><a href="#orgf302a9f">Archetypes</a></h2>
+<div class="outline-text-2" id="text-orgf302a9f">
 <p>
 By default, I think maven uses the archetype catalog here:
 <a href="https://repo.maven.apache.org/maven2/archetype-catalog.xml">https://repo.maven.apache.org/maven2/archetype-catalog.xml</a>
 </p>
 </div>
 
-<div id="outline-container-org82a84db" class="outline-3">
-<h3 id="org82a84db"><a href="#org82a84db">List Archetypes</a></h3>
-<div class="outline-text-3" id="text-org82a84db">
+<div id="outline-container-orgc47517a" class="outline-3">
+<h3 id="orgc47517a"><a href="#orgc47517a">List Archetypes</a></h3>
+<div class="outline-text-3" id="text-orgc47517a">
 <div class="org-src-container">
 <pre class="src src-sh">mvn archetype:generate
 </pre>

@@ -151,131 +151,134 @@
 
 ** Rationale
 
-  Why sign commits?
+   Why sign commits?
 
-  The value of =user.email= is the only piece of information GitHub uses when
-  determining what profile picture to display next to a commit. You can set that
-  email address to anything! E.g. set it to =torvalds@linux-foundation.org=, and
-  GitHub will happily put Linus Torvalds' picture next to your git commits. And
-  to be sure, [[https://news.ycombinator.com/item?id=10005577][that happens]].
+   The value of =user.email= is the only piece of information GitHub uses when
+   determining what profile picture to display next to a commit. You can set that
+   email address to anything! E.g. set it to =torvalds@linux-foundation.org=, and
+   GitHub will happily put Linus Torvalds' picture next to your git commits. And
+   to be sure, [[https://news.ycombinator.com/item?id=10005577][that happens]].
 
-  If you don't want other people impersonating you, you can /partially/ mitigate
-  this problem of attribution by using [[https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work][signed commits]].
+   If you don't want other people impersonating you, you can /partially/ mitigate
+   this problem of attribution by using [[https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work][signed commits]].
 
-  GitHub allows you to upload a PGP key to your GitHub account, and GitHub
-  displays a "Verified" badge on commits that proprely verify (i.e. =git
-  verify-commit <commit>= works). For a commit to verify,
+   GitHub allows you to upload a PGP key to your GitHub account, and GitHub
+   displays a "Verified" badge on commits that proprely verify (i.e. =git
+   verify-commit <commit>= works). For a commit to verify,
 
-  1. The email address in the commit must match your GitHub account email
-     address
-  2. The commit must be signed by a PGP key that has been uploaded to
-     your GitHub account
+   1. The email address in the commit must match your GitHub account email
+      address
+   2. The commit must be signed by a PGP key that has been uploaded to
+      your GitHub account
 
 ** Prerequisites
 
-  First install the necessary tools:
+   First install the necessary tools:
 
-  #+begin_src sh
-    brew install gnupg
-    brew install pinentry-mac
-  #+end_src
+   #+begin_src sh
+     brew install gnupg
+     brew install pinentry-mac
+   #+end_src
 
-  =pinentry-mac= saves passphrases in the MacOS keychain.
+   =pinentry-mac= saves passphrases in the MacOS keychain.
 
 ** Create PGP key
 
-  Although GitHub [[https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key][has some instructions]] for creating a PGP key, I prefer using
-  [[https://keybase.io/][keybase]].
+   Although GitHub [[https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key][has some instructions]] for creating a PGP key, I prefer using
+   [[https://keybase.io/][keybase]].
 
-  To use keybase, first install the [[https://keybase.io/download][native app]] (this installs the =keybase= CLI
-  program).
+   To use keybase, first install the [[https://keybase.io/download][native app]] (this installs the =keybase= CLI
+   program).
 
-  You /can/ import preexisting PGP keys from keybase, but it's a better idea to
-  create a new PGP key for every device. To view your existing PGP keys in
-  keybase:
+   You /can/ import preexisting PGP keys from keybase, but it's a better idea to
+   create a new PGP key for every device. To view your existing PGP keys in
+   keybase:
 
-  #+begin_src sh
-    keybase pgp list
-  #+end_src
+   #+begin_src sh
+     keybase pgp list
+   #+end_src
 
-  And to list your local PGP keys (this may be empty):
+   And to list your local PGP keys (this may be empty):
 
-  #+begin_src sh
-    gpg --list-secret-keys --keyid-format=long
-  #+end_src
+   #+begin_src sh
+     gpg --list-secret-keys --keyid-format=long
+   #+end_src
 
-  Now, create two new PGP keys.
+   Now, create one new PGP key. We'll add both your home and work email addresses
+   to this key, then upload the public key to both GitHub accounts (GitHub will
+   allow the same PGP key to be used for multiple accounts). Alternatively, you
+   could create two different PGP keys: one for each GitHub account.
 
-  TODO: Can I just use one key, and add two email addresses to it as [[https://docs.github.com/en/authentication/managing-commit-signature-verification/associating-an-email-with-your-gpg-key][described
-  here]]? Or does GitHub make you use different keys for different accounts?
+   #+begin_src sh :results output
+     keybase pgp gen --multi
+   #+end_src
 
-  Home key:
+   - It will prompt you for email addresses one at a time. Add both your home and
+     work email addresses.
+   - Add a passphrase.
 
-  #+begin_src sh :results output
-    keybase pgp gen --multi
-  #+end_src
+** Update trust level
 
-  It will prompt you for email addresses. Add both your home and work email
-  addresses.
+   Update this key's trust level to "ultimate"; this is not strictly necessary,
+   but will make some =gpg= CLI output cleaner.
 
-  Add a passphrase.
+   #+begin_src sh
+     gpg --edit-key $keyid
+   #+end_src
 
-  #+begin_src sh
-    keybase pgp gen --multi
-  #+end_src
+   At the prompt, type =trust=, after which you'll see some output like this:
 
-  TODO: Should we update the trust level on each key to ultimate?
+   #+begin_example
+     Please decide how far you trust this user to correctly verify other users' keys
+     (by looking at passports, checking fingerprints from different sources, etc.)
 
-  For completeness, if you _do_ want to import a key instead of creating a new one:
+       1 = I don't know or won't say
+       2 = I do NOT trust
+       3 = I trust marginally
+       4 = I trust fully
+       5 = I trust ultimately
+       m = back to the main menu
+   #+end_example
 
-  #+begin_src sh
-    # Import your public pgp key
-    keybase pgp export -q $keyid \
-        | gpg --import
-    # Import your private pgp key
-    keybase pgp export -q $keyid \
-            --secret \
-        | gpg --allow-secret-key \
-              --import
-  #+end_src
+   Choose =5= for ultimate trust. Then, at the prompt, type =save=.
 
 ** Add key ID to git config
 
-  Get the GPG key ID of your PGP key. To get the key ID:
+   Get the GPG key ID of your PGP key. To get the key ID:
 
-  #+begin_src sh :results output
-    gpg --list-secret-keys --keyid-format=long
-  #+end_src
+   #+begin_src sh :results output
+     gpg --list-secret-keys --keyid-format=long
+   #+end_src
 
-  #+RESULTS:
-  : /Users/cfclrk/.gnupg/pubring.kbx
-  : --------------------------------
-  : sec   rsa4096/80027A20FC0B6207 2022-03-14 [SC] [expires: 2038-03-10]
-  :       2DEF144646C3152AE294CC5D80027A20FC0B6207
-  : uid                 [ultimate] Chris Clark <cfclrk@gmail.com>
-  : ssb   rsa4096/799C916E01D155A3 2022-03-14 [E] [expires: 2038-03-10]
+   #+RESULTS:
+   : /Users/cfclrk/.gnupg/pubring.kbx
+   : --------------------------------
+   : sec   rsa4096/80027A20FC0B6207 2022-03-14 [SC] [expires: 2038-03-10]
+   :       2DEF144646C3152AE294CC5D80027A20FC0B6207
+   : uid                 [ultimate] Chris Clark <cfclrk@gmail.com>
+   : ssb   rsa4096/799C916E01D155A3 2022-03-14 [E] [expires: 2038-03-10]
 
-  In the above, the key ID is =80027A20FC0B6207= (is there some command that
-  prints out the key id?). Update your git config like so:
+   In the above, the key ID is =80027A20FC0B6207= (is there some command that
+   prints out the key id?). Update your git config like so:
 
-  #+begin_src gitconfig
-    [user]
-        signingkey = 80027A20FC0B6207
-    [commit]
-        gpgsign = true
-  #+end_src
+   #+begin_src gitconfig
+     [user]
+         signingkey = 80027A20FC0B6207
+     [commit]
+         gpgsign = true
+   #+end_src
 
 ** Update gpg-agent.conf
 
-  Add the following to =~/.gnupg/gpg-agent.conf=. This allows for automatic
-  signing (on MacOS anyway).
+   Add the following to =~/.gnupg/gpg-agent.conf=. This allows for automatic
+   signing (on MacOS anyway).
 
-  #+header: :tangle ~/.gnupg/gpg-agent.conf
-  #+begin_src conf
-    # Connects gpg-agent to the MacOS keychain. This enables
-    # automatic key signing.
-    pinentry-program /usr/local/bin/pinentry-mac
-  #+end_src
+   #+header: :tangle ~/.gnupg/gpg-agent.conf
+   #+begin_src conf
+     # Connects gpg-agent to the MacOS keychain. This enables
+     # automatic key signing.
+     pinentry-program /opt/homebrew/bin/pinentry-mac
+   #+end_src
 
 ** Make a git commit
 
@@ -301,6 +304,24 @@
 
    Add this key to GitHub.
 
-* More Resources
+* Appendix
 
-  - [[https://yayimorphology.org/ssh-identities-made-easy.html][Managing several SSH identities explained]]
+** Other Resources
+
+   - [[https://yayimorphology.org/ssh-identities-made-easy.html][Managing several SSH identities explained]]
+
+** Keybase
+
+   If you want to import an existing PGP key from keybase instead of creating a
+   new one:
+
+   #+begin_src sh
+     # Import the public key
+     keybase pgp export -q $keyid \
+         | gpg --import
+     # Import the private key
+     keybase pgp export -q $keyid \
+             --secret \
+         | gpg --allow-secret-key \
+               --import
+   #+end_src
