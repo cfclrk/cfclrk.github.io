@@ -259,19 +259,12 @@ this document [[https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-
    well also add all the files in =projectile-project-root-files-bottom-up=
    (which has =.git=, etc).
 
-   I also add =requirements.txt=, which is a useful way for me to demarcate a
-   small Python example (like a GitHub Gist) that maybe doesn't warrant a whole
-   =setup.py=, and some files for the Bazel build system.
-
    #+name: MyProjectRootFiles
    #+begin_src emacs-lisp :results silent
      (defvar
       my-project-root-files
       (-concat
-       "BUILD" "BUILD.bzl"       ;; Bazel
-       "BUILD.bazel" "WORKSPACE" ;; Bazel
-       "requirements.txt"        ;; Python
-       "go.mod"                  ;; Go
+       '("go.mod")
        projectile-project-root-files-bottom-up
        projectile-project-root-files))
    #+end_src

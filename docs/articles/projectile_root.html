@@ -522,20 +522,11 @@ well also add all the files in <code>projectile-project-root-files-bottom-up</co
 (which has <code>.git</code>, etc).
 </p>
 
-<p>
-I also add <code>requirements.txt</code>, which is a useful way for me to demarcate a
-small Python example (like a GitHub Gist) that maybe doesn't warrant a whole
-<code>setup.py</code>, and some files for the Bazel build system.
-</p>
-
 <div class="org-src-container">
 <pre class="src src-emacs-lisp" id="orgcb41304"><span style="color: #51afef;">(</span><span style="color: #51afef;">defvar</span>
  my-project-root-files
  <span style="color: #c678dd;">(</span>-concat
-  <span style="color: #98be65;">"BUILD"</span> <span style="color: #98be65;">"BUILD.bzl"</span>       <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Bazel</span>
-  <span style="color: #98be65;">"BUILD.bazel"</span> <span style="color: #98be65;">"WORKSPACE"</span> <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Bazel</span>
-  <span style="color: #98be65;">"requirements.txt"</span>        <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Python</span>
-  <span style="color: #98be65;">"go.mod"</span>                  <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Go</span>
+  '<span style="color: #98be65;">(</span><span style="color: #98be65;">"go.mod"</span><span style="color: #98be65;">)</span>
   projectile-project-root-files-bottom-up
   projectile-project-root-files<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
@@ -599,10 +590,7 @@ variable with the marker files that indicate a project root.
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">defvar</span>
  my-project-root-files
  <span style="color: #c678dd;">(</span>-concat
-  <span style="color: #98be65;">"BUILD"</span> <span style="color: #98be65;">"BUILD.bzl"</span>       <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Bazel</span>
-  <span style="color: #98be65;">"BUILD.bazel"</span> <span style="color: #98be65;">"WORKSPACE"</span> <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Bazel</span>
-  <span style="color: #98be65;">"requirements.txt"</span>        <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Python</span>
-  <span style="color: #98be65;">"go.mod"</span>                  <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Go</span>
+  '<span style="color: #98be65;">(</span><span style="color: #98be65;">"go.mod"</span><span style="color: #98be65;">)</span>
   projectile-project-root-files-bottom-up
   projectile-project-root-files<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
