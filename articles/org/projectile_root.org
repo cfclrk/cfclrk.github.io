@@ -6,25 +6,16 @@
   (-partition num in)
 #+end_src
 
-[[https://docs.projectile.mx/projectile/index.html][Projectile]] is an awesome part of Emacs -- /foundational/ even. For example,
-=lsp-mode= uses Projectile to determine what directory an LSP server should be
-associated with.
+In monorepos, [[https://docs.projectile.mx/projectile/index.html][Projectile]] determines the project root to be the /monorepo/, not
+the subproject that you're in.
 
-A minor annoyance (the bane of an Emacs user) had been nagging me. Here was the
-problem:
+Instead: when I'm working in, say, a python project that happens to be in a
+monorepo, I want Projectile to operate on that python project. One could still
+use Projectile on the whole monorepo by navigating to a file at the root of the
+monorepo.
 
-* The Problem
-
-  In monorepos, Projectile determines the project root to be the /monorepo/, not
-  the subproject that you're in.
-
-  Instead: when I'm working in, say, a python project that happens to be in a
-  monorepo, I want Projectile to operate on that python project. One could still
-  use Projectile on the whole monorepo by navigating to a file at the root of
-  the monorepo.
-
-  To jump to the solution, go to [[#solution]]. Or, see the Elisp file generated
-  from this document [[https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-discovery.el][on GitHub]] (which I use in my personal Emacs config).
+To jump to the solution, go to [[#solution]]. Or, see the Elisp file generated from
+this document [[https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-discovery.el][on GitHub]] (which I use in my personal Emacs config).
 
 * Example of the Problem
 
@@ -266,27 +257,23 @@ problem:
 
    Decent start, but it doesn't have =go.mod=, so we should add that. Might as
    well also add all the files in =projectile-project-root-files-bottom-up=
-   (which has =.git=, etc). I also add =requirements.txt=, which is a useful way
-   for me to demarcate a small Python example (like a GitHub Gist) that maybe
-   doesn't warrant a whole =setup.py=.
+   (which has =.git=, etc).
+
+   I also add =requirements.txt=, which is a useful way for me to demarcate a
+   small Python example (like a GitHub Gist) that maybe doesn't warrant a whole
+   =setup.py=, and some files for the Bazel build system.
 
    #+name: MyProjectRootFiles
    #+begin_src emacs-lisp :results silent
-     (setq
+     (defvar
       my-project-root-files
       (-concat
+       "BUILD" "BUILD.bzl"       ;; Bazel
+       "BUILD.bazel" "WORKSPACE" ;; Bazel
+       "requirements.txt"        ;; Python
+       "go.mod"                  ;; Go
        projectile-project-root-files-bottom-up
        projectile-project-root-files))
-
-     ;; Python
-     (add-to-list
-      'my-project-root-files
-      "requirements.txt")
-
-     ;; Go
-     (add-to-list
-      'my-project-root-files
-      "go.mod")
    #+end_src
 
    That creates a pretty complete list of marker files that can indicate project

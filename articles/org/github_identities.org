@@ -299,7 +299,7 @@
    GitHub?
 
    #+begin_src sh
-     keybase pgp export -q $keyid | pbcopy
+     gpg --armor --export $keyid | pbcopy
    #+end_src
 
    Add this key to GitHub.

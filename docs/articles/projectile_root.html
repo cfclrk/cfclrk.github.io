@@ -33,7 +33,6 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org7f282f0">The Problem</a></li>
 <li><a href="#org00c90ad">Example of the Problem</a></li>
 <li><a href="#orgc84f9c5">About Projectile Project Detection</a></li>
 <li><a href="#org8a8b690">Project Detection Issues</a>
@@ -54,37 +53,21 @@
 </div>
 </nav>
 <p>
-<a href="https://docs.projectile.mx/projectile/index.html">Projectile</a> is an awesome part of Emacs &#x2013; <i>foundational</i> even. For example,
-<code>lsp-mode</code> uses Projectile to determine what directory an LSP server should be
-associated with.
-</p>
-
-<p>
-A minor annoyance (the bane of an Emacs user) had been nagging me. Here was the
-problem:
-</p>
-
-<div id="outline-container-org7f282f0" class="outline-2">
-<h2 id="org7f282f0"><a href="#org7f282f0">The Problem</a></h2>
-<div class="outline-text-2" id="text-org7f282f0">
-<p>
-In monorepos, Projectile determines the project root to be the <i>monorepo</i>, not
+In monorepos, <a href="https://docs.projectile.mx/projectile/index.html">Projectile</a> determines the project root to be the <i>monorepo</i>, not
 the subproject that you're in.
 </p>
 
 <p>
 Instead: when I'm working in, say, a python project that happens to be in a
 monorepo, I want Projectile to operate on that python project. One could still
-use Projectile on the whole monorepo by navigating to a file at the root of
-the monorepo.
+use Projectile on the whole monorepo by navigating to a file at the root of the
+monorepo.
 </p>
 
 <p>
-To jump to the solution, go to <a href="#solution">Solution</a>. Or, see the Elisp file generated
-from this document <a href="https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-discovery.el">on GitHub</a> (which I use in my personal Emacs config).
+To jump to the solution, go to <a href="#solution">Solution</a>. Or, see the Elisp file generated from
+this document <a href="https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-discovery.el">on GitHub</a> (which I use in my personal Emacs config).
 </p>
-</div>
-</div>
 
 <div id="outline-container-org00c90ad" class="outline-2">
 <h2 id="org00c90ad"><a href="#org00c90ad">Example of the Problem</a></h2>
@@ -536,27 +519,25 @@ root. Projectile already has a variable for this, documented in <a href="https:/
 <p>
 Decent start, but it doesn't have <code>go.mod</code>, so we should add that. Might as
 well also add all the files in <code>projectile-project-root-files-bottom-up</code>
-(which has <code>.git</code>, etc). I also add <code>requirements.txt</code>, which is a useful way
-for me to demarcate a small Python example (like a GitHub Gist) that maybe
-doesn't warrant a whole <code>setup.py</code>.
+(which has <code>.git</code>, etc).
+</p>
+
+<p>
+I also add <code>requirements.txt</code>, which is a useful way for me to demarcate a
+small Python example (like a GitHub Gist) that maybe doesn't warrant a whole
+<code>setup.py</code>, and some files for the Bazel build system.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="orgcb41304"><span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span>
+<pre class="src src-emacs-lisp" id="orgcb41304"><span style="color: #51afef;">(</span><span style="color: #51afef;">defvar</span>
  my-project-root-files
  <span style="color: #c678dd;">(</span>-concat
+  <span style="color: #98be65;">"BUILD"</span> <span style="color: #98be65;">"BUILD.bzl"</span>       <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Bazel</span>
+  <span style="color: #98be65;">"BUILD.bazel"</span> <span style="color: #98be65;">"WORKSPACE"</span> <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Bazel</span>
+  <span style="color: #98be65;">"requirements.txt"</span>        <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Python</span>
+  <span style="color: #98be65;">"go.mod"</span>                  <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Go</span>
   projectile-project-root-files-bottom-up
   projectile-project-root-files<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
-
-<span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Python</span>
-<span style="color: #51afef;">(</span>add-to-list
- 'my-project-root-files
- <span style="color: #98be65;">"requirements.txt"</span><span style="color: #51afef;">)</span>
-
-<span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Go</span>
-<span style="color: #51afef;">(</span>add-to-list
- 'my-project-root-files
- <span style="color: #98be65;">"go.mod"</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
 
@@ -615,21 +596,15 @@ variable with the marker files that indicate a project root.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span>
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">defvar</span>
  my-project-root-files
  <span style="color: #c678dd;">(</span>-concat
+  <span style="color: #98be65;">"BUILD"</span> <span style="color: #98be65;">"BUILD.bzl"</span>       <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Bazel</span>
+  <span style="color: #98be65;">"BUILD.bazel"</span> <span style="color: #98be65;">"WORKSPACE"</span> <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Bazel</span>
+  <span style="color: #98be65;">"requirements.txt"</span>        <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Python</span>
+  <span style="color: #98be65;">"go.mod"</span>                  <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Go</span>
   projectile-project-root-files-bottom-up
   projectile-project-root-files<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
-
-<span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Python</span>
-<span style="color: #51afef;">(</span>add-to-list
- 'my-project-root-files
- <span style="color: #98be65;">"requirements.txt"</span><span style="color: #51afef;">)</span>
-
-<span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Go</span>
-<span style="color: #51afef;">(</span>add-to-list
- 'my-project-root-files
- <span style="color: #98be65;">"go.mod"</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
 

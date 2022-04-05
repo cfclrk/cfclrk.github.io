@@ -35,6 +35,11 @@
 <ul>
 <li><a href="#org1ec3ca0">Installation</a></li>
 <li><a href="#orgdecc67a">clj vs clojure</a></li>
+<li><a href="#orgbba9f61">Tools</a>
+<ul>
+<li><a href="#org704df1e">Where do tools live?</a></li>
+</ul>
+</li>
 <li><a href="#org6e70f25">Cmd Execution and REPL</a></li>
 <li><a href="#org3385fbb">Project Creation</a>
 <ul>
@@ -56,7 +61,11 @@
 </ul>
 </li>
 <li><a href="#orgea9bdd7">Symbols vs Keywords</a></li>
-<li><a href="#orgaff9517">How to (+ 1 2 3)</a></li>
+<li><a href="#org6c9b735">Quickies</a>
+<ul>
+<li><a href="#orgefb9897">Print environment variables</a></li>
+</ul>
+</li>
 <li><a href="#orgf4cf461">core.async</a></li>
 </ul>
 </div>
@@ -66,14 +75,28 @@
 <h2 id="org1ec3ca0"><a href="#org1ec3ca0">Installation</a></h2>
 <div class="outline-text-2" id="text-org1ec3ca0">
 <p>
-The clojure site <a href="https://clojure.org/guides/getting_started#_clojure_installer_and_cli_tools">suggests</a> using the following, but <code>brew install clojure</code> also
-works just fine.
+The clojure site <a href="https://clojure.org/guides/getting_started#_clojure_installer_and_cli_tools">suggests</a> using the following:
 </p>
 
 <div class="org-src-container">
 <pre class="src src-sh">brew install clojure/tools/clojure
 </pre>
 </div>
+
+<p>
+There is also a slightly different <a href="https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/clojure.rb">formula in homebrew core</a>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">brew install clojure
+</pre>
+</div>
+
+<p>
+This one <code>depends_on "openjdk"</code>, so it will also install the latest <code>openjdk</code>
+homebrew package. The first method is preferred, which requires you to set up
+and configure a JDK yourself.
+</p>
 </div>
 </div>
 
@@ -105,6 +128,43 @@ arrow keys and <code>C-a</code> <code>C-e</code> <code>C-f</code> <code>C-b</cod
 <p>
 So, <code>clj</code> just provides better interactivity in the terminal REPL.
 </p>
+</div>
+</div>
+
+<div id="outline-container-orgbba9f61" class="outline-2">
+<h2 id="orgbba9f61"><a href="#orgbba9f61">Tools</a></h2>
+<div class="outline-text-2" id="text-orgbba9f61">
+<p>
+Ok, so there is:
+</p>
+
+<ol class="org-ol">
+<li>tools.build</li>
+<li>tools.tools</li>
+</ol>
+
+
+<p>
+From the <a href="https://clojure.org/guides/tools_build">tools.build guide</a>:
+</p>
+
+<blockquote>
+<p>
+In the Clojure CLI, "tools" are programs that provide functionality and do not
+use your project deps or classpath. Tools executed with <code>-T:an-alias</code> remove
+all project deps and paths, add "<code>.</code>" as a path, and include any other deps or
+paths as defined in <code>:an-alias</code>.
+</p>
+</blockquote>
+</div>
+
+<div id="outline-container-org704df1e" class="outline-3">
+<h3 id="org704df1e"><a href="#org704df1e">Where do tools live?</a></h3>
+<div class="outline-text-3" id="text-org704df1e">
+<p>
+Defined by an alias in <code>deps.edn</code>.
+</p>
+</div>
 </div>
 </div>
 
@@ -304,51 +364,18 @@ colon.
 </div>
 </div>
 
-<div id="outline-container-orgaff9517" class="outline-2">
-<h2 id="orgaff9517"><a href="#orgaff9517">How to (+ 1 2 3)</a></h2>
-<div class="outline-text-2" id="text-orgaff9517">
-<p>
-A few ways to add 1, 2, and 3.
-</p>
-
+<div id="outline-container-org6c9b735" class="outline-2">
+<h2 id="org6c9b735"><a href="#org6c9b735">Quickies</a></h2>
+<div class="outline-text-2" id="text-org6c9b735">
+</div>
+<div id="outline-container-orgefb9897" class="outline-3">
+<h3 id="orgefb9897"><a href="#orgefb9897">Print environment variables</a></h3>
+<div class="outline-text-3" id="text-orgefb9897">
 <div class="org-src-container">
-<pre class="src src-clojure"><span style="color: #51afef;">(</span>+ 1 2 3<span style="color: #51afef;">)</span>
+<pre class="src src-clojure"><span style="color: #51afef;">(</span><span style="color: #51afef;">doseq</span> <span style="color: #c678dd;">[</span><span style="color: #98be65;">[</span>k v<span style="color: #98be65;">]</span> <span style="color: #98be65;">(</span><span style="color: #ECBE7B;">System</span>/getenv<span style="color: #98be65;">)</span><span style="color: #c678dd;">]</span> <span style="color: #c678dd;">(</span>println k v<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-6
-</pre>
-
-
-<div class="org-src-container">
-<pre class="src src-clojure"><span style="color: #51afef;">(</span>apply + <span style="color: #c678dd;">[</span>1 2 3<span style="color: #c678dd;">]</span><span style="color: #51afef;">)</span>
-</pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-6
-</pre>
-
-
-<div class="org-src-container">
-<pre class="src src-clojure"><span style="color: #51afef;">(</span>reduce + <span style="color: #c678dd;">[</span>1 2 3<span style="color: #c678dd;">]</span><span style="color: #51afef;">)</span>
-</pre>
-</div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-6
-</pre>
-
-
-<div class="org-src-container">
-<pre class="src src-clojure"><span style="color: #51afef;">(</span>reduce <span style="color: #c678dd;">(</span><span style="color: #51afef;">fn</span> <span style="color: #98be65;">[</span>x y<span style="color: #98be65;">]</span> <span style="color: #98be65;">(</span>+ x y<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">[</span>1 2 3<span style="color: #c678dd;">]</span><span style="color: #51afef;">)</span>
-</pre>
-</div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-6
-</pre>
 </div>
 </div>
 

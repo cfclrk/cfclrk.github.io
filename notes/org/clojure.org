@@ -3,13 +3,21 @@
 
 * Installation
 
-  The clojure site [[https://clojure.org/guides/getting_started#_clojure_installer_and_cli_tools][suggests]] using the following, but =brew install clojure= also
-  works just fine.
+  The clojure site [[https://clojure.org/guides/getting_started#_clojure_installer_and_cli_tools][suggests]] using the following:
 
-  #+header: :tangle ~/Projects/dotfiles/langs/clojure.sh
   #+begin_src sh
     brew install clojure/tools/clojure
   #+end_src
+
+  There is also a slightly different [[https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/clojure.rb][formula in homebrew core]]:
+
+  #+begin_src sh
+    brew install clojure
+  #+end_src
+
+  This one =depends_on "openjdk"=, so it will also install the latest =openjdk=
+  homebrew package. The first method is preferred, which requires you to set up
+  and configure a JDK yourself.
 
 * clj vs clojure
 
@@ -30,12 +38,34 @@
 
   So, =clj= just provides better interactivity in the terminal REPL.
 
+* Tools
+
+  Ok, so there is:
+
+  1. tools.build
+  2. tools.tools
+
+
+  From the [[https://clojure.org/guides/tools_build][tools.build guide]]:
+
+  #+begin_quote
+  In the Clojure CLI, "tools" are programs that provide functionality and do not
+  use your project deps or classpath. Tools executed with =-T:an-alias= remove
+  all project deps and paths, add "=.=" as a path, and include any other deps or
+  paths as defined in =:an-alias=.
+  #+end_quote
+
+** Where do tools live?
+
+   Defined by an alias in =deps.edn=.
+
 * Cmd Execution and REPL
 
   Call a single function
 
   #+header: :dir ~/Projects/codenotes/clojure/scratch
-  #+begin_src sh :var nsname="hello" funcname="foo" :results output
+  #+header: :var nsname="hello" funcname="foo"
+  #+begin_src sh :results output
     clj -X $nsname/$funcname
   #+end_src
 
@@ -154,37 +184,13 @@
   colon.
   #+end_quote
 
-* How to (+ 1 2 3)
+* Quickies
 
-  A few ways to add 1, 2, and 3.
+** Print environment variables
 
-  #+begin_src clojure
-  (+ 1 2 3)
-  #+end_src
-
-  #+RESULTS:
-  : 6
-
-  #+begin_src clojure
-    (apply + [1 2 3])
-  #+end_src
-
-  #+RESULTS:
-  : 6
-
-  #+begin_src clojure
-    (reduce + [1 2 3])
-  #+end_src
-
-  #+RESULTS:
-  : 6
-
-  #+begin_src clojure
-    (reduce (fn [x y] (+ x y)) [1 2 3])
-  #+end_src
-
-  #+RESULTS:
-  : 6
+   #+begin_src clojure
+     (doseq [[k v] (System/getenv)] (println k v))
+   #+end_src
 
 * core.async
 

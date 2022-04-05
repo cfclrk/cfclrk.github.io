@@ -35,6 +35,7 @@
 <ul>
 <li><a href="#orgfd3f646">Since epoch</a></li>
 <li><a href="#org5876463">UTC</a></li>
+<li><a href="#orgddb38ed">Format</a></li>
 </ul>
 </div>
 </nav>
@@ -63,6 +64,25 @@
 
 <div class="results">#+RESULTS:</div><pre class="example">
 Fri May 15 13:16:51 UTC 2020
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgddb38ed" class="outline-2">
+<h2 id="orgddb38ed"><a href="#orgddb38ed">Format</a></h2>
+<div class="outline-text-2" id="text-orgddb38ed">
+<p>
+A 14-digit date with year, month, day, hour, minute, and second, as expected
+by <a href="https://github.com/yogthos/migratus">migratus</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">date +<span style="color: #98be65;">"%Y%m%d%H%M%S"</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+20220405093410
 </pre>
 </div>
 </div>

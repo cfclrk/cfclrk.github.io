@@ -3,18 +3,30 @@
 
 * Since epoch
 
-#+begin_src sh
-  gdate +%s
-#+end_src
+  #+begin_src sh
+    gdate +%s
+  #+end_src
 
-#+RESULTS:
-: 1589548609
+  #+RESULTS:
+  : 1589548609
 
 * UTC
 
-#+begin_src sh
-  gdate -u
-#+end_src
+  #+begin_src sh
+    gdate -u
+  #+end_src
 
-#+RESULTS:
-: Fri May 15 13:16:51 UTC 2020
+  #+RESULTS:
+  : Fri May 15 13:16:51 UTC 2020
+
+* Format
+
+  A 14-digit date with year, month, day, hour, minute, and second, as expected
+  by [[https://github.com/yogthos/migratus][migratus]].
+
+  #+begin_src sh
+    date +"%Y%m%d%H%M%S"
+  #+end_src
+
+  #+RESULTS:
+  : 20220405093410
