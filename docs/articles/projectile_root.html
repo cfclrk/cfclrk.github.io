@@ -55,12 +55,8 @@
 </nav>
 <p>
 In monorepos, <a href="https://docs.projectile.mx/projectile/index.html">Projectile</a> determines the project root to be the <i>monorepo</i>, not
-the subproject that you're in.
-</p>
-
-<p>
-In this article I update Projectile to instead prioritize the most specific
-project it can find.
+the subproject that you're in. In this article I update Projectile to instead
+prioritize the most specific project it can find.
 </p>
 
 <p>
@@ -82,9 +78,8 @@ A single git repository to hold several, self-contained projects.
 
 <p>
 In this case, the repo is basically a dumping ground for smaller projects.
-The motivation here is to stave off as explosion of small repositories, and
-to group projects under a single team where they can more quickly see all
-issues and PRs.
+The motivation here is to stave off an explosion of small repositories, and
+to collect issues and PRs in one place where a team can review them.
 </p></li>
 
 <li><p>
@@ -94,21 +89,15 @@ deployable services.
 
 <p>
 This is what the term "monorepo" is supposed to connote - a single commit
-describes a single, working version of several services that may need to work
+describes a working version of several services that may need to work
 together and share code.
 </p></li>
 </ol>
 
 <p>
-Always in case 1, and sometimes in case 2, I would rather projectile consider a
-subproject as a "project root".
-</p>
-
-<p>
-When I'm working in, say, a python project that happens to be in a monorepo, I
-want Projectile to operate on that python project. One could still use
-Projectile on the whole monorepo by navigating to a file at the root of the
-monorepo.
+Always in case 1, and sometimes in case 2, I would rather projectile consider
+a subproject as a "project root". One could still use Projectile on the whole
+monorepo by navigating to a file at the root of the monorepo.
 </p>
 </div>
 </div>
@@ -165,13 +154,13 @@ is the monorepo:
 </p>
 
 <p>
-I <i>want</i> Projectile to say that the project root is <code>/tmp/repo/go/projectA</code>.
-But alas, Projectile instead found <code>/tmp/repo/</code>.
+I <i>want</i> Projectile to say that the project root is the Go subject:
+<code>/tmp/repo/go/projectA</code>. But alas, Projectile instead found the monorepo root:
+<code>/tmp/repo/</code>.
 </p>
 
 <p>
-To understand how to change this, we need to understand how Projectile detects
-projects.
+How does projectile determine that project root?
 </p>
 </div>
 </div>
@@ -181,8 +170,8 @@ projects.
 <div class="outline-text-2" id="text-orgc84f9c5">
 <p>
 The relevant documentation is here: <a href="https://docs.projectile.mx/projectile/projects.html#customizing-project-detection">Customizing Project Detection</a>. Projectile
-has a few strategies for finding a project root, and tries each one in order.
-The order is defined by this variable:
+has a few strategies for finding a project root, and it tries each strategy
+until one returns a result. The order is defined by this variable:
 </p>
 
 <div class="org-src-container">
@@ -216,8 +205,8 @@ The order is defined by this variable:
 </table>
 
 <p>
-The second function &#x2013; <code>projectile-root-bottom-up</code> &#x2013; is our culprit. We can
-try it out interactively:
+In our example, the second function &#x2013; <code>projectile-root-bottom-up</code> &#x2013; is the
+culprit. We can try it out interactively:
 </p>
 
 <div class="org-src-container">
@@ -416,7 +405,8 @@ could just put a <code>.projectile</code> file there.
 
 
 <p>
-That works! Ok, we should try to retain that behavior.
+That's useful, and works! Ok, we should retain that behavior. So what exactly
+are the problems we need to fix now?
 </p>
 </div>
 </div>
@@ -425,8 +415,7 @@ That works! Ok, we should try to retain that behavior.
 <h2 id="org8a8b690"><a href="#org8a8b690">Project Detection Issues</a></h2>
 <div class="outline-text-2" id="text-org8a8b690">
 <p>
-So, there are two issues preventing Projectile from finding subprojects in
-our monorepo:
+Two things prevent Projectile from discovering subprojects in our monorepo:
 </p>
 
 <ol class="org-ol">
@@ -567,8 +556,7 @@ well also add all the files in <code>projectile-project-root-files-bottom-up</co
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="orgcb41304"><span style="color: #51afef;">(</span><span style="color: #51afef;">defvar</span>
-  my-project-root-files
+<pre class="src src-emacs-lisp" id="orgcb41304"><span style="color: #51afef;">(</span><span style="color: #51afef;">defvar</span> <span style="color: #dcaeea;">my-project-root-files</span>
   <span style="color: #c678dd;">(</span>-concat
    '<span style="color: #98be65;">(</span><span style="color: #98be65;">"go.mod"</span><span style="color: #98be65;">)</span>
    projectile-project-root-files-bottom-up
@@ -626,8 +614,8 @@ The <a href="https://github.com/rejeep/f.el">f</a> library already has a perfect
 </div>
 
 <p>
-<span class="underline">The Elisp file generated from this section is <a href="https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-discovery.el">on GitHub</a> (which I use in my
-personal Emacs config).</span>
+<i><a href="https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-discovery.el">Here is the Elisp file</a> generated from this section (which I use in my
+personal Emacs config).</i>
 </p>
 
 <p>
@@ -636,8 +624,7 @@ variable with the marker files that indicate a project root.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">defvar</span>
-  my-project-root-files
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">defvar</span> <span style="color: #dcaeea;">my-project-root-files</span>
   <span style="color: #c678dd;">(</span>-concat
    '<span style="color: #98be65;">(</span><span style="color: #98be65;">"go.mod"</span><span style="color: #98be65;">)</span>
    projectile-project-root-files-bottom-up
