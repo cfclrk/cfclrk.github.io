@@ -1,0 +1,21 @@
+#+TITLE: Buffers
+#+SETUPFILE: ../../setup.org
+
+* List Buffers
+
+  #+begin_src emacs-lisp
+    (buffer-list)
+  #+end_src
+
+* Get a Buffer
+
+  #+begin_src emacs-lisp
+    (get-buffer "application.clj")
+  #+end_src
+
+* Run in a Buffer
+
+  #+begin_src emacs-lisp
+    (with-current-buffer "application.clj"
+      (cider-current-repl))
+  #+end_src

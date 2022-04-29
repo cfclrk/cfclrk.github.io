@@ -1,4 +1,5 @@
 #+TITLE: Cons Cells
+#+SETUPFILE: ../../setup.org
 
 Because cons is weird.
 

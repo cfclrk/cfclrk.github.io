@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Buffers</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Buffers</h1>
+</header><nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org13ca913">List Buffers</a></li>
+<li><a href="#orgafbe52a">Get a Buffer</a></li>
+<li><a href="#org08bd66f">Run in a Buffer</a></li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-org13ca913" class="outline-2">
+<h2 id="org13ca913"><a href="#org13ca913">List Buffers</a></h2>
+<div class="outline-text-2" id="text-org13ca913">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>buffer-list<span style="color: #51afef;">)</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgafbe52a" class="outline-2">
+<h2 id="orgafbe52a"><a href="#orgafbe52a">Get a Buffer</a></h2>
+<div class="outline-text-2" id="text-orgafbe52a">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>get-buffer <span style="color: #98be65;">"application.clj"</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org08bd66f" class="outline-2">
+<h2 id="org08bd66f"><a href="#org08bd66f">Run in a Buffer</a></h2>
+<div class="outline-text-2" id="text-org08bd66f">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">with-current-buffer</span> <span style="color: #98be65;">"application.clj"</span>
+  <span style="color: #c678dd;">(</span>cider-current-repl<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

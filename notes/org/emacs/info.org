@@ -1,4 +1,13 @@
 #+TITLE: Getting Help
+#+SETUPFILE: ../../setup.org
+
+* Workflow
+
+  Basic workflow for looking up something about Elisp:
+
+  - Invoke the info manual: =C-h i=
+  - Find the Elisp manual: =m Elisp=
+  - Search the index for, say, "defvar": =i defvar=
 
 * apropos
 

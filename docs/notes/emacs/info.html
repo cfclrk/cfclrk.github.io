@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Getting Help</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Getting Help</h1>
+</header><nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org2f6bc8b">Workflow</a></li>
+<li><a href="#org17f556c">apropos</a></li>
+<li><a href="#orgb63bfa0">Info-mode Invocation</a></li>
+<li><a href="#orga6e68e5">Info-mode Navigation</a></li>
+<li><a href="#org025a11d">Alternatives?</a></li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-org2f6bc8b" class="outline-2">
+<h2 id="org2f6bc8b"><a href="#org2f6bc8b">Workflow</a></h2>
+<div class="outline-text-2" id="text-org2f6bc8b">
+<p>
+Basic workflow for looking up something about Elisp:
+</p>
+
+<ul class="org-ul">
+<li>Invoke the info manual: <code>C-h i</code></li>
+<li>Find the Elisp manual: <code>m Elisp</code></li>
+<li>Search the index for, say, "defvar": <code>i defvar</code></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org17f556c" class="outline-2">
+<h2 id="org17f556c"><a href="#org17f556c">apropos</a></h2>
+<div class="outline-text-2" id="text-org17f556c">
+<p>
+<code>M-x apropos</code>, then type the part of the function name you remember.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb63bfa0" class="outline-2">
+<h2 id="orgb63bfa0"><a href="#orgb63bfa0">Info-mode Invocation</a></h2>
+<div class="outline-text-2" id="text-orgb63bfa0">
+<p>
+<code>C-h i</code> to get the top-level info
+</p>
+
+<p>
+<code>M-x info-display-manual</code> to get a specific manual (TODO: bind to <code>C-h RET</code>)
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga6e68e5" class="outline-2">
+<h2 id="orga6e68e5"><a href="#orga6e68e5">Info-mode Navigation</a></h2>
+<div class="outline-text-2" id="text-orga6e68e5">
+<p>
+<code>^</code> to go up
+</p>
+
+<p>
+<code>n/p</code> next/previous node (not child node!)
+</p>
+
+<p>
+I find this confusing because many modes (dired, magit) bind <code>n</code> and <code>p</code> to
+move up and down. Although n/p does work from top-level node of a mode's help.
+Hm.
+</p>
+
+<p>
+<code>m</code> Pick menu item by name. Super useful.
+</p>
+
+<p>
+<code>d</code> Go to top-level node.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org025a11d" class="outline-2">
+<h2 id="org025a11d"><a href="#org025a11d">Alternatives?</a></h2>
+<div class="outline-text-2" id="text-org025a11d">
+<p>
+Info is an emacs-only format. There are other possible formats, and there have
+been proposals to change the Emacs help system to use a different format.
+</p>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,22 @@
+#+TITLE: Configuration Languages
+#+SETUPFILE: ../setup.org
+
+* JSON
+
+* YAML
+
+* Dhall
+
+  https://dhall-lang.org
+
+  Supports variables, functions, and types.
+
+  Opinion: the syntax is cluttered. Even in the hand-picked example on the
+  homepage, which compares Dhall to JSON and YAML, the JSON and YAML are so much
+  nicer.
+
+* EDN
+
+* Protobuf
+
+  Not a "configuration" language. But it can be used to declare domain models.

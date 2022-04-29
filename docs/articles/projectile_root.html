@@ -58,9 +58,42 @@ the subproject that you're in.
 </p>
 
 <p>
-Instead: when I'm working in, say, a python project that happens to be in a
-monorepo, I want Projectile to operate on that python project. One could still
-use Projectile on the whole monorepo by navigating to a file at the root of the
+I've seen two kinds of monorepos:
+</p>
+
+<ol class="org-ol">
+<li><p>
+A single git repository to hold several, self-contained projects.
+</p>
+
+<p>
+Such projects could just as easily be separate repos, but are dumped together
+into one repo for organizational purposes. The motivation here is to stave
+off an explosion of small repositories, and to group projects under a single
+team where they can more quickly see all issues and PRs.
+</p></li>
+
+<li><p>
+A single git repository with common libraries and multiple indenpently
+deplayable services.
+</p>
+
+<p>
+This is what "monorepos" are really supposed to be about - a single commit
+describes a single, working version of several services that may need to work
+together and share code.
+</p></li>
+</ol>
+
+<p>
+Always in case 1, and sometimes in case 2, I would rather projectile consider a
+subproject as a "project root".
+</p>
+
+<p>
+When I'm working in, say, a python project that happens to be in a monorepo, I
+want Projectile to operate on that python project. One could still use
+Projectile on the whole monorepo by navigating to a file at the root of the
 monorepo.
 </p>
 

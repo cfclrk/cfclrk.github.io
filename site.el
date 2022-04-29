@@ -6,6 +6,7 @@
 
 ;;; Code:
 
+(require 'ox)
 (require 'f)
 
 (defconst site/project-directory
@@ -29,9 +30,8 @@ PROJECT-PLIST has all project info, but we don't need it."
                                     site/project-directory)))
 	(call-process "sass" nil nil nil scss-file out-file)))
 
-
-;; HTML Derived Backend
-;;;; -----------------------------------------------------------------
+;;;; HTML Derived Backend
+;; -------------------------------------------------------------------
 
 (defun site/org-html-fixed-width (fixed-width _contents _info)
   "Transcode a FIXED-WIDTH element from Org to HTML.
@@ -65,8 +65,8 @@ Return output file name."
 				  "html"))
 		      plist pub-dir))
 
-;; Project alist
-;;;; -----------------------------------------------------------------
+;;;; Project alist
+;; -------------------------------------------------------------------
 
 (defconst site/org-project-alist
   `(("site-static"

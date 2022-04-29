@@ -1,0 +1,11 @@
+#+TITLE: PostgreSQL Database Client
+
+* Tutorial
+
+  Install psql
+
+  #+begin_src sh
+    brew install libpq
+  #+end_src
+
+  And add to =$PATH=.
