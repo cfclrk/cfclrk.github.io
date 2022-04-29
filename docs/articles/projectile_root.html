@@ -33,6 +33,7 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
+<li><a href="#orgad67b2b">Two Kinds of Monorepos</a></li>
 <li><a href="#org00c90ad">Example of the Problem</a></li>
 <li><a href="#orgc84f9c5">About Projectile Project Detection</a></li>
 <li><a href="#org8a8b690">Project Detection Issues</a>
@@ -58,6 +59,19 @@ the subproject that you're in.
 </p>
 
 <p>
+In this article I update Projectile to instead prioritize the most specific
+project it can find.
+</p>
+
+<p>
+To jump to the solution, go to <a href="#solution">Solution</a>. Or, see the Elisp file generated from
+this document <a href="https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-discovery.el">on GitHub</a> (which I use in my personal Emacs config).
+</p>
+
+<div id="outline-container-orgad67b2b" class="outline-2">
+<h2 id="orgad67b2b"><a href="#orgad67b2b">Two Kinds of Monorepos</a></h2>
+<div class="outline-text-2" id="text-orgad67b2b">
+<p>
 I've seen two kinds of monorepos:
 </p>
 
@@ -67,19 +81,19 @@ A single git repository to hold several, self-contained projects.
 </p>
 
 <p>
-Such projects could just as easily be separate repos, but are dumped together
-into one repo for organizational purposes. The motivation here is to stave
-off an explosion of small repositories, and to group projects under a single
-team where they can more quickly see all issues and PRs.
+In this case, the repo is basically a dumping ground for smaller projects.
+The motivation here is to stave off as explosion of small repositories, and
+to group projects under a single team where they can more quickly see all
+issues and PRs.
 </p></li>
 
 <li><p>
-A single git repository with common libraries and multiple indenpently
-deplayable services.
+A single git repository with common libraries and multiple independently
+deployable services.
 </p>
 
 <p>
-This is what "monorepos" are really supposed to be about - a single commit
+This is what the term "monorepo" is supposed to connote - a single commit
 describes a single, working version of several services that may need to work
 together and share code.
 </p></li>
@@ -96,11 +110,8 @@ want Projectile to operate on that python project. One could still use
 Projectile on the whole monorepo by navigating to a file at the root of the
 monorepo.
 </p>
-
-<p>
-To jump to the solution, go to <a href="#solution">Solution</a>. Or, see the Elisp file generated from
-this document <a href="https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-discovery.el">on GitHub</a> (which I use in my personal Emacs config).
-</p>
+</div>
+</div>
 
 <div id="outline-container-org00c90ad" class="outline-2">
 <h2 id="org00c90ad"><a href="#org00c90ad">Example of the Problem</a></h2>
@@ -557,11 +568,11 @@ well also add all the files in <code>projectile-project-root-files-bottom-up</co
 
 <div class="org-src-container">
 <pre class="src src-emacs-lisp" id="orgcb41304"><span style="color: #51afef;">(</span><span style="color: #51afef;">defvar</span>
- my-project-root-files
- <span style="color: #c678dd;">(</span>-concat
-  '<span style="color: #98be65;">(</span><span style="color: #98be65;">"go.mod"</span><span style="color: #98be65;">)</span>
-  projectile-project-root-files-bottom-up
-  projectile-project-root-files<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+  my-project-root-files
+  <span style="color: #c678dd;">(</span>-concat
+   '<span style="color: #98be65;">(</span><span style="color: #98be65;">"go.mod"</span><span style="color: #98be65;">)</span>
+   projectile-project-root-files-bottom-up
+   projectile-project-root-files<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
 
@@ -615,17 +626,22 @@ The <a href="https://github.com/rejeep/f.el">f</a> library already has a perfect
 </div>
 
 <p>
+<span class="underline">The Elisp file generated from this section is <a href="https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-discovery.el">on GitHub</a> (which I use in my
+personal Emacs config).</span>
+</p>
+
+<p>
 We will define a new strategy for discovering projects. First, define a
 variable with the marker files that indicate a project root.
 </p>
 
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">defvar</span>
- my-project-root-files
- <span style="color: #c678dd;">(</span>-concat
-  '<span style="color: #98be65;">(</span><span style="color: #98be65;">"go.mod"</span><span style="color: #98be65;">)</span>
-  projectile-project-root-files-bottom-up
-  projectile-project-root-files<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+  my-project-root-files
+  <span style="color: #c678dd;">(</span>-concat
+   '<span style="color: #98be65;">(</span><span style="color: #98be65;">"go.mod"</span><span style="color: #98be65;">)</span>
+   projectile-project-root-files-bottom-up
+   projectile-project-root-files<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
 

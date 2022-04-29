@@ -11,32 +11,37 @@
 In monorepos, [[https://docs.projectile.mx/projectile/index.html][Projectile]] determines the project root to be the /monorepo/, not
 the subproject that you're in.
 
-I've seen two kinds of monorepos:
-
-1. A single git repository to hold several, self-contained projects.
-
-   Such projects could just as easily be separate repos, but are dumped together
-   into one repo for organizational purposes. The motivation here is to stave
-   off an explosion of small repositories, and to group projects under a single
-   team where they can more quickly see all issues and PRs.
-
-2. A single git repository with common libraries and multiple indenpently
-   deplayable services.
-
-   This is what "monorepos" are really supposed to be about - a single commit
-   describes a single, working version of several services that may need to work
-   together and share code.
-
-Always in case 1, and sometimes in case 2, I would rather projectile consider a
-subproject as a "project root".
-
-When I'm working in, say, a python project that happens to be in a monorepo, I
-want Projectile to operate on that python project. One could still use
-Projectile on the whole monorepo by navigating to a file at the root of the
-monorepo.
+In this article I update Projectile to instead prioritize the most specific
+project it can find.
 
 To jump to the solution, go to [[#solution]]. Or, see the Elisp file generated from
 this document [[https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-discovery.el][on GitHub]] (which I use in my personal Emacs config).
+
+* Two Kinds of Monorepos
+
+  I've seen two kinds of monorepos:
+
+  1. A single git repository to hold several, self-contained projects.
+
+     In this case, the repo is basically a dumping ground for smaller projects.
+     The motivation here is to stave off as explosion of small repositories, and
+     to group projects under a single team where they can more quickly see all
+     issues and PRs.
+
+  2. A single git repository with common libraries and multiple independently
+     deployable services.
+
+     This is what the term "monorepo" is supposed to connote - a single commit
+     describes a single, working version of several services that may need to work
+     together and share code.
+
+  Always in case 1, and sometimes in case 2, I would rather projectile consider a
+  subproject as a "project root".
+
+  When I'm working in, say, a python project that happens to be in a monorepo, I
+  want Projectile to operate on that python project. One could still use
+  Projectile on the whole monorepo by navigating to a file at the root of the
+  monorepo.
 
 * Example of the Problem
 
@@ -283,11 +288,11 @@ this document [[https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-
    #+name: MyProjectRootFiles
    #+begin_src emacs-lisp :results silent
      (defvar
-      my-project-root-files
-      (-concat
-       '("go.mod")
-       projectile-project-root-files-bottom-up
-       projectile-project-root-files))
+       my-project-root-files
+       (-concat
+        '("go.mod")
+        projectile-project-root-files-bottom-up
+        projectile-project-root-files))
    #+end_src
 
    That creates a pretty complete list of marker files that can indicate project
@@ -312,17 +317,24 @@ this document [[https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-
 
    The [[https://github.com/rejeep/f.el][f]] library already has a perfect function for that: [[https://github.com/rejeep/f.el#f-traverse-upwards-fn-optional-path][f-traverse-upwards]].
 
-* File Header                                                      :noexport:
+* Solution
+  :PROPERTIES:
+  :CUSTOM_ID: solution
+  :END:
 
   #+header: :tangle (expand-file-name "~/Projects/dotfiles/emacs/projectile-discovery.el")
   #+begin_src emacs-lisp :exports none
-    ;;; projectile-discovery.el -- My project discovery config -*- lexical-binding: t; -*-
+    ;;; projectile-discovery.el -- My project discovery config -*- lexical-binding:
+    ;;; t; -*-
 
     ;;; Commentary:
 
-    ;; Update projectile's project discovery behavior in monorepos to consider
-    ;; subprojects as project roots, rather than considering the monorepo root as
-    ;; the project root.
+    ;; Update projectile's project discovery behavior to prioritize the most
+    ;; specific project it can discover. In monorepos, this means projectile will
+    ;; find subprojects before finding the monorepo root.
+
+    ;; To override this behavior, manually place a `.projectile' file at a higher
+    ;; level.
 
     ;; See: https://www.cfclrk.com/articles/projectile_root.html
 
@@ -332,16 +344,14 @@ this document [[https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-
     ;;; Code:
   #+end_src
 
-* Solution
-  :PROPERTIES:
-  :CUSTOM_ID: solution
-  :END:
-
   #+header: :tangle (expand-file-name "~/Projects/dotfiles/emacs/projectile-discovery.el")
   #+begin_src emacs-lisp
     (require 'projectile)
     (require 'f)
   #+end_src
+
+  _The Elisp file generated from this section is [[https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-discovery.el][on GitHub]] (which I use in my
+  personal Emacs config)._
 
   We will define a new strategy for discovering projects. First, define a
   variable with the marker files that indicate a project root.
