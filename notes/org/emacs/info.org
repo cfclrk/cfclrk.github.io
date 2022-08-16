@@ -3,11 +3,21 @@
 
 * Workflow
 
-  Basic workflow for looking up something about Elisp:
+  If it's about Emacs Lisp:
 
   - Invoke the info manual: =C-h i=
   - Find the Elisp manual: =m Elisp=
   - Search the index for, say, "defvar": =i defvar=
+
+  If it's about a specific package, and you know what the package is called:
+
+  - =C-h P=, which runs =describe-package=
+
+  You can also evaluate a lisp form to jump to info docs. For example:
+
+  #+begin_src emacs-lisp
+    (info "(elisp) Packaging")
+  #+end_src
 
 * apropos
 

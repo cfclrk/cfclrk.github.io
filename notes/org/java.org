@@ -44,3 +44,69 @@
   #+begin_src bash
     export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
   #+end_src
+
+* GraalVM
+
+  Installation
+
+  #+name: q
+  #+begin_example
+    query {
+      repository(name: "graalvm-ce-builds", owner: "graalvm") {
+        releases(orderBy: {field: CREATED_AT, direction: ASC}, last: 1) {
+          nodes {
+            name
+            releaseAssets(first: 100) {
+              nodes {
+                name
+                downloadUrl
+              }
+            }
+          }
+        }
+      }
+    }
+  #+end_example
+
+  #+header: :backend babashka
+  #+header: :var q=q
+  #+begin_src clojure :results output
+    (require '[babashka.curl :as curl])
+
+    (def token (System/getenv "GITHUB_TOKEN"))
+
+    (def resp
+      (curl/post
+       "https://api.github.com/graphql"
+       {:headers {"Authorization"
+                  (str "bearer " token)}
+        :body (json/generate-string {:query q})}))
+
+    (def names-and-urls
+      (-> resp
+         :body
+         (json/parse-string true)
+         (get-in [:data :repository :releases :nodes])
+         first ;; todo: map
+         (get-in [:releaseAssets :nodes])))
+
+    ;; Can there be multiple release assets with the same name?
+    (def my-items
+      (filter ;; should this be a reduce?
+       #(=
+         "graalvm-ce-java17-darwin-amd64-22.1.0.tar.gz"
+         (:name %))
+       names-and-urls))
+
+    (-> my-item
+        first
+        :downloadUrl)
+  #+end_src
+
+  #+RESULTS:
+
+
+
+foo
+
+  : "https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.1.0/graalvm-ce-java17-darwin-amd64-22.1.0.tar.gz"

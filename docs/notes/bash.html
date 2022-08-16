@@ -37,7 +37,7 @@
 <li><a href="#org86b3b3e">Function Parameters</a>
 <ul>
 <li><a href="#org9a321ba">Using [[ (new-test)</a></li>
-<li><a href="#org4a24e40">Using test</a></li>
+<li><a href="#org1a5dc03">Using [ (test)</a></li>
 <li><a href="#org9fee011">if-else</a></li>
 </ul>
 </li>
@@ -69,6 +69,7 @@
 <li><a href="#org12914c9">Resources</a></li>
 <li><a href="#orgc1209c3">:-</a></li>
 <li><a href="#org2001bfc">+</a></li>
+<li><a href="#orgc193f41">##</a></li>
 </ul>
 </li>
 <li><a href="#orgd8681db">Arrays</a>
@@ -77,6 +78,11 @@
 <li><a href="#org1cc52aa">Basic</a></li>
 <li><a href="#org6740f24">Length</a></li>
 <li><a href="#orgf5bb7b5">Pipe array to xargs</a></li>
+</ul>
+</li>
+<li><a href="#org0cb3e88">Associative Arrays</a>
+<ul>
+<li><a href="#org7862d73">Using cut</a></li>
 </ul>
 </li>
 <li><a href="#orga23a280">Range</a></li>
@@ -122,6 +128,10 @@ How to specify bash functions with required parameters. When the function is
 applied to the wrong number of arguments, a non-0 exit status should be
 returned.
 </p>
+
+<p>
+One important question: is the empty string <code>""</code> a valid parameter?
+</p>
 </div>
 
 <div id="outline-container-org9a321ba" class="outline-3">
@@ -143,64 +153,29 @@ The double-bracket <code>[[</code> syntax is called "new-test".
     }
     <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Param is: $1"</span>
 }
-</pre>
-</div>
 
-<div class="org-src-container">
-<pre class="src src-sh"><span style="color: #c678dd;">foo</span>() {
-    [[ -n <span style="color: #98be65;">"$1"</span> ]] || {
-        <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Error: param 1 is required"</span>
-        <span style="color: #51afef;">return</span> 1
-    }
-    <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Param is: $1"</span>
-}
 foo
-</pre>
-</div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-Error: param 1 is required
-</pre>
-
-
-<div class="org-src-container">
-<pre class="src src-sh"><span style="color: #c678dd;">foo</span>() {
-    [[ -n <span style="color: #98be65;">"$1"</span> ]] || {
-        <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Error: param 1 is required"</span>
-        <span style="color: #51afef;">return</span> 1
-    }
-    <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Param is: $1"</span>
-}
 foo <span style="color: #98be65;">""</span>
-</pre>
-</div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-Error: param 1 is required
-</pre>
-
-
-<div class="org-src-container">
-<pre class="src src-sh"><span style="color: #c678dd;">foo</span>() {
-    [[ -n <span style="color: #98be65;">"$1"</span> ]] || {
-        <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Error: param 1 is required"</span>
-        <span style="color: #51afef;">return</span> 1
-    }
-    <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Param is: $1"</span>
-}
 foo bar
 </pre>
 </div>
 
 <div class="results">#+RESULTS:</div><pre class="example">
+Error: param 1 is required
+Error: param 1 is required
 Param is: bar
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org4a24e40" class="outline-3">
-<h3 id="org4a24e40"><a href="#org4a24e40">Using test</a></h3>
-<div class="outline-text-3" id="text-org4a24e40">
+<div id="outline-container-org1a5dc03" class="outline-3">
+<h3 id="org1a5dc03"><a href="#org1a5dc03">Using [ (test)</a></h3>
+<div class="outline-text-3" id="text-org1a5dc03">
+<p>
+Same as above, but not as good. For more info, see <a href="http://mywiki.wooledge.org/BashFAQ/031">FAQ</a>: "What is the
+difference between <code>test</code>, <code>[</code> and <code>[[</code>?"
+</p>
+
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #c678dd;">foo</span>() {
     [ -n <span style="color: #98be65;">"$1"</span> ] || {
@@ -212,8 +187,8 @@ Param is: bar
 </div>
 
 <p>
-Note that <code>[</code> <code>]</code> is an alias for <code>test</code>. For completeness, the above example
-can be written as:
+Note that <code>[</code> <code>]</code> is an alias for <code>test</code>. The above example could be written
+as:
 </p>
 
 <div class="org-src-container">
@@ -226,10 +201,6 @@ can be written as:
 }
 </pre>
 </div>
-
-<p>
-For more info, see <a href="http://mywiki.wooledge.org/BashFAQ/031">FAQ</a>: "What is the difference between <code>test</code>, <code>[</code> and <code>[[</code>?"
-</p>
 </div>
 </div>
 
@@ -237,7 +208,7 @@ For more info, see <a href="http://mywiki.wooledge.org/BashFAQ/031">FAQ</a>: "Wh
 <h3 id="org9fee011"><a href="#org9fee011">if-else</a></h3>
 <div class="outline-text-3" id="text-org9fee011">
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #c678dd;">func</span>() {
+<pre class="src src-sh"><span style="color: #c678dd;">foo</span>() {
     <span style="color: #51afef;">if</span> [ -z ${<span style="color: #dcaeea;">1</span>+x} ]; <span style="color: #51afef;">then</span>
         <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Error: param 1 is required"</span>
         <span style="color: #51afef;">return</span> 1
@@ -246,8 +217,18 @@ For more info, see <a href="http://mywiki.wooledge.org/BashFAQ/031">FAQ</a>: "Wh
     <span style="color: #51afef;">fi</span>
     <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"a is '$a'"</span>
 }
+
+foo
+foo <span style="color: #98be65;">""</span>
+foo bar
 </pre>
 </div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+Error: param 1 is required
+a is ''
+a is 'bar'
+</pre>
 </div>
 </div>
 </div>
@@ -630,6 +611,30 @@ empty argument, and this prints out <code>var is unset</code>.
 </p>
 </div>
 </div>
+
+<div id="outline-container-orgc193f41" class="outline-3">
+<h3 id="orgc193f41"><a href="#orgc193f41">##</a></h3>
+<div class="outline-text-3" id="text-orgc193f41">
+<p>
+Remove largest prefix pattern.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #dcaeea;">a_list</span>=(<span style="color: #98be65;">"foo/aa.foo"</span> <span style="color: #98be65;">"bar/ab.foo"</span> <span style="color: #98be65;">"baz/ac.foo"</span>)
+<span style="color: #51afef;">for</span> a<span style="color: #51afef;"> in</span> ${<span style="color: #dcaeea;">a_list</span>[@]}; <span style="color: #51afef;">do</span>
+    <span style="color: #5B6268;"># </span><span style="color: #5B6268;">The "*/" is a regex</span>
+    <span style="color: #c678dd;">echo</span> ${<span style="color: #dcaeea;">a</span>##*/}
+<span style="color: #51afef;">done</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+aa.foo
+ab.foo
+ac.foo
+</pre>
+</div>
+</div>
 </div>
 
 <div id="outline-container-orgd8681db" class="outline-2">
@@ -675,7 +680,7 @@ foo bar baz
 
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #dcaeea;">arr</span>=(<span style="color: #98be65;">"foo"</span> <span style="color: #98be65;">"bar"</span> <span style="color: #98be65;">"baz"</span>)
-<span style="color: #51afef;">for</span> x<span style="color: #51afef;"> in</span> ${<span style="color: #dcaeea;">arr</span>[@]}; <span style="color: #51afef;">do</span>
+<span style="color: #51afef;">for</span> x<span style="color: #51afef;"> in</span> <span style="color: #98be65;">"${arr[@]}"</span>; <span style="color: #51afef;">do</span>
     <span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">x</span>
 <span style="color: #51afef;">done</span>
 </pre>
@@ -713,7 +718,7 @@ Start a subprocess per element in an array, where each subprocess runs <code>$sc
 
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #dcaeea;">script</span>=$(cat &lt;&lt;<span style="color: #98be65;">"EOF"</span>
-<span style="color: #98be65;">echo {}</span>
+<span style="color: #98be65;">echo "some {}"</span>
 <span style="color: #98be65;">EOF</span>
 )
 <span style="color: #dcaeea;">arr</span>=(<span style="color: #98be65;">"foo"</span> <span style="color: #98be65;">"bar"</span> <span style="color: #98be65;">"baz"</span>)
@@ -726,9 +731,38 @@ printf <span style="color: #98be65;">"%s\n"</span> <span style="color: #98be65;"
 </div>
 
 <div class="results">#+RESULTS:</div><pre class="example">
-foo
-bar
-baz
+some foo
+some bar
+some baz
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0cb3e88" class="outline-2">
+<h2 id="org0cb3e88"><a href="#org0cb3e88">Associative Arrays</a></h2>
+<div class="outline-text-2" id="text-org0cb3e88">
+</div>
+<div id="outline-container-org7862d73" class="outline-3">
+<h3 id="org7862d73"><a href="#org7862d73">Using cut</a></h3>
+<div class="outline-text-3" id="text-org7862d73">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #dcaeea;">arr</span>=(<span style="color: #98be65;">"key1,val1"</span>,
+     <span style="color: #98be65;">"key2,val2"</span>,
+     <span style="color: #98be65;">"key3,val3"</span>)
+
+<span style="color: #51afef;">for</span> i<span style="color: #51afef;"> in</span> <span style="color: #98be65;">"${arr[@]}"</span>; <span style="color: #51afef;">do</span>
+    <span style="color: #dcaeea;">k</span>=$(<span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"$i"</span> | cut -d, -f 1)
+    <span style="color: #dcaeea;">v</span>=$(<span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"$i"</span> | cut -d, -f 2)
+    <span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"Key is $k and val is $v"</span>
+<span style="color: #51afef;">done</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+Key is key1 and val is val1
+Key is key2 and val is val2
+Key is key3 and val is val3
 </pre>
 </div>
 </div>
@@ -788,8 +822,8 @@ While <code>printf</code> does not.
 <h3 id="orgad85e0c"><a href="#orgad85e0c">Print a multiline string</a></h3>
 <div class="outline-text-3" id="text-orgad85e0c">
 <p>
-<code>echo $a</code> prints everything on one line, while <code>echo "$a"</code> preserves
-newlines. Why is that?
+<code>echo $a</code> prints a heredoc on one line, while <code>echo "$a"</code> preserves the
+newlines in the heredoc. Why is that?
 </p>
 
 <div class="org-src-container">
@@ -822,7 +856,7 @@ world
 </pre>
 </div>
 
-<pre class="example" id="org4e8ef56">
+<pre class="example" id="org482226b">
  1	/Users/chris.clark/.rbenv/shims
  2	/usr/local/Cellar/pyenv-virtualenv/1.1.5/shims
  3	/Users/chris.clark/.pyenv/shims

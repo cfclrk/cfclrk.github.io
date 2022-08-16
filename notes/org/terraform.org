@@ -1,6 +1,13 @@
 #+TITLE: Terraform
 #+SETUPFILE: ../setup.org
 
+* Kinds of terraform files
+
+  - state files (terraform.tfstate)
+  - configs (.tf)
+  - plans (.tfplan)
+  - variables file (.tfvars)
+
 * State
 
   After a =terraform apply=, Terraform refreshes the local =terraform.tfstate=
@@ -8,12 +15,26 @@
 
   =terraform plan= refreshes local state first, but only in-memory.
 
-  Kinds of terraform files:
+** terraform state list
 
-  - state files (terraform.tfstate)
-  - configs (.tf)
-  - plans (.tfplan)
-  - variables file (.tfvars)
+   A brief list of all objects in the current state.
+
+   #+begin_src sh
+     terraform state list
+   #+end_src
+
+** Get state details
+
+   There are two ways:
+
+   - =terraform show=
+   - =terraform state show=
+
+   =terraform state show= is a lot more brief, and doesn't have the option to
+   show JSON output.
+
+   =terraform show -json= dumps everything, and then you can dig into it with
+   =jq=.
 
 * Workspaces
 

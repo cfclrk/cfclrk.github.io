@@ -48,6 +48,7 @@
 </ul>
 </li>
 <li><a href="#orgf7683d2">Sorting</a></li>
+<li><a href="#orgfd726d8">Stringify JSON</a></li>
 </ul>
 </div>
 </nav>
@@ -194,11 +195,29 @@ because you are not piping a proper list to it. For example:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">cat $<span style="color: #dcaeea;">data</span> | jq <span style="color: #98be65;">'.Stuff[] | sort_by(.Time)'</span>  <span style="color: #5B6268;"># </span><span style="color: #5B6268;">Bad</span>
+<pre class="src src-sh">cat $<span style="color: #dcaeea;">data</span> | jq <span style="color: #98be65;">'.Stuff[] | sort_by(.Time)'</span>  <span style="color: #5B6268;"># </span><span style="color: #5B6268;">Does not work</span>
 
-cat $<span style="color: #dcaeea;">data</span> | jq <span style="color: #98be65;">'.Stuff | sort_by(.Time)'</span>    <span style="color: #5B6268;"># </span><span style="color: #5B6268;">Good</span>
+cat $<span style="color: #dcaeea;">data</span> | jq <span style="color: #98be65;">'.Stuff | sort_by(.Time)'</span>    <span style="color: #5B6268;"># </span><span style="color: #5B6268;">Works!</span>
 </pre>
 </div>
+</div>
+</div>
+
+<div id="outline-container-orgfd726d8" class="outline-2">
+<h2 id="orgfd726d8"><a href="#orgfd726d8">Stringify JSON</a></h2>
+<div class="outline-text-2" id="text-orgfd726d8">
+<pre class="example" id="org1fd3b5e">
+{"message": "foo"}
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">message</span> | jq <span style="color: #98be65;">'@json'</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+"{\"message\":\"foo\"}"
+</pre>
 </div>
 </div>
 </div>

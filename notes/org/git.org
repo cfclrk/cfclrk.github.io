@@ -144,10 +144,11 @@
 
    You ran a =git commit --ammend=, then realized you've already pushed the
    commit you were ammending! You can't push the ammended commit! (You /can/,
-   but that would be rewriting history on the remote).
+   but that would be rewriting history on the remote server).
 
    - Reset soft to =origin/<branch-name>=. Then the changes you just committed
-     will be staged. Now you can commit again as a new commit.
+     will be staged.
+   - Commit again as a new commit.
 
 ** Committed Locally Before Pulling Remote
 
@@ -218,6 +219,13 @@
 
   #+begin_src sh
     git log --reverse
+  #+end_src
+
+* Files changed in commit
+
+  #+begin_src sh
+    git diff-tree -r --no-commit-id \
+        --name-only $sha
   #+end_src
 
 * Tags

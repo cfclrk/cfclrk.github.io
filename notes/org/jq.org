@@ -223,7 +223,22 @@
   because you are not piping a proper list to it. For example:
 
   #+begin_src sh
-    cat $data | jq '.Stuff[] | sort_by(.Time)'  # Bad
+    cat $data | jq '.Stuff[] | sort_by(.Time)'  # Does not work
 
-    cat $data | jq '.Stuff | sort_by(.Time)'    # Good
+    cat $data | jq '.Stuff | sort_by(.Time)'    # Works!
   #+end_src
+
+* Stringify JSON
+
+  #+name: message
+  #+begin_example
+  {"message": "foo"}
+  #+end_example
+
+  #+header: :var message=message
+  #+begin_src sh :results output
+    echo $message | jq '@json'
+  #+end_src
+
+  #+RESULTS:
+  : "{\"message\":\"foo\"}"

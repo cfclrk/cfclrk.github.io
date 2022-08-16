@@ -22,6 +22,7 @@
 - [[file:keys_and_certs.org][Keys and Certificates]]
 - [[file:kubernetes.org][Kubernetes]]
 - [[file:maven.org][Maven]]
+- [[file:postgres.org][Postgres]]
 - [[file:python.org][Python]]
 - [[file:rust.org][Rust]]
 - [[file:terraform.org][Terraform]]

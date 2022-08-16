@@ -33,7 +33,7 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org15d6f3c">Account</a></li>
+<li><a href="#org6b7e2b4">Account</a></li>
 <li><a href="#org1f7c126">IP Address Ranges</a>
 <ul>
 <li><a href="#org71c9ae4">Get Region of IP</a></li>
@@ -54,7 +54,7 @@
 <li><a href="#org015ee64">ACM</a>
 <ul>
 <li><a href="#org7520f42">List</a></li>
-<li><a href="#org8e2dd1d">Describe</a></li>
+<li><a href="#org73c75c9">Describe</a></li>
 <li><a href="#orgc9c4ac1">Get Certificate</a></li>
 <li><a href="#orgeab0333">Get Certificate PEM File</a></li>
 </ul>
@@ -80,6 +80,11 @@
 <li><a href="#orgdab1a9f">Create Alarm Targeting ASG policy</a></li>
 </ul>
 </li>
+<li><a href="#orgac55fec">CodeDeploy</a>
+<ul>
+<li><a href="#org10d58a9">list-deployments</a></li>
+</ul>
+</li>
 <li><a href="#orgd109f23">DynamoDB</a>
 <ul>
 <li><a href="#orgcd484b0">List Tables</a></li>
@@ -102,7 +107,7 @@
 <li><a href="#orge786173">EC2 KeyPairs</a>
 <ul>
 <li><a href="#org86b1c6a">Create</a></li>
-<li><a href="#org73c75c9">Describe</a></li>
+<li><a href="#org7584c80">Describe</a></li>
 <li><a href="#org82dbef7">Delete</a></li>
 </ul>
 </li>
@@ -176,6 +181,7 @@
 <li><a href="#orgce07388">IAM</a>
 <ul>
 <li><a href="#org92d8b3d">Create Policy</a></li>
+<li><a href="#org29b87dc">Describe Policy</a></li>
 <li><a href="#org44188e0">Assume Role</a></li>
 <li><a href="#org2ec8d74">List Instance Profiles</a></li>
 <li><a href="#org17db863">Delete Instance Profile</a></li>
@@ -205,9 +211,16 @@
 <li><a href="#orgdcc0535">Organizations</a></li>
 <li><a href="#org77afbd8">Polly</a></li>
 <li><a href="#org4f417a6">Reosurce Access Manager (RAM)</a></li>
+<li><a href="#orged392ac">RDS</a>
+<ul>
+<li><a href="#org7f886c4">describe-db-instances</a></li>
+<li><a href="#org8f4c0c1">describe-db-engine-versions</a></li>
+<li><a href="#org9affadf">pending maintenance actions for a DB</a></li>
+</ul>
+</li>
 <li><a href="#orga7f2e6b">Route53</a>
 <ul>
-<li><a href="#org4128f80">Get HostedZoneId from Name</a></li>
+<li><a href="#org9955e19">Get HostedZoneId from domain name</a></li>
 <li><a href="#orgd48bc48">List Records for a HostedZone</a></li>
 </ul>
 </li>
@@ -235,7 +248,8 @@
 <li><a href="#orgd915749">Canonical ID</a></li>
 <li><a href="#orgb569f97">Create Bucket</a></li>
 <li><a href="#org3598548">List Objects</a></li>
-<li><a href="#orgbe6dcc2">Get Object</a></li>
+<li><a href="#org6660dfd">Get object</a></li>
+<li><a href="#org1fddda1">Get multiple objects</a></li>
 <li><a href="#org5dacec5">Get Bucket Policy</a></li>
 <li><a href="#org81dc8d9">Delete Buckets</a></li>
 </ul>
@@ -248,11 +262,14 @@
 <li><a href="#org09ca393">SQS</a>
 <ul>
 <li><a href="#orgf6f0ddd">List Queues</a></li>
+<li><a href="#orgd684c4d">Read Message</a></li>
+<li><a href="#org21bfe09">Send Message</a></li>
 </ul>
 </li>
 <li><a href="#orgf97ac30">SSM</a></li>
 <li><a href="#orgeea0d28">SSO</a>
 <ul>
+<li><a href="#org88165e1">Register Client</a></li>
 <li><a href="#orgf5857a2">Token</a></li>
 <li><a href="#orge8f9e05">List Accounts I Can Access</a></li>
 </ul>
@@ -261,15 +278,17 @@
 </div>
 </nav>
 
-<div id="outline-container-org15d6f3c" class="outline-2">
-<h2 id="org15d6f3c"><a href="#org15d6f3c">Account</a></h2>
-<div class="outline-text-2" id="text-org15d6f3c">
+<div id="outline-container-org6b7e2b4" class="outline-2">
+<h2 id="org6b7e2b4"><a href="#org6b7e2b4">Account</a></h2>
+<div class="outline-text-2" id="text-org6b7e2b4">
 <p>
 Account number:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="orgad099d8">aws sts get-caller-identity --query <span style="color: #98be65;">'Account'</span> --output text
+<pre class="src src-sh" id="org15d6f3c">aws sts get-caller-identity <span style="color: #98be65;">\</span>
+    --query <span style="color: #98be65;">'Account'</span> <span style="color: #98be65;">\</span>
+    --output text
 </pre>
 </div>
 </div>
@@ -499,9 +518,9 @@ ap-southeast-2: 1
 </div>
 </div>
 
-<div id="outline-container-org8e2dd1d" class="outline-3">
-<h3 id="org8e2dd1d"><a href="#org8e2dd1d">Describe</a></h3>
-<div class="outline-text-3" id="text-org8e2dd1d">
+<div id="outline-container-org73c75c9" class="outline-3">
+<h3 id="org73c75c9"><a href="#org73c75c9">Describe</a></h3>
+<div class="outline-text-3" id="text-org73c75c9">
 <div class="org-src-container">
 <pre class="src src-sh">aws acm describe-certificate <span style="color: #98be65;">\</span>
     --certificate-arn $<span style="color: #dcaeea;">CertArn</span>
@@ -720,6 +739,21 @@ URLs are documented <a href="https://docs.aws.amazon.com/AWSCloudFormation/lates
 </div>
 </div>
 
+<div id="outline-container-orgac55fec" class="outline-2">
+<h2 id="orgac55fec"><a href="#orgac55fec">CodeDeploy</a></h2>
+<div class="outline-text-2" id="text-orgac55fec">
+</div>
+<div id="outline-container-org10d58a9" class="outline-3">
+<h3 id="org10d58a9"><a href="#org10d58a9">list-deployments</a></h3>
+<div class="outline-text-3" id="text-org10d58a9">
+<div class="org-src-container">
+<pre class="src src-sh">aws deploy list-deployments --application-name saus
+</pre>
+</div>
+</div>
+</div>
+</div>
+
 <div id="outline-container-orgd109f23" class="outline-2">
 <h2 id="orgd109f23"><a href="#orgd109f23">DynamoDB</a></h2>
 <div class="outline-text-2" id="text-orgd109f23">
@@ -881,7 +915,8 @@ All AZs in all regions:
 
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #51afef;">for</span> region<span style="color: #51afef;"> in</span> $<span style="color: #dcaeea;">AllRegions</span>; <span style="color: #51afef;">do</span>
-    <span style="color: #dcaeea;">azs</span>=$(aws --region $<span style="color: #dcaeea;">region</span> ec2 describe-availability-zones <span style="color: #98be65;">\</span>
+    <span style="color: #dcaeea;">azs</span>=$(aws --region $<span style="color: #dcaeea;">region</span> <span style="color: #98be65;">\</span>
+              ec2 describe-availability-zones <span style="color: #98be65;">\</span>
               | jq -c <span style="color: #98be65;">'[.AvailabilityZones[].ZoneName]'</span>)
     printf <span style="color: #98be65;">"$region: $azs\n"</span>
 <span style="color: #51afef;">done</span>
@@ -966,9 +1001,9 @@ chmod 0600 $<span style="color: #dcaeea;">KeyFile</span>
 </div>
 </div>
 
-<div id="outline-container-org73c75c9" class="outline-3">
-<h3 id="org73c75c9"><a href="#org73c75c9">Describe</a></h3>
-<div class="outline-text-3" id="text-org73c75c9">
+<div id="outline-container-org7584c80" class="outline-3">
+<h3 id="org7584c80"><a href="#org7584c80">Describe</a></h3>
+<div class="outline-text-3" id="text-org7584c80">
 <div class="org-src-container">
 <pre class="src src-sh">aws ec2 describe-key-pairs | jq <span style="color: #98be65;">'.KeyPairs[]'</span>
 </pre>
@@ -1202,6 +1237,10 @@ The names of VPCs that have a <code>Name</code> tag:
 <div id="outline-container-orgd6f2beb" class="outline-3">
 <h3 id="orgd6f2beb"><a href="#orgd6f2beb">Log in</a></h3>
 <div class="outline-text-3" id="text-orgd6f2beb">
+<p>
+TODO: <code>$account</code> doesn't work (newline)
+</p>
+
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #dcaeea;">ecr</span>=$<span style="color: #dcaeea;">account</span>.dkr.ecr.$<span style="color: #dcaeea;">AWS_DEFAULT_REGION</span>.amazonaws.com
 <span style="color: #dcaeea;">pw</span>=$(aws ecr get-login-password)
@@ -1449,6 +1488,16 @@ GlobalAccelerator is only in <code>us-west-2</code>, so set the region explicitl
 <span style="color: #98be65;">    ]</span>
 <span style="color: #98be65;">  }]</span>
 <span style="color: #98be65;">}'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org29b87dc" class="outline-3">
+<h3 id="org29b87dc"><a href="#org29b87dc">Describe Policy</a></h3>
+<div class="outline-text-3" id="text-org29b87dc">
+<div class="org-src-container">
+<pre class="src src-sh">aws iam get-policy --policy-arn $<span style="color: #dcaeea;">arn</span>
 </pre>
 </div>
 </div>
@@ -1702,23 +1751,60 @@ account.
 </div>
 </div>
 
+<div id="outline-container-orged392ac" class="outline-2">
+<h2 id="orged392ac"><a href="#orged392ac">RDS</a></h2>
+<div class="outline-text-2" id="text-orged392ac">
+</div>
+<div id="outline-container-org7f886c4" class="outline-3">
+<h3 id="org7f886c4"><a href="#org7f886c4">describe-db-instances</a></h3>
+<div class="outline-text-3" id="text-org7f886c4">
+<div class="org-src-container">
+<pre class="src src-sh">aws rds describe-db-instances <span style="color: #98be65;">\</span>
+    --db-instance-identifier <span style="color: #98be65;">"my-service-dev"</span> <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'DBInstances[]'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8f4c0c1" class="outline-3">
+<h3 id="org8f4c0c1"><a href="#org8f4c0c1">describe-db-engine-versions</a></h3>
+<div class="outline-text-3" id="text-org8f4c0c1">
+<div class="org-src-container">
+<pre class="src src-sh">aws rds describe-db-engine-versions <span style="color: #98be65;">\</span>
+    --engine <span style="color: #98be65;">"postgres"</span> <span style="color: #98be65;">\</span>
+    | jq -r <span style="color: #98be65;">'.DBEngineVersions[].EngineVersion'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9affadf" class="outline-3">
+<h3 id="org9affadf"><a href="#org9affadf">pending maintenance actions for a DB</a></h3>
+<div class="outline-text-3" id="text-org9affadf">
+<div class="org-src-container">
+<pre class="src src-sh">aws rds describe-pending-maintenance-actions <span style="color: #98be65;">\</span>
+    | jq <span style="color: #98be65;">'.PendingMaintenanceActions[]</span>
+<span style="color: #98be65;">          | select(.ResourceIdentifier=="$DB_ARN")'</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
 <div id="outline-container-orga7f2e6b" class="outline-2">
 <h2 id="orga7f2e6b"><a href="#orga7f2e6b">Route53</a></h2>
 <div class="outline-text-2" id="text-orga7f2e6b">
 </div>
-<div id="outline-container-org4128f80" class="outline-3">
-<h3 id="org4128f80"><a href="#org4128f80">Get HostedZoneId from Name</a></h3>
-<div class="outline-text-3" id="text-org4128f80">
-<p>
-AWS credentials have to be set for the account that actually has this
-HostedZone.
-</p>
-
+<div id="outline-container-org9955e19" class="outline-3">
+<h3 id="org9955e19"><a href="#org9955e19">Get HostedZoneId from domain name</a></h3>
+<div class="outline-text-3" id="text-org9955e19">
 <div class="org-src-container">
 <pre class="src src-sh" id="orge74718d">aws route53 list-hosted-zones <span style="color: #98be65;">\</span>
     | jq -r --arg name $<span style="color: #dcaeea;">hostedZoneName</span> <span style="color: #98be65;">\</span>
          <span style="color: #98be65;">'.HostedZones[]</span>
 <span style="color: #98be65;">          | select(.Name == $name + ".")</span>
+<span style="color: #98be65;">          | select(.Config.PrivateZone == false)</span>
 <span style="color: #98be65;">          | .Id'</span>
 </pre>
 </div>
@@ -1746,7 +1832,19 @@ HostedZone.
 <h3 id="org1d541b3"><a href="#org1d541b3">List Secrets</a></h3>
 <div class="outline-text-3" id="text-org1d541b3">
 <div class="org-src-container">
-<pre class="src src-sh">aws secretsmanager list-secrets
+<pre class="src src-sh">aws secretsmanager list-secrets <span style="color: #98be65;">\</span>
+    | jq -r <span style="color: #98be65;">'.SecretList[].Name'</span>
+</pre>
+</div>
+
+<p>
+Filter:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">aws secretsmanager list-secrets <span style="color: #98be65;">\</span>
+    --filters <span style="color: #98be65;">'Key=name,Values=foo/bar'</span> <span style="color: #98be65;">\</span>
+    | jq -r <span style="color: #98be65;">'.SecretList[].Name'</span>
 </pre>
 </div>
 </div>
@@ -1887,13 +1985,27 @@ so you need to request all objects and then sort them.
 </div>
 </div>
 
-<div id="outline-container-orgbe6dcc2" class="outline-3">
-<h3 id="orgbe6dcc2"><a href="#orgbe6dcc2">Get Object</a></h3>
-<div class="outline-text-3" id="text-orgbe6dcc2">
+<div id="outline-container-org6660dfd" class="outline-3">
+<h3 id="org6660dfd"><a href="#org6660dfd">Get object</a></h3>
+<div class="outline-text-3" id="text-org6660dfd">
 <div class="org-src-container">
 <pre class="src src-sh">aws s3api get-object <span style="color: #98be65;">\</span>
     --bucket $<span style="color: #dcaeea;">BucketName</span> <span style="color: #98be65;">\</span>
     --key $<span style="color: #dcaeea;">Key</span> ./foo
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1fddda1" class="outline-3">
+<h3 id="org1fddda1"><a href="#org1fddda1">Get multiple objects</a></h3>
+<div class="outline-text-3" id="text-org1fddda1">
+<div class="org-src-container">
+<pre class="src src-sh">mkdir -p ~/Downloads/foo
+aws s3 cp <span style="color: #98be65;">\</span>
+    --recursive <span style="color: #98be65;">\</span>
+    s3://$<span style="color: #dcaeea;">BucketName</span>/ <span style="color: #98be65;">\</span>
+    ~/Downloads/foo/
 </pre>
 </div>
 </div>
@@ -1950,6 +2062,32 @@ I have functions for this in <a href="https://github.com/cfclrk/dotfiles/blob/ma
 </div>
 </div>
 </div>
+
+<div id="outline-container-orgd684c4d" class="outline-3">
+<h3 id="orgd684c4d"><a href="#orgd684c4d">Read Message</a></h3>
+<div class="outline-text-3" id="text-orgd684c4d">
+<div class="org-src-container">
+<pre class="src src-sh" id="org967f7ac">aws --profile prod --region us-east-1 sqs receive-message <span style="color: #98be65;">\</span>
+    --queue-url <span style="color: #98be65;">"$q_url"</span> <span style="color: #98be65;">\</span>
+    --attribute-names All <span style="color: #98be65;">\</span>
+    --message-attribute-names All <span style="color: #98be65;">\</span>
+    --max-number-of-messages 2
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org21bfe09" class="outline-3">
+<h3 id="org21bfe09"><a href="#org21bfe09">Send Message</a></h3>
+<div class="outline-text-3" id="text-org21bfe09">
+<div class="org-src-container">
+<pre class="src src-sh">aws sqs send-message <span style="color: #98be65;">\</span>
+    --queue-url <span style="color: #98be65;">"$q_url"</span> <span style="color: #98be65;">\</span>
+    --message-body <span style="color: #98be65;">'{"Message": "{\"foo\":\"bar\"}"}'</span>
+</pre>
+</div>
+</div>
+</div>
 </div>
 
 <div id="outline-container-orgf97ac30" class="outline-2">
@@ -1968,6 +2106,35 @@ I have functions for this in <a href="https://github.com/cfclrk/dotfiles/blob/ma
 <h2 id="orgeea0d28"><a href="#orgeea0d28">SSO</a></h2>
 <div class="outline-text-2" id="text-orgeea0d28">
 </div>
+<div id="outline-container-org88165e1" class="outline-3">
+<h3 id="org88165e1"><a href="#org88165e1">Register Client</a></h3>
+<div class="outline-text-3" id="text-org88165e1">
+<p>
+This command <b>does not</b> require AWS credentials. You only need a region.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">aws --region us-east-1 sso-oidc register-client <span style="color: #98be65;">\</span>
+    --client-name foo <span style="color: #98be65;">\</span>
+    --client-type public
+</pre>
+</div>
+
+<p>
+Returns an object like:
+</p>
+
+<pre class="example" id="orgb594d9f">
+{
+    "clientId": "abc1234",
+    "clientSecret": "a JSON Web Token",
+    "clientIdIssuedAt": 1659099242,
+    "clientSecretExpiresAt": 1666875242
+}
+</pre>
+</div>
+</div>
+
 <div id="outline-container-orgf5857a2" class="outline-3">
 <h3 id="orgf5857a2"><a href="#orgf5857a2">Token</a></h3>
 <div class="outline-text-3" id="text-orgf5857a2">
@@ -1980,7 +2147,8 @@ TODO: Look up token file programatically
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="org2fd03f1">cat $<span style="color: #dcaeea;">tokenFile</span> | jq -r <span style="color: #98be65;">'.accessToken'</span>
+<pre class="src src-sh" id="org2fd03f1"><span style="color: #dcaeea;">token_file</span>=~/.aws/sso/cache/$<span style="color: #dcaeea;">token_name</span>.json
+cat $<span style="color: #dcaeea;">token_file</span> | jq -r <span style="color: #98be65;">'.accessToken'</span>
 </pre>
 </div>
 </div>
@@ -1995,14 +2163,14 @@ TODO: SsoToken has a trailing newline!
 
 <div class="org-src-container">
 <pre class="src src-sh">aws sso list-accounts <span style="color: #98be65;">\</span>
-    --access-token $<span style="color: #dcaeea;">SsoToken</span>
+    --access-token $<span style="color: #dcaeea;">token</span>
 </pre>
 </div>
 
 <div class="org-src-container">
 <pre class="src src-sh">aws sso list-account-roles <span style="color: #98be65;">\</span>
-    --access-token <span style="color: #98be65;">"$SsoToken"</span> <span style="color: #98be65;">\</span>
-    --account-id $<span style="color: #dcaeea;">Account</span>
+    --access-token $<span style="color: #dcaeea;">token</span> <span style="color: #98be65;">\</span>
+    --account-id 820416642700
 </pre>
 </div>
 </div>

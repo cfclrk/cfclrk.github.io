@@ -46,7 +46,7 @@
 <h2 id="org2f6bc8b"><a href="#org2f6bc8b">Workflow</a></h2>
 <div class="outline-text-2" id="text-org2f6bc8b">
 <p>
-Basic workflow for looking up something about Elisp:
+If it's about Emacs Lisp:
 </p>
 
 <ul class="org-ul">
@@ -54,6 +54,23 @@ Basic workflow for looking up something about Elisp:
 <li>Find the Elisp manual: <code>m Elisp</code></li>
 <li>Search the index for, say, "defvar": <code>i defvar</code></li>
 </ul>
+
+<p>
+If it's about a specific package, and you know what the package is called:
+</p>
+
+<ul class="org-ul">
+<li><code>C-h P</code>, which runs <code>describe-package</code></li>
+</ul>
+
+<p>
+You can also evaluate a lisp form to jump to info docs. For example:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>info <span style="color: #98be65;">"(elisp) Packaging"</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
 </div>
 </div>
 

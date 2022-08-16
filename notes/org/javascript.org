@@ -10,7 +10,8 @@
 
 *** Install
 
-    #+begin_src sh :var package="markdownlint-cli" :results output
+    #+header: :var package="markdownlint-cli"
+    #+begin_src sh :results output
       yarn global add $package
     #+end_src
 
@@ -39,6 +40,12 @@
 
 ** Global Packages
 
+*** Install
+
+    #+begin_src sh
+      npm install -g $package_name
+    #+end_src
+
 *** List
 
     #+begin_src sh
@@ -52,6 +59,12 @@
           | awk -F/ '/node_modules/ && !/\/npm$/ {print $NF}' \
           | xargs npm -g uninstall
     #+end_src
+
+** New project
+
+   #+begin_src sh
+     npm init
+   #+end_src
 
 * Strings
 

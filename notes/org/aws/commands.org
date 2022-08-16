@@ -1,14 +1,15 @@
 #+TITLE: AWS Commands
 #+SETUPFILE: ../../setup.org
 #+PROPERTY: header-args+ :results output
+#+PROPERTY: header-args+ :cache yes
 
 * Variables                                                        :noexport:
 
   #+NAME: env
-  | Env Var            | Value            |
-  |--------------------+------------------|
-  | AWS_PROFILE        | dev              |
-  | AWS_DEFAULT_REGION | us-east-1        |
+  | Env Var            | Value     |
+  |--------------------+-----------|
+  | AWS_PROFILE        | dev       |
+  | AWS_DEFAULT_REGION | us-east-1 |
 
   #+begin_src emacs-lisp :var env=env
     (setenv-file-export-pairs env)
@@ -20,7 +21,9 @@
 
   #+NAME: Account
   #+begin_src sh
-    aws sts get-caller-identity --query 'Account' --output text
+    aws sts get-caller-identity \
+        --query 'Account' \
+        --output text
   #+end_src
 
 * IP Address Ranges
@@ -56,7 +59,7 @@
 ** All Regions in Partition
 
    #+NAME: AllRegions
-   #+begin_src sh :cache yes
+   #+begin_src sh
      aws ec2 describe-regions \
          | jq -r ".Regions[].RegionName"
    #+end_src
@@ -336,6 +339,15 @@
          --alarm-actions $ScalingPolicyArn
    #+end_src
 
+* CodeDeploy
+
+
+** list-deployments
+
+  #+begin_src sh
+    aws deploy list-deployments --application-name saus
+  #+end_src
+
 * DynamoDB
 
   The paper: [[https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf][Dynamo: Amazon’s Highly Available Key-value Store]]. This describes a
@@ -443,7 +455,8 @@
   #+header: :var AllRegions=AllRegions
   #+begin_src sh
     for region in $AllRegions; do
-        azs=$(aws --region $region ec2 describe-availability-zones \
+        azs=$(aws --region $region \
+                  ec2 describe-availability-zones \
                   | jq -c '[.AvailabilityZones[].ZoneName]')
         printf "$region: $azs\n"
     done
@@ -493,13 +506,15 @@
 ** Create
 
    #+NAME: KeyPair
-   #+begin_src sh :var KeyName="test" :cache yes
+   #+header: :var KeyName="test"
+   #+begin_src sh
      aws ec2 create-key-pair --key-name $KeyName
    #+end_src
 
    Copy private key to =~/.ssh=
 
-   #+begin_src bash :var KeyPair=KeyPair dir="ironnet"
+   #+header: :var KeyPair=KeyPair dir="ironnet"
+   #+begin_src bash
      KeyName=$(echo $KeyPair | jq -r '.KeyName')
      KeyFile=~/.ssh/$dir/$KeyName
      echo $KeyPair | jq -r '.KeyMaterial' > $KeyFile
@@ -632,7 +647,7 @@
 
    #+NAME: AllVolumes
    #+header: :var Tag="kubernetes.io/cluster/steger1018test1"
-   #+begin_src sh :cache yes
+   #+begin_src sh
      aws ec2 describe-volumes \
          --filters Name=tag-key,Values=$Tag \
          | jq -r '.Volumes[].VolumeId'
@@ -659,6 +674,8 @@
 * ECR
 
 ** Log in
+
+   TODO: =$account= doesn't work (newline)
 
    #+header: :var account=Account
    #+begin_src sh
@@ -816,6 +833,7 @@
 
 ** Create Policy
 
+   #+header: :var PolicyName="chris-clark-test"
    #+begin_src sh
      aws iam create-policy \
          --policy-name $PolicyName \
@@ -832,6 +850,12 @@
          ]
        }]
      }'
+   #+end_src
+
+** Describe Policy
+
+   #+begin_src sh
+     aws iam get-policy --policy-arn $arn
    #+end_src
 
 ** Assume Role
@@ -999,20 +1023,44 @@
     aws ram list-resources --resource-owner SELF
   #+end_src
 
+* RDS
+
+** describe-db-instances
+
+   #+begin_src sh
+     aws rds describe-db-instances \
+         --db-instance-identifier "my-service-dev" \
+         | jq 'DBInstances[]'
+   #+end_src
+
+** describe-db-engine-versions
+
+  #+begin_src sh
+    aws rds describe-db-engine-versions \
+        --engine "postgres" \
+        | jq -r '.DBEngineVersions[].EngineVersion'
+  #+end_src
+
+** pending maintenance actions for a DB
+
+   #+begin_src sh
+     aws rds describe-pending-maintenance-actions \
+         | jq '.PendingMaintenanceActions[]
+               | select(.ResourceIdentifier=="$DB_ARN")'
+   #+end_src
+
 * Route53
 
-** Get HostedZoneId from Name
-
-   AWS credentials have to be set for the account that actually has this
-   HostedZone.
+** Get HostedZoneId from domain name
 
    #+NAME: HostedZoneId
    #+header: :var hostedZoneName="irondev.io"
-   #+begin_src sh :cache yes
+   #+begin_src sh
      aws route53 list-hosted-zones \
          | jq -r --arg name $hostedZoneName \
               '.HostedZones[]
                | select(.Name == $name + ".")
+               | select(.Config.PrivateZone == false)
                | .Id'
    #+end_src
 
@@ -1030,12 +1078,22 @@
 ** List Secrets
 
    #+begin_src sh
-     aws secretsmanager list-secrets
+     aws secretsmanager list-secrets \
+         | jq -r '.SecretList[].Name'
+   #+end_src
+
+   Filter:
+
+   #+begin_src sh
+     aws secretsmanager list-secrets \
+         --filters 'Key=name,Values=foo/bar' \
+         | jq -r '.SecretList[].Name'
    #+end_src
 
 ** Get Secret
 
-   #+begin_src sh :var SecretName="/ixiactl/BP_PASSWORD"
+   #+header: :var SecretName="/ixiactl/BP_PASSWORD"
+   #+begin_src sh
      aws secretsmanager get-secret-value \
          --secret-id $SecretName \
          | jq -r '.SecretString'
@@ -1118,12 +1176,24 @@
                   | reverse | first | .Key'
    #+end_src
 
-** Get Object
+** Get object
 
-   #+begin_src sh :var BucketName="" Key=""
+   #+header: :var BucketName="" Key=""
+   #+begin_src sh
      aws s3api get-object \
          --bucket $BucketName \
          --key $Key ./foo
+   #+end_src
+
+** Get multiple objects
+
+   #+header: :var BucketName=""
+   #+begin_src sh
+     mkdir -p ~/Downloads/foo
+     aws s3 cp \
+         --recursive \
+         s3://$BucketName/ \
+         ~/Downloads/foo/
    #+end_src
 
 ** Get Bucket Policy
@@ -1155,6 +1225,27 @@
          | jq '.QueueUrls[]'
    #+end_src
 
+** Read Message
+
+   #+name: ReadMessage
+   #+header: :var q_url="https://sqs.us-east-1.amazonaws.com/..."
+   #+begin_src sh
+     aws --profile prod --region us-east-1 sqs receive-message \
+         --queue-url "$q_url" \
+         --attribute-names All \
+         --message-attribute-names All \
+         --max-number-of-messages 2
+   #+end_src
+
+** Send Message
+
+   #+header: :var q_url=""
+   #+begin_src sh
+     aws sqs send-message \
+         --queue-url "$q_url" \
+         --message-body '{"Message": "{\"foo\":\"bar\"}"}'
+   #+end_src
+
 * SSM
 
   #+header: :var name="/aws/service/eks/optimized-ami/1.19/amazon-linux-2/recommended/image_id"
@@ -1166,6 +1257,27 @@
 
 * SSO
 
+** Register Client
+
+   This command *does not* require AWS credentials. You only need a region.
+
+   #+begin_src sh
+     aws --region us-east-1 sso-oidc register-client \
+         --client-name foo \
+         --client-type public
+   #+end_src
+
+   Returns an object like:
+
+   #+begin_example
+     {
+         "clientId": "abc1234",
+         "clientSecret": "a JSON Web Token",
+         "clientIdIssuedAt": 1659099242,
+         "clientSecretExpiresAt": 1666875242
+     }
+   #+end_example
+
 ** Token
 
    TODO: Need to run aws sso login. Requires block in =~/.aws/config= I think.
@@ -1173,24 +1285,23 @@
    TODO: Look up token file programatically
 
    #+NAME: SsoToken
-   #+headers: :var tokenFile="/Users/chris.clark/.aws/sso/cache/b9d131856200283be9603e59dc49f1dc50aa7c62.json"
+   #+headers: :var token_name="64f3a92deadad760a4cbf8386ec4e7e29859da67"
    #+begin_src sh
-     cat $tokenFile | jq -r '.accessToken'
+     token_file=~/.aws/sso/cache/$token_name.json
+     cat $token_file | jq -r '.accessToken'
    #+end_src
 
 ** List Accounts I Can Access
 
    TODO: SsoToken has a trailing newline!
 
-   #+begin_src sh :var SsoToken=SsoToken :results output
+   #+begin_src sh :var token=SsoToken :results output
      aws sso list-accounts \
-         --access-token $SsoToken
+         --access-token $token
    #+end_src
 
-   #+RESULTS:
-
-   #+begin_src sh :var SsoToken=SsoToken Account=Account
+   #+begin_src sh :var token=SsoToken
      aws sso list-account-roles \
-         --access-token "$SsoToken" \
-         --account-id $Account
+         --access-token $token \
+         --account-id 820416642700
    #+end_src

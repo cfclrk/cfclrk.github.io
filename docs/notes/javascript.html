@@ -35,10 +35,10 @@
 <ul>
 <li><a href="#org9b9866f">yarn</a>
 <ul>
-<li><a href="#orgfdab57a">Global Packages</a>
+<li><a href="#orgad8fe37">Global Packages</a>
 <ul>
 <li><a href="#org5eac91d">Install</a></li>
-<li><a href="#org2c18046">List</a></li>
+<li><a href="#org588aa15">List</a></li>
 <li><a href="#org77eafda">Upgrade</a></li>
 </ul>
 </li>
@@ -46,12 +46,14 @@
 </li>
 <li><a href="#orgb36f320">npm</a>
 <ul>
-<li><a href="#orgad8fe37">Global Packages</a>
+<li><a href="#orgb5a3cea">Global Packages</a>
 <ul>
-<li><a href="#org588aa15">List</a></li>
+<li><a href="#org617ce30">Install</a></li>
+<li><a href="#org88c7ed6">List</a></li>
 <li><a href="#org6fa2cc4">Delete Them All</a></li>
 </ul>
 </li>
+<li><a href="#org2d55d6e">New project</a></li>
 </ul>
 </li>
 <li><a href="#org9c9d5b0">Strings</a></li>
@@ -64,9 +66,9 @@
 <h2 id="org9b9866f"><a href="#org9b9866f">yarn</a></h2>
 <div class="outline-text-2" id="text-org9b9866f">
 </div>
-<div id="outline-container-orgfdab57a" class="outline-3">
-<h3 id="orgfdab57a"><a href="#orgfdab57a">Global Packages</a></h3>
-<div class="outline-text-3" id="text-orgfdab57a">
+<div id="outline-container-orgad8fe37" class="outline-3">
+<h3 id="orgad8fe37"><a href="#orgad8fe37">Global Packages</a></h3>
+<div class="outline-text-3" id="text-orgad8fe37">
 <p>
 Global packages are installed to <code>$(yarn global dir)/node_modules/</code> and
 symlinks are placed in <code>$(yarn global bin)</code>.
@@ -83,9 +85,9 @@ symlinks are placed in <code>$(yarn global bin)</code>.
 </div>
 </div>
 
-<div id="outline-container-org2c18046" class="outline-4">
-<h4 id="org2c18046"><a href="#org2c18046">List</a></h4>
-<div class="outline-text-4" id="text-org2c18046">
+<div id="outline-container-org588aa15" class="outline-4">
+<h4 id="org588aa15"><a href="#org588aa15">List</a></h4>
+<div class="outline-text-4" id="text-org588aa15">
 <div class="org-src-container">
 <pre class="src src-sh">yarn global list
 </pre>
@@ -123,13 +125,23 @@ Without <code>--latest</code>, yarn will respect semver specs in <code>$(yarn gl
 <h2 id="orgb36f320"><a href="#orgb36f320">npm</a></h2>
 <div class="outline-text-2" id="text-orgb36f320">
 </div>
-<div id="outline-container-orgad8fe37" class="outline-3">
-<h3 id="orgad8fe37"><a href="#orgad8fe37">Global Packages</a></h3>
-<div class="outline-text-3" id="text-orgad8fe37">
+<div id="outline-container-orgb5a3cea" class="outline-3">
+<h3 id="orgb5a3cea"><a href="#orgb5a3cea">Global Packages</a></h3>
+<div class="outline-text-3" id="text-orgb5a3cea">
 </div>
-<div id="outline-container-org588aa15" class="outline-4">
-<h4 id="org588aa15"><a href="#org588aa15">List</a></h4>
-<div class="outline-text-4" id="text-org588aa15">
+<div id="outline-container-org617ce30" class="outline-4">
+<h4 id="org617ce30"><a href="#org617ce30">Install</a></h4>
+<div class="outline-text-4" id="text-org617ce30">
+<div class="org-src-container">
+<pre class="src src-sh">npm install -g $<span style="color: #dcaeea;">package_name</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org88c7ed6" class="outline-4">
+<h4 id="org88c7ed6"><a href="#org88c7ed6">List</a></h4>
+<div class="outline-text-4" id="text-org88c7ed6">
 <div class="org-src-container">
 <pre class="src src-sh">npm -g list --depth 0
 </pre>
@@ -146,6 +158,16 @@ Without <code>--latest</code>, yarn will respect semver specs in <code>$(yarn gl
     | xargs npm -g uninstall
 </pre>
 </div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2d55d6e" class="outline-3">
+<h3 id="org2d55d6e"><a href="#org2d55d6e">New project</a></h3>
+<div class="outline-text-3" id="text-org2d55d6e">
+<div class="org-src-container">
+<pre class="src src-sh">npm init
+</pre>
 </div>
 </div>
 </div>

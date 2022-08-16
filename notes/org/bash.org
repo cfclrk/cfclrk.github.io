@@ -18,13 +18,16 @@
   applied to the wrong number of arguments, a non-0 exit status should be
   returned.
 
+  One important question: is the empty string =""= a valid parameter?
+
 ** Using [[ (new-test)
 
    The double-bracket =[[= syntax is called "new-test".
 
    =-n= is a string comparison operator that tests if a string is not null zero-length.
 
-   #+NAME: FuncParam
+   #+name: FuncParam
+   #+header: :prologue "exec 2>&1" :epilogue "true"
    #+begin_src sh
      foo() {
          [[ -n "$1" ]] || {
@@ -33,35 +36,21 @@
          }
          echo "Param is: $1"
      }
-   #+end_src
 
-   #+header: :prologue "exec 2>&1" :epilogue "true"
-   #+begin_src sh
-     <<FuncParam>>
      foo
-   #+end_src
-
-   #+RESULTS:
-   : Error: param 1 is required
-
-   #+header: :prologue "exec 2>&1" :epilogue "true"
-    #+begin_src sh
-     <<FuncParam>>
      foo ""
-   #+end_src
-
-   #+RESULTS:
-   : Error: param 1 is required
-
-   #+begin_src sh
-     <<FuncParam>>
      foo bar
    #+end_src
 
-   #+RESULTS:
+   #+RESULTS: FuncParam
+   : Error: param 1 is required
+   : Error: param 1 is required
    : Param is: bar
 
-** Using test
+** Using [ (test)
+
+   Same as above, but not as good. For more info, see [[http://mywiki.wooledge.org/BashFAQ/031][FAQ]]: "What is the
+   difference between =test=, =[= and =[[=?"
 
    #+begin_src sh
 	 foo() {
@@ -72,8 +61,8 @@
 	 }
    #+end_src
 
-   Note that =[= =]= is an alias for =test=. For completeness, the above example
-   can be written as:
+   Note that =[= =]= is an alias for =test=. The above example could be written
+   as:
 
    #+begin_src sh
 	 foo() {
@@ -85,21 +74,28 @@
 	 }
    #+end_src
 
-   For more info, see [[http://mywiki.wooledge.org/BashFAQ/031][FAQ]]: "What is the difference between =test=, =[= and =[[=?"
-
 ** if-else
 
    #+begin_src sh
-	 func() {
-		 if [ -z ${1+x} ]; then
-			 echo "Error: param 1 is required"
-			 return 1
-		 else
-			 local a=$1
-		 fi
-		 echo "a is '$a'"
-	 }
+     foo() {
+         if [ -z ${1+x} ]; then
+             echo "Error: param 1 is required"
+             return 1
+         else
+             local a=$1
+         fi
+         echo "a is '$a'"
+     }
+
+     foo
+     foo ""
+     foo bar
    #+end_src
+
+   #+RESULTS:
+   : Error: param 1 is required
+   : a is ''
+   : a is 'bar'
 
 * Set
 
@@ -373,6 +369,23 @@
    =var= is empty, it is subsituted by an empty string. Now the =-z= test sees an
    empty argument, and this prints out =var is unset=.
 
+** ##
+
+   Remove largest prefix pattern.
+
+   #+begin_src sh
+     a_list=("foo/aa.foo" "bar/ab.foo" "baz/ac.foo")
+     for a in ${a_list[@]}; do
+         # The "*/" is a regex
+         echo ${a##*/}
+     done
+   #+end_src
+
+   #+RESULTS:
+   : aa.foo
+   : ab.foo
+   : ac.foo
+
 * Arrays
 
 ** * vs @
@@ -401,7 +414,7 @@
 
   #+begin_src sh
     arr=("foo" "bar" "baz")
-    for x in ${arr[@]}; do
+    for x in "${arr[@]}"; do
         echo $x
     done
   #+end_src
@@ -427,7 +440,7 @@
 
   #+begin_src sh
     script=$(cat <<"EOF"
-    echo {}
+    echo "some {}"
     EOF
     )
     arr=("foo" "bar" "baz")
@@ -439,9 +452,30 @@
   #+end_src
 
   #+RESULTS:
-  : foo
-  : bar
-  : baz
+  : some foo
+  : some bar
+  : some baz
+
+* Associative Arrays
+
+** Using cut
+
+   #+begin_src sh
+     arr=("key1,val1",
+          "key2,val2",
+          "key3,val3")
+
+     for i in "${arr[@]}"; do
+         k=$(echo "$i" | cut -d, -f 1)
+         v=$(echo "$i" | cut -d, -f 2)
+         echo "Key is $k and val is $v"
+     done
+   #+end_src
+
+   #+RESULTS:
+   : Key is key1 and val is val1
+   : Key is key2 and val is val2
+   : Key is key3 and val is val3
 
 * Range
 
@@ -477,8 +511,8 @@
 
 ** Print a multiline string
 
-   =echo $a= prints everything on one line, while =echo "$a"= preserves
-   newlines. Why is that?
+   =echo $a= prints a heredoc on one line, while =echo "$a"= preserves the
+   newlines in the heredoc. Why is that?
 
 	#+begin_src sh
       a=$(cat <<EOF

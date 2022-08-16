@@ -40,6 +40,7 @@
 </ul>
 </li>
 <li><a href="#orge0a1003">Switch Versions</a></li>
+<li><a href="#org0de1dab">GraalVM</a></li>
 </ul>
 </div>
 </nav>
@@ -111,6 +112,75 @@ You can set <code>JAVA_HOME</code> to be one of those paths like this:
 <pre class="src src-bash"><span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">JAVA_HOME</span>=$(/usr/libexec/java_home -v 1.8)
 </pre>
 </div>
+</div>
+</div>
+
+<div id="outline-container-org0de1dab" class="outline-2">
+<h2 id="org0de1dab"><a href="#org0de1dab">GraalVM</a></h2>
+<div class="outline-text-2" id="text-org0de1dab">
+<p>
+Installation
+</p>
+
+<pre class="example" id="org6d2b29b">
+query {
+  repository(name: "graalvm-ce-builds", owner: "graalvm") {
+    releases(orderBy: {field: CREATED_AT, direction: ASC}, last: 1) {
+      nodes {
+        name
+        releaseAssets(first: 100) {
+          nodes {
+            name
+            downloadUrl
+          }
+        }
+      }
+    }
+  }
+}
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #51afef;">(</span>require '<span style="color: #c678dd;">[</span>babashka.curl <span style="color: #a9a1e1;">:as</span> curl<span style="color: #c678dd;">]</span><span style="color: #51afef;">)</span>
+
+<span style="color: #51afef;">(</span><span style="color: #51afef;">def</span> <span style="color: #dcaeea;">token</span> <span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">System</span>/getenv <span style="color: #98be65;">"GITHUB_TOKEN"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+
+<span style="color: #51afef;">(</span><span style="color: #51afef;">def</span> <span style="color: #dcaeea;">resp</span>
+  <span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">curl</span>/post
+   <span style="color: #98be65;">"https://api.github.com/graphql"</span>
+   <span style="color: #98be65;">{</span><span style="color: #a9a1e1;">:headers</span> <span style="color: #a9a1e1;">{</span><span style="color: #98be65;">"Authorization"</span>
+              <span style="color: #4db5bd;">(</span>str <span style="color: #98be65;">"bearer "</span> token<span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">}</span>
+    <span style="color: #a9a1e1;">:body</span> <span style="color: #a9a1e1;">(</span><span style="color: #ECBE7B;">json</span>/generate-string <span style="color: #4db5bd;">{</span><span style="color: #a9a1e1;">:query</span> q<span style="color: #4db5bd;">}</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">}</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+
+<span style="color: #51afef;">(</span><span style="color: #51afef;">def</span> <span style="color: #dcaeea;">names-and-urls</span>
+  <span style="color: #c678dd;">(</span><span style="color: #51afef;">-&gt;</span> resp
+     <span style="color: #a9a1e1;">:body</span>
+     <span style="color: #98be65;">(</span><span style="color: #ECBE7B;">json</span>/parse-string <span style="color: #a9a1e1;">true</span><span style="color: #98be65;">)</span>
+     <span style="color: #98be65;">(</span>get-in <span style="color: #a9a1e1;">[</span><span style="color: #a9a1e1;">:data</span> <span style="color: #a9a1e1;">:repository</span> <span style="color: #a9a1e1;">:releases</span> <span style="color: #a9a1e1;">:nodes</span><span style="color: #a9a1e1;">]</span><span style="color: #98be65;">)</span>
+     first <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">todo: map</span>
+     <span style="color: #98be65;">(</span>get-in <span style="color: #a9a1e1;">[</span><span style="color: #a9a1e1;">:releaseAssets</span> <span style="color: #a9a1e1;">:nodes</span><span style="color: #a9a1e1;">]</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+
+<span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Can there be multiple release assets with the same name?</span>
+<span style="color: #51afef;">(</span><span style="color: #51afef;">def</span> <span style="color: #dcaeea;">my-items</span>
+  <span style="color: #c678dd;">(</span>filter <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">should this be a reduce?</span>
+   #<span style="color: #98be65;">(</span>=
+     <span style="color: #98be65;">"graalvm-ce-java17-darwin-amd64-22.1.0.tar.gz"</span>
+     <span style="color: #a9a1e1;">(</span><span style="color: #a9a1e1;">:name</span> <span style="color: #dcaeea;">%</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
+   names-and-urls<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+
+<span style="color: #51afef;">(</span><span style="color: #51afef;">-&gt;</span> my-item
+    first
+    <span style="color: #a9a1e1;">:downloadUrl</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<p>
+foo
+</p>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+"https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.1.0/graalvm-ce-java17-darwin-amd64-22.1.0.tar.gz"
+</pre>
 </div>
 </div>
 </div>

@@ -55,6 +55,7 @@
 </ul>
 </li>
 <li><a href="#org3b5de98">First Commit</a></li>
+<li><a href="#org41f2f1e">Files changed in commit</a></li>
 <li><a href="#orgf7f62a8">Tags</a>
 <ul>
 <li><a href="#org1003fa7">Get Project Version From Tag</a></li>
@@ -102,7 +103,7 @@ touch D &amp;&amp; git add D &amp;&amp; git commit -m <span style="color: #98be6
 </div>
 
 
-<figure id="org15e5963">
+<figure id="org9486368">
 <img src="../img/RebaseToAncestor1.png" alt="RebaseToAncestor1.png">
 
 </figure>
@@ -129,7 +130,7 @@ Current branch feat-2 is up to date.
 </div>
 
 
-<figure id="org8b679fb">
+<figure id="org3a85080">
 <img src="../img/RebaseToAncestor2.png" alt="RebaseToAncestor2.png">
 
 </figure>
@@ -158,7 +159,7 @@ git rebase --onto main feat-1
 </div>
 
 
-<figure id="org3bd0dc5">
+<figure id="org93ae145">
 <img src="../img/RebaseToAncestor3.png" alt="RebaseToAncestor3.png">
 
 </figure>
@@ -189,7 +190,7 @@ touch D &amp;&amp; git add D &amp;&amp; git commit -m <span style="color: #98be6
 </div>
 
 
-<figure id="orgafc72e9">
+<figure id="org22de485">
 <img src="../img/RebaseToCommit1.png" alt="RebaseToCommit1.png">
 
 </figure>
@@ -254,12 +255,13 @@ pushed to a remote repo. You shouldn't push this rebase!
 <p>
 You ran a <code>git commit --ammend</code>, then realized you've already pushed the
 commit you were ammending! You can't push the ammended commit! (You <i>can</i>,
-but that would be rewriting history on the remote).
+but that would be rewriting history on the remote server).
 </p>
 
 <ul class="org-ul">
 <li>Reset soft to <code>origin/&lt;branch-name&gt;</code>. Then the changes you just committed
-will be staged. Now you can commit again as a new commit.</li>
+will be staged.</li>
+<li>Commit again as a new commit.</li>
 </ul>
 </div>
 </div>
@@ -377,6 +379,17 @@ Some ways to find the first commit in a Git repository:
 
 <div class="org-src-container">
 <pre class="src src-sh">git log --reverse
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org41f2f1e" class="outline-2">
+<h2 id="org41f2f1e"><a href="#org41f2f1e">Files changed in commit</a></h2>
+<div class="outline-text-2" id="text-org41f2f1e">
+<div class="org-src-container">
+<pre class="src src-sh">git diff-tree -r --no-commit-id <span style="color: #98be65;">\</span>
+    --name-only $<span style="color: #dcaeea;">sha</span>
 </pre>
 </div>
 </div>

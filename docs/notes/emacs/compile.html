@@ -33,6 +33,7 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
+<li><a href="#orgd1b8c93">PSA: Don't do this</a></li>
 <li><a href="#org565fb0d">Git Clone</a></li>
 <li><a href="#orgedd4eaa">Install Prerequisites</a></li>
 <li><a href="#org9b3604b">Provide path to libxml headers</a></li>
@@ -51,6 +52,15 @@
 </ul>
 </div>
 </nav>
+
+<div id="outline-container-orgd1b8c93" class="outline-2">
+<h2 id="orgd1b8c93"><a href="#orgd1b8c93">PSA: Don't do this</a></h2>
+<div class="outline-text-2" id="text-orgd1b8c93">
+<p>
+Just use <a href="https://github.com/d12frosted/homebrew-emacs-plus">emacs-plus</a>. That does everything these notes do, but better.
+</p>
+</div>
+</div>
 
 <div id="outline-container-org565fb0d" class="outline-2">
 <h2 id="org565fb0d"><a href="#org565fb0d">Git Clone</a></h2>
@@ -221,7 +231,7 @@ t
 <div id="outline-container-org74f0c9b" class="outline-2">
 <h2 id="org74f0c9b"><a href="#org74f0c9b">Debugging</a></h2>
 <div class="outline-text-2" id="text-org74f0c9b">
-<pre class="example" id="org0651cef">
+<pre class="example" id="orgf049dce">
 $ lldb
 (lldb) target create "nextstep/Emacs.app/Contents/MacOS/Emacs"
 Current executable set to '/Users/chris.clark/Projects/emacs/nextstep/Emacs.app/Contents/MacOS/Emacs' (x86_64).
@@ -320,7 +330,7 @@ Do <b>NOT</b> manually create that link (say, by doing something like <code>ln -
 following error during the <code>./configure</code> step of building Emacs:
 </p>
 
-<pre class="example" id="org2f368c8">
+<pre class="example" id="org8d6d91c">
 checking for AppKit/AppKit.h... no
 configure: error: The include files (AppKit/AppKit.h etc) that
 are required for a Nextstep build are missing or cannot be compiled.
@@ -359,7 +369,7 @@ Emacs from a pinned Dock icon, Emacs won't have <code>LIBRARY_PATH</code> set, a
 see an error like:
 </p>
 
-<pre class="example" id="orgda77b58">
+<pre class="example" id="orgef08367">
 ld: library not found for -lgcc_ext.10.5
 libgccjit.so: error: error invoking gcc driver
 </pre>

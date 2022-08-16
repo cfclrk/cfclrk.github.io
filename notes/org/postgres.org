@@ -1,0 +1,10 @@
+#+TITLE: Postgres
+
+* Connect
+
+  #+header: :var db_dns_record=""
+  #+begin_src sh
+    psql -h $db_dns_record \
+         -p 5432 \
+         -U $user
+  #+end_src

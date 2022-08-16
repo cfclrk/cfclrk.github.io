@@ -19,6 +19,72 @@
   homebrew package. The first method is preferred, which requires you to set up
   and configure a JDK yourself.
 
+* Project Creation
+
+** Minimal
+
+   All you need is a project directory with a =deps.edn= and a =src/foo.clj=.
+   However it should be namespaced properly (TODO: work on this).
+
+   #+begin_src sh :var d="helloworld"
+     touch $d/deps.edn $d/src/core.clj
+     echo "{:deps {org.clojure/clojure {:mvn/version \"RELEASE\"}}}" > $d/deps.edn
+     echo "(ns core) (defn -main [] (println \"hello world\"))" >> src/core.clj
+     clj -m core
+   #+end_src
+
+** neil
+
+   This looks like the best way! Try this out!
+
+** My deps-new template
+
+   #+header: :dir ~/Projects/codenotes/clojure
+   #+header: :var user="cfclrk"
+   #+header: :var projectName="plaid-wrapper"
+   #+begin_src sh :results output
+     clojure \
+         -Sdeps '{:deps
+                  {net.clojars.cfclrk/minimal
+                   {:local/root "/Users/cclark/Projects/codenotes/clojure/minimal"}}}' \
+                       -Tnew \
+                       create \
+                       :template cfclrk/minimal \
+                       :name $user/$projectName
+   #+end_src
+
+** Leiningen
+
+   #+header: :dir ~/Projects/codenotes/clojure
+   #+header: :var projectName="minesweeper"
+   #+begin_src sh :results output
+     lein new app cfclrk/$projectName
+   #+end_src
+
+** deps-new
+
+   First, make sure [[https://github.com/seancorfield/deps-new][deps-new]] is installed:
+
+   #+begin_src sh :results output
+     clojure -Ttools install \
+             io.github.seancorfield/deps-new \
+             '{:git/tag "v0.4.9"}' :as new
+   #+end_src
+
+   Create a new app:
+
+   #+header: :dir ~/Projects/codenotes/clojure
+   #+header: :var projectName="ring-compojure"
+   #+begin_src sh
+     clojure -Tnew app :name cfclrk/$projectName
+   #+end_src
+
+   Create a new lib:
+
+   #+begin_src sh
+     clojure -Tnew lib :name cfclrk/$projectName
+   #+end_src
+
 * clj vs clojure
 
   =clj= is just a program that wraps =clojure= with =readline= support.
@@ -38,13 +104,32 @@
 
   So, =clj= just provides better interactivity in the terminal REPL.
 
+* Install a package
+
+** Find package versions
+
+  Say you want to install integrant:
+
+  #+begin_src sh :results output
+    clj -X:deps \
+        find-versions \
+        :lib integrant/integrant
+  #+end_src
+
+  Add that dependency, then build the project.
+
+** Start clj with package
+
+   #+begin_src sh
+     clj -Sdeps '{:deps {cider/orchard {:mvn/version "0.9.2"}}}'
+   #+end_src
+
 * Tools
 
   Ok, so there is:
 
   1. tools.build
   2. tools.tools
-
 
   From the [[https://clojure.org/guides/tools_build][tools.build guide]]:
 
@@ -58,6 +143,48 @@
 ** Where do tools live?
 
    Defined by an alias in =deps.edn=.
+
+* Code Format
+
+  Good article: [[https://bogoyavlensky.com/blog/clojure-formatting-cljstyle/][Clojure formatting with cljstyle]].
+
+** cljstyle
+
+   Install
+
+   #+begin_src sh
+     brew install --cask cljstyle
+   #+end_src
+
+** cljfmt
+
+   Format a project using =cljfmt=. Note, the =check= argument can also be
+   "=fix=" to make the changes in-place.
+
+   #+begin_src sh
+     clojure -Sdeps '{:deps {cljfmt/cljfmt {:mvn/version "0.8.0"}}}' \
+             -M -m cljfmt.main check
+   #+end_src
+
+* Classpath
+
+  This is how cider grabs it:
+
+  #+begin_src clojure
+    (seq (.split (System/getProperty "java.class.path") ":"))
+  #+end_src
+
+  Directories on the classpath:
+
+  #+begin_src clojure
+    (let [classpath-entries (.split (System/getProperty "java.class.path") ":")
+          classpath-as-files (map clojure.java.io/file classpath-entries)
+          classpath-dirs (filter #(.isDirectory %) classpath-as-files)]
+      classpath-dirs)
+  #+end_src
+
+  : (#object[java.io.File 0x43602f98 "src"]
+  :  #object[java.io.File 0x2b9120c6 "resources"])
 
 * Cmd Execution and REPL
 
@@ -80,52 +207,6 @@
         --middleware "[cider.nrepl/cider-middleware]"
   #+end_src
 
-* Project Creation
-
-** Minimal
-
-   All you need is a project directory with a =deps.edn= and a =src/foo.clj=.
-   However it should be namespaced properly (TODO: work on this).
-
-   #+begin_src sh :var d="helloworld"
-     touch $d/deps.edn $d/src/core.clj
-     echo "{:deps {org.clojure/clojure {:mvn/version \"RELEASE\"}}}" > $d/deps.edn
-     echo "(ns core) (defn -main [] (println \"hello world\"))" >> src/core.clj
-     clj -m core
-   #+end_src
-
-** Leiningen
-
-   #+header: :dir ~/Projects/codenotes/clojure
-   #+header: :var projectName="minesweeper"
-   #+begin_src sh :results output
-     lein new app cfclrk/$projectName
-   #+end_src
-
-** deps-new
-
-   First, make sure [[https://github.com/seancorfield/deps-new][deps-new]] is installed:
-
-   #+begin_src sh :results output
-     clojure -Ttools install \
-         io.github.seancorfield/deps-new \
-         '{:git/tag "v0.4.9"}' :as new
-   #+end_src
-
-   Create a new app:
-
-   #+header: :dir ~/Projects/codenotes/clojure
-   #+header: :var projectName="ring-compojure"
-   #+begin_src sh
-     clojure -Tnew app :name cfclrk/$projectName
-   #+end_src
-
-   Create a new lib:
-
-   #+begin_src sh
-     clojure -Tnew lib :name cfclrk/$projectName
-   #+end_src
-
 * Emacs Cider
 
   Basic workflow is described [[https://docs.cider.mx/cider/usage/cider_mode.html#basic-workflow][in the cider docs here]].
@@ -142,55 +223,75 @@
 
 ** Tips
 
-  - From source file, =C-u C-c C-z= to jump to cider buffer already namespaced
-    to the source file.
-  - Quit a long-running eval with =C-c C-b= (=cider-interrupt=).
+   - From source file, =C-u C-c C-z= to jump to cider buffer already namespaced
+     to the source file.
+   - Quit a long-running eval with =C-c C-b= (=cider-interrupt=).
 
 ** Doc
 
    Function doc: =C-c C-d C-d= (=cider-doc=)
-
-* Testing
-
-  Use test-runner, which handles test discovery and running tests.
-  https://github.com/cognitect-labs/test-runner
-
-** Run all tests in namespace
-
-   #+begin_src sh
-     clj -A:test -n cfclrk.sicp-test
-   #+end_src
-
-** Run a single test
-
-   #+begin_src sh
-     clj -A:test -v cfclrk.sicp-test/a-test
-   #+end_src
-
-* Symbols vs Keywords
-
-  What's the difference between a quoted symbol and a keyword?
-
-  Excerpt from "Clojure in Action, Second Edition" by Amit Rathore Francis
-  Avila:
-
-  #+begin_quote
-  Essetially what's happening when you quote a symbol is you’re treating the
-  symbol as data and not code. In practice you’ll almost never quote symbols to
-  use them as data because Clojure has a special type specifically for this use
-  case: the keyword. A keyword is sort of like an autoquoted symbol: keywords
-  never reference some other value and always evaluate to themselves. Keyword
-  syntax is almost like symbol syntax, except keywords always begin with a
-  colon.
-  #+end_quote
 
 * Quickies
 
 ** Print environment variables
 
    #+begin_src clojure
-     (doseq [[k v] (System/getenv)] (println k v))
+     (doseq [[k v] (System/getenv)]
+       (println k v))
    #+end_src
+
+** Clojure and Java versions
+
+   #+begin_src clojure
+     ,*clojure-version*
+     (System/getProperty "java.version")
+   #+end_src
+
+** Read and write a binary file
+
+   #+begin_src clojure
+     (import java.net.URI)
+     (import java.nio.file.Paths)
+     (import java.nio.file.Files)
+
+     (defn read-file-bytes
+       "Load the file at `path` into a byte[].
+       `path` is a String relative to the this service's root directory."
+       [^String path]
+       (let [file-uri (.toURI (io/resource path))
+             nio-path (Paths/get file-uri)]
+         (Files/readAllBytes nio-path)))
+
+     ;; Read file
+     (def mypdf
+       (read-file-bytes "resources/my.pdf"))
+
+     ;; Write file
+     (let [p (Paths/get
+              (URI. "file:///Users/cclark/Downloads/bar.pdf"))
+           opts (into-array java.nio.file.OpenOption [])]
+       (Files/write p mypdf opts))
+   #+end_src
+
+** Org mode
+
+   #+header: :backend clj-cli
+   #+header: :args "-Sdeps '{:deps {inflections {:mvn/version \"0.13.2\"}}}'"
+   #+begin_src clojure
+     (use 'inflections.core)
+     (plural "word")
+   #+end_src
+
+   #+RESULTS:
+   : words
+
+   #+header: :backend babashka
+   #+begin_src clojure :results output
+     (range 10)
+   #+end_src
+
+   #+RESULTS:
+   : (0 1 2 3 4 5 6 7 8 9)
 
 * core.async
 

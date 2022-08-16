@@ -1,6 +1,10 @@
 #+TITLE: Comiling Emacs on MacOS
 #+SETUPFILE: ../../setup.org
 
+* PSA: Don't do this
+
+  Just use [[https://github.com/d12frosted/homebrew-emacs-plus][emacs-plus]]. That does everything these notes do, but better.
+
 * Git Clone
 
   #+begin_src sh

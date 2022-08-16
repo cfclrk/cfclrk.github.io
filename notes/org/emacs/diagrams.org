@@ -77,3 +77,15 @@
 
    #+NAME: mytikz
    [[./mytikz.png]]
+
+* Mermaid
+
+  #+header: :file mermaid.png
+  #+begin_src mermaid
+    sequenceDiagram
+        A->>B: Hello
+        B->>A: Sup
+  #+end_src
+
+  #+RESULTS:
+  [[file:mermaid.png]]

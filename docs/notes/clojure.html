@@ -34,36 +34,47 @@
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
 <li><a href="#org1ec3ca0">Installation</a></li>
+<li><a href="#org3385fbb">Project Creation</a>
+<ul>
+<li><a href="#org5f9f88c">Minimal</a></li>
+<li><a href="#org71a6fad">neil</a></li>
+<li><a href="#org67b9012">My deps-new template</a></li>
+<li><a href="#orgf7f553c">Leiningen</a></li>
+<li><a href="#orge34443f">deps-new</a></li>
+</ul>
+</li>
 <li><a href="#orgdecc67a">clj vs clojure</a></li>
+<li><a href="#orgb6f2bf7">Install a package</a>
+<ul>
+<li><a href="#orgc4c80a6">Find package versions</a></li>
+<li><a href="#org14442cc">Start clj with package</a></li>
+</ul>
+</li>
 <li><a href="#orgbba9f61">Tools</a>
 <ul>
 <li><a href="#org704df1e">Where do tools live?</a></li>
 </ul>
 </li>
-<li><a href="#org6e70f25">Cmd Execution and REPL</a></li>
-<li><a href="#org3385fbb">Project Creation</a>
+<li><a href="#orga9ab7e5">Code Format</a>
 <ul>
-<li><a href="#org5f9f88c">Minimal</a></li>
-<li><a href="#orgf7f553c">Leiningen</a></li>
-<li><a href="#orge34443f">deps-new</a></li>
+<li><a href="#org4a8d570">cljstyle</a></li>
+<li><a href="#org13cac6f">cljfmt</a></li>
 </ul>
 </li>
+<li><a href="#org94b7e36">Classpath</a></li>
+<li><a href="#org6e70f25">Cmd Execution and REPL</a></li>
 <li><a href="#org96ab6bc">Emacs Cider</a>
 <ul>
 <li><a href="#org4f02911">Tips</a></li>
 <li><a href="#org10e514e">Doc</a></li>
 </ul>
 </li>
-<li><a href="#org106e00f">Testing</a>
-<ul>
-<li><a href="#org8c4169e">Run all tests in namespace</a></li>
-<li><a href="#org8a6790f">Run a single test</a></li>
-</ul>
-</li>
-<li><a href="#orgea9bdd7">Symbols vs Keywords</a></li>
 <li><a href="#org6c9b735">Quickies</a>
 <ul>
 <li><a href="#orgefb9897">Print environment variables</a></li>
+<li><a href="#org1045709">Clojure and Java versions</a></li>
+<li><a href="#org673ebb8">Read and write a binary file</a></li>
+<li><a href="#org660e9da">Org mode</a></li>
 </ul>
 </li>
 <li><a href="#orgf4cf461">core.async</a></li>
@@ -100,6 +111,99 @@ and configure a JDK yourself.
 </div>
 </div>
 
+<div id="outline-container-org3385fbb" class="outline-2">
+<h2 id="org3385fbb"><a href="#org3385fbb">Project Creation</a></h2>
+<div class="outline-text-2" id="text-org3385fbb">
+</div>
+<div id="outline-container-org5f9f88c" class="outline-3">
+<h3 id="org5f9f88c"><a href="#org5f9f88c">Minimal</a></h3>
+<div class="outline-text-3" id="text-org5f9f88c">
+<p>
+All you need is a project directory with a <code>deps.edn</code> and a <code>src/foo.clj</code>.
+However it should be namespaced properly (TODO: work on this).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">touch $<span style="color: #dcaeea;">d</span>/deps.edn $<span style="color: #dcaeea;">d</span>/src/core.clj
+<span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"{:deps {org.clojure/clojure {:mvn/version \"RELEASE\"}}}"</span> &gt; $<span style="color: #dcaeea;">d</span>/deps.edn
+<span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"(ns core) (defn -main [] (println \"hello world\"))"</span> &gt;&gt; src/core.clj
+clj -m core
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org71a6fad" class="outline-3">
+<h3 id="org71a6fad"><a href="#org71a6fad">neil</a></h3>
+<div class="outline-text-3" id="text-org71a6fad">
+<p>
+This looks like the best way! Try this out!
+</p>
+</div>
+</div>
+
+<div id="outline-container-org67b9012" class="outline-3">
+<h3 id="org67b9012"><a href="#org67b9012">My deps-new template</a></h3>
+<div class="outline-text-3" id="text-org67b9012">
+<div class="org-src-container">
+<pre class="src src-sh">clojure <span style="color: #98be65;">\</span>
+    -Sdeps <span style="color: #98be65;">'{:deps</span>
+<span style="color: #98be65;">             {net.clojars.cfclrk/minimal</span>
+<span style="color: #98be65;">              {:local/root "/Users/cclark/Projects/codenotes/clojure/minimal"}}}'</span> <span style="color: #98be65;">\</span>
+                  -Tnew <span style="color: #98be65;">\</span>
+                  create <span style="color: #98be65;">\</span>
+                  :template cfclrk/minimal <span style="color: #98be65;">\</span>
+                  :name $<span style="color: #dcaeea;">user</span>/$<span style="color: #dcaeea;">projectName</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf7f553c" class="outline-3">
+<h3 id="orgf7f553c"><a href="#orgf7f553c">Leiningen</a></h3>
+<div class="outline-text-3" id="text-orgf7f553c">
+<div class="org-src-container">
+<pre class="src src-sh">lein new app cfclrk/$<span style="color: #dcaeea;">projectName</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge34443f" class="outline-3">
+<h3 id="orge34443f"><a href="#orge34443f">deps-new</a></h3>
+<div class="outline-text-3" id="text-orge34443f">
+<p>
+First, make sure <a href="https://github.com/seancorfield/deps-new">deps-new</a> is installed:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">clojure -Ttools install <span style="color: #98be65;">\</span>
+        io.github.seancorfield/deps-new <span style="color: #98be65;">\</span>
+        <span style="color: #98be65;">'{:git/tag "v0.4.9"}'</span> :as new
+</pre>
+</div>
+
+<p>
+Create a new app:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">clojure -Tnew app :name cfclrk/$<span style="color: #dcaeea;">projectName</span>
+</pre>
+</div>
+
+<p>
+Create a new lib:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">clojure -Tnew lib :name cfclrk/$<span style="color: #dcaeea;">projectName</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
 <div id="outline-container-orgdecc67a" class="outline-2">
 <h2 id="orgdecc67a"><a href="#orgdecc67a">clj vs clojure</a></h2>
 <div class="outline-text-2" id="text-orgdecc67a">
@@ -131,6 +235,41 @@ So, <code>clj</code> just provides better interactivity in the terminal REPL.
 </div>
 </div>
 
+<div id="outline-container-orgb6f2bf7" class="outline-2">
+<h2 id="orgb6f2bf7"><a href="#orgb6f2bf7">Install a package</a></h2>
+<div class="outline-text-2" id="text-orgb6f2bf7">
+</div>
+<div id="outline-container-orgc4c80a6" class="outline-3">
+<h3 id="orgc4c80a6"><a href="#orgc4c80a6">Find package versions</a></h3>
+<div class="outline-text-3" id="text-orgc4c80a6">
+<p>
+Say you want to install integrant:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">clj -X:deps <span style="color: #98be65;">\</span>
+    find-versions <span style="color: #98be65;">\</span>
+    :lib integrant/integrant
+</pre>
+</div>
+
+<p>
+Add that dependency, then build the project.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org14442cc" class="outline-3">
+<h3 id="org14442cc"><a href="#org14442cc">Start clj with package</a></h3>
+<div class="outline-text-3" id="text-org14442cc">
+<div class="org-src-container">
+<pre class="src src-sh">clj -Sdeps <span style="color: #98be65;">'{:deps {cider/orchard {:mvn/version "0.9.2"}}}'</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
 <div id="outline-container-orgbba9f61" class="outline-2">
 <h2 id="orgbba9f61"><a href="#orgbba9f61">Tools</a></h2>
 <div class="outline-text-2" id="text-orgbba9f61">
@@ -142,7 +281,6 @@ Ok, so there is:
 <li>tools.build</li>
 <li>tools.tools</li>
 </ol>
-
 
 <p>
 From the <a href="https://clojure.org/guides/tools_build">tools.build guide</a>:
@@ -165,6 +303,76 @@ paths as defined in <code>:an-alias</code>.
 Defined by an alias in <code>deps.edn</code>.
 </p>
 </div>
+</div>
+</div>
+
+<div id="outline-container-orga9ab7e5" class="outline-2">
+<h2 id="orga9ab7e5"><a href="#orga9ab7e5">Code Format</a></h2>
+<div class="outline-text-2" id="text-orga9ab7e5">
+<p>
+Good article: <a href="https://bogoyavlensky.com/blog/clojure-formatting-cljstyle/">Clojure formatting with cljstyle</a>.
+</p>
+</div>
+
+<div id="outline-container-org4a8d570" class="outline-3">
+<h3 id="org4a8d570"><a href="#org4a8d570">cljstyle</a></h3>
+<div class="outline-text-3" id="text-org4a8d570">
+<p>
+Install
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">brew install --cask cljstyle
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org13cac6f" class="outline-3">
+<h3 id="org13cac6f"><a href="#org13cac6f">cljfmt</a></h3>
+<div class="outline-text-3" id="text-org13cac6f">
+<p>
+Format a project using <code>cljfmt</code>. Note, the <code>check</code> argument can also be
+"<code>fix</code>" to make the changes in-place.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">clojure -Sdeps <span style="color: #98be65;">'{:deps {cljfmt/cljfmt {:mvn/version "0.8.0"}}}'</span> <span style="color: #98be65;">\</span>
+        -M -m cljfmt.main check
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org94b7e36" class="outline-2">
+<h2 id="org94b7e36"><a href="#org94b7e36">Classpath</a></h2>
+<div class="outline-text-2" id="text-org94b7e36">
+<p>
+This is how cider grabs it:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #51afef;">(</span>seq <span style="color: #c678dd;">(</span>.split <span style="color: #98be65;">(</span><span style="color: #ECBE7B;">System</span>/getProperty <span style="color: #98be65;">"java.class.path"</span><span style="color: #98be65;">)</span> <span style="color: #98be65;">":"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<p>
+Directories on the classpath:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">[</span>classpath-entries <span style="color: #98be65;">(</span>.split <span style="color: #a9a1e1;">(</span><span style="color: #ECBE7B;">System</span>/getProperty <span style="color: #98be65;">"java.class.path"</span><span style="color: #a9a1e1;">)</span> <span style="color: #98be65;">":"</span><span style="color: #98be65;">)</span>
+      classpath-as-files <span style="color: #98be65;">(</span>map <span style="color: #ECBE7B;">clojure.java.io</span>/file classpath-entries<span style="color: #98be65;">)</span>
+      classpath-dirs <span style="color: #98be65;">(</span>filter #<span style="color: #a9a1e1;">(</span>.isDirectory <span style="color: #dcaeea;">%</span><span style="color: #a9a1e1;">)</span> classpath-as-files<span style="color: #98be65;">)</span><span style="color: #c678dd;">]</span>
+  classpath-dirs<span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+(#object[java.io.File 0x43602f98 "src"]
+ #object[java.io.File 0x2b9120c6 "resources"])
+</pre>
 </div>
 </div>
 
@@ -194,73 +402,6 @@ Start a REPL that I can attach to from Emacs.
     -m nrepl.cmdline <span style="color: #98be65;">\</span>
     --middleware <span style="color: #98be65;">"[cider.nrepl/cider-middleware]"</span>
 </pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org3385fbb" class="outline-2">
-<h2 id="org3385fbb"><a href="#org3385fbb">Project Creation</a></h2>
-<div class="outline-text-2" id="text-org3385fbb">
-</div>
-<div id="outline-container-org5f9f88c" class="outline-3">
-<h3 id="org5f9f88c"><a href="#org5f9f88c">Minimal</a></h3>
-<div class="outline-text-3" id="text-org5f9f88c">
-<p>
-All you need is a project directory with a <code>deps.edn</code> and a <code>src/foo.clj</code>.
-However it should be namespaced properly (TODO: work on this).
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">touch $<span style="color: #dcaeea;">d</span>/deps.edn $<span style="color: #dcaeea;">d</span>/src/core.clj
-<span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"{:deps {org.clojure/clojure {:mvn/version \"RELEASE\"}}}"</span> &gt; $<span style="color: #dcaeea;">d</span>/deps.edn
-<span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"(ns core) (defn -main [] (println \"hello world\"))"</span> &gt;&gt; src/core.clj
-clj -m core
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orgf7f553c" class="outline-3">
-<h3 id="orgf7f553c"><a href="#orgf7f553c">Leiningen</a></h3>
-<div class="outline-text-3" id="text-orgf7f553c">
-<div class="org-src-container">
-<pre class="src src-sh">lein new app cfclrk/$<span style="color: #dcaeea;">projectName</span>
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orge34443f" class="outline-3">
-<h3 id="orge34443f"><a href="#orge34443f">deps-new</a></h3>
-<div class="outline-text-3" id="text-orge34443f">
-<p>
-First, make sure <a href="https://github.com/seancorfield/deps-new">deps-new</a> is installed:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">clojure -Ttools install <span style="color: #98be65;">\</span>
-    io.github.seancorfield/deps-new <span style="color: #98be65;">\</span>
-    <span style="color: #98be65;">'{:git/tag "v0.4.9"}'</span> :as new
-</pre>
-</div>
-
-<p>
-Create a new app:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">clojure -Tnew app :name cfclrk/$<span style="color: #dcaeea;">projectName</span>
-</pre>
-</div>
-
-<p>
-Create a new lib:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">clojure -Tnew lib :name cfclrk/$<span style="color: #dcaeea;">projectName</span>
-</pre>
-</div>
 </div>
 </div>
 </div>
@@ -308,62 +449,6 @@ Function doc: <code>C-c C-d C-d</code> (<code>cider-doc</code>)
 </div>
 </div>
 
-<div id="outline-container-org106e00f" class="outline-2">
-<h2 id="org106e00f"><a href="#org106e00f">Testing</a></h2>
-<div class="outline-text-2" id="text-org106e00f">
-<p>
-Use test-runner, which handles test discovery and running tests.
-<a href="https://github.com/cognitect-labs/test-runner">https://github.com/cognitect-labs/test-runner</a>
-</p>
-</div>
-
-<div id="outline-container-org8c4169e" class="outline-3">
-<h3 id="org8c4169e"><a href="#org8c4169e">Run all tests in namespace</a></h3>
-<div class="outline-text-3" id="text-org8c4169e">
-<div class="org-src-container">
-<pre class="src src-sh">clj -A:test -n cfclrk.sicp-test
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org8a6790f" class="outline-3">
-<h3 id="org8a6790f"><a href="#org8a6790f">Run a single test</a></h3>
-<div class="outline-text-3" id="text-org8a6790f">
-<div class="org-src-container">
-<pre class="src src-sh">clj -A:test -v cfclrk.sicp-test/a-test
-</pre>
-</div>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orgea9bdd7" class="outline-2">
-<h2 id="orgea9bdd7"><a href="#orgea9bdd7">Symbols vs Keywords</a></h2>
-<div class="outline-text-2" id="text-orgea9bdd7">
-<p>
-What's the difference between a quoted symbol and a keyword?
-</p>
-
-<p>
-Excerpt from "Clojure in Action, Second Edition" by Amit Rathore Francis
-Avila:
-</p>
-
-<blockquote>
-<p>
-Essetially what's happening when you quote a symbol is you’re treating the
-symbol as data and not code. In practice you’ll almost never quote symbols to
-use them as data because Clojure has a special type specifically for this use
-case: the keyword. A keyword is sort of like an autoquoted symbol: keywords
-never reference some other value and always evaluate to themselves. Keyword
-syntax is almost like symbol syntax, except keywords always begin with a
-colon.
-</p>
-</blockquote>
-</div>
-</div>
-
 <div id="outline-container-org6c9b735" class="outline-2">
 <h2 id="org6c9b735"><a href="#org6c9b735">Quickies</a></h2>
 <div class="outline-text-2" id="text-org6c9b735">
@@ -372,9 +457,76 @@ colon.
 <h3 id="orgefb9897"><a href="#orgefb9897">Print environment variables</a></h3>
 <div class="outline-text-3" id="text-orgefb9897">
 <div class="org-src-container">
-<pre class="src src-clojure"><span style="color: #51afef;">(</span><span style="color: #51afef;">doseq</span> <span style="color: #c678dd;">[</span><span style="color: #98be65;">[</span>k v<span style="color: #98be65;">]</span> <span style="color: #98be65;">(</span><span style="color: #ECBE7B;">System</span>/getenv<span style="color: #98be65;">)</span><span style="color: #c678dd;">]</span> <span style="color: #c678dd;">(</span>println k v<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<pre class="src src-clojure"><span style="color: #51afef;">(</span><span style="color: #51afef;">doseq</span> <span style="color: #c678dd;">[</span><span style="color: #98be65;">[</span>k v<span style="color: #98be65;">]</span> <span style="color: #98be65;">(</span><span style="color: #ECBE7B;">System</span>/getenv<span style="color: #98be65;">)</span><span style="color: #c678dd;">]</span>
+  <span style="color: #c678dd;">(</span>println k v<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
 </pre>
 </div>
+</div>
+</div>
+
+<div id="outline-container-org1045709" class="outline-3">
+<h3 id="org1045709"><a href="#org1045709">Clojure and Java versions</a></h3>
+<div class="outline-text-3" id="text-org1045709">
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #c678dd;">*clojure-version*</span>
+<span style="color: #51afef;">(</span><span style="color: #ECBE7B;">System</span>/getProperty <span style="color: #98be65;">"java.version"</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org673ebb8" class="outline-3">
+<h3 id="org673ebb8"><a href="#org673ebb8">Read and write a binary file</a></h3>
+<div class="outline-text-3" id="text-org673ebb8">
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #51afef;">(</span><span style="color: #51afef;">import</span> java.net.URI<span style="color: #51afef;">)</span>
+<span style="color: #51afef;">(</span><span style="color: #51afef;">import</span> java.nio.file.Paths<span style="color: #51afef;">)</span>
+<span style="color: #51afef;">(</span><span style="color: #51afef;">import</span> java.nio.file.Files<span style="color: #51afef;">)</span>
+
+<span style="color: #51afef;">(</span><span style="color: #51afef;">defn</span> <span style="color: #c678dd;">read-file-bytes</span>
+  <span style="color: #83898d;">"Load the file at `</span><span style="color: #a9a1e1;">path</span><span style="color: #83898d;">` into a byte[].</span>
+<span style="color: #83898d;">  `</span><span style="color: #a9a1e1;">path</span><span style="color: #83898d;">` is a String relative to the this service's root directory."</span>
+  <span style="color: #c678dd;">[</span><span style="color: #bbc2cf; background-color: #282c34;">^</span><span style="color: #ECBE7B;">String</span> path<span style="color: #c678dd;">]</span>
+  <span style="color: #c678dd;">(</span><span style="color: #51afef;">let</span> <span style="color: #98be65;">[</span>file-uri <span style="color: #a9a1e1;">(</span>.toURI <span style="color: #4db5bd;">(</span><span style="color: #ECBE7B;">io</span>/resource path<span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span>
+        nio-path <span style="color: #a9a1e1;">(</span><span style="color: #ECBE7B;">Paths</span>/get file-uri<span style="color: #a9a1e1;">)</span><span style="color: #98be65;">]</span>
+    <span style="color: #98be65;">(</span><span style="color: #ECBE7B;">Files</span>/readAllBytes nio-path<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+
+<span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Read file</span>
+<span style="color: #51afef;">(</span><span style="color: #51afef;">def</span> <span style="color: #dcaeea;">mypdf</span>
+  <span style="color: #c678dd;">(</span>read-file-bytes <span style="color: #98be65;">"resources/my.pdf"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+
+<span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Write file</span>
+<span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">[</span>p <span style="color: #98be65;">(</span><span style="color: #ECBE7B;">Paths</span>/get
+         <span style="color: #a9a1e1;">(</span>URI. <span style="color: #98be65;">"file:///Users/cclark/Downloads/bar.pdf"</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
+      opts <span style="color: #98be65;">(</span>into-array java.nio.file.OpenOption <span style="color: #a9a1e1;">[]</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">]</span>
+  <span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">Files</span>/write p mypdf opts<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org660e9da" class="outline-3">
+<h3 id="org660e9da"><a href="#org660e9da">Org mode</a></h3>
+<div class="outline-text-3" id="text-org660e9da">
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #51afef;">(</span>use 'inflections.core<span style="color: #51afef;">)</span>
+<span style="color: #51afef;">(</span>plural <span style="color: #98be65;">"word"</span><span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+words
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #51afef;">(</span>range 10<span style="color: #51afef;">)</span>
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+(0 1 2 3 4 5 6 7 8 9)
+</pre>
 </div>
 </div>
 </div>
