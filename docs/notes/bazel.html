@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bazel</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Bazel</h1>
+</header><nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org2caa458">Links</a></li>
+<li><a href="#org7915fe4">Deps</a></li>
+<li><a href="#org2e3c427">Repositories</a>
+<ul>
+<li><a href="#orgd7484d6">Update http<sub>archive</sub></a></li>
+</ul>
+</li>
+<li><a href="#orgeab46c2">Query</a>
+<ul>
+<li><a href="#org497957a">Deps</a></li>
+</ul>
+</li>
+<li><a href="#org62b3564">Tools</a></li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-org2caa458" class="outline-2">
+<h2 id="org2caa458"><a href="#org2caa458">Links</a></h2>
+<div class="outline-text-2" id="text-org2caa458">
+<p>
+bazel<sub>tools</sub> - This is actually part of the bazel binary. I think the bazel
+people would rather get rid of this in favor of repositories living outside of
+the bazel binary.
+</p>
+
+<p>
+<a href="https://github.com/bazelbuild/bazel-skylib">skylib</a> - A library of Starlark functions for manipulating collections, file
+paths, and various other data types.
+</p>
+
+<p>
+<a href="https://github.com/bazelbuild/buildtools">buildtools</a> - Contains <code>buildifier</code>, <code>buildozer</code>, and <code>unused_deps</code>. These are
+development tools.
+</p>
+
+<p>
+<a href="https://bazel.build/configure/best-practices">Best Practices</a> doc.
+</p>
+
+<p>
+<a href="https://github.com/google/bazel-common">bazel<sub>common</sub></a> - Contains assorted common functionality.
+</p>
+
+<p>
+<a href="https://github.com/bazelbuild/platforms">platforms</a> - Ever wonder where the <code>@platform</code> comes from? Is it here? Maybe?
+Defiens the <code>cpu</code> and <code>os</code> constraints and values.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7915fe4" class="outline-2">
+<h2 id="org7915fe4"><a href="#org7915fe4">Deps</a></h2>
+<div class="outline-text-2" id="text-org7915fe4">
+<p>
+All dependencies are downloaded to a directory here:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">$(bazel info output_base)/external
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2e3c427" class="outline-2">
+<h2 id="org2e3c427"><a href="#org2e3c427">Repositories</a></h2>
+<div class="outline-text-2" id="text-org2e3c427">
+<div class="org-src-container">
+<pre class="src src-sh">bazel query --output=build //external:bazel_tools
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgd7484d6" class="outline-3">
+<h3 id="orgd7484d6"><a href="#orgd7484d6">Update http<sub>archive</sub></a></h3>
+<div class="outline-text-3" id="text-orgd7484d6">
+<p>
+Say you want to update an <code>http_archive</code> like this one:
+</p>
+
+<pre class="example" id="org8dfcb6e">
+http_archive(
+  name = "rules_clojure",
+  sha256 = "c841fbf94af331f0f8f02de788ca9981d7c73a10cec798d3be0dd4f79d1d627d",
+  strip_prefix = "rules_clojure-c044cb8608a2c3180cbfee89e66bbeb604afb146",
+  urls = ["https://github.com/simuons/rules_clojure/archive/c044cb8608a2c3180cb.tar.gz"],
+)
+</pre>
+
+<p>
+Manually change the two references to the <code>c044cb...</code> commit, then comment
+out the <code>sha256</code> line. Then run a <code>bazel build /...</code> and the bazel output
+will say something like:
+</p>
+
+<pre class="example" id="org20361c4">
+DEBUG: Rule 'rules_clojure' indicated that a canonical reproducible
+form can be obtained by modifying arguments
+sha256 = "4749769faee9e2d00bb50d08e6a16b46aebdb885dc8ee75356964719622bf4e9"
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgeab46c2" class="outline-2">
+<h2 id="orgeab46c2"><a href="#orgeab46c2">Query</a></h2>
+<div class="outline-text-2" id="text-orgeab46c2">
+</div>
+<div id="outline-container-org497957a" class="outline-3">
+<h3 id="org497957a"><a href="#org497957a">Deps</a></h3>
+<div class="outline-text-3" id="text-org497957a">
+<div class="org-src-container">
+<pre class="src src-sh">bazel query \
+      --notool_deps \
+      --noimplicit_deps \
+      'deps(//some:target)'
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org62b3564" class="outline-2">
+<h2 id="org62b3564"><a href="#org62b3564">Tools</a></h2>
+<div class="outline-text-2" id="text-org62b3564">
+<p>
+Run buildifier on all build files in a repo:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">buildifier -r -mode=fix -lint=warn .
+</pre>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

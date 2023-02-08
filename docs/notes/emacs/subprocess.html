@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Subprocesses</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Subprocesses</h1>
+</header><nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org7903627">shell-command-to-string</a></li>
+<li><a href="#orgdcfc1e5">start-process</a></li>
+<li><a href="#org4e03b2f">call-process</a></li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-org7903627" class="outline-2">
+<h2 id="org7903627"><a href="#org7903627">shell-command-to-string</a></h2>
+<div class="outline-text-2" id="text-org7903627">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(shell-command-to-string "ping -c 3 google.com")
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgdcfc1e5" class="outline-2">
+<h2 id="orgdcfc1e5"><a href="#orgdcfc1e5">start-process</a></h2>
+<div class="outline-text-2" id="text-orgdcfc1e5">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(start-process "ping -c 3 google.com")
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4e03b2f" class="outline-2">
+<h2 id="org4e03b2f"><a href="#org4e03b2f">call-process</a></h2>
+<div class="outline-text-2" id="text-org4e03b2f">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(call-process nil nil nil "ping" "-c" "3" "google.com")
+</pre>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

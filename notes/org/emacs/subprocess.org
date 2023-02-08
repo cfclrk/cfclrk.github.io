@@ -1,0 +1,30 @@
+#+TITLE: Subprocesses
+#+SETUPFILE: ../../setup.org
+
+* shell-command-to-string
+
+  #+begin_src emacs-lisp
+    (shell-command-to-string "ping -c 3 google.com")
+  #+end_src
+
+  #+RESULTS:
+  : PING google.com (172.217.164.174): 56 data bytes
+  : 64 bytes from 172.217.164.174: icmp_seq=0 ttl=113 time=17.913 ms
+  : 64 bytes from 172.217.164.174: icmp_seq=1 ttl=113 time=13.029 ms
+  : 64 bytes from 172.217.164.174: icmp_seq=2 ttl=113 time=12.645 ms
+  :
+  : --- google.com ping statistics ---
+  : 3 packets transmitted, 3 packets received, 0.0% packet loss
+  : round-trip min/avg/max/stddev = 12.645/14.529/17.913/2.398 ms
+
+* start-process
+
+  #+begin_src emacs-lisp
+    (start-process "ping -c 3 google.com")
+  #+end_src
+
+* call-process
+
+  #+begin_src emacs-lisp
+    (call-process nil nil nil "ping" "-c" "3" "google.com")
+  #+end_src

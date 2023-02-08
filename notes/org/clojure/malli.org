@@ -1,0 +1,12 @@
+#+TITLE: Malli
+#+SETUPFILE: ../../setup.org
+
+#+begin_src clojure
+  (require '[malli.core :as m])
+  (require '[malli.transform :as mt])
+
+  (m/decode
+      :uuid
+      "317fd4db-610f-439c-b71c-fddb59a1e8dd"
+      mt/json-transformer)
+#+end_src

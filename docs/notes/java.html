@@ -35,8 +35,8 @@
 <ul>
 <li><a href="#org2778a86">Installation</a>
 <ul>
-<li><a href="#orgadf9d26">Latest</a></li>
-<li><a href="#org514ed88">Older java versions</a></li>
+<li><a href="#org0c9beb7">Latest version</a></li>
+<li><a href="#orgf6ad79b">Older versions</a></li>
 </ul>
 </li>
 <li><a href="#orge0a1003">Switch Versions</a></li>
@@ -53,26 +53,30 @@ Best resource I've found is <a href="https://mkyong.com/java/how-to-install-java
 </p>
 </div>
 
-<div id="outline-container-orgadf9d26" class="outline-3">
-<h3 id="orgadf9d26"><a href="#orgadf9d26">Latest</a></h3>
-<div class="outline-text-3" id="text-orgadf9d26">
+<div id="outline-container-org0c9beb7" class="outline-3">
+<h3 id="org0c9beb7"><a href="#org0c9beb7">Latest version</a></h3>
+<div class="outline-text-3" id="text-org0c9beb7">
 <div class="org-src-container">
-<pre class="src src-sh">brew install java
+<pre class="src src-sh">brew install openjdk
 </pre>
 </div>
 
+<p>
+As stated in the instructions printed by <code>brew info openjdk</code>, run:
+</p>
+
 <div class="org-src-container">
-<pre class="src src-sh">sudo ln -svfn <span style="color: #98be65;">\</span>
-     $(brew --prefix)/opt/openjdk/libexec/openjdk.jdk <span style="color: #98be65;">\</span>
+<pre class="src src-sh">sudo ln -svfn \
+     $(brew --prefix)/opt/openjdk/libexec/openjdk.jdk \
      /Library/Java/JavaVirtualMachines/openjdk.jdk
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org514ed88" class="outline-3">
-<h3 id="org514ed88"><a href="#org514ed88">Older java versions</a></h3>
-<div class="outline-text-3" id="text-org514ed88">
+<div id="outline-container-orgf6ad79b" class="outline-3">
+<h3 id="orgf6ad79b"><a href="#orgf6ad79b">Older versions</a></h3>
+<div class="outline-text-3" id="text-orgf6ad79b">
 <p>
 Older java packages may not work on Apple Silicon.
 </p>
@@ -83,8 +87,8 @@ Older java packages may not work on Apple Silicon.
 </div>
 
 <div class="org-src-container">
-<pre class="src src-sh">sudo ln -svfn <span style="color: #98be65;">\</span>
-     $(brew --prefix)/opt/openjdk@17/libexec/openjdk.jdk <span style="color: #98be65;">\</span>
+<pre class="src src-sh">sudo ln -svfn \
+     $(brew --prefix)/opt/openjdk@17/libexec/openjdk.jdk \
      /Library/Java/JavaVirtualMachines/openjdk-17.jdk
 </pre>
 </div>
@@ -100,7 +104,31 @@ To see installed Java versions (assuming they have been properly symlinked):
 </p>
 
 <div class="org-src-container">
+<pre class="src src-sh">env
+</pre>
+</div>
+
+<p>
+Note that <code>java_home -V</code> writes the "verbose" part of this output to stderr,
+and only writes the current version to stdout.
+</p>
+
+<div class="org-src-container">
 <pre class="src src-sh">/usr/libexec/java_home -V
+</pre>
+</div>
+
+<p>
+The java's installed via brew:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">ls $(brew --prefix)/Cellar | grep openjdk
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh">/usr/libexec/java_home -v 17
 </pre>
 </div>
 
@@ -109,7 +137,7 @@ You can set <code>JAVA_HOME</code> to be one of those paths like this:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">JAVA_HOME</span>=$(/usr/libexec/java_home -v 1.8)
+<pre class="src src-bash">export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 </pre>
 </div>
 </div>
@@ -141,38 +169,40 @@ query {
 </pre>
 
 <div class="org-src-container">
-<pre class="src src-clojure"><span style="color: #51afef;">(</span>require '<span style="color: #c678dd;">[</span>babashka.curl <span style="color: #a9a1e1;">:as</span> curl<span style="color: #c678dd;">]</span><span style="color: #51afef;">)</span>
+<pre class="src src-clojure">(require '[babashka.curl :as curl])
 
-<span style="color: #51afef;">(</span><span style="color: #51afef;">def</span> <span style="color: #dcaeea;">token</span> <span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">System</span>/getenv <span style="color: #98be65;">"GITHUB_TOKEN"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+(def token (System/getenv "GITHUB_TOKEN"))
 
-<span style="color: #51afef;">(</span><span style="color: #51afef;">def</span> <span style="color: #dcaeea;">resp</span>
-  <span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">curl</span>/post
-   <span style="color: #98be65;">"https://api.github.com/graphql"</span>
-   <span style="color: #98be65;">{</span><span style="color: #a9a1e1;">:headers</span> <span style="color: #a9a1e1;">{</span><span style="color: #98be65;">"Authorization"</span>
-              <span style="color: #4db5bd;">(</span>str <span style="color: #98be65;">"bearer "</span> token<span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">}</span>
-    <span style="color: #a9a1e1;">:body</span> <span style="color: #a9a1e1;">(</span><span style="color: #ECBE7B;">json</span>/generate-string <span style="color: #4db5bd;">{</span><span style="color: #a9a1e1;">:query</span> q<span style="color: #4db5bd;">}</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">}</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+(def resp
+  (curl/post
+   "https://api.github.com/graphql"
+   {:headers {"Authorization"
+              (str "bearer " token)}
+    :body (json/generate-string {:query q})}))
 
-<span style="color: #51afef;">(</span><span style="color: #51afef;">def</span> <span style="color: #dcaeea;">names-and-urls</span>
-  <span style="color: #c678dd;">(</span><span style="color: #51afef;">-&gt;</span> resp
-     <span style="color: #a9a1e1;">:body</span>
-     <span style="color: #98be65;">(</span><span style="color: #ECBE7B;">json</span>/parse-string <span style="color: #a9a1e1;">true</span><span style="color: #98be65;">)</span>
-     <span style="color: #98be65;">(</span>get-in <span style="color: #a9a1e1;">[</span><span style="color: #a9a1e1;">:data</span> <span style="color: #a9a1e1;">:repository</span> <span style="color: #a9a1e1;">:releases</span> <span style="color: #a9a1e1;">:nodes</span><span style="color: #a9a1e1;">]</span><span style="color: #98be65;">)</span>
-     first <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">todo: map</span>
-     <span style="color: #98be65;">(</span>get-in <span style="color: #a9a1e1;">[</span><span style="color: #a9a1e1;">:releaseAssets</span> <span style="color: #a9a1e1;">:nodes</span><span style="color: #a9a1e1;">]</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+(def names-and-urls
+  (-&gt; resp
+     :body
+     (json/parse-string true)
+     (get-in [:data :repository :releases :nodes])
+     first ;; todo: map
+     (get-in [:releaseAssets :nodes])))
 
-<span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Can there be multiple release assets with the same name?</span>
-<span style="color: #51afef;">(</span><span style="color: #51afef;">def</span> <span style="color: #dcaeea;">my-items</span>
-  <span style="color: #c678dd;">(</span>filter <span style="color: #5B6268;">;; </span><span style="color: #5B6268;">should this be a reduce?</span>
-   #<span style="color: #98be65;">(</span>=
-     <span style="color: #98be65;">"graalvm-ce-java17-darwin-amd64-22.1.0.tar.gz"</span>
-     <span style="color: #a9a1e1;">(</span><span style="color: #a9a1e1;">:name</span> <span style="color: #dcaeea;">%</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
-   names-and-urls<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+;; Can there be multiple release assets with the same name?
+(def my-items
+  (filter ;; should this be a reduce?
+   #(=
+     "graalvm-ce-java17-darwin-amd64-22.1.0.tar.gz"
+     (:name %))
+   names-and-urls))
 
-<span style="color: #51afef;">(</span><span style="color: #51afef;">-&gt;</span> my-item
+(-&gt; my-item
     first
-    <span style="color: #a9a1e1;">:downloadUrl</span><span style="color: #51afef;">)</span>
+    :downloadUrl)
 </pre>
 </div>
+
+
 
 <p>
 foo

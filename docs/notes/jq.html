@@ -69,13 +69,9 @@
 </pre>
 
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">KubeSecret</span> | jq -r <span style="color: #98be65;">'.data["tls.crt"]'</span>
+<pre class="src src-bash">echo $KubeSecret | jq -r '.data["tls.crt"]'
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-Zm9vCg==
-</pre>
 </div>
 </div>
 
@@ -83,16 +79,12 @@ Zm9vCg==
 <h2 id="org7b64c34"><a href="#org7b64c34">Multiline</a></h2>
 <div class="outline-text-2" id="text-org7b64c34">
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">GithubRelease</span> <span style="color: #98be65;">\</span>
-    | jq <span style="color: #98be65;">'.assets[]</span>
-<span style="color: #98be65;">          | select(.name == "py-demo-Darwin-x86_64")</span>
-<span style="color: #98be65;">          | .name'</span>
+<pre class="src src-sh">echo $GithubRelease \
+    | jq '.assets[]
+          | select(.name == "py-demo-Darwin-x86_64")
+          | .name'
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-py-demo-Darwin-x86_64
-</pre>
 </div>
 </div>
 
@@ -100,17 +92,13 @@ py-demo-Darwin-x86_64
 <h2 id="org788227e"><a href="#org788227e">Variable as Argument</a></h2>
 <div class="outline-text-2" id="text-org788227e">
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">GithubRelease</span> <span style="color: #98be65;">\</span>
-    | jq --arg name <span style="color: #98be65;">"py-demo-Darwin"</span> <span style="color: #98be65;">\</span>
-         <span style="color: #98be65;">'.assets[]</span>
-<span style="color: #98be65;">          | select(.name | startswith($name))</span>
-<span style="color: #98be65;">          | .name'</span>
+<pre class="src src-sh">echo $GithubRelease \
+    | jq --arg name "py-demo-Darwin" \
+         '.assets[]
+          | select(.name | startswith($name))
+          | .name'
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-py-demo-Darwin-x86_64
-</pre>
 </div>
 </div>
 
@@ -130,14 +118,10 @@ py-demo-Darwin-x86_64
 </pre>
 
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">Items</span> <span style="color: #98be65;">\</span>
-    | jq -c <span style="color: #98be65;">'.[] | select(.name | contains("item2"))'</span>
+<pre class="src src-sh">echo $Items \
+    | jq -c '.[] | select(.name | contains("item2"))'
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-{"name":"This is item2"}
-</pre>
 </div>
 </div>
 
@@ -145,15 +129,10 @@ py-demo-Darwin-x86_64
 <h3 id="org43e5d91"><a href="#org43e5d91">Name Starts With</a></h3>
 <div class="outline-text-3" id="text-org43e5d91">
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">Items</span> <span style="color: #98be65;">\</span>
-    | jq -c <span style="color: #98be65;">'.[] | select(.name | startswith("This is"))'</span>
+<pre class="src src-sh">echo $Items \
+    | jq -c '.[] | select(.name | startswith("This is"))'
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-{"name":"This is item1"}
-{"name":"This is item2"}
-</pre>
 </div>
 </div>
 </div>
@@ -170,8 +149,8 @@ Some AWS commands provide a <code>--filter</code> option that allows filtering b
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">aws ec2 describe-addresses <span style="color: #98be65;">\</span>
-    --filters <span style="color: #98be65;">"Name=tag:Name,Values=cfclrk"</span>
+<pre class="src src-sh">aws ec2 describe-addresses \
+    --filters "Name=tag:Name,Values=cfclrk"
 </pre>
 </div>
 </div>
@@ -182,10 +161,10 @@ Some AWS commands provide a <code>--filter</code> option that allows filtering b
 <h2 id="orgf7683d2"><a href="#orgf7683d2">Sorting</a></h2>
 <div class="outline-text-2" id="text-orgf7683d2">
 <div class="org-src-container">
-<pre class="src src-sh">aws s3api list-objects-v2 <span style="color: #98be65;">\</span>
-    --bucket $<span style="color: #dcaeea;">BUCKET</span> <span style="color: #98be65;">\</span>
-    --prefix <span style="color: #98be65;">"foo/bar"</span> <span style="color: #98be65;">\</span>
-    | jq <span style="color: #98be65;">'.Contents | sort_by(.LastModified)'</span>
+<pre class="src src-sh">aws s3api list-objects-v2 \
+    --bucket $BUCKET \
+    --prefix "foo/bar" \
+    | jq '.Contents | sort_by(.LastModified)'
 </pre>
 </div>
 
@@ -195,9 +174,9 @@ because you are not piping a proper list to it. For example:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">cat $<span style="color: #dcaeea;">data</span> | jq <span style="color: #98be65;">'.Stuff[] | sort_by(.Time)'</span>  <span style="color: #5B6268;"># </span><span style="color: #5B6268;">Does not work</span>
+<pre class="src src-sh">cat $data | jq '.Stuff[] | sort_by(.Time)'  # Does not work
 
-cat $<span style="color: #dcaeea;">data</span> | jq <span style="color: #98be65;">'.Stuff | sort_by(.Time)'</span>    <span style="color: #5B6268;"># </span><span style="color: #5B6268;">Works!</span>
+cat $data | jq '.Stuff | sort_by(.Time)'    # Works!
 </pre>
 </div>
 </div>
@@ -211,13 +190,9 @@ cat $<span style="color: #dcaeea;">data</span> | jq <span style="color: #98be65;
 </pre>
 
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">message</span> | jq <span style="color: #98be65;">'@json'</span>
+<pre class="src src-sh">echo $message | jq '@json'
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-"{\"message\":\"foo\"}"
-</pre>
 </div>
 </div>
 </div>

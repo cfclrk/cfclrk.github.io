@@ -53,6 +53,14 @@
 </ul>
 </div>
 </nav>
+<blockquote>
+<p>
+This is out of date. Projectile has been updated to fix the issue presented
+here. I'm temporarily keeping this as an example for myself about how to
+reproduce problems like this.
+</p>
+</blockquote>
+
 <p>
 In monorepos, <a href="https://docs.projectile.mx/projectile/index.html">Projectile</a> determines the project root to be the <i>monorepo</i>, not
 the subproject that you're in. In this article I update Projectile to instead
@@ -114,39 +122,16 @@ Consider the following monorepo:
 </pre>
 </div>
 
-<div class="results">#+RESULTS:</div><pre class="example">
-/tmp/repo/
-├── .git
-├── go/
-│   ├── projectA/
-│   │   └── go.mod
-│   └── projectB/
-│       └── go.mod
-└── python/
-    ├── projectC/
-    │   └── setup.py
-    └── projectD/
-        └── setup.py
-
-6 directories, 5 files
-</pre>
-
-
 <p>
 Now when I open a file in <code>go/projectA</code>, Projectile says that the project root
 is the monorepo:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>default-directory <span style="color: #98be65;">"/tmp/repo/go/projectA"</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
-  <span style="color: #c678dd;">(</span>projectile-project-root<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp">(let ((default-directory "/tmp/repo/go/projectA"))
+  (projectile-project-root))
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-/private/tmp/repo/
-</pre>
-
 
 <p>
 (Don't worry about the <code>/private/</code> &#x2013; it's because MacOS symlinks <code>/tmp</code> →
@@ -210,14 +195,9 @@ culprit. We can try it out interactively:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>projectile-root-bottom-up <span style="color: #98be65;">"/tmp/notes/go/projectA"</span><span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp">(projectile-root-bottom-up "/tmp/notes/go/projectA")
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-/tmp/notes/
-</pre>
-
 
 <p>
 Yup &#x2013; it found the monorepo, not the subproject. To understand why this is,
@@ -225,16 +205,16 @@ let's look at <a href="https://github.com/bbatsov/projectile/blob/7f64570d3e6829
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">projectile-root-bottom-up</span> <span style="color: #c678dd;">(</span>dir <span style="color: #ECBE7B;">&amp;optional</span> list<span style="color: #c678dd;">)</span>
-  <span style="color: #83898d;">"Identify a project root in DIR by bottom-up search for</span>
-<span style="color: #83898d;">files in LIST.</span>
+<pre class="src src-emacs-lisp">(defun projectile-root-bottom-up (dir &amp;optional list)
+  "Identify a project root in DIR by bottom-up search for
+files in LIST.
 
-<span style="color: #83898d;">If LIST is nil, use `</span><span style="color: #a9a1e1;">projectile-project-root-files-bottom-up</span><span style="color: #83898d;">'</span>
-<span style="color: #83898d;">instead. Return the first (bottommost) matched directory or nil</span>
-<span style="color: #83898d;">if not found."</span>
-  <span style="color: #c678dd;">(</span>cl-some
-   <span style="color: #98be65;">(</span><span style="color: #51afef;">lambda</span> <span style="color: #a9a1e1;">(</span>name<span style="color: #a9a1e1;">)</span> <span style="color: #a9a1e1;">(</span>projectile-locate-dominating-file dir name<span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
-   <span style="color: #98be65;">(</span><span style="color: #51afef;">or</span> list projectile-project-root-files-bottom-up<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+If LIST is nil, use `projectile-project-root-files-bottom-up'
+instead. Return the first (bottommost) matched directory or nil
+if not found."
+  (cl-some
+   (lambda (name) (projectile-locate-dominating-file dir name))
+   (or list projectile-project-root-files-bottom-up)))
 </pre>
 </div>
 
@@ -272,37 +252,6 @@ And what are these "marker files"?
 </pre>
 </div>
 
-<table>
-
-
-<colgroup>
-<col  class="org-left">
-
-<col  class="org-left">
-
-<col  class="org-left">
-
-<col  class="org-left">
-
-<col  class="org-left">
-
-<col  class="org-left">
-
-<col  class="org-left">
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">.projectile</td>
-<td class="org-left">.git</td>
-<td class="org-left">.hg</td>
-<td class="org-left">.fslckout</td>
-<td class="org-left"><span class="underline">FOSSIL</span></td>
-<td class="org-left">.bzr</td>
-<td class="org-left">_darcs</td>
-</tr>
-</tbody>
-</table>
-
 <p>
 So, assuming we're somewhere in our monorepo, Projectile starts by looking for
 a <code>.projectile</code> between here and <code>/</code>, then looks for a <code>.git</code> between here and
@@ -314,45 +263,11 @@ To drive this point home, say we append <code>go.mod</code> to that list of mark
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> projectile-project-root-files-bottom-up
-      '<span style="color: #c678dd;">(</span><span style="color: #98be65;">".projectile"</span> <span style="color: #98be65;">".git"</span> <span style="color: #98be65;">".hg"</span> <span style="color: #98be65;">".fslckout"</span>
-        <span style="color: #98be65;">"_FOSSIL_"</span> <span style="color: #98be65;">".bzr"</span> <span style="color: #98be65;">"_darcs"</span> <span style="color: #98be65;">"go.mod"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp">(setq projectile-project-root-files-bottom-up
+      '(".projectile" ".git" ".hg" ".fslckout"
+        "_FOSSIL_" ".bzr" "_darcs" "go.mod"))
 </pre>
 </div>
-
-<table>
-
-
-<colgroup>
-<col  class="org-left">
-
-<col  class="org-left">
-
-<col  class="org-left">
-
-<col  class="org-left">
-
-<col  class="org-left">
-
-<col  class="org-left">
-
-<col  class="org-left">
-
-<col  class="org-left">
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">.projectile</td>
-<td class="org-left">.git</td>
-<td class="org-left">.hg</td>
-<td class="org-left">.fslckout</td>
-<td class="org-left"><span class="underline">FOSSIL</span></td>
-<td class="org-left">.bzr</td>
-<td class="org-left">_darcs</td>
-<td class="org-left">go.mod</td>
-</tr>
-</tbody>
-</table>
 
 <p>
 Projectile still won't find our Go subproject, because <code>.git</code> comes earlier in
@@ -360,14 +275,9 @@ the list of marker files.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>projectile-root-bottom-up <span style="color: #98be65;">"/tmp/notes/go/projectA"</span><span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp">(projectile-root-bottom-up "/tmp/notes/go/projectA")
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-/tmp/notes/
-</pre>
-
 
 <p>
 Projectile found a <code>.git</code> two directories up before ever even looking for a
@@ -394,15 +304,10 @@ could just put a <code>.projectile</code> file there.
 </div>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>default-directory <span style="color: #98be65;">"/tmp/notes/go/projectA"</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
-  <span style="color: #c678dd;">(</span>projectile-project-root<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp">(let ((default-directory "/tmp/notes/go/projectA"))
+  (projectile-project-root))
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-/private/tmp/
-</pre>
-
 
 <p>
 That's useful, and works! Ok, we should retain that behavior. So what exactly
@@ -457,98 +362,6 @@ root. Projectile already has a variable for this, documented in <a href="https:/
 </pre>
 </div>
 
-<table>
-
-
-<colgroup>
-<col  class="org-left">
-
-<col  class="org-left">
-
-<col  class="org-left">
-
-<col  class="org-left">
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left">dune-project</td>
-<td class="org-left">pubspec.yaml</td>
-<td class="org-left">info.rkt</td>
-<td class="org-left">Cargo.toml</td>
-</tr>
-
-<tr>
-<td class="org-left">stack.yaml</td>
-<td class="org-left">DESCRIPTION</td>
-<td class="org-left">Eldev</td>
-<td class="org-left">Cask</td>
-</tr>
-
-<tr>
-<td class="org-left">shard.yml</td>
-<td class="org-left">Gemfile</td>
-<td class="org-left">.bloop</td>
-<td class="org-left">deps.edn</td>
-</tr>
-
-<tr>
-<td class="org-left">build.boot</td>
-<td class="org-left">project.clj</td>
-<td class="org-left">build.sc</td>
-<td class="org-left">build.sbt</td>
-</tr>
-
-<tr>
-<td class="org-left">application.properties</td>
-<td class="org-left">gradlew</td>
-<td class="org-left">build.gradle</td>
-<td class="org-left">pom.xml</td>
-</tr>
-
-<tr>
-<td class="org-left">poetry.lock</td>
-<td class="org-left">Pipfile</td>
-<td class="org-left">tox.ini</td>
-<td class="org-left">setup.py</td>
-</tr>
-
-<tr>
-<td class="org-left">requirements.txt</td>
-<td class="org-left">manage.py</td>
-<td class="org-left">angular.json</td>
-<td class="org-left">package.json</td>
-</tr>
-
-<tr>
-<td class="org-left">gulpfile.js</td>
-<td class="org-left">Gruntfile.js</td>
-<td class="org-left">mix.exs</td>
-<td class="org-left">rebar.config</td>
-</tr>
-
-<tr>
-<td class="org-left">composer.json</td>
-<td class="org-left">CMakeLists.txt</td>
-<td class="org-left">Makefile</td>
-<td class="org-left">debian/control</td>
-</tr>
-
-<tr>
-<td class="org-left">WORKSPACE</td>
-<td class="org-left">flake.nix</td>
-<td class="org-left">default.nix</td>
-<td class="org-left">meson.build</td>
-</tr>
-
-<tr>
-<td class="org-left">SConstruct</td>
-<td class="org-left">GTAGS</td>
-<td class="org-left">TAGS</td>
-<td class="org-left">configure.ac</td>
-</tr>
-</tbody>
-</table>
-
 <p>
 Decent start, but it doesn't have <code>go.mod</code>, so we should add that. Might as
 well also add all the files in <code>projectile-project-root-files-bottom-up</code>
@@ -556,11 +369,11 @@ well also add all the files in <code>projectile-project-root-files-bottom-up</co
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="orgcb41304"><span style="color: #51afef;">(</span><span style="color: #51afef;">defvar</span> <span style="color: #dcaeea;">my-project-root-files</span>
-  <span style="color: #c678dd;">(</span>-concat
-   '<span style="color: #98be65;">(</span><span style="color: #98be65;">"go.mod"</span><span style="color: #98be65;">)</span>
+<pre class="src src-emacs-lisp" id="orgcb41304">(defvar my-project-root-files
+  (-concat
+   '("go.mod")
    projectile-project-root-files-bottom-up
-   projectile-project-root-files<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+   projectile-project-root-files))
 </pre>
 </div>
 
@@ -608,8 +421,8 @@ The <a href="https://github.com/rejeep/f.el">f</a> library already has a perfect
 <h2 id="solution"><a href="#solution">Solution</a></h2>
 <div class="outline-text-2" id="text-solution">
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">require</span> '<span style="color: #a9a1e1;">projectile</span><span style="color: #51afef;">)</span>
-<span style="color: #51afef;">(</span><span style="color: #51afef;">require</span> '<span style="color: #a9a1e1;">f</span><span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp">(require 'projectile)
+(require 'f)
 </pre>
 </div>
 
@@ -624,11 +437,7 @@ variable with the marker files that indicate a project root.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">defvar</span> <span style="color: #dcaeea;">my-project-root-files</span>
-  <span style="color: #c678dd;">(</span>-concat
-   '<span style="color: #98be65;">(</span><span style="color: #98be65;">"go.mod"</span><span style="color: #98be65;">)</span>
-   projectile-project-root-files-bottom-up
-   projectile-project-root-files<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp">&lt;&lt;MyProjectRootFiles&gt;&gt;
 </pre>
 </div>
 
@@ -638,34 +447,34 @@ project discovery functions work, allow elements to be predicates.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">any-file-exists?</span> <span style="color: #c678dd;">(</span>files dir<span style="color: #c678dd;">)</span>
-  <span style="color: #83898d;">"True if any of FILES exist in DIR.</span>
-<span style="color: #83898d;">FILES is a list of file names and/or predicates.</span>
+<pre class="src src-emacs-lisp">(defun any-file-exists? (files dir)
+  "True if any of FILES exist in DIR.
+FILES is a list of file names and/or predicates.
 
-<span style="color: #83898d;">An element of FILES can also be a predicate taking one</span>
-<span style="color: #83898d;">argument (a directory) and returning a non-nil value if that</span>
-<span style="color: #83898d;">directory is the one we're looking for.</span>
+An element of FILES can also be a predicate taking one
+argument (a directory) and returning a non-nil value if that
+directory is the one we're looking for.
 
-<span style="color: #83898d;">DIR is a path to a directory."</span>
-  <span style="color: #c678dd;">(</span>cl-some
-   <span style="color: #98be65;">(</span><span style="color: #51afef;">lambda</span> <span style="color: #a9a1e1;">(</span>name<span style="color: #a9a1e1;">)</span>
-     <span style="color: #a9a1e1;">(</span><span style="color: #51afef;">if</span> <span style="color: #4db5bd;">(</span>stringp name<span style="color: #4db5bd;">)</span>
-         <span style="color: #4db5bd;">(</span>f-exists? <span style="color: #51afef;">(</span>f-expand name dir<span style="color: #51afef;">)</span><span style="color: #4db5bd;">)</span>
-       <span style="color: #4db5bd;">(</span>funcall name dir<span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
-   files<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+DIR is a path to a directory."
+  (cl-some
+   (lambda (name)
+     (if (stringp name)
+         (f-exists? (f-expand name dir))
+       (funcall name dir)))
+   files))
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">my/projectile-root-bottom-up</span> <span style="color: #c678dd;">(</span>dir <span style="color: #ECBE7B;">&amp;optional</span> list<span style="color: #c678dd;">)</span>
-  <span style="color: #83898d;">"Identify a project root.</span>
-<span style="color: #83898d;">Perform a bottom-up search for files in LIST starting from DIR.</span>
-<span style="color: #83898d;">Always return the lowest directory that has any file in LIST. If</span>
-<span style="color: #83898d;">LIST is nil, use `</span><span style="color: #a9a1e1;">my-project-root-files</span><span style="color: #83898d;">' instead. Return the</span>
-<span style="color: #83898d;">first (bottommost) matched directory or nil."</span>
-  <span style="color: #c678dd;">(</span><span style="color: #51afef;">let</span> <span style="color: #98be65;">(</span><span style="color: #a9a1e1;">(</span>marker-files <span style="color: #4db5bd;">(</span><span style="color: #51afef;">or</span> list my-project-root-files<span style="color: #4db5bd;">)</span><span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
-    <span style="color: #98be65;">(</span><span style="color: #51afef;">f--traverse-upwards</span>
-     <span style="color: #a9a1e1;">(</span>any-file-exists? marker-files <span style="color: #dcaeea;">it</span><span style="color: #a9a1e1;">)</span> dir<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp">(defun my/projectile-root-bottom-up (dir &amp;optional list)
+  "Identify a project root.
+Perform a bottom-up search for files in LIST starting from DIR.
+Always return the lowest directory that has any file in LIST. If
+LIST is nil, use `my-project-root-files' instead. Return the
+first (bottommost) matched directory or nil."
+  (let ((marker-files (or list my-project-root-files)))
+    (f--traverse-upwards
+     (any-file-exists? marker-files it) dir)))
 </pre>
 </div>
 
@@ -674,14 +483,14 @@ Insert our new lookup function into <code>projectile-project-root-functions</cod
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Add my new function into Projectile's hierarchy of project</span>
-<span style="color: #5B6268;">;; </span><span style="color: #5B6268;">discovery functions.</span>
-<span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> projectile-project-root-functions
-      '<span style="color: #c678dd;">(</span>projectile-root-local
+<pre class="src src-emacs-lisp">;; Add my new function into Projectile's hierarchy of project
+;; discovery functions.
+(setq projectile-project-root-functions
+      '(projectile-root-local
         projectile-root-bottom-up
-        my/projectile-root-bottom-up  <span style="color: #5B6268;">;;  </span><span style="color: #5B6268;">New function</span>
+        my/projectile-root-bottom-up  ;;  New function
         projectile-root-top-down
-        projectile-root-top-down-recurring<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+        projectile-root-top-down-recurring))
 </pre>
 </div>
 
@@ -692,10 +501,10 @@ by creating a <code>.projectile</code> file in a parent directory.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #5B6268;">;; </span><span style="color: #5B6268;">Only allow a .projectile file to force project</span>
-<span style="color: #5B6268;">;; </span><span style="color: #5B6268;">roots to higher levels.</span>
-<span style="color: #51afef;">(</span><span style="color: #51afef;">setq</span> projectile-project-root-files-bottom-up
-      '<span style="color: #c678dd;">(</span><span style="color: #98be65;">".projectile"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp">;; Only allow a .projectile file to force project
+;; roots to higher levels.
+(setq projectile-project-root-files-bottom-up
+      '(".projectile"))
 </pre>
 </div>
 </div>
@@ -718,15 +527,10 @@ Can we correctly identify a Go project?
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>default-directory <span style="color: #98be65;">"/tmp/notes/go/projectA"</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
-  <span style="color: #c678dd;">(</span>projectile-project-root<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp">(let ((default-directory "/tmp/notes/go/projectA"))
+  (projectile-project-root))
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-/private/tmp/notes/go/projectA
-</pre>
-
 
 <p>
 ✔ Works!
@@ -742,15 +546,10 @@ Can we correctly identify a Python project?
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>default-directory <span style="color: #98be65;">"/tmp/notes/python/projectC"</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
-  <span style="color: #c678dd;">(</span>projectile-project-root<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp">(let ((default-directory "/tmp/notes/python/projectC"))
+  (projectile-project-root))
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-/private/tmp/notes/python/projectC
-</pre>
-
 
 <p>
 ✔ Works!
@@ -772,15 +571,10 @@ file?
 </div>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">let</span> <span style="color: #c678dd;">(</span><span style="color: #98be65;">(</span>default-directory <span style="color: #98be65;">"/tmp/repo/go/projectA"</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>
-  <span style="color: #c678dd;">(</span>projectile-project-root<span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp">(let ((default-directory "/tmp/repo/go/projectA"))
+  (projectile-project-root))
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-/private/tmp/repo/
-</pre>
-
 
 <p>
 ✔ Works!

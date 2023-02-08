@@ -26,9 +26,9 @@ in the project."
 PROJECT-PLIST has all project info, but we don't need it."
   (let ((scss-file (expand-file-name "static/main.scss"
                                      site/project-directory))
-		(out-file (expand-file-name "static/main.css"
+        (out-file (expand-file-name "static/main.css"
                                     site/project-directory)))
-	(call-process "sass" nil nil nil scss-file out-file)))
+    (call-process "sass" nil nil nil scss-file out-file)))
 
 ;;;; HTML Derived Backend
 ;; -------------------------------------------------------------------
@@ -41,9 +41,9 @@ before (some) RESULTS blocks.
 
 CONTENTS is nil. INFO is a plist with contextual information."
   (format "<div class=\"results\">#+RESULTS:</div><pre class=\"example\">\n%s</pre>"
-	  (org-html-do-format-code
-	   (org-remove-indentation
-	    (org-element-property :value fixed-width)))))
+          (org-html-do-format-code
+           (org-remove-indentation
+            (org-element-property :value fixed-width)))))
 
 
 (org-export-define-derived-backend 'site/html 'html
@@ -58,12 +58,14 @@ is the property list for the given project.  PUB-DIR is the
 publishing directory.
 
 Return output file name."
-  (org-publish-org-to 'site/html filename
-		      (concat (when (> (length org-html-extension) 0) ".")
-			      (or (plist-get plist :html-extension)
-				  org-html-extension
-				  "html"))
-		      plist pub-dir))
+  (org-publish-org-to
+   'site/html
+   filename
+   (concat (when (> (length org-html-extension) 0) ".")
+           (or (plist-get plist :html-extension)
+               org-html-extension
+               "html"))
+   plist pub-dir))
 
 ;;;; Project alist
 ;; -------------------------------------------------------------------
@@ -93,8 +95,7 @@ Return output file name."
      :section-numbers nil
      :html-preamble site/site-preamble
      :html-self-link-headlines t
-     :html-head
-     "<link rel=\"stylesheet\" type=\"text/css\" href=\"/static/main.css\" />")))
+     :html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"/static/main.css\" />")))
 
 ;; Add (or update) the projects in site/org-project-alist
 (dolist (project site/org-project-alist)

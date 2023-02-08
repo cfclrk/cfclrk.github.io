@@ -1,0 +1,40 @@
+#+TITLE: Idempotency
+
+Means a function can be composed with itself and form the same result.
+
+It doesn't necessarily mean you can do the same thing multiple times without
+changing a result.
+
+Is this the technical definition?
+
+#+begin_src clojure
+  (= (comp f f) f)
+#+end_src
+
+#+header: :backend babashka
+#+begin_src clojure
+  (inc 1)
+  (inc 1) ;; same result!
+#+end_src
+
+#+header: :backend babashka
+#+begin_src clojure
+  (inc (inc 1))
+#+end_src
+
+#+RESULTS:
+: 3
+
+So =inc= is not idempotent.
+
+* Example
+
+** Side effects
+
+   Elevator buttons are idempotent. You can keep pushing button 5, and the
+   elevator won't change anything. It will still go to floor 5.
+
+   PUT vs POST. If I POST the same thing twice, will there be two of them, or
+   one of them? The HTTP spec encourages PUT to be idempotent and POST not to
+   be. So, if I PUT two of the same thing, there should only be 1 saved. If I
+   POST 2 of of the same thing, there will be 2 of them.

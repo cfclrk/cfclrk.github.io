@@ -1,0 +1,76 @@
+#+TITLE: Bazel
+
+* Links
+
+  bazel_tools - This is actually part of the bazel binary. I think the bazel
+  people would rather get rid of this in favor of repositories living outside of
+  the bazel binary.
+
+  [[https://github.com/bazelbuild/bazel-skylib][skylib]] - A library of Starlark functions for manipulating collections, file
+  paths, and various other data types.
+
+  [[https://github.com/bazelbuild/buildtools][buildtools]] - Contains =buildifier=, =buildozer=, and =unused_deps=. These are
+  development tools.
+
+  [[https://bazel.build/configure/best-practices][Best Practices]] doc.
+
+  [[https://github.com/google/bazel-common][bazel_common]] - Contains assorted common functionality.
+
+  [[https://github.com/bazelbuild/platforms][platforms]] - Ever wonder where the =@platform= comes from? Is it here? Maybe?
+  Defiens the =cpu= and =os= constraints and values.
+
+* Deps
+
+  All dependencies are downloaded to a directory here:
+
+  #+begin_src sh
+    $(bazel info output_base)/external
+  #+end_src
+
+* Repositories
+
+  #+begin_src sh
+    bazel query --output=build //external:bazel_tools
+  #+end_src
+
+** Update http_archive
+
+   Say you want to update an =http_archive= like this one:
+
+   #+begin_example
+     http_archive(
+       name = "rules_clojure",
+       sha256 = "c841fbf94af331f0f8f02de788ca9981d7c73a10cec798d3be0dd4f79d1d627d",
+       strip_prefix = "rules_clojure-c044cb8608a2c3180cbfee89e66bbeb604afb146",
+       urls = ["https://github.com/simuons/rules_clojure/archive/c044cb8608a2c3180cb.tar.gz"],
+     )
+   #+end_example
+
+   Manually change the two references to the =c044cb...= commit, then comment
+   out the =sha256= line. Then run a =bazel build /...= and the bazel output
+   will say something like:
+
+   #+begin_example
+     DEBUG: Rule 'rules_clojure' indicated that a canonical reproducible
+     form can be obtained by modifying arguments
+     sha256 = "4749769faee9e2d00bb50d08e6a16b46aebdb885dc8ee75356964719622bf4e9"
+   #+end_example
+
+* Query
+
+** Deps
+
+   #+begin_src sh
+     bazel query \
+           --notool_deps \
+           --noimplicit_deps \
+           'deps(//some:target)'
+   #+end_src
+
+* Tools
+
+  Run buildifier on all build files in a repo:
+
+  #+begin_src sh
+    buildifier -r -mode=fix -lint=warn .
+  #+end_src

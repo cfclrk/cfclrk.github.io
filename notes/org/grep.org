@@ -1,0 +1,16 @@
+#+TITLE: Grep
+#+SETUPFILE: ../setup.org
+
+* rg string in file type
+
+  Search for =foo= in all terraform files.
+
+  #+begin_src sh
+    rg 'foo' -g '**/*.tf'
+  #+end_src
+
+  In a directory:
+
+  #+begin_src sh
+    rg 'foo' -g '*.tf' -- in/a/dir
+  #+end_src

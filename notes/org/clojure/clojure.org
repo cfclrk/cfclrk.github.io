@@ -1,5 +1,12 @@
 #+TITLE: Clojure
-#+SETUPFILE: ../setup.org
+#+SETUPFILE: ../../setup.org
+
+* Unbind all vars in a namespace
+
+  #+begin_src clojure
+    (doseq [[sym var] (ns-publics *ns*)]
+      (ns-unmap *ns* sym))
+  #+end_src
 
 * Installation
 
@@ -19,18 +26,55 @@
   homebrew package. The first method is preferred, which requires you to set up
   and configure a JDK yourself.
 
+* Versions
+
+** Clojure version
+
+   #+begin_src clojure
+     *clojure-version*
+   #+end_src
+
+** Java version
+
+   #+begin_src clojure
+     (System/getProperty "java.version")
+   #+end_src
+
 * Project Creation
 
 ** Minimal
 
-   All you need is a project directory with a =deps.edn= and a =src/foo.clj=.
-   However it should be namespaced properly (TODO: work on this).
+   All you need is a project directory with a =deps.edn= and a =src/core.clj=.
 
-   #+begin_src sh :var d="helloworld"
-     touch $d/deps.edn $d/src/core.clj
-     echo "{:deps {org.clojure/clojure {:mvn/version \"RELEASE\"}}}" > $d/deps.edn
-     echo "(ns core) (defn -main [] (println \"hello world\"))" >> src/core.clj
-     clj -m core
+   #+header: :dir ~/emacs/org-clojure
+   #+header: :backend babashka
+   #+begin_src clojure
+     (require '[clojure.java.io])
+
+     (def deps
+       "{:deps
+      {org.clojure/clojure {:mvn/version \"RELEASE\"}}}
+     ")
+
+     (def core
+       "(ns core)
+
+     (defn -main
+       [& args]
+       (println \"hello world!\"))
+     ")
+
+     (let [deps-path "hello_world/deps.edn"
+           core-path "hello_world/src/core.clj"]
+       (clojure.java.io/make-parents deps-path)
+       (spit deps-path deps)
+       (spit core-path core))
+   #+end_src
+
+   Run with:
+
+   #+begin_src sh
+     clojure -M -m core
    #+end_src
 
 ** neil
@@ -51,14 +95,6 @@
                        create \
                        :template cfclrk/minimal \
                        :name $user/$projectName
-   #+end_src
-
-** Leiningen
-
-   #+header: :dir ~/Projects/codenotes/clojure
-   #+header: :var projectName="minesweeper"
-   #+begin_src sh :results output
-     lein new app cfclrk/$projectName
    #+end_src
 
 ** deps-new
@@ -83,6 +119,14 @@
 
    #+begin_src sh
      clojure -Tnew lib :name cfclrk/$projectName
+   #+end_src
+
+** Leiningen
+
+   #+header: :dir ~/Projects/codenotes/clojure
+   #+header: :var projectName="minesweeper"
+   #+begin_src sh :results output
+     lein new app cfclrk/$projectName
    #+end_src
 
 * clj vs clojure
@@ -197,7 +241,7 @@
   #+end_src
 
   #+RESULTS:
-  : Hello world, the time is 10:00 AM
+  : Hello world, the time is 09:42 AM
 
   Start a REPL that I can attach to from Emacs.
 
@@ -229,7 +273,7 @@
 
 ** Doc
 
-   Function doc: =C-c C-d C-d= (=cider-doc=)
+   Function doc: =C-c C-d d= (=cider-doc=)
 
 * Quickies
 
@@ -238,13 +282,6 @@
    #+begin_src clojure
      (doseq [[k v] (System/getenv)]
        (println k v))
-   #+end_src
-
-** Clojure and Java versions
-
-   #+begin_src clojure
-     ,*clojure-version*
-     (System/getProperty "java.version")
    #+end_src
 
 ** Read and write a binary file
@@ -286,12 +323,26 @@
    : words
 
    #+header: :backend babashka
-   #+begin_src clojure :results output
-     (range 10)
+   #+begin_src clojure
+     (range 3)
    #+end_src
 
    #+RESULTS:
-   : (0 1 2 3 4 5 6 7 8 9)
+   : (0 1 2)
+
+  #+begin_src clojurescript
+  #js {:foo "bar"}
+  #+end_src
+
+  #+RESULTS:
+  : #js {:foo "bar"}
+
+  #+BEGIN_SRC clojure :backend clojure-cli
+  (= *file* (System/getProperty "babashka.file"))
+  #+END_SRC
+
+  #+RESULTS:
+  : false
 
 * core.async
 

@@ -135,22 +135,29 @@ containerized applications.
 </blockquote>
 
 <p>
-I think of it more like: Kubernetes is a program for creating and managing a
+I would define it as: Kubernetes is a program for creating and managing a
 <i>computer cluster</i>.
 </p>
 
 <p>
 A cluster is a distributed system in which multiple computers work together to
-behave somewhat like one, bigger computer. While a distributed system is
-fundamentally different from a single computer, cluster management software
-(e.g. Kubernetes) bring these two closer together.
+behave somewhat like one, bigger computer. There is a long history of cluster
+computing (see: <a href="https://en.wikipedia.org/wiki/Beowulf_cluster">beowulf clusters</a>). While a distributed system is fundamentally
+different from a single computer, cluster management software (e.g.
+Kubernetes) helps to bridge that gap.
 </p>
 
 <p>
-Running a process on a cluster is different from a running program on a single
-computer. Kubernetes provides heavy abstractions for dealing with clusters.
-People started trying to create "clusters" a long time ago (see: <a href="https://en.wikipedia.org/wiki/Beowulf_cluster">beowulf
-clusters</a>). Some of the problems that need to be addressed are:
+These days, practically all applications are distributed systems. Dealing with
+the inherent problems of a distributed system is often left to the application
+layer. Kubernetes is designed to directly address some (but not all) of the
+fundamental problems of working in a distributed system, like: how do you tell
+when a node is dead? And what should be done about that when it happens?
+</p>
+
+<p>
+Kubernetes provides heavy abstractions for dealing with clusters. Some of the
+problems that need to be addressed are:
 </p>
 
 <ul class="org-ul">
@@ -275,8 +282,8 @@ Set namespace for the current context
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">kubectl config set-context <span style="color: #98be65;">\</span>
-        $(kubectl config current-context) <span style="color: #98be65;">\</span>
+<pre class="src src-sh">kubectl config set-context \
+        $(kubectl config current-context) \
         --namespace default
 </pre>
 </div>
@@ -292,8 +299,8 @@ kube-system namespace UID. For a discussion, see: <a href="https://groups.google
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">kubectl get ns kube-system <span style="color: #98be65;">\</span>
-        -o <span style="color: #dcaeea;">jsonpath</span>=<span style="color: #98be65;">'{.metadata.uid}'</span>
+<pre class="src src-sh">kubectl get ns kube-system \
+        -o jsonpath='{.metadata.uid}'
 </pre>
 </div>
 </div>
@@ -355,10 +362,10 @@ scheduled to nodes with a matching taint.
 <h2 id="org511ccf0"><a href="#org511ccf0">ConfigMaps</a></h2>
 <div class="outline-text-2" id="text-org511ccf0">
 <div class="org-src-container">
-<pre class="src src-sh">kubectl get cm aws-auth <span style="color: #98be65;">\</span>
-        -n kube-system <span style="color: #98be65;">\</span>
-        --output=json <span style="color: #98be65;">\</span>
-    | jq -r <span style="color: #98be65;">'.data'</span>
+<pre class="src src-sh">kubectl get cm aws-auth \
+        -n kube-system \
+        --output=json \
+    | jq -r '.data'
 </pre>
 </div>
 </div>
@@ -391,8 +398,8 @@ Note you can also get the master node ip with <code>kubectl cluster-info</code>.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="org358404d">kubectl get node -lnode-role.kubernetes.io/master <span style="color: #98be65;">\</span>
-        -o <span style="color: #dcaeea;">jsonpath</span>=<span style="color: #98be65;">'{ $.items[*].status.addresses[?(@.type=="ExternalIP")].address }'</span>
+<pre class="src src-sh" id="org358404d">kubectl get node -lnode-role.kubernetes.io/master \
+        -o jsonpath='{ $.items[*].status.addresses[?(@.type=="ExternalIP")].address }'
 </pre>
 </div>
 </div>
@@ -402,8 +409,8 @@ Note you can also get the master node ip with <code>kubectl cluster-info</code>.
 <h3 id="orgdc7e49b"><a href="#orgdc7e49b">Worker Nodes</a></h3>
 <div class="outline-text-3" id="text-orgdc7e49b">
 <div class="org-src-container">
-<pre class="src src-sh">kubectl get nodes <span style="color: #98be65;">\</span>
-        -l <span style="color: #98be65;">"kubernetes.io/role = node"</span>
+<pre class="src src-sh">kubectl get nodes \
+        -l "kubernetes.io/role = node"
 </pre>
 </div>
 </div>
@@ -421,9 +428,9 @@ Without jq:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="org5f67f3b">kubectl get nodes -l <span style="color: #98be65;">"kubernetes.io/role = node"</span> <span style="color: #98be65;">\</span>
-        -o <span style="color: #dcaeea;">jsonpath</span>=<span style="color: #98be65;">'{range .items[*]}{.metadata.annotations.flannel\.alpha\.coreos\.com/public-ip}</span>
-<span style="color: #98be65;">{end}'</span>
+<pre class="src src-sh" id="org5f67f3b">kubectl get nodes -l "kubernetes.io/role = node" \
+        -o jsonpath='{range .items[*]}{.metadata.annotations.flannel\.alpha\.coreos\.com/public-ip}
+{end}'
 </pre>
 </div>
 
@@ -432,12 +439,12 @@ With jq:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">kubectl get nodes <span style="color: #98be65;">\</span>
-        -l <span style="color: #98be65;">"kubernetes.io/role = node"</span> <span style="color: #98be65;">\</span>
-        -o json <span style="color: #98be65;">\</span>
-    | jq -r <span style="color: #98be65;">'.items[]</span>
-<span style="color: #98be65;">             .metadata</span>
-<span style="color: #98be65;">             .annotations["flannel.alpha.coreos.com/public-ip"]'</span>
+<pre class="src src-sh">kubectl get nodes \
+        -l "kubernetes.io/role = node" \
+        -o json \
+    | jq -r '.items[]
+             .metadata
+             .annotations["flannel.alpha.coreos.com/public-ip"]'
 </pre>
 </div>
 </div>
@@ -447,11 +454,11 @@ With jq:
 <h4 id="org0bd7214"><a href="#org0bd7214">Public IPs</a></h4>
 <div class="outline-text-4" id="text-org0bd7214">
 <div class="org-src-container">
-<pre class="src src-sh">kubectl get nodes -o json <span style="color: #98be65;">\</span>
-        -l <span style="color: #98be65;">"kubernetes.io/role = node"</span> <span style="color: #98be65;">\</span>
-    | jq -r <span style="color: #98be65;">'.items[].status.addresses[]</span>
-<span style="color: #98be65;">             | select(.type == "ExternalIP")</span>
-<span style="color: #98be65;">             | .address'</span>
+<pre class="src src-sh">kubectl get nodes -o json \
+        -l "kubernetes.io/role = node" \
+    | jq -r '.items[].status.addresses[]
+             | select(.type == "ExternalIP")
+             | .address'
 </pre>
 </div>
 </div>
@@ -462,13 +469,13 @@ With jq:
 <h3 id="orgea476b3"><a href="#orgea476b3">All Pods on a Node</a></h3>
 <div class="outline-text-3" id="text-orgea476b3">
 <div class="org-src-container">
-<pre class="src src-sh">kubectl describe node $<span style="color: #dcaeea;">NodeName</span>
+<pre class="src src-sh">kubectl describe node $NodeName
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-sh">kubectl get pods --all-namespaces <span style="color: #98be65;">\</span>
-        --field-selector spec.nodeName=$<span style="color: #dcaeea;">NodeName</span>
+<pre class="src src-sh">kubectl get pods --all-namespaces \
+        --field-selector spec.nodeName=$NodeName
 </pre>
 </div>
 </div>
@@ -478,11 +485,11 @@ With jq:
 <h3 id="org404ff36"><a href="#org404ff36">SSH to a Pod's Node</a></h3>
 <div class="outline-text-3" id="text-org404ff36">
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #dcaeea;">node</span>=$(kubectl get pod <span style="color: #98be65;">\</span>
-               -o=custom-columns=NODE:.spec.nodeName $<span style="color: #dcaeea;">applianceConfigPod</span> <span style="color: #98be65;">\</span>
+<pre class="src src-sh">node=$(kubectl get pod \
+               -o=custom-columns=NODE:.spec.nodeName $applianceConfigPod \
            | sed -n 2p)
-<span style="color: #dcaeea;">ip</span>=$(kubectl get node $<span style="color: #dcaeea;">node</span> <span style="color: #98be65;">\</span>
-             -o <span style="color: #dcaeea;">jsonpath</span>=<span style="color: #98be65;">'{ $.status.addresses[?(@.type=="ExternalIP")].address }'</span>)
+ip=$(kubectl get node $node \
+             -o jsonpath='{ $.status.addresses[?(@.type=="ExternalIP")].address }')
 </pre>
 </div>
 
@@ -501,7 +508,7 @@ Now, <code>ssh user@nodeIp</code>
 <h3 id="org0ec7144"><a href="#org0ec7144">List Containers in a Pod</a></h3>
 <div class="outline-text-3" id="text-org0ec7144">
 <div class="org-src-container">
-<pre class="src src-sh">kubectl get pod $<span style="color: #dcaeea;">pod</span> -o json | jq -r <span style="color: #98be65;">'.spec.containers[].name'</span>
+<pre class="src src-sh">kubectl get pod $pod -o json | jq -r '.spec.containers[].name'
 </pre>
 </div>
 </div>
@@ -511,9 +518,9 @@ Now, <code>ssh user@nodeIp</code>
 <h3 id="org2254ea3"><a href="#org2254ea3">What Node is this Pod on?</a></h3>
 <div class="outline-text-3" id="text-org2254ea3">
 <div class="org-src-container">
-<pre class="src src-sh">kubectl get pod <span style="color: #98be65;">\</span>
-        -o custom-columns=NODE:.spec.nodeName <span style="color: #98be65;">\</span>
-        $<span style="color: #dcaeea;">pod</span> <span style="color: #98be65;">\</span>
+<pre class="src src-sh">kubectl get pod \
+        -o custom-columns=NODE:.spec.nodeName \
+        $pod \
     | sed -n 2p
 </pre>
 </div>
@@ -529,10 +536,10 @@ Now, <code>ssh user@nodeIp</code>
 <h3 id="orgdba11f2"><a href="#orgdba11f2">Create Docker Registry Secret</a></h3>
 <div class="outline-text-3" id="text-orgdba11f2">
 <div class="org-src-container">
-<pre class="src src-sh">kubectl create secret docker-registry $<span style="color: #dcaeea;">SecretName</span> <span style="color: #98be65;">\</span>
-        --docker-server=$<span style="color: #dcaeea;">Server</span> <span style="color: #98be65;">\</span>
-        --docker-username=$<span style="color: #dcaeea;">User</span> <span style="color: #98be65;">\</span>
-        --docker-password=$<span style="color: #dcaeea;">Password</span>
+<pre class="src src-sh">kubectl create secret docker-registry $SecretName \
+        --docker-server=$Server \
+        --docker-username=$User \
+        --docker-password=$Password
 </pre>
 </div>
 </div>
@@ -546,8 +553,8 @@ TODO: also decode <code>=.auths["registry.ironnet.cloud"].auth</code>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">kubectl get secret $<span style="color: #dcaeea;">SecretName</span> -o json <span style="color: #98be65;">\</span>
-    | jq -r <span style="color: #98be65;">'.data[".dockerconfigjson"]'</span> <span style="color: #98be65;">\</span>
+<pre class="src src-sh">kubectl get secret $SecretName -o json \
+    | jq -r '.data[".dockerconfigjson"]' \
     | base64 --decode | jq
 </pre>
 </div>
@@ -558,10 +565,10 @@ TODO: also decode <code>=.auths["registry.ironnet.cloud"].auth</code>
 <h3 id="org10b5e1a"><a href="#org10b5e1a">Update a Secret</a></h3>
 <div class="outline-text-3" id="text-org10b5e1a">
 <div class="org-src-container">
-<pre class="src src-sh">kubectl create secret docker-registry $<span style="color: #dcaeea;">SecretName</span> <span style="color: #98be65;">\</span>
-        --docker-server=$<span style="color: #dcaeea;">Server</span> <span style="color: #98be65;">\</span>
-        --docker-username=$<span style="color: #dcaeea;">User</span> <span style="color: #98be65;">\</span>
-        --docker-password=$<span style="color: #dcaeea;">Password</span> <span style="color: #98be65;">\</span>
+<pre class="src src-sh">kubectl create secret docker-registry $SecretName \
+        --docker-server=$Server \
+        --docker-username=$User \
+        --docker-password=$Password \
         --dry-run=client -o yaml | kubectl apply -f -
 </pre>
 </div>
@@ -581,10 +588,10 @@ Get all services of type NodePort/LoadBalancer/ClusterIP:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">kubectl get services --all-namespaces -o json <span style="color: #98be65;">\</span>
-    | jq <span style="color: #98be65;">'.items[]</span>
-<span style="color: #98be65;">          | select(.spec.type == "LoadBalancer")</span>
-<span style="color: #98be65;">          | .metadata.name'</span>
+<pre class="src src-sh">kubectl get services --all-namespaces -o json \
+    | jq '.items[]
+          | select(.spec.type == "LoadBalancer")
+          | .metadata.name'
 </pre>
 </div>
 </div>
@@ -599,9 +606,9 @@ Get the default service account:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">kubectl get secret -o json <span style="color: #98be65;">\</span>
-    | jq <span style="color: #98be65;">'.items[]</span>
-<span style="color: #98be65;">          | select(.metadata.annotations["kubernetes.io/service-account.name"] == "default")'</span>
+<pre class="src src-sh">kubectl get secret -o json \
+    | jq '.items[]
+          | select(.metadata.annotations["kubernetes.io/service-account.name"] == "default")'
 </pre>
 </div>
 </div>
@@ -615,36 +622,22 @@ Get the default StorageClass:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">kubectl get sc <span style="color: #98be65;">\</span>
-        -o json <span style="color: #98be65;">\</span>
-    | jq <span style="color: #98be65;">'.items[].metadata</span>
-<span style="color: #98be65;">          | select(.annotations."storageclass.kubernetes.io/is-default-class" == "true")</span>
-<span style="color: #98be65;">          | .name'</span>
+<pre class="src src-sh">kubectl get sc \
+        -o json \
+    | jq '.items[].metadata
+          | select(.annotations."storageclass.kubernetes.io/is-default-class" == "true")
+          | .name'
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-kops-ssd-1-17
-</pre>
-
 
 <div class="org-src-container">
-<pre class="src src-sh">kubectl get sc <span style="color: #98be65;">\</span>
-        -o json <span style="color: #98be65;">\</span>
-    | jq -c <span style="color: #98be65;">'.items[].metadata</span>
-<span style="color: #98be65;">             | { "name": .name,</span>
-<span style="color: #98be65;">                 "default?": .annotations."storageclass.kubernetes.io/is-default-class" }'</span>
+<pre class="src src-sh">kubectl get sc \
+        -o json \
+    | jq -c '.items[].metadata
+             | { "name": .name,
+                 "default?": .annotations."storageclass.kubernetes.io/is-default-class" }'
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-{"name":"default","default?":null}
-{"name":"gp2","default?":"false"}
-{"name":"gp3-250","default?":null}
-{"name":"kops-ssd-1-17","default?":"true"}
-{"name":"local","default?":"false"}
-{"name":"st1","default?":"false"}
-</pre>
 </div>
 </div>
 
@@ -675,7 +668,7 @@ If the pod has multiple containers, use <code>-c $containerName</code> as well.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">kubectl exec $<span style="color: #dcaeea;">podName</span> -- &lt;COMMAND&gt;
+<pre class="src src-sh">kubectl exec $podName -- &lt;COMMAND&gt;
 </pre>
 </div>
 </div>
@@ -685,7 +678,7 @@ If the pod has multiple containers, use <code>-c $containerName</code> as well.
 <h3 id="org385f648"><a href="#org385f648">Port forwarding with kubectl</a></h3>
 <div class="outline-text-3" id="text-org385f648">
 <div class="org-src-container">
-<pre class="src src-sh">kubectl port-forward $<span style="color: #dcaeea;">podName</span> 8000:8000 -n $<span style="color: #dcaeea;">namespace</span>
+<pre class="src src-sh">kubectl port-forward $podName 8000:8000 -n $namespace
 </pre>
 </div>
 </div>
@@ -700,13 +693,13 @@ If the pod has multiple containers, use <code>-c $containerName</code> as well.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #dcaeea;">APISERVER</span>=$(kubectl config view <span style="color: #98be65;">\</span>
-                    --minify <span style="color: #98be65;">\</span>
-                    -o <span style="color: #dcaeea;">jsonpath</span>=<span style="color: #98be65;">'{.clusters[0].cluster.server}'</span>)
+<pre class="src src-sh">APISERVER=$(kubectl config view \
+                    --minify \
+                    -o jsonpath='{.clusters[0].cluster.server}')
 
-<span style="color: #dcaeea;">SA</span>=$(kubectl get serviceaccount default -o <span style="color: #dcaeea;">jsonpath</span>=<span style="color: #98be65;">'{.secrets[0].name}'</span>)
-<span style="color: #dcaeea;">TOKEN</span>=$(kubectl get secret $<span style="color: #dcaeea;">SA</span> -o <span style="color: #dcaeea;">jsonpath</span>=<span style="color: #98be65;">'{.data.token}'</span> | base64 --decode )
-curl $<span style="color: #dcaeea;">APISERVER</span>/api --header <span style="color: #98be65;">"Authorization: Bearer $TOKEN"</span> --insecure
+SA=$(kubectl get serviceaccount default -o jsonpath='{.secrets[0].name}')
+TOKEN=$(kubectl get secret $SA -o jsonpath='{.data.token}' | base64 --decode )
+curl $APISERVER/api --header "Authorization: Bearer $TOKEN" --insecure
 </pre>
 </div>
 </div>

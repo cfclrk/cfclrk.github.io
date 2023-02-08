@@ -34,6 +34,9 @@
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
 <li><a href="#org381355f">Connect</a></li>
+<li><a href="#org2b264cb">Docker</a></li>
+<li><a href="#org9eee454">WAL</a></li>
+<li><a href="#org7ff512e">Parameters</a></li>
 </ul>
 </div>
 </nav>
@@ -42,9 +45,83 @@
 <h2 id="org381355f"><a href="#org381355f">Connect</a></h2>
 <div class="outline-text-2" id="text-org381355f">
 <div class="org-src-container">
-<pre class="src src-sh">psql -h $<span style="color: #dcaeea;">db_dns_record</span> <span style="color: #98be65;">\</span>
-     -p 5432 <span style="color: #98be65;">\</span>
-     -U $<span style="color: #dcaeea;">user</span>
+<pre class="src src-sh">psql -h $db_dns_record \
+     -p 5432 \
+     -U $USER \
+     -d 'postgres'
+</pre>
+</div>
+
+<p>
+Locally, this is usually:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">psql -h localhost \
+     -d postgres
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2b264cb" class="outline-2">
+<h2 id="org2b264cb"><a href="#org2b264cb">Docker</a></h2>
+<div class="outline-text-2" id="text-org2b264cb">
+<div class="org-src-container">
+<pre class="src src-sh">docker run --rm \
+       -e POSTGRES_USER='postgres' \
+       -e POSTGRES_PASSWORD='postgres' \
+       -p 5433:5432 \
+       postgres:15.2-alpine
+</pre>
+</div>
+
+<p>
+Connect
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">psql -h localhost -d postgres --port 5433 -U postgres
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9eee454" class="outline-2">
+<h2 id="org9eee454"><a href="#org9eee454">WAL</a></h2>
+<div class="outline-text-2" id="text-org9eee454">
+<p>
+Get a list of the current WAL files:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sql">SELECT * FROM pg_ls_waldir();
+</pre>
+</div>
+
+<p>
+Current amount of space in MiB taken up by WAL:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sql">SELECT
+(sum(size) / 1024 / 1024)
+FROM
+pg_ls_waldir ();
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7ff512e" class="outline-2">
+<h2 id="org7ff512e"><a href="#org7ff512e">Parameters</a></h2>
+<div class="outline-text-2" id="text-org7ff512e">
+<p>
+View postgres parameters using `SHOW`. E.g.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sql">SHOW max_wal_size;
 </pre>
 </div>
 </div>

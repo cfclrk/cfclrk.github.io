@@ -26,18 +26,23 @@
   containerized applications.
   #+end_quote
 
-  I think of it more like: Kubernetes is a program for creating and managing a
+  I would define it as: Kubernetes is a program for creating and managing a
   /computer cluster/.
 
   A cluster is a distributed system in which multiple computers work together to
-  behave somewhat like one, bigger computer. While a distributed system is
-  fundamentally different from a single computer, cluster management software
-  (e.g. Kubernetes) bring these two closer together.
+  behave somewhat like one, bigger computer. There is a long history of cluster
+  computing (see: [[https://en.wikipedia.org/wiki/Beowulf_cluster][beowulf clusters]]). While a distributed system is fundamentally
+  different from a single computer, cluster management software (e.g.
+  Kubernetes) helps to bridge that gap.
 
-  Running a process on a cluster is different from a running program on a single
-  computer. Kubernetes provides heavy abstractions for dealing with clusters.
-  People started trying to create "clusters" a long time ago (see: [[https://en.wikipedia.org/wiki/Beowulf_cluster][beowulf
-  clusters]]). Some of the problems that need to be addressed are:
+  These days, practically all applications are distributed systems. Dealing with
+  the inherent problems of a distributed system is often left to the application
+  layer. Kubernetes is designed to directly address some (but not all) of the
+  fundamental problems of working in a distributed system, like: how do you tell
+  when a node is dead? And what should be done about that when it happens?
+
+  Kubernetes provides heavy abstractions for dealing with clusters. Some of the
+  problems that need to be addressed are:
 
   - Networking
     - What does it mean for a machine to be "in" the cluster vs "out" of the

@@ -5,11 +5,13 @@
 
   Best resource I've found is [[https://mkyong.com/java/how-to-install-java-on-mac-osx/][How to install Java JDK on macOS]].
 
-** Latest
+** Latest version
 
   #+begin_src sh
-    brew install java
+    brew install openjdk
   #+end_src
+
+  As stated in the instructions printed by =brew info openjdk=, run:
 
   #+begin_src sh
     sudo ln -svfn \
@@ -17,7 +19,7 @@
          /Library/Java/JavaVirtualMachines/openjdk.jdk
   #+end_src
 
-** Older java versions
+** Older versions
 
    Older java packages may not work on Apple Silicon.
 
@@ -35,9 +37,41 @@
 
   To see installed Java versions (assuming they have been properly symlinked):
 
-  #+begin_src sh
+  #+begin_src sh :results output
+    env
+  #+end_src
+
+  Note that =java_home -V= writes the "verbose" part of this output to stderr,
+  and only writes the current version to stdout.
+
+  #+header: :prologue "exec 2>&1" :epilogue "true"
+  #+begin_src sh :results output
     /usr/libexec/java_home -V
   #+end_src
+
+  #+RESULTS:
+  : Matching Java Virtual Machines (3):
+  :     19.0.2 (arm64) "Homebrew" - "OpenJDK 19.0.2" /opt/homebrew/Cellar/openjdk/19.0.2/libexec/openjdk.jdk/Contents/Home
+  :     17.0.6 (arm64) "Homebrew" - "OpenJDK 17.0.6" /opt/homebrew/Cellar/openjdk@17/17.0.6/libexec/openjdk.jdk/Contents/Home
+  :     17.0.2 (x86_64) "GraalVM Community" - "GraalVM CE 22.0.0.2" /Library/Java/JavaVirtualMachines/graalvm-ce-java17-22.0.0.2/Contents/Home
+  : /opt/homebrew/Cellar/openjdk/19.0.2/libexec/openjdk.jdk/Contents/Home
+
+  The java's installed via brew:
+
+  #+begin_src sh :results output
+    ls $(brew --prefix)/Cellar | grep openjdk
+  #+end_src
+
+  #+RESULTS:
+  : openjdk
+  : openjdk@17
+
+  #+begin_src sh
+    /usr/libexec/java_home -v 17
+  #+end_src
+
+  #+RESULTS:
+  : /opt/homebrew/Cellar/openjdk@17/17.0.4.1/libexec/openjdk.jdk/Contents/Home
 
   You can set =JAVA_HOME= to be one of those paths like this:
 

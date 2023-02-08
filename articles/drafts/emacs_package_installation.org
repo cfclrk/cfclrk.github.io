@@ -1,0 +1,71 @@
+#+TITLE: How to Install an Emacs Package
+#+SETUPFILE: ../setup.org
+
+In which I enumerate the ways you you can install Emacs packages.
+
+* Rationale
+
+  The goal of this article is to enumerate most ways to install an Emacs package
+  so that project README's don't have to.
+
+  I don't think it's a good idea for a package to include installation
+  instructions if the package's installation requires no special considerations.
+  This goes for all programming languages, not just Elisp. Why not?
+
+  1. Most likely, there is nothing unique about how to install your package (if
+     there *is*, then of course document it!)
+  2. Your installation instructions will become out of date.
+  3. New package management tools come and go.
+  4. There are a lot of ways to install packages. You don't know how every user
+     wants to install your package.
+
+  Don't try to explain standard installation workflows; instead, point people to
+  where they can find up-to-date information. That's what this page is for!
+
+* package.el (the built-in package manager)
+
+  =package.el= is Emacs's built-in package management system (i.e. what you see
+  when you run =M-x list-packages=).
+
+** Install from MELPA
+
+  #+begin_src emacs-lisp
+    (require 'package)
+
+    (add-to-list
+     'package-archives
+     '("melpa-stable" . "https://stable.melpa.org/packages/"))
+
+    (package-initialize)
+  #+end_src
+
+*** with use-package
+
+  #+begin_src emacs-lisp
+    (use-package markdown-mode
+      :ensure t
+      :mode ("README\\.md\\'" . gfm-mode)
+      :init (setq markdown-command "multimarkdown"))
+  #+end_src
+
+** Install from a buffer
+
+   If you have the elisp file locally, and that file in Emacs, you can
+   interactivly tell Emacs to "install the stuff in this here buffer".
+
+   Visit the buffer, and run =M-x package-install-from-buffer=.
+
+   Then, update your init file to include:
+
+   #+begin_src emacs-lisp
+     (require 'the-new-package-name)
+   #+end_src
+
+
+* quelpa
+
+* straight.el
+
+  Set up straight as documented in [[https://github.com/radian-software/straight.el#bootstrapping-straightel][Bootstrapping straight]].
+
+** with use-package

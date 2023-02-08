@@ -182,14 +182,13 @@
 
 ** HEAD
 
-   HEAD is usually a symbolic ref, meaning it points to another ref.
+   HEAD is usually a symbolic ref, meaning it points to another ref. The
+   exception is when you are in a detached HEAD state, in which case HEAD points
+   directly to a commit.
 
    #+begin_src sh
      git symbolic-ref HEAD
    #+end_src
-
-   Unless you are in a detached HEAD state, in which case HEAD points directly
-   to a commit.
 
    Some ways to print the SHA of the HEAD ref:
 
@@ -209,6 +208,14 @@
      git rev-parse --abbrev-ref HEAD
    #+end_src
 
+* Diff
+
+  Diff a branch with the commit you branched from.
+
+  #+begin_src sh
+    git diff my-branch...main
+  #+end_src
+
 * First Commit
 
   Some ways to find the first commit in a Git repository:
@@ -220,6 +227,20 @@
   #+begin_src sh
     git log --reverse
   #+end_src
+
+* Latest commit
+
+  Fun way to get the latest commit hash on a repo! (Or really, any commit hash
+  for any ref). You don't even need the repo cloned locally.
+
+  #+begin_src sh
+    git ls-remote \
+        https://github.com/cfclrk/rules_clojure.git \
+        refs/heads/master
+  #+end_src
+
+  #+RESULTS:
+  | 5605a9fb9653157579f7b86d9bd9b5993eec2b31 | refs/heads/master |
 
 * Files changed in commit
 

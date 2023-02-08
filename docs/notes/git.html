@@ -54,7 +54,9 @@
 <li><a href="#org21edcb5">Branches</a></li>
 </ul>
 </li>
+<li><a href="#org74f979b">Diff</a></li>
 <li><a href="#org3b5de98">First Commit</a></li>
+<li><a href="#orgfb354de">Latest commit</a></li>
 <li><a href="#org41f2f1e">Files changed in commit</a></li>
 <li><a href="#orgf7f62a8">Tags</a>
 <ul>
@@ -88,12 +90,12 @@ Given a repo like this:
 
 <div class="org-src-container">
 <pre class="src src-bash">git init
-touch A &amp;&amp; git add A &amp;&amp; git commit -m <span style="color: #98be65;">"A"</span>
-touch B &amp;&amp; git add B &amp;&amp; git commit -m <span style="color: #98be65;">"B"</span>
-git checkout -b <span style="color: #98be65;">"feat-1"</span>
-touch C &amp;&amp; git add C &amp;&amp; git commit -m <span style="color: #98be65;">"C"</span>
-git checkout -b <span style="color: #98be65;">"feat-2"</span>
-touch D &amp;&amp; git add D &amp;&amp; git commit -m <span style="color: #98be65;">"D"</span>
+touch A &amp;&amp; git add A &amp;&amp; git commit -m "A"
+touch B &amp;&amp; git add B &amp;&amp; git commit -m "B"
+git checkout -b "feat-1"
+touch C &amp;&amp; git add C &amp;&amp; git commit -m "C"
+git checkout -b "feat-2"
+touch D &amp;&amp; git add D &amp;&amp; git commit -m "D"
 </pre>
 </div>
 
@@ -103,7 +105,7 @@ touch D &amp;&amp; git add D &amp;&amp; git commit -m <span style="color: #98be6
 </div>
 
 
-<figure id="org9486368">
+<figure id="org7f4d797">
 <img src="../img/RebaseToAncestor1.png" alt="RebaseToAncestor1.png">
 
 </figure>
@@ -119,18 +121,13 @@ git rebase main
 </pre>
 </div>
 
-<div class="results">#+RESULTS:</div><pre class="example">
-Current branch feat-2 is up to date.
-</pre>
-
-
 <div class="org-src-container">
 <pre class="src src-sh" id="orga3d7a0d">gitdot --png
 </pre>
 </div>
 
 
-<figure id="org3a85080">
+<figure id="orgdb911bf">
 <img src="../img/RebaseToAncestor2.png" alt="RebaseToAncestor2.png">
 
 </figure>
@@ -159,7 +156,7 @@ git rebase --onto main feat-1
 </div>
 
 
-<figure id="org93ae145">
+<figure id="orgdf100de">
 <img src="../img/RebaseToAncestor3.png" alt="RebaseToAncestor3.png">
 
 </figure>
@@ -175,12 +172,12 @@ Given a repo like this:
 
 <div class="org-src-container">
 <pre class="src src-bash">git init
-touch A &amp;&amp; git add A &amp;&amp; git commit -m <span style="color: #98be65;">"A"</span>
-git checkout -b <span style="color: #98be65;">"feat-1"</span>
-touch B &amp;&amp; git add B &amp;&amp; git commit -m <span style="color: #98be65;">"B"</span>
+touch A &amp;&amp; git add A &amp;&amp; git commit -m "A"
+git checkout -b "feat-1"
+touch B &amp;&amp; git add B &amp;&amp; git commit -m "B"
 git checkout main
-touch C &amp;&amp; git add C &amp;&amp; git commit -m <span style="color: #98be65;">"C"</span>
-touch D &amp;&amp; git add D &amp;&amp; git commit -m <span style="color: #98be65;">"D"</span>
+touch C &amp;&amp; git add C &amp;&amp; git commit -m "C"
+touch D &amp;&amp; git add D &amp;&amp; git commit -m "D"
 </pre>
 </div>
 
@@ -190,7 +187,7 @@ touch D &amp;&amp; git add D &amp;&amp; git commit -m <span style="color: #98be6
 </div>
 
 
-<figure id="org22de485">
+<figure id="orge020ffb">
 <img src="../img/RebaseToCommit1.png" alt="RebaseToCommit1.png">
 
 </figure>
@@ -321,18 +318,15 @@ the rebase is started from.
 <h3 id="org3b2d88b"><a href="#org3b2d88b">HEAD</a></h3>
 <div class="outline-text-3" id="text-org3b2d88b">
 <p>
-HEAD is usually a symbolic ref, meaning it points to another ref.
+HEAD is usually a symbolic ref, meaning it points to another ref. The
+exception is when you are in a detached HEAD state, in which case HEAD points
+directly to a commit.
 </p>
 
 <div class="org-src-container">
 <pre class="src src-sh">git symbolic-ref HEAD
 </pre>
 </div>
-
-<p>
-Unless you are in a detached HEAD state, in which case HEAD points directly
-to a commit.
-</p>
 
 <p>
 Some ways to print the SHA of the HEAD ref:
@@ -344,7 +338,7 @@ Some ways to print the SHA of the HEAD ref:
 </div>
 
 <div class="org-src-container">
-<pre class="src src-sh">git log -1 --format=<span style="color: #98be65;">'%H'</span>
+<pre class="src src-sh">git log -1 --format='%H'
 </pre>
 </div>
 </div>
@@ -361,6 +355,20 @@ Current branch name:
 <pre class="src src-sh">git rev-parse --abbrev-ref HEAD
 </pre>
 </div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org74f979b" class="outline-2">
+<h2 id="org74f979b"><a href="#org74f979b">Diff</a></h2>
+<div class="outline-text-2" id="text-org74f979b">
+<p>
+Diff a branch with the commit you branched from.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">git diff my-branch...main
+</pre>
 </div>
 </div>
 </div>
@@ -384,12 +392,29 @@ Some ways to find the first commit in a Git repository:
 </div>
 </div>
 
+<div id="outline-container-orgfb354de" class="outline-2">
+<h2 id="orgfb354de"><a href="#orgfb354de">Latest commit</a></h2>
+<div class="outline-text-2" id="text-orgfb354de">
+<p>
+Fun way to get the latest commit hash on a repo! (Or really, any commit hash
+for any ref). You don't even need the repo cloned locally.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">git ls-remote \
+    https://github.com/cfclrk/rules_clojure.git \
+    refs/heads/master
+</pre>
+</div>
+</div>
+</div>
+
 <div id="outline-container-org41f2f1e" class="outline-2">
 <h2 id="org41f2f1e"><a href="#org41f2f1e">Files changed in commit</a></h2>
 <div class="outline-text-2" id="text-org41f2f1e">
 <div class="org-src-container">
-<pre class="src src-sh">git diff-tree -r --no-commit-id <span style="color: #98be65;">\</span>
-    --name-only $<span style="color: #dcaeea;">sha</span>
+<pre class="src src-sh">git diff-tree -r --no-commit-id \
+    --name-only $sha
 </pre>
 </div>
 </div>
@@ -431,7 +456,7 @@ If HEAD is a tag, this will print the tag name. If not, it prints nothing.
 <h3 id="orga6b382b"><a href="#orga6b382b">List Tags Matching Pattern</a></h3>
 <div class="outline-text-3" id="text-orga6b382b">
 <div class="org-src-container">
-<pre class="src src-sh">git tag --list <span style="color: #98be65;">"v*"</span>
+<pre class="src src-sh">git tag --list "v*"
 </pre>
 </div>
 </div>

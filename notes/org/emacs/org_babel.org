@@ -117,7 +117,8 @@
   Then set variables at the top of a file, and use something like:
 
   #+begin_example
-  #+begin_src bash :dir (host (getenv "HOST") (getenv "USER") "/home/ec2-user")
-    pwd
+  #+header: :dir (host (getenv "HOST") (getenv "USER") "/home/ec2-user")
+  #+begin_src bash
+   pwd
   #+end_src
   #+end_example

@@ -48,7 +48,9 @@
 </li>
 <li><a href="#orgc83207e">Creating Certificates</a>
 <ul>
-<li><a href="#orgc83e3b4">Create Keypair</a></li>
+<li><a href="#org1b528a2">Using go generate<sub>cert</sub></a></li>
+<li><a href="#orgb2d5b3a">Using openssl</a></li>
+<li><a href="#org2c6307a">Using keytool</a></li>
 <li><a href="#org596fcf2">CA Certificates</a>
 <ul>
 <li><a href="#org07b9d33">Self-Issued Certificates</a></li>
@@ -62,12 +64,18 @@
 <li><a href="#org095288e">cfssl</a></li>
 <li><a href="#org113c521">Fingerprint</a></li>
 <li><a href="#org9614322">Native Certs</a></li>
+<li><a href="#orgc83c216">Fetch remote certificate</a></li>
 <li><a href="#org018a894">Checking and Viewing Certs</a>
 <ul>
-<li><a href="#orgc292de5">View a Server's Certificate</a></li>
+<li><a href="#orgcaa8be1">View local cert info</a></li>
 <li><a href="#org88a4399">Check if a Private Key Matches a Certificate</a></li>
 <li><a href="#org1e1b883">CSR</a></li>
 <li><a href="#org79260d6">Verify Cert with CA</a></li>
+</ul>
+</li>
+<li><a href="#org2a94fcb">PKCS12</a>
+<ul>
+<li><a href="#org74405c4">View info</a></li>
 </ul>
 </li>
 </ul>
@@ -110,11 +118,11 @@ For RSA: use <code>-t rsa -b 2048</code>.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">ssh-keygen <span style="color: #98be65;">\</span>
-    -t ed25519 <span style="color: #98be65;">\</span>
-    -N <span style="color: #98be65;">""</span> <span style="color: #98be65;">\</span>
-    -f ~/.ssh/$<span style="color: #dcaeea;">keyname</span> <span style="color: #98be65;">\</span>
-    -C <span style="color: #98be65;">"$email"</span>
+<pre class="src src-sh">ssh-keygen \
+    -t ed25519 \
+    -N "" \
+    -f ~/.ssh/$keyname \
+    -C "$email"
 </pre>
 </div>
 
@@ -123,7 +131,7 @@ The email address is optional:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">ssh-keygen -t ed25519 -f ~/.ssh/$<span style="color: #dcaeea;">keyname</span> -N <span style="color: #98be65;">""</span>
+<pre class="src src-sh">ssh-keygen -t ed25519 -f ~/.ssh/$keyname -N ""
 </pre>
 </div>
 </div>
@@ -133,7 +141,7 @@ The email address is optional:
 <h3 id="org4dc1fbe"><a href="#org4dc1fbe">With Passphrase</a></h3>
 <div class="outline-text-3" id="text-org4dc1fbe">
 <div class="org-src-container">
-<pre class="src src-sh">ssh-keygen -t ed25519 -f ~/.ssh/$<span style="color: #dcaeea;">keyname</span>
+<pre class="src src-sh">ssh-keygen -t ed25519 -f ~/.ssh/$keyname
 </pre>
 </div>
 </div>
@@ -148,9 +156,9 @@ Generate a public key from a private key:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">ssh-keygen -y <span style="color: #98be65;">\</span>
-           -f ~/.ssh/${<span style="color: #dcaeea;">keyname</span>}.pem <span style="color: #98be65;">\</span>
-           $<span style="color: #dcaeea;">HOME</span>/.ssh/${<span style="color: #dcaeea;">keyname</span>}.pub
+<pre class="src src-sh">ssh-keygen -y \
+           -f ~/.ssh/${keyname}.pem \
+           $HOME/.ssh/${keyname}.pub
 </pre>
 </div>
 </div>
@@ -178,15 +186,28 @@ Generate a public key from a private key:
 <div id="outline-container-orgc83207e" class="outline-2">
 <h2 id="orgc83207e"><a href="#orgc83207e">Creating Certificates</a></h2>
 <div class="outline-text-2" id="text-orgc83207e">
+</div>
+<div id="outline-container-org1b528a2" class="outline-3">
+<h3 id="org1b528a2"><a href="#org1b528a2">Using go generate<sub>cert</sub></a></h3>
+<div class="outline-text-3" id="text-org1b528a2">
 <p>
-Note: there is a golang tool to create self-signed certs at <code>$(go env
-  GOROOT)/src/crypto/tls/generate_cert.go</code>.
+There is a golang tool to create self-signed certs at <code>$(go env
+   GOROOT)/src/crypto/tls/generate_cert.go</code>. Use it like:
 </p>
+
+<div class="org-src-container">
+<pre class="src src-sh">go run \
+   $(go env GOROOT)/src/crypto/tls/generate_cert.go \
+   --host localhost \
+   --rsa-bits 2048
+</pre>
+</div>
+</div>
 </div>
 
-<div id="outline-container-orgc83e3b4" class="outline-3">
-<h3 id="orgc83e3b4"><a href="#orgc83e3b4">Create Keypair</a></h3>
-<div class="outline-text-3" id="text-orgc83e3b4">
+<div id="outline-container-orgb2d5b3a" class="outline-3">
+<h3 id="orgb2d5b3a"><a href="#orgb2d5b3a">Using openssl</a></h3>
+<div class="outline-text-3" id="text-orgb2d5b3a">
 <p>
 The <code>openssl genrsa</code> command creates a private key that includes a public
 key.
@@ -202,9 +223,18 @@ Extract the public key from the private key:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"$keypair"</span> | openssl rsa -outform PEM -pubout
+<pre class="src src-sh">echo "$keypair" | openssl rsa -outform PEM -pubout
 </pre>
 </div>
+</div>
+</div>
+
+<div id="outline-container-org2c6307a" class="outline-3">
+<h3 id="org2c6307a"><a href="#org2c6307a">Using keytool</a></h3>
+<div class="outline-text-3" id="text-org2c6307a">
+<p>
+The Java JDK comes with a command called <a href="https://docs.oracle.com/en/java/javase/18/docs/specs/man/keytool.html">keytool</a>.
+</p>
 </div>
 </div>
 
@@ -225,13 +255,6 @@ cross-certificates, self-issued certificates, and self-signed certificates.
 <p>
 Every root CA certificate is a self-signed certificate. Intermediate CA
 certificates are not self-signed; they are signed by their parent CA.
-</p>
-
-<p>
-The following commands create a <code>ca.key</code> and a <code>ca.crt</code> file. Remember, the
-<code>ca.key</code> actually contains both the public and private key. The certificate
-has the public key, some metadata, and a signature (signed by some private
-key).
 </p>
 </div>
 
@@ -279,10 +302,10 @@ That is, self-signed certificates are either:
 
 <div class="org-src-container">
 <pre class="src src-sh">openssl genrsa -out ca.key 2048
-openssl req -x509 -new -nodes <span style="color: #98be65;">\</span>
-        -key ca.key <span style="color: #98be65;">\</span>
-        -subj <span style="color: #98be65;">"/CN=${CommonName}"</span> <span style="color: #98be65;">\</span>
-        -days 3650 <span style="color: #98be65;">\</span>
+openssl req -x509 -new -nodes \
+        -key ca.key \
+        -subj "/CN=${CommonName}" \
+        -days 3650 \
         -out ca.crt
 </pre>
 </div>
@@ -333,9 +356,9 @@ associates some metadata with the key. This creates one file: <code>client.csr</
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">openssl req -new <span style="color: #98be65;">\</span>
-        -key client.key <span style="color: #98be65;">\</span>
-        -subj <span style="color: #98be65;">"/CN=${CommonName}"</span> <span style="color: #98be65;">\</span>
+<pre class="src src-sh">openssl req -new \
+        -key client.key \
+        -subj "/CN=${CommonName}" \
         -out client.csr
 </pre>
 </div>
@@ -348,13 +371,13 @@ practice I'm not sure of any examples where that actually happens.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">openssl x509 -req <span style="color: #98be65;">\</span>
-        -in client.csr <span style="color: #98be65;">\</span>
-        -CA $<span style="color: #dcaeea;">CACertFile</span> <span style="color: #98be65;">\</span>
-        -CAkey $<span style="color: #dcaeea;">CAKeyFile</span> <span style="color: #98be65;">\</span>
-        -CAcreateserial <span style="color: #98be65;">\</span>
-        -out client.crt <span style="color: #98be65;">\</span>
-        -days 3650 <span style="color: #98be65;">\</span>
+<pre class="src src-sh">openssl x509 -req \
+        -in client.csr \
+        -CA $CACertFile \
+        -CAkey $CAKeyFile \
+        -CAcreateserial \
+        -out client.crt \
+        -days 3650 \
         -sha256
 </pre>
 </div>
@@ -366,7 +389,7 @@ practice I'm not sure of any examples where that actually happens.
 <h2 id="org095288e"><a href="#org095288e">cfssl</a></h2>
 <div class="outline-text-2" id="text-org095288e">
 <div class="org-src-container">
-<pre class="src src-sh">cfssl selfsign www.example.net acm-test.json <span style="color: #98be65;">\</span>
+<pre class="src src-sh">cfssl selfsign www.example.net acm-test.json \
     | cfssljson -bare acm-test
 </pre>
 </div>
@@ -377,18 +400,18 @@ practice I'm not sure of any examples where that actually happens.
 <h2 id="org113c521"><a href="#org113c521">Fingerprint</a></h2>
 <div class="outline-text-2" id="text-org113c521">
 <div class="org-src-container">
-<pre class="src src-sh">openssl x509 -noout -fingerprint -sha256 <span style="color: #98be65;">\</span>
-        -inform pem -in $<span style="color: #dcaeea;">file</span>
+<pre class="src src-sh">openssl x509 -noout -fingerprint -sha256 \
+        -inform pem -in $file
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-sh">ssh-keygen -lf $<span style="color: #dcaeea;">file</span>
+<pre class="src src-sh">ssh-keygen -lf $file
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-sh">ssh-keygen -l -E md5 -f $<span style="color: #dcaeea;">file</span>
+<pre class="src src-sh">ssh-keygen -l -E md5 -f $file
 </pre>
 </div>
 
@@ -398,8 +421,8 @@ docs <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">openssl pkcs8 -in $<span style="color: #dcaeea;">file</span> <span style="color: #98be65;">\</span>
-        -inform PEM -outform DER -topk8 -nocrypt <span style="color: #98be65;">\</span>
+<pre class="src src-sh">openssl pkcs8 -in $file \
+        -inform PEM -outform DER -topk8 -nocrypt \
     | openssl sha1 -c
 </pre>
 </div>
@@ -437,28 +460,29 @@ program on Debian.
 </div>
 </div>
 
+<div id="outline-container-orgc83c216" class="outline-2">
+<h2 id="orgc83c216"><a href="#orgc83c216">Fetch remote certificate</a></h2>
+<div class="outline-text-2" id="text-orgc83c216">
+<div class="org-src-container">
+<pre class="src src-sh">openssl s_client -connect $domain:443 -showcerts
+</pre>
+</div>
+</div>
+</div>
+
 <div id="outline-container-org018a894" class="outline-2">
 <h2 id="org018a894"><a href="#org018a894">Checking and Viewing Certs</a></h2>
 <div class="outline-text-2" id="text-org018a894">
 </div>
-<div id="outline-container-orgc292de5" class="outline-3">
-<h3 id="orgc292de5"><a href="#orgc292de5">View a Server's Certificate</a></h3>
-<div class="outline-text-3" id="text-orgc292de5">
-<p>
-Show cert info for a website.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">openssl s_client -connect $<span style="color: #dcaeea;">domain</span>:443 -showcerts
-</pre>
-</div>
-
+<div id="outline-container-orgcaa8be1" class="outline-3">
+<h3 id="orgcaa8be1"><a href="#orgcaa8be1">View local cert info</a></h3>
+<div class="outline-text-3" id="text-orgcaa8be1">
 <p>
 Show cert info for a local certificate file.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">openssl x509 -in $<span style="color: #dcaeea;">cert</span> -text -noout
+<pre class="src src-sh">openssl x509 -in $cert -text -noout
 </pre>
 </div>
 </div>
@@ -472,7 +496,7 @@ On the private key:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">openssl rsa -modulus -noout -in $<span style="color: #dcaeea;">key</span>
+<pre class="src src-sh">openssl rsa -modulus -noout -in $key
 </pre>
 </div>
 
@@ -481,7 +505,7 @@ On the certificate:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">openssl x509 -modulus -noout -in $<span style="color: #dcaeea;">cert</span>
+<pre class="src src-sh">openssl x509 -modulus -noout -in $cert
 </pre>
 </div>
 
@@ -496,7 +520,7 @@ way to compare them is to pipe them both to <code>openssl md5</code>.
 <h3 id="org1e1b883"><a href="#org1e1b883">CSR</a></h3>
 <div class="outline-text-3" id="text-org1e1b883">
 <div class="org-src-container">
-<pre class="src src-sh">openssl req -text -noout -verify -in $<span style="color: #dcaeea;">file</span>.csr
+<pre class="src src-sh">openssl req -text -noout -verify -in $file.csr
 </pre>
 </div>
 </div>
@@ -507,6 +531,27 @@ way to compare them is to pipe them both to <code>openssl md5</code>.
 <div class="outline-text-3" id="text-org79260d6">
 <div class="org-src-container">
 <pre class="src src-sh">openssl verify -CAfile ca.crt entity.crt
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2a94fcb" class="outline-2">
+<h2 id="org2a94fcb"><a href="#org2a94fcb">PKCS12</a></h2>
+<div class="outline-text-2" id="text-org2a94fcb">
+<p>
+PKCS12 is a format that allows for bundling a private key and its associated
+certificate (and potentially more) in a single file. PKCS12 is a binary
+format, so the file contents cannot be viewed without a tool like openssl.
+</p>
+</div>
+
+<div id="outline-container-org74405c4" class="outline-3">
+<h3 id="org74405c4"><a href="#org74405c4">View info</a></h3>
+<div class="outline-text-3" id="text-org74405c4">
+<div class="org-src-container">
+<pre class="src src-sh">openssl pkcs12 -info -in cert.p12 -nodes
 </pre>
 </div>
 </div>

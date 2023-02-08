@@ -1,0 +1,14 @@
+* Formatting XML
+
+  There's a built-in function, =sgml-pretty-print=, but it's really slow. When
+  running it on some large XML files, it's locked up Emacs for *minutes* for me.
+  Running xmlstarlet on the same file was instantaneous.
+
+  Install xmlstarlet:
+
+  #+begin_src sh
+    brew install xmlstarlet
+  #+end_src
+
+  Navigate to the file in a dired buffer, and hit =!= (=dired-do-shell-command=)
+  to run a shell command on the file. Type: =xmlstarlet ed --inplace=.

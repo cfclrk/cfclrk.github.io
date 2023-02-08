@@ -6,5 +6,54 @@
   #+begin_src sh
     psql -h $db_dns_record \
          -p 5432 \
-         -U $user
+         -U $USER \
+         -d 'postgres'
+  #+end_src
+
+  Locally, this is usually:
+
+  #+begin_src sh
+    psql -h localhost \
+         -d postgres
+  #+end_src
+
+* Docker
+
+  #+begin_src sh
+    docker run --rm \
+           -e POSTGRES_USER='postgres' \
+           -e POSTGRES_PASSWORD='postgres' \
+           -p 5433:5432 \
+           postgres:15.2-alpine
+  #+end_src
+
+  Connect
+
+  #+begin_src sh
+    psql -h localhost -d postgres --port 5433 -U postgres
+  #+end_src
+
+* WAL
+
+  Get a list of the current WAL files:
+
+  #+begin_src sql
+    SELECT * FROM pg_ls_waldir();
+  #+end_src
+
+  Current amount of space in MiB taken up by WAL:
+
+  #+begin_src sql
+    SELECT
+    (sum(size) / 1024 / 1024)
+    FROM
+    pg_ls_waldir ();
+  #+end_src
+
+* Parameters
+
+  View postgres parameters using `SHOW`. E.g.
+
+  #+begin_src sql
+     SHOW max_wal_size;
   #+end_src

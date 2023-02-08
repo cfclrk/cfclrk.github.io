@@ -12,8 +12,8 @@
   Supports variables, functions, and types.
 
   Opinion: the syntax is cluttered. Even in the hand-picked example on the
-  homepage, which compares Dhall to JSON and YAML, the JSON and YAML are so much
-  nicer.
+  homepage, which compares Dhall to JSON and YAML, I think many people would say
+  that the JSON and YAML are so much nicer.
 
 * EDN
 

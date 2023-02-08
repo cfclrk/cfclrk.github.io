@@ -1,0 +1,6 @@
+#+TITLE: Copy Paste
+
+Don't limit yourself to a sequence of copy, paste, copy, paste...
+It's better if you can copy, copy, copy, paste, paste, paste!
+
+Use: =yank-pop=, which comes with Emacs. Bound to =M-y=.

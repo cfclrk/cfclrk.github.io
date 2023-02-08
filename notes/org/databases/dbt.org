@@ -1,0 +1,14 @@
+#+TITLE: dbt
+#+SETUPFILE: ../../setup.org
+
+* Switching adabters
+
+  If you've installed multiple adapters via brew, you need to =brew link= the
+  one you want to use.
+
+  Say you have =dbt-postgres= and =dbt-snowflake= installed. To start using the
+  snowflake adapter:
+
+  #+begin_src sh
+    brew link --overwrite dbt-snowflake
+  #+end_src

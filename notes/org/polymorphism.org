@@ -1,0 +1,16 @@
+#+TITLE: Polymorphism
+#+SETUPFILE: ../setup.org
+
+* Definitions
+
+  #+begin_quote
+  associating an operation name with more than one algorithm
+  #+end_quote
+
+  in [[https://www.braveclojure.com/multimethods-records-protocols/][Clojure for the Brave and True]]. It continues:
+
+  #+begin_quote
+  For example, the algorithm for performing =conj= on a list is different from
+  the one for vectors, but we unify them under the same name to indicate that
+  they implement the same concept...
+  #+end_quote

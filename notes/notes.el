@@ -18,10 +18,8 @@
   ;; Publish org files to HTML files in the cfclrk.com project
   `(("notes"
      :recursive t
-     :base-directory
-     ,(expand-file-name "org" notes/project-directory)
-     :publishing-directory
-     ,(expand-file-name "notes" site/publishing-directory)
+     :base-directory ,(expand-file-name "org" notes/project-directory)
+     :publishing-directory ,(expand-file-name "notes" site/publishing-directory)
      :publishing-function site/org-html-publish-to-html
      :auto-sitemap t
      :sitemap-title "Notes"
@@ -32,8 +30,7 @@
      :section-numbers nil
      :html-preamble site/site-preamble
      :html-self-link-headlines t
-     :html-head
-     "<link rel=\"stylesheet\" type=\"text/css\" href=\"/static/main.css\" />")
+     :html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"/static/main.css\" />")
 
     ;; Copy images to the cfclrk.com project
     ("notes-img"

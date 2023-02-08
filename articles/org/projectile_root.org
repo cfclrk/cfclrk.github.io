@@ -8,6 +8,12 @@
   (-partition num in)
 #+end_src
 
+#+begin_quote
+This is out of date. Projectile has been updated to fix the issue presented
+here. I'm temporarily keeping this as an example for myself about how to
+reproduce problems like this.
+#+end_quote
+
 In monorepos, [[https://docs.projectile.mx/projectile/index.html][Projectile]] determines the project root to be the /monorepo/, not
 the subproject that you're in. In this article I update Projectile to instead
 prioritize the most specific project it can find.

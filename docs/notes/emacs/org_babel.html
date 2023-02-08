@@ -76,11 +76,6 @@ Relevant SO questions:
 <pre class="src src-bash">ls --foo
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-ls: unrecognized option '--foo'
-Try 'ls --help' for more information.
-</pre>
 </div>
 
 <div id="outline-container-org8218ccc" class="outline-4">
@@ -91,15 +86,15 @@ Doesn't work:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"hi"</span>
-<span style="color: #51afef;">exit</span> 1
+<pre class="src src-bash">echo "hi"
+exit 1
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #c678dd;">set</span> -u
-<span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">foo</span>
-<span style="color: #c678dd;">echo</span> <span style="color: #98be65;">"hi"</span>
+<pre class="src src-bash">set -u
+echo $foo
+echo "hi"
 </pre>
 </div>
 
@@ -116,10 +111,6 @@ Instead, this works though:
 <pre class="src src-sh">ssh -T github-work 2&gt;&amp;1 || true
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-Hi chrisc-ironnet! You've successfully authenticated, but GitHub does not provide shell access.
-</pre>
 </div>
 </div>
 </div>
@@ -128,7 +119,7 @@ Hi chrisc-ironnet! You've successfully authenticated, but GitHub does not provid
 <h3 id="org64151bb"><a href="#org64151bb">Python</a></h3>
 <div class="outline-text-3" id="text-org64151bb">
 <div class="org-src-container">
-<pre class="src src-sh">python -c <span style="color: #98be65;">'bar=b"&#1054;&#1060;&#1048;&#1057;"''</span>
+<pre class="src src-sh">python -c 'bar=b"ОФИС"''
 </pre>
 </div>
 </div>
@@ -143,8 +134,8 @@ To print data structure, use <code>:results value pp</code>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="orgb1cc0aa">'<span style="color: #51afef;">(</span><span style="color: #c678dd;">(</span><span style="color: #98be65;">"DeploymentName"</span> <span style="color: #98be65;">"webserver"</span><span style="color: #c678dd;">)</span>
-  <span style="color: #c678dd;">(</span><span style="color: #98be65;">"KeyName"</span> <span style="color: #98be65;">"cfc"</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp" id="orgb1cc0aa">'(("DeploymentName" "webserver")
+  ("KeyName" "cfc"))
 </pre>
 </div>
 
@@ -152,11 +143,6 @@ To print data structure, use <code>:results value pp</code>
 <pre class="src src-emacs-lisp">Params
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-(("DeploymentName" "webserver")
- ("KeyName" "cfc"))
-</pre>
 </div>
 </div>
 
@@ -167,7 +153,7 @@ To print data structure, use <code>:results value pp</code>
 <div id="outline-container-org8eab29b" class="outline-3">
 <h3 id="org8eab29b"><a href="#org8eab29b">Single Hop</a></h3>
 <div class="outline-text-3" id="text-org8eab29b">
-<pre class="example" id="org388818f">
+<pre class="example" id="orgcada7b3">
 :dir /ssh:ec2-user@1.2.3.4:/
 </pre>
 </div>
@@ -176,7 +162,7 @@ To print data structure, use <code>:results value pp</code>
 <div id="outline-container-orgcb9f87c" class="outline-3">
 <h3 id="orgcb9f87c"><a href="#orgcb9f87c">Double-Hop (Use a Bastion)</a></h3>
 <div class="outline-text-3" id="text-orgcb9f87c">
-<pre class="example" id="org2a8b913">
+<pre class="example" id="orgbf7d732">
 :dir /ssh:ec2-user@1.2.3.4|ssh:ec2-user@10.192.1.2:/
 </pre>
 </div>
@@ -191,7 +177,7 @@ This leverages my <code>host</code> function.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #51afef;">(</span>copy-file MyFile <span style="color: #c678dd;">(</span>host <span style="color: #98be65;">"ec2-user"</span> <span style="color: #98be65;">"/tmp/my_file.txt"</span> 'sudo<span style="color: #c678dd;">)</span> t<span style="color: #51afef;">)</span>
+<pre class="src src-elisp">(copy-file MyFile (host "ec2-user" "/tmp/my_file.txt" 'sudo) t)
 </pre>
 </div>
 </div>
@@ -206,14 +192,14 @@ some kind of animal!
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">defun</span> <span style="color: #c678dd;">host</span> <span style="color: #c678dd;">(</span>user ip path <span style="color: #ECBE7B;">&amp;optional</span> sudo<span style="color: #c678dd;">)</span>
-  <span style="color: #83898d;">"Return a TRAMP string for SSHing to a remote host.</span>
-<span style="color: #83898d;">USER is a user name on the remote host IP. PATH is the path on</span>
-<span style="color: #83898d;">the remote host at which to execute the source block. If SUDO is</span>
-<span style="color: #83898d;">non-nil, use sudo on the remote host."</span>
-  <span style="color: #c678dd;">(</span><span style="color: #51afef;">if</span> sudo
-      <span style="color: #98be65;">(</span><span style="color: #51afef;">s-lex-format</span> <span style="color: #98be65;">"/ssh:${user}@${ip}|sudo:${ip}:${path}"</span><span style="color: #98be65;">)</span>
-    <span style="color: #98be65;">(</span><span style="color: #51afef;">s-lex-format</span> <span style="color: #98be65;">"/ssh:${user}@${ip}:${path}"</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp">(defun host (user ip path &amp;optional sudo)
+  "Return a TRAMP string for SSHing to a remote host.
+USER is a user name on the remote host IP. PATH is the path on
+the remote host at which to execute the source block. If SUDO is
+non-nil, use sudo on the remote host."
+  (if sudo
+      (s-lex-format "/ssh:${user}@${ip}|sudo:${ip}:${path}")
+    (s-lex-format "/ssh:${user}@${ip}:${path}")))
 </pre>
 </div>
 
@@ -221,9 +207,10 @@ some kind of animal!
 Then set variables at the top of a file, and use something like:
 </p>
 
-<pre class="example" id="org75f35ea">
-#+begin_src bash :dir (host (getenv "HOST") (getenv "USER") "/home/ec2-user")
-  pwd
+<pre class="example" id="org4054ce5">
+#+header: :dir (host (getenv "HOST") (getenv "USER") "/home/ec2-user")
+#+begin_src bash
+ pwd
 #+end_src
 </pre>
 </div>

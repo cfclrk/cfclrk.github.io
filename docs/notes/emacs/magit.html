@@ -33,11 +33,16 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orge04b9cc">Diff a PR</a></li>
+<li><a href="#orge04b9cc">Diff a PR</a>
+<ul>
+<li><a href="#orga613345">Using forge</a></li>
+<li><a href="#org749f1e0">Using branch names without checking out</a></li>
+<li><a href="#orgca07890">Using current branch</a></li>
+</ul>
+</li>
 <li><a href="#orgcbdca77">Rebase and move branch pointers</a></li>
-<li><a href="#org2ebc0e7">View File History</a></li>
-<li><a href="#org2ff0eaf">Previous Version of File</a></li>
-<li><a href="#org7b005b5">View PR Diff</a></li>
+<li><a href="#org77f9955">View file history</a></li>
+<li><a href="#org5c07323">View previous version of a file</a></li>
 <li><a href="#org53e3248">Visit File from Diff</a></li>
 <li><a href="#orga5cf761">View Current and Previous File Version from Diff</a></li>
 <li><a href="#org9ef3ed8">Cherry pick</a></li>
@@ -48,8 +53,12 @@
 <div id="outline-container-orge04b9cc" class="outline-2">
 <h2 id="orge04b9cc"><a href="#orge04b9cc">Diff a PR</a></h2>
 <div class="outline-text-2" id="text-orge04b9cc">
+</div>
+<div id="outline-container-orga613345" class="outline-3">
+<h3 id="orga613345"><a href="#orga613345">Using forge</a></h3>
+<div class="outline-text-3" id="text-orga613345">
 <p>
-From the <i>status page</i>:
+From the <i>status buffer</i> (not the View Topic buffer!):
 </p>
 
 <ul class="org-ul">
@@ -59,14 +68,55 @@ From the <i>status page</i>:
 </ul>
 
 <p>
-This doesn't work if you're actually visiting the PR topic (i.e. you hit Enter
-on the PR listing and are now in a buffer with a name like <code>*forge: repo
-  #123*</code>).
+This will do a between <code>origin/main...refs/pullreqs/&lt;PR number&gt;</code>.
 </p>
 
 <p>
-This runs a diff between <code>origin/dev...refs/pullreqs/&lt;PR number&gt;</code>.
+This doesn't work if you're actually visiting the PR topic (i.e. you hit Enter
+on the PR listing and are now in a View Topic buffer).
 </p>
+
+<p>
+I <b>really</b> want the diff-dwim to work from the View Topic buffer - is there
+some way to get that working?
+</p>
+</div>
+</div>
+
+<div id="outline-container-org749f1e0" class="outline-3">
+<h3 id="org749f1e0"><a href="#org749f1e0">Using branch names without checking out</a></h3>
+<div class="outline-text-3" id="text-org749f1e0">
+<p>
+From any magit buffer:
+</p>
+
+<ul class="org-ul">
+<li><code>d r</code> to diff a range</li>
+<li>type in: <code>origin/main...pullreqs/&lt;PR number&gt;</code></li>
+</ul>
+
+<p>
+It would be nice if this was the default <code>dwim</code> behavior in a PR topic
+buffer.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgca07890" class="outline-3">
+<h3 id="orgca07890"><a href="#orgca07890">Using current branch</a></h3>
+<div class="outline-text-3" id="text-orgca07890">
+<ul class="org-ul">
+<li>Check out the PR (if you are using forge, you can do <code>b f</code>)</li>
+<li><code>d r</code> (magit-diff-range)</li>
+<li>Type in: <code>main...</code> (or <code>master...</code>)</li>
+</ul>
+
+<p>
+See <a href="https://stackoverflow.com/a/20809283/340613">this StackOverflow</a> for an explanation of the <code>git diff main...</code> command.
+It's basically the "do that thing that I obviosly always want to do" command,
+which is to diff HEAD with <code>main</code>, ignoring extra stuff on <code>main</code>.
+</p>
+</div>
 </div>
 </div>
 
@@ -90,18 +140,18 @@ still be at previous SHAs.
 </div>
 </div>
 
-<div id="outline-container-org2ebc0e7" class="outline-2">
-<h2 id="org2ebc0e7"><a href="#org2ebc0e7">View File History</a></h2>
-<div class="outline-text-2" id="text-org2ebc0e7">
+<div id="outline-container-org77f9955" class="outline-2">
+<h2 id="org77f9955"><a href="#org77f9955">View file history</a></h2>
+<div class="outline-text-2" id="text-org77f9955">
 <ul class="org-ul">
 <li><code>M-x magit-log-buffer-file</code></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org2ff0eaf" class="outline-2">
-<h2 id="org2ff0eaf"><a href="#org2ff0eaf">Previous Version of File</a></h2>
-<div class="outline-text-2" id="text-org2ff0eaf">
+<div id="outline-container-org5c07323" class="outline-2">
+<h2 id="org5c07323"><a href="#org5c07323">View previous version of a file</a></h2>
+<div class="outline-text-2" id="text-org5c07323">
 <p>
 The function <code>magit-find-file</code> is to "View FILE from REV". Running <code>M-x
   magit-find-file</code> will first prompt for a revision (completes with a list of
@@ -120,24 +170,6 @@ From a specific file:
 </div>
 </div>
 
-<div id="outline-container-org7b005b5" class="outline-2">
-<h2 id="org7b005b5"><a href="#org7b005b5">View PR Diff</a></h2>
-<div class="outline-text-2" id="text-org7b005b5">
-<p>
-Requires <a href="https://github.com/magit/forge">forge</a>.
-</p>
-
-<ul class="org-ul">
-<li>Check out the PR (<code>b</code> <code>y</code>)</li>
-<li>From main magit buffer, navigate to the PR and visit it with <code>&lt;enter&gt;</code>.</li>
-<li>With cursor at beginning of buffer, <code>d</code> to open the diff menu, then <code>d</code> to
-"do what I mean". If this pops up a menu of branches, select the branch you
-want to diff against (i.e. the branch the PR will be merged into, probably
-<code>main</code>).</li>
-</ul>
-</div>
-</div>
-
 <div id="outline-container-org53e3248" class="outline-2">
 <h2 id="org53e3248"><a href="#org53e3248">Visit File from Diff</a></h2>
 <div class="outline-text-2" id="text-org53e3248">
@@ -147,10 +179,10 @@ another window:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span><span style="color: #51afef;">use-package</span> <span style="color: #a9a1e1;">magit</span>
-  <span style="color: #c678dd;">:bind</span>
-  <span style="color: #c678dd;">(</span><span style="color: #c678dd;">:map</span> magit-diff-mode-map
-        <span style="color: #98be65;">(</span><span style="color: #98be65;">"M-&lt;return&gt;"</span> . magit-diff-visit-file-other-window<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp">(use-package magit
+  :bind
+  (:map magit-diff-mode-map
+        ("M-&lt;return&gt;" . magit-diff-visit-file-other-window)))
 </pre>
 </div>
 </div>

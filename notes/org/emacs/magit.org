@@ -3,17 +3,41 @@
 
 * Diff a PR
 
-  From the /status page/:
+** Using forge
+
+  From the /status buffer/ (not the View Topic buffer!):
 
   - =' f f= to fetch all topics
   - =n= down to the PR listing
   - =d d= (diff dwim) on the PR listing
 
-  This doesn't work if you're actually visiting the PR topic (i.e. you hit Enter
-  on the PR listing and are now in a buffer with a name like =*forge: repo
-  #123*=).
+  This will do a between =origin/main...refs/pullreqs/<PR number>=.
 
-  This runs a diff between =origin/dev...refs/pullreqs/<PR number>=.
+  This doesn't work if you're actually visiting the PR topic (i.e. you hit Enter
+  on the PR listing and are now in a View Topic buffer).
+
+  I *really* want the diff-dwim to work from the View Topic buffer - is there
+  some way to get that working?
+
+** Using branch names without checking out
+
+   From any magit buffer:
+
+   - =d r= to diff a range
+   - type in: =origin/main...pullreqs/<PR number>=
+
+   It would be nice if this was the default =dwim= behavior in a PR topic
+   buffer.
+
+** Using current branch
+
+   - Check out the PR (if you are using forge, you can do =b f=)
+   - =d r= (magit-diff-range)
+   - Type in: =main...= (or =master...=)
+
+   See [[https://stackoverflow.com/a/20809283/340613][this StackOverflow]] for an explanation of the =git diff main...= command.
+   It's basically the "do that thing that I obviosly always want to do" command,
+   which is to diff HEAD with =main=, ignoring extra stuff on =main=.
 
 * Rebase and move branch pointers
 
@@ -26,11 +50,11 @@
     - move cursor to commit where branch should be moved to
     - =x= to reset to this commit
 
-* View File History
+* View file history
 
   - =M-x magit-log-buffer-file=
 
-* Previous Version of File
+* View previous version of a file
 
   The function =magit-find-file= is to "View FILE from REV". Running =M-x
   magit-find-file= will first prompt for a revision (completes with a list of
@@ -41,17 +65,6 @@
   - =M-x magit-log-buffer-file=
   - Move to the commit you want
   - =M-x magit-find-file=
-
-* View PR Diff
-
-  Requires [[https://github.com/magit/forge][forge]].
-
-  - Check out the PR (=b= =y=)
-  - From main magit buffer, navigate to the PR and visit it with =<enter>=.
-  - With cursor at beginning of buffer, =d= to open the diff menu, then =d= to
-    "do what I mean". If this pops up a menu of branches, select the branch you
-    want to diff against (i.e. the branch the PR will be merged into, probably
-    =main=).
 
 * Visit File from Diff
 

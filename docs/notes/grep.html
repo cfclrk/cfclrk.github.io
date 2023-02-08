@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Articles</title>
+<title>Grep</title>
 <meta name="generator" content="Org Mode" />
 <link rel="stylesheet" type="text/css" href="/static/main.css" />
 </head>
@@ -28,12 +28,38 @@
 </div>
 <div id="content" class="content">
 <header>
-<h1 class="title">Articles</h1>
-</header><ul class="org-ul">
-<li><a href="projectile_root.html">Emacs Projectile in a Monorepo</a></li>
-<li><a href="github_identities.html">Using Multiple GitHub Accounts</a></li>
-<li><a href="home.html">home</a></li>
+<h1 class="title">Grep</h1>
+</header><nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orge88c95f">rg string in file type</a></li>
 </ul>
+</div>
+</nav>
+
+<div id="outline-container-orge88c95f" class="outline-2">
+<h2 id="orge88c95f"><a href="#orge88c95f">rg string in file type</a></h2>
+<div class="outline-text-2" id="text-orge88c95f">
+<p>
+Search for <code>foo</code> in all terraform files.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">rg 'foo' -g '**/*.tf'
+</pre>
+</div>
+
+<p>
+In a directory:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">rg 'foo' -g '*.tf' -- in/a/dir
+</pre>
+</div>
+</div>
+</div>
 </div>
 </body>
 </html>

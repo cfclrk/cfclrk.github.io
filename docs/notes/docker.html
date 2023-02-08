@@ -131,10 +131,10 @@ to copy the files.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">docker run --rm -it <span style="color: #98be65;">\</span>
-       --name sshtest <span style="color: #98be65;">\</span>
-       --mount <span style="color: #dcaeea;">type</span>=bind,<span style="color: #dcaeea;">source</span>=/Users/chrisc/.ssh,<span style="color: #dcaeea;">target</span>=/root/.ssh <span style="color: #98be65;">\</span>
-       $<span style="color: #dcaeea;">ImageName</span> <span style="color: #98be65;">\</span>
+<pre class="src src-sh">docker run --rm -it \
+       --name sshtest \
+       --mount type=bind,source=/Users/chrisc/.ssh,target=/root/.ssh \
+       $ImageName \
        /bin/bash
 </pre>
 </div>
@@ -145,7 +145,7 @@ to copy the files.
 <h3 id="orgc5dd26b"><a href="#orgc5dd26b">In container, start ssh-agent</a></h3>
 <div class="outline-text-3" id="text-orgc5dd26b">
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #c678dd;">eval</span> $(ssh-agent -s)
+<pre class="src src-sh">eval $(ssh-agent -s)
 </pre>
 </div>
 </div>
@@ -178,11 +178,11 @@ Run and mount current dir.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #dcaeea;">PROJECT_NAME</span>=$(basename $(<span style="color: #c678dd;">pwd</span>))
+<pre class="src src-bash">PROJECT_NAME=$(basename $(pwd))
 
-docker run --rm <span style="color: #98be65;">\</span>
-       --name $<span style="color: #dcaeea;">PROJECT_NAME</span> <span style="color: #98be65;">\</span>
-       --mount <span style="color: #dcaeea;">type</span>=bind,<span style="color: #dcaeea;">source</span>=$(<span style="color: #c678dd;">pwd</span>),<span style="color: #dcaeea;">target</span>=/$<span style="color: #dcaeea;">PROJECT_NAME</span> <span style="color: #98be65;">\</span>
+docker run --rm \
+       --name $PROJECT_NAME \
+       --mount type=bind,source=$(pwd),target=/$PROJECT_NAME \
        python:3.6.5-slim-stretch /bin/bash
 </pre>
 </div>
@@ -208,31 +208,17 @@ Run golang container for interactive use
 <h2 id="org9f9f552"><a href="#org9f9f552">Rate Limiting</a></h2>
 <div class="outline-text-2" id="text-org9f9f552">
 <div class="org-src-container">
-<pre class="src src-sh" id="orgf109636">curl <span style="color: #98be65;">"https://auth.docker.io/token?service=registry.docker.io&amp;scope=repository:ratelimitpreview/test:pull"</span> <span style="color: #98be65;">\</span>
+<pre class="src src-sh" id="orgf109636">curl "https://auth.docker.io/token?service=registry.docker.io&amp;scope=repository:ratelimitpreview/test:pull" \
     | jq -r .token
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-sh">curl --head <span style="color: #98be65;">\</span>
-     -H <span style="color: #98be65;">"Authorization: Bearer $TOKEN"</span> <span style="color: #98be65;">\</span>
+<pre class="src src-sh">curl --head \
+     -H "Authorization: Bearer $TOKEN" \
      https://registry-1.docker.io/v2/ratelimitpreview/test/manifests/latest
 </pre>
 </div>
-
-<pre class="example" id="org2ab4ea0">
-HTTP/1.1 200 OK
-Content-Length: 2782
-Content-Type: application/vnd.docker.distribution.manifest.v1+prettyjws
-Docker-Content-Digest: sha256:767a3815c34823b355bed31760d5fa3daca0aec2ce15b217c9cd83229e0e2020
-Docker-Distribution-Api-Version: registry/2.0
-Etag: "sha256:767a3815c34823b355bed31760d5fa3daca0aec2ce15b217c9cd83229e0e2020"
-Date: Mon, 07 Dec 2020 21:19:08 GMT
-Strict-Transport-Security: max-age=31536000
-RateLimit-Limit: 100;w=21600
-RateLimit-Remaining: 100;w=21600
-
-</pre>
 </div>
 </div>
 </div>

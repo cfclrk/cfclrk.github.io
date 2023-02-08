@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Articles</title>
+<title>Malli</title>
 <meta name="generator" content="Org Mode" />
 <link rel="stylesheet" type="text/css" href="/static/main.css" />
 </head>
@@ -28,12 +28,17 @@
 </div>
 <div id="content" class="content">
 <header>
-<h1 class="title">Articles</h1>
-</header><ul class="org-ul">
-<li><a href="projectile_root.html">Emacs Projectile in a Monorepo</a></li>
-<li><a href="github_identities.html">Using Multiple GitHub Accounts</a></li>
-<li><a href="home.html">home</a></li>
-</ul>
+<h1 class="title">Malli</h1>
+</header><div class="org-src-container">
+<pre class="src src-clojure">(require '[malli.core :as m])
+(require '[malli.transform :as mt])
+
+(m/decode
+    :uuid
+    "317fd4db-610f-439c-b71c-fddb59a1e8dd"
+    mt/json-transformer)
+</pre>
+</div>
 </div>
 </body>
 </html>

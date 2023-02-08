@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>&lrm;</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org343a36c">Formatting XML</a></li>
+</ul>
+</div>
+</nav>
+<div id="outline-container-org343a36c" class="outline-2">
+<h2 id="org343a36c"><a href="#org343a36c">Formatting XML</a></h2>
+<div class="outline-text-2" id="text-org343a36c">
+<p>
+There's a built-in function, <code>sgml-pretty-print</code>, but it's really slow. When
+running it on some large XML files, it's locked up Emacs for <b>minutes</b> for me.
+Running xmlstarlet on the same file was instantaneous.
+</p>
+
+<p>
+Install xmlstarlet:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">brew install xmlstarlet
+</pre>
+</div>
+
+<p>
+Navigate to the file in a dired buffer, and hit <code>!</code> (<code>dired-do-shell-command</code>)
+to run a shell command on the file. Type: <code>xmlstarlet ed --inplace</code>.
+</p>
+</div>
+</div>
+</div>
+</body>
+</html>

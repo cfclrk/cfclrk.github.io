@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Domain Modeling</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Domain Modeling</h1>
+</header><nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org44cbfab">Latest values</a></li>
+<li><a href="#org678d446">Content Hashing</a></li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-org44cbfab" class="outline-2">
+<h2 id="org44cbfab"><a href="#org44cbfab">Latest values</a></h2>
+<div class="outline-text-2" id="text-org44cbfab">
+<p>
+Any time you use the <i>latest</i> value of something, then adding a new value is
+side-effecting.
+</p>
+
+<p>
+A more functional approach is for processes to use a specific value.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org678d446" class="outline-2">
+<h2 id="org678d446"><a href="#org678d446">Content Hashing</a></h2>
+<div class="outline-text-2" id="text-org678d446">
+<p>
+One pattern for storing data is <b>content hashing</b>. The idea is that for every
+value you store in a db, you also store a hash of the content. What does this
+get you?
+</p>
+
+<ol class="org-ol">
+<li>Consistency - Say service A requests something from service B. Service B
+generates a response and stores the response (along with the hash) in a
+service-local db. Later, Service ZZZ needs to do some work using the same
+data. Service ZZZ calls Service B and is like: "Yo, I heard about this
+really cool response with hash <code>abcd1234</code> you gave to service A. Can you
+hook me up?" Service B is like: here ya go.</li>
+
+<li>Deduplication - A service may be called many times for the same exact
+thing.</li>
+</ol>
+
+<p>
+If two objects have the same ID (hash), then they are the same value.
+</p>
+
+<p>
+The application can be updated, and the mechanism for producing responses
+might change a little bit, but you still preserve the deduplication thing.
+When a new response has the same content as an old response, the old response
+will be returned.
+</p>
+
+<p>
+The problem:
+</p>
+
+<p>
+Without content hashing: I have ID 3, you have ID 5, turns out they are
+the same (in terms of content). But their IDs, being different, suggest they
+might be different.
+</p>
+
+<p>
+Another solution: Use a redis cache, bust the cache each time you deploy.
+However, you'll end up producing duplicates every time the service is
+deployed, so not a general solution.
+</p>
+
+<p>
+Cons:
+</p>
+
+<ul class="org-ul">
+<li>You still have to compute the response for every request. Without layering
+on more middleware to this solution, this approach does not save any CPU
+cycles.</li>
+</ul>
+</div>
+</div>
+</div>
+</body>
+</html>

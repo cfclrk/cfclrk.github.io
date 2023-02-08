@@ -8,18 +8,18 @@
   #+NAME: env
   | Env Var            | Value     |
   |--------------------+-----------|
-  | AWS_PROFILE        | dev       |
+  | AWS_PROFILE        | prod      |
   | AWS_DEFAULT_REGION | us-east-1 |
 
   #+begin_src emacs-lisp :var env=env
-    (setenv-file-export-pairs env)
+    (env-set-pairs env)
   #+end_src
 
 * Account
 
   Account number:
 
-  #+NAME: Account
+  #+name: Account
   #+begin_src sh
     aws sts get-caller-identity \
         --query 'Account' \
@@ -56,7 +56,7 @@
 
 * Regions
 
-** All Regions in Partition
+** All regions in partition
 
    #+NAME: AllRegions
    #+begin_src sh
@@ -96,7 +96,7 @@
    : 21
    : 21
 
-** All Regions in All Partitions
+** All regions in all partitions
 
    Should be in the botocore data files. Also, we can pull them from the IpRanges
    document. You have to decide whether "GLOBAL" is a "region" in your situation.
@@ -107,7 +107,7 @@
          | sort | uniq
    #+end_src
 
-** Run a Command in All Regions
+** Run a command in all regions
 
 *** Linear
 
@@ -187,7 +187,7 @@
 
 * ACM
 
-** List
+** list-certificates
 
    #+begin_src sh
      aws acm list-certificates \
@@ -195,35 +195,31 @@
          | jq '.CertificateSummaryList[]'
    #+end_src
 
-** Describe
+** describe-certificate
 
-   #+begin_src sh :var CertArn=""
+   #+begin_src sh :var cert_arn=""
      aws acm describe-certificate \
-         --certificate-arn $CertArn
+         --certificate-arn $cert_arn
    #+end_src
 
-** Get Certificate
+** get-certificate
 
-   #+begin_src sh :var CertificateArn="" :results output
+   #+begin_src sh :var cert_arn=""
      aws acm get-certificate \
-         --certificate-arn $CertificateArn
+         --certificate-arn $cert_arn
    #+end_src
 
-** Get Certificate PEM File
+** Get certificate PEM File
 
-   #+begin_src sh :var CertificateArn="" :results output
+   #+begin_src sh :var cert_arn=""
      aws acm get-certificate \
-         --certificate-arn $CertificateArn \
-         | jq -r '.Certificate' > route_guide_cert.pem
-   #+end_src
-
-   #+begin_src sh
-     cat appliance_cert.pem
+         --certificate-arn $cert_arn \
+         | jq -r '.Certificate' > cert.pem
    #+end_src
 
 * API Gateway V2
 
-** List APIs
+** get-apis
 
    #+begin_src sh
      aws apigatewayv2 get-apis \
@@ -341,12 +337,19 @@
 
 * CodeDeploy
 
-
 ** list-deployments
 
-  #+begin_src sh
-    aws deploy list-deployments --application-name saus
-  #+end_src
+   #+begin_src sh
+     aws deploy list-deployments \
+         --application-name $app
+   #+end_src
+
+** list-tags-for-resource
+
+   #+begin_src sh
+     aws deploy list-tags-for-resource \
+         --resource-arn ""
+   #+end_src
 
 * DynamoDB
 
@@ -490,16 +493,16 @@
 
    Print the Zone Name and Zone ID for each AZ in a region:
 
-  #+begin_src sh
-    aws ec2 describe-availability-zones \
-        | jq -c '.AvailabilityZones[]
-                 | {"Name": .ZoneName, "Id": .ZoneId}'
-  #+end_src
+   #+begin_src sh
+     aws ec2 describe-availability-zones \
+         | jq -c '.AvailabilityZones[]
+                  | {"Name": .ZoneName, "Id": .ZoneId}'
+   #+end_src
 
-  #+RESULTS:
-  : {"Name":"us-east-2a","Id":"use2-az1"}
-  : {"Name":"us-east-2b","Id":"use2-az2"}
-  : {"Name":"us-east-2c","Id":"use2-az3"}
+   #+RESULTS:
+   : {"Name":"us-east-2a","Id":"use2-az1"}
+   : {"Name":"us-east-2b","Id":"use2-az2"}
+   : {"Name":"us-east-2c","Id":"use2-az3"}
 
 * EC2 KeyPairs
 
@@ -721,17 +724,101 @@
             $ecr/$name:$tag
    #+end_src
 
+** describe-registry
+
+   #+begin_src sh
+     aws ecr describe-registry
+   #+end_src
+
+** describe-repositories
+
+   #+begin_src sh
+     aws ecr describe-repositories \
+         --registry-id "<id>"
+   #+end_src
+
+** list-tags-for-resource
+
+   The ARN is like =arn:aws:ecr:us-east-1:<account-num>:repository/<repo-name>=.
+
+   #+header: :var arn=""
+   #+begin_src sh
+     aws ecr list-tags-for-resource \
+         --resource-arn "$arn"
+   #+end_src
+
 * ECS
 
   Fix a CloudFormation deployment where an ECS service fails to stabilize. Taken
   from [[https://aws.amazon.com/premiumsupport/knowledge-center/cloudformation-ecs-service-stabilize/][this]] AWS blog post. Just updates the number of ECS service tasks to 0.
 
+  #+header: :var cluster="my-cluster"
+  #+header: :var service="my-service"
   #+begin_src sh
     aws ecs update-service \
-        --cluster $ECS_CLUSTER_NAME \
-        --service $ECS_SERVICE_NAME \
+        --cluster $cluster \
+        --service $service \
         --desired-count 0
   #+end_src
+
+** list-clusters
+
+   #+begin_src sh
+     aws ecs list-clusters \
+         | jq '.clusterArns[]'
+   #+end_src
+
+** describe-clusters
+
+   #+header: :var cluster="prod-zone-service-cluster"
+   #+begin_src sh
+     aws ecs describe-clusters \
+         --clusters $cluster \
+         | jq '.clusters[]'
+   #+end_src
+
+** describe-services
+
+   #+header: :var cluster="prod-zone-service-cluster"
+   #+header: :var service="service-prod"
+   #+begin_src sh
+     aws ecs describe-services \
+         --cluster $cluster \
+         --services $service \
+         | jq '.services[]'
+   #+end_src
+
+** describe-task-definition
+
+   #+header: :var task="sevice-prod:132"
+   #+begin_src sh
+     aws ecs describe-task-definition \
+         --task-definition $task \
+         | jq '.taskDefinition.containerDefinitions[]'
+   #+end_src
+
+** descibe-task-sets
+
+   #+name: TaskSet
+   #+header: :var cluster="prod-zone-service-cluster"
+   #+header: :var service="service-prod"
+   #+begin_src sh
+     aws ecs describe-services \
+         --cluster $cluster \
+         --services $service \
+         | jq -r '.services[].taskSets[].id'
+   #+end_src
+
+   #+header: :var cluster="prod-zone-service-cluster"
+   #+header: :var service="service-prod"
+   #+header: :var task_set=TaskSet
+   #+begin_src sh
+     aws ecs describe-task-sets \
+         --cluster $cluster \
+         --service $service \
+         --task-sets $task_set \
+         | jq '.taskSets[]'
+   #+end_src
 
 * EKS
 
@@ -1027,19 +1114,31 @@
 
 ** describe-db-instances
 
+   #+header: :var db_name="foo-dev"
    #+begin_src sh
      aws rds describe-db-instances \
-         --db-instance-identifier "my-service-dev" \
-         | jq 'DBInstances[]'
+         --db-instance-identifier "$db_name" \
+         | jq '.DBInstances[]'
+   #+end_src
+
+** modify-db-instance
+
+   Run this command to apply pending maintenance:
+
+   #+header: :var db_name="foo-dev"
+   #+begin_src sh
+     aws rds modify-db-instance \
+         --db-instance-identifier "$db_name" \
+         --apply-immediately
    #+end_src
 
 ** describe-db-engine-versions
 
-  #+begin_src sh
-    aws rds describe-db-engine-versions \
-        --engine "postgres" \
-        | jq -r '.DBEngineVersions[].EngineVersion'
-  #+end_src
+   #+begin_src sh
+     aws rds describe-db-engine-versions \
+         --engine "postgres" \
+         --filters 'Key=status,Values=deprecated'
+   #+end_src
 
 ** pending maintenance actions for a DB
 
@@ -1047,6 +1146,50 @@
      aws rds describe-pending-maintenance-actions \
          | jq '.PendingMaintenanceActions[]
                | select(.ResourceIdentifier=="$DB_ARN")'
+   #+end_src
+
+** create-db-snapshot
+
+   #+header: :var snap_id="my-snap-name"
+   #+begin_src sh
+     aws rds create-db-snapshot \
+         --db-snapshot-identifier "$snap_id" \
+         --db-instance-identifier work-number-dev
+   #+end_src
+
+   Check whether a snapshot exists yet:
+
+   #+header: :var snap_id="my-snap-name"
+   #+header: :var db_name="foo-dev"
+   #+begin_src sh
+     aws rds describe-db-snapshots \
+         --db-snapshot-identifier "$snap_id" \
+         --db-instance-identifier "$db_name" \
+         | jq '.DBSnapshots[].OriginalSnapshotCreateTime'
+   #+end_src
+
+** create-parameter-group
+
+   #+begin_src sh
+     aws rds create-db-parameter-group \
+         --db-parameter-group-name "cclark-test" \
+         --db-parameter-group-family "postgres11" \
+         --description "cclark test group"
+   #+end_src
+
+   #+begin_src sh
+     aws rds modify-db-parameter-group \
+         --db-parameter-group-name "cclark-test" \
+         --parameters "ParameterName='max_slot_wal_keep_size',ParameterValue=4000,ApplyMethod=immediate"
+   #+end_src
+
+** describe-parameter-group
+
+   #+begin_src sh
+     aws rds describe-db-parameters \
+         --db-parameter-group-name "cclark-test" \
+         | jq '.Parameters[]
+               | select(.ParameterName | contains("wal_"))'
    #+end_src
 
 * Route53
@@ -1072,6 +1215,14 @@
          --hosted-zone-id $hostedZoneId \
          | jq '.ResourceRecordSets[]'
    #+end_src
+
+* SageMaker
+
+** list-models
+
+  #+begin_src sh
+    aws sagemaker list-models | jq '.Models[]'
+  #+end_src
 
 * SecretsManager
 
@@ -1122,20 +1273,32 @@
 
 * Service Quotas
 
-** Get Quota
+** Get all service quotas
 
    #+begin_src sh :results output
      aws service-quotas list-service-quotas \
-         --service-code firehose \
-         | jq '.Quotas[] | {QuotaName, Value}'
+         --service-code rds \
+         | jq -c '.Quotas[] | {Value, QuotaName}'
    #+end_src
 
-** Get Default Quota
+** Get one quota
 
-   #+begin_src sh :var QuotaCode="L-14BB0BE7"
+   #+begin_src sh
+     aws service-quotas list-service-quotas \
+         --service-code rds \
+         | jq '.Quotas[]
+               | select(.QuotaName == "Parameter groups")'
+   #+end_src
+
+** Get default quota
+
+   Is this actually different from the above? What makes this default?
+
+   #+begin_src sh
      aws service-quotas get-aws-default-service-quota \
          --service-code firehose \
-         --quota-code $QuotaCode
+         --quota-code "L-14BB0BE7" \
+         | jq '.Quota'
    #+end_src
 
 * S3
@@ -1144,6 +1307,18 @@
 
    #+begin_src sh :var BucketName=""
      aws s3api get-bucket-acl --bucket $BucketName
+   #+end_src
+
+** list-buckets
+
+   List buckets that start with the name =$prefix=.
+
+   #+header: :var prefix="foo"
+   #+begin_src sh
+     aws s3api list-buckets \
+         | jq -r --arg prefix $prefix \
+              '.Buckets[]
+               | select(.Name | startswith($prefix)).Name'
    #+end_src
 
 ** Create Bucket
@@ -1203,9 +1378,9 @@
          | jq -r '.Policy' | jq
    #+end_src
 
-** Delete Buckets
+** Clear and delete buckets
 
-   I have functions for this in [[https://github.com/cfclrk/dotfiles/blob/master/dotfiles/.functions.fish][dotfiles/.functions.fish]].
+   To clear a bucket, I have functions for this in [[https://github.com/cfclrk/dotfiles/blob/master/dotfiles/.functions.fish][dotfiles/.functions.fish]].
 
 * SNS
 
@@ -1230,7 +1405,7 @@
    #+name: ReadMessage
    #+header: :var q_url="https://sqs.us-east-1.amazonaws.com/..."
    #+begin_src sh
-     aws --profile prod --region us-east-1 sqs receive-message \
+     aws sqs receive-message \
          --queue-url "$q_url" \
          --attribute-names All \
          --message-attribute-names All \
@@ -1255,9 +1430,19 @@
         --name $name
   #+end_src
 
-* SSO
+* Identity Store (SSO)
 
-** Register Client
+  AWS SSO was renamed to AWS Identity Store.
+
+  - [[https://docs.aws.amazon.com/singlesignon/latest/IdentityStoreAPIReference/welcome.html][Identity Store API Reference]]
+
+    These API operations correspond to the =aws identitystore= commands.
+
+  - [[https://docs.aws.amazon.com/singlesignon/latest/PortalAPIReference/Welcome.html][IAM Idenetity Center Portal API Reference]]
+
+    These API operations correspond to the =aws sso= commands.
+
+** Register client
 
    This command *does not* require AWS credentials. You only need a region.
 
@@ -1280,28 +1465,53 @@
 
 ** Token
 
-   TODO: Need to run aws sso login. Requires block in =~/.aws/config= I think.
-
-   TODO: Look up token file programatically
+   #+begin_src sh
+     aws sso login
+   #+end_src
 
    #+NAME: SsoToken
-   #+headers: :var token_name="64f3a92deadad760a4cbf8386ec4e7e29859da67"
+   #+headers: :var token_name=""
    #+begin_src sh
      token_file=~/.aws/sso/cache/$token_name.json
      cat $token_file | jq -r '.accessToken'
    #+end_src
 
-** List Accounts I Can Access
+** List my accounts
 
-   TODO: SsoToken has a trailing newline!
-
-   #+begin_src sh :var token=SsoToken :results output
-     aws sso list-accounts \
+   #+header: :var token=SsoToken
+   #+begin_src sh :results output
+     aws --region us-east-1 sso list-accounts \
          --access-token $token
    #+end_src
 
-   #+begin_src sh :var token=SsoToken
-     aws sso list-account-roles \
+   #+header: :var account=123456789
+   #+header: :var token=SsoToken
+   #+begin_src sh
+     aws --region us-east-1 sso list-account-roles \
          --access-token $token \
-         --account-id 820416642700
+         --account-id $account
+   #+end_src
+
+** Get credentials
+
+   The jq can be improved. See: https://github.com/aws/aws-cli/issues/5261
+
+   #+header: :var account=123456789
+   #+header: :var token=SsoToken
+   #+header: :var role="tribe_sso_permission_set"
+   #+begin_src sh :results file :file ~/.env/aws_creds
+     creds=$(aws --region us-east-1 sso get-role-credentials \
+                 --role-name $role \
+                 --account-id $account \
+                 --access-token $token)
+
+     access_key=$(echo $creds | jq '.roleCredentials.accessKeyId')
+     secret_key=$(echo $creds | jq '.roleCredentials.secretAccessKey')
+     access_token=$(echo $creds | jq '.roleCredentials.sessionToken')
+
+     echo "AWS_ACCESS_KEY_ID=$access_key"
+     echo "AWS_SECRET_ACCESS_KEY=$secret_key"
+     echo "AWS_SESSION_TOKEN=$access_token"
+     echo "AWS_REGION=us-east-1"
+     echo "AWS_DEFAULT_REGION=us-east-1"
    #+end_src

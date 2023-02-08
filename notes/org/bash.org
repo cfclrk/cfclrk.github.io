@@ -310,6 +310,7 @@
    #+end_src
 
    #+RESULTS:
+   : var is set to ''
 
 ** +
 

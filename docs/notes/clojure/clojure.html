@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Clojure</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">Clojure</h1>
+</header><nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org0102f1a">Unbind all vars in a namespace</a></li>
+<li><a href="#org88f47aa">Installation</a></li>
+<li><a href="#org1d87151">Versions</a>
+<ul>
+<li><a href="#org3f2322c">Clojure version</a></li>
+<li><a href="#org8f4b6b3">Java version</a></li>
+</ul>
+</li>
+<li><a href="#org977c451">Project Creation</a>
+<ul>
+<li><a href="#orgac76b67">Minimal</a></li>
+<li><a href="#org52b34b4">neil</a></li>
+<li><a href="#org7781ae1">My deps-new template</a></li>
+<li><a href="#orgc77279a">deps-new</a></li>
+<li><a href="#org029176e">Leiningen</a></li>
+</ul>
+</li>
+<li><a href="#org1a9d2ea">clj vs clojure</a></li>
+<li><a href="#org9320ab6">Install a package</a>
+<ul>
+<li><a href="#org1621d7b">Find package versions</a></li>
+<li><a href="#org3beb7ce">Start clj with package</a></li>
+</ul>
+</li>
+<li><a href="#orge7a64e0">Tools</a>
+<ul>
+<li><a href="#org35ce06a">Where do tools live?</a></li>
+</ul>
+</li>
+<li><a href="#org5dd0950">Code Format</a>
+<ul>
+<li><a href="#org2f777ec">cljstyle</a></li>
+<li><a href="#org3a1d963">cljfmt</a></li>
+</ul>
+</li>
+<li><a href="#org5855908">Classpath</a></li>
+<li><a href="#orgfcb0d14">Cmd Execution and REPL</a></li>
+<li><a href="#org492c07d">Emacs Cider</a>
+<ul>
+<li><a href="#org60e57d7">Tips</a></li>
+<li><a href="#org41bf729">Doc</a></li>
+</ul>
+</li>
+<li><a href="#org34e58de">Quickies</a>
+<ul>
+<li><a href="#org522e11d">Print environment variables</a></li>
+<li><a href="#orgea1bbdc">Read and write a binary file</a></li>
+<li><a href="#org4c205d9">Org mode</a></li>
+</ul>
+</li>
+<li><a href="#org60a22f1">core.async</a></li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-org0102f1a" class="outline-2">
+<h2 id="org0102f1a"><a href="#org0102f1a">Unbind all vars in a namespace</a></h2>
+<div class="outline-text-2" id="text-org0102f1a">
+<div class="org-src-container">
+<pre class="src src-clojure">(doseq [[sym var] (ns-publics *ns*)]
+  (ns-unmap *ns* sym))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org88f47aa" class="outline-2">
+<h2 id="org88f47aa"><a href="#org88f47aa">Installation</a></h2>
+<div class="outline-text-2" id="text-org88f47aa">
+<p>
+The clojure site <a href="https://clojure.org/guides/getting_started#_clojure_installer_and_cli_tools">suggests</a> using the following:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">brew install clojure/tools/clojure
+</pre>
+</div>
+
+<p>
+There is also a slightly different <a href="https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/clojure.rb">formula in homebrew core</a>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">brew install clojure
+</pre>
+</div>
+
+<p>
+This one <code>depends_on "openjdk"</code>, so it will also install the latest <code>openjdk</code>
+homebrew package. The first method is preferred, which requires you to set up
+and configure a JDK yourself.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1d87151" class="outline-2">
+<h2 id="org1d87151"><a href="#org1d87151">Versions</a></h2>
+<div class="outline-text-2" id="text-org1d87151">
+</div>
+<div id="outline-container-org3f2322c" class="outline-3">
+<h3 id="org3f2322c"><a href="#org3f2322c">Clojure version</a></h3>
+<div class="outline-text-3" id="text-org3f2322c">
+<div class="org-src-container">
+<pre class="src src-clojure">*clojure-version*
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8f4b6b3" class="outline-3">
+<h3 id="org8f4b6b3"><a href="#org8f4b6b3">Java version</a></h3>
+<div class="outline-text-3" id="text-org8f4b6b3">
+<div class="org-src-container">
+<pre class="src src-clojure">(System/getProperty "java.version")
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org977c451" class="outline-2">
+<h2 id="org977c451"><a href="#org977c451">Project Creation</a></h2>
+<div class="outline-text-2" id="text-org977c451">
+</div>
+<div id="outline-container-orgac76b67" class="outline-3">
+<h3 id="orgac76b67"><a href="#orgac76b67">Minimal</a></h3>
+<div class="outline-text-3" id="text-orgac76b67">
+<p>
+All you need is a project directory with a <code>deps.edn</code> and a <code>src/core.clj</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">(require '[clojure.java.io])
+
+(def deps
+  "{:deps
+ {org.clojure/clojure {:mvn/version \"RELEASE\"}}}
+")
+
+(def core
+  "(ns core)
+
+(defn -main
+  [&amp; args]
+  (println \"hello world!\"))
+")
+
+(let [deps-path "hello_world/deps.edn"
+      core-path "hello_world/src/core.clj"]
+  (clojure.java.io/make-parents deps-path)
+  (spit deps-path deps)
+  (spit core-path core))
+</pre>
+</div>
+
+<p>
+Run with:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">clojure -M -m core
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org52b34b4" class="outline-3">
+<h3 id="org52b34b4"><a href="#org52b34b4">neil</a></h3>
+<div class="outline-text-3" id="text-org52b34b4">
+<p>
+This looks like the best way! Try this out!
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7781ae1" class="outline-3">
+<h3 id="org7781ae1"><a href="#org7781ae1">My deps-new template</a></h3>
+<div class="outline-text-3" id="text-org7781ae1">
+<div class="org-src-container">
+<pre class="src src-sh">clojure \
+    -Sdeps '{:deps
+             {net.clojars.cfclrk/minimal
+              {:local/root "/Users/cclark/Projects/codenotes/clojure/minimal"}}}' \
+                  -Tnew \
+                  create \
+                  :template cfclrk/minimal \
+                  :name $user/$projectName
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc77279a" class="outline-3">
+<h3 id="orgc77279a"><a href="#orgc77279a">deps-new</a></h3>
+<div class="outline-text-3" id="text-orgc77279a">
+<p>
+First, make sure <a href="https://github.com/seancorfield/deps-new">deps-new</a> is installed:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">clojure -Ttools install \
+        io.github.seancorfield/deps-new \
+        '{:git/tag "v0.4.9"}' :as new
+</pre>
+</div>
+
+<p>
+Create a new app:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">clojure -Tnew app :name cfclrk/$projectName
+</pre>
+</div>
+
+<p>
+Create a new lib:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">clojure -Tnew lib :name cfclrk/$projectName
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org029176e" class="outline-3">
+<h3 id="org029176e"><a href="#org029176e">Leiningen</a></h3>
+<div class="outline-text-3" id="text-org029176e">
+<div class="org-src-container">
+<pre class="src src-sh">lein new app cfclrk/$projectName
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1a9d2ea" class="outline-2">
+<h2 id="org1a9d2ea"><a href="#org1a9d2ea">clj vs clojure</a></h2>
+<div class="outline-text-2" id="text-org1a9d2ea">
+<p>
+<code>clj</code> is just a program that wraps <code>clojure</code> with <code>readline</code> support.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">find /usr/local/Cellar/clojure -name clj \
+    | sed -n '2 p' \
+    | xargs cat \
+    | grep exec
+</pre>
+</div>
+
+<p>
+<code>readline</code> provides support for editing a command in the terminal (e.g. using
+arrow keys and <code>C-a</code> <code>C-e</code> <code>C-f</code> <code>C-b</code> for movement, and stuff like that.
+</p>
+
+<p>
+So, <code>clj</code> just provides better interactivity in the terminal REPL.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org9320ab6" class="outline-2">
+<h2 id="org9320ab6"><a href="#org9320ab6">Install a package</a></h2>
+<div class="outline-text-2" id="text-org9320ab6">
+</div>
+<div id="outline-container-org1621d7b" class="outline-3">
+<h3 id="org1621d7b"><a href="#org1621d7b">Find package versions</a></h3>
+<div class="outline-text-3" id="text-org1621d7b">
+<p>
+Say you want to install integrant:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">clj -X:deps \
+    find-versions \
+    :lib integrant/integrant
+</pre>
+</div>
+
+<p>
+Add that dependency, then build the project.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3beb7ce" class="outline-3">
+<h3 id="org3beb7ce"><a href="#org3beb7ce">Start clj with package</a></h3>
+<div class="outline-text-3" id="text-org3beb7ce">
+<div class="org-src-container">
+<pre class="src src-sh">clj -Sdeps '{:deps {cider/orchard {:mvn/version "0.9.2"}}}'
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge7a64e0" class="outline-2">
+<h2 id="orge7a64e0"><a href="#orge7a64e0">Tools</a></h2>
+<div class="outline-text-2" id="text-orge7a64e0">
+<p>
+Ok, so there is:
+</p>
+
+<ol class="org-ol">
+<li>tools.build</li>
+<li>tools.tools</li>
+</ol>
+
+<p>
+From the <a href="https://clojure.org/guides/tools_build">tools.build guide</a>:
+</p>
+
+<blockquote>
+<p>
+In the Clojure CLI, "tools" are programs that provide functionality and do not
+use your project deps or classpath. Tools executed with <code>-T:an-alias</code> remove
+all project deps and paths, add "<code>.</code>" as a path, and include any other deps or
+paths as defined in <code>:an-alias</code>.
+</p>
+</blockquote>
+</div>
+
+<div id="outline-container-org35ce06a" class="outline-3">
+<h3 id="org35ce06a"><a href="#org35ce06a">Where do tools live?</a></h3>
+<div class="outline-text-3" id="text-org35ce06a">
+<p>
+Defined by an alias in <code>deps.edn</code>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5dd0950" class="outline-2">
+<h2 id="org5dd0950"><a href="#org5dd0950">Code Format</a></h2>
+<div class="outline-text-2" id="text-org5dd0950">
+<p>
+Good article: <a href="https://bogoyavlensky.com/blog/clojure-formatting-cljstyle/">Clojure formatting with cljstyle</a>.
+</p>
+</div>
+
+<div id="outline-container-org2f777ec" class="outline-3">
+<h3 id="org2f777ec"><a href="#org2f777ec">cljstyle</a></h3>
+<div class="outline-text-3" id="text-org2f777ec">
+<p>
+Install
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">brew install --cask cljstyle
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3a1d963" class="outline-3">
+<h3 id="org3a1d963"><a href="#org3a1d963">cljfmt</a></h3>
+<div class="outline-text-3" id="text-org3a1d963">
+<p>
+Format a project using <code>cljfmt</code>. Note, the <code>check</code> argument can also be
+"<code>fix</code>" to make the changes in-place.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">clojure -Sdeps '{:deps {cljfmt/cljfmt {:mvn/version "0.8.0"}}}' \
+        -M -m cljfmt.main check
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5855908" class="outline-2">
+<h2 id="org5855908"><a href="#org5855908">Classpath</a></h2>
+<div class="outline-text-2" id="text-org5855908">
+<p>
+This is how cider grabs it:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">(seq (.split (System/getProperty "java.class.path") ":"))
+</pre>
+</div>
+
+<p>
+Directories on the classpath:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">(let [classpath-entries (.split (System/getProperty "java.class.path") ":")
+      classpath-as-files (map clojure.java.io/file classpath-entries)
+      classpath-dirs (filter #(.isDirectory %) classpath-as-files)]
+  classpath-dirs)
+</pre>
+</div>
+
+<div class="results">#+RESULTS:</div><pre class="example">
+(#object[java.io.File 0x43602f98 "src"]
+ #object[java.io.File 0x2b9120c6 "resources"])
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgfcb0d14" class="outline-2">
+<h2 id="orgfcb0d14"><a href="#orgfcb0d14">Cmd Execution and REPL</a></h2>
+<div class="outline-text-2" id="text-orgfcb0d14">
+<p>
+Call a single function
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">clj -X $nsname/$funcname
+</pre>
+</div>
+
+<p>
+Start a REPL that I can attach to from Emacs.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">clj -Sdeps '{:deps {cider/cider-nrepl {:mvn/version "RELEASE"}}}' \
+    -m nrepl.cmdline \
+    --middleware "[cider.nrepl/cider-middleware]"
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org492c07d" class="outline-2">
+<h2 id="org492c07d"><a href="#org492c07d">Emacs Cider</a></h2>
+<div class="outline-text-2" id="text-org492c07d">
+<p>
+Basic workflow is described <a href="https://docs.cider.mx/cider/usage/cider_mode.html#basic-workflow">in the cider docs here</a>.
+</p>
+
+<ul class="org-ul">
+<li>Open a file in the project</li>
+<li><code>M-x cider-jack-in</code></li>
+<li>Load a project file using <code>C-c C-k</code> (<code>cider-load-buffer</code>)</li>
+<li>In the <code>*cider-repl</code> buffer, you know call the fully-qualified functions in
+that file.
+<ul class="org-ul">
+<li>Or, <code>(in-ns 'the.ns.name)</code> to call functions in that file without
+namespace qualification.</li>
+<li>Then also <code>(use 'clojure.core)</code> and <code>(use 'clojure.repl)</code>'</li>
+</ul></li>
+<li>Edit a function, and <code>C-c C-e</code> on that function to reload it.</li>
+</ul>
+</div>
+
+<div id="outline-container-org60e57d7" class="outline-3">
+<h3 id="org60e57d7"><a href="#org60e57d7">Tips</a></h3>
+<div class="outline-text-3" id="text-org60e57d7">
+<ul class="org-ul">
+<li>From source file, <code>C-u C-c C-z</code> to jump to cider buffer already namespaced
+to the source file.</li>
+<li>Quit a long-running eval with <code>C-c C-b</code> (<code>cider-interrupt</code>).</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org41bf729" class="outline-3">
+<h3 id="org41bf729"><a href="#org41bf729">Doc</a></h3>
+<div class="outline-text-3" id="text-org41bf729">
+<p>
+Function doc: <code>C-c C-d d</code> (<code>cider-doc</code>)
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org34e58de" class="outline-2">
+<h2 id="org34e58de"><a href="#org34e58de">Quickies</a></h2>
+<div class="outline-text-2" id="text-org34e58de">
+</div>
+<div id="outline-container-org522e11d" class="outline-3">
+<h3 id="org522e11d"><a href="#org522e11d">Print environment variables</a></h3>
+<div class="outline-text-3" id="text-org522e11d">
+<div class="org-src-container">
+<pre class="src src-clojure">(doseq [[k v] (System/getenv)]
+  (println k v))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgea1bbdc" class="outline-3">
+<h3 id="orgea1bbdc"><a href="#orgea1bbdc">Read and write a binary file</a></h3>
+<div class="outline-text-3" id="text-orgea1bbdc">
+<div class="org-src-container">
+<pre class="src src-clojure">(import java.net.URI)
+(import java.nio.file.Paths)
+(import java.nio.file.Files)
+
+(defn read-file-bytes
+  "Load the file at `path` into a byte[].
+  `path` is a String relative to the this service's root directory."
+  [^String path]
+  (let [file-uri (.toURI (io/resource path))
+        nio-path (Paths/get file-uri)]
+    (Files/readAllBytes nio-path)))
+
+;; Read file
+(def mypdf
+  (read-file-bytes "resources/my.pdf"))
+
+;; Write file
+(let [p (Paths/get
+         (URI. "file:///Users/cclark/Downloads/bar.pdf"))
+      opts (into-array java.nio.file.OpenOption [])]
+  (Files/write p mypdf opts))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4c205d9" class="outline-3">
+<h3 id="org4c205d9"><a href="#org4c205d9">Org mode</a></h3>
+<div class="outline-text-3" id="text-org4c205d9">
+<div class="org-src-container">
+<pre class="src src-clojure">(use 'inflections.core)
+(plural "word")
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-clojure">(range 3)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-clojurescript">#js {:foo "bar"}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-clojure">(= *file* (System/getProperty "babashka.file"))
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org60a22f1" class="outline-2">
+<h2 id="org60a22f1"><a href="#org60a22f1">core.async</a></h2>
+<div class="outline-text-2" id="text-org60a22f1">
+<p>
+There are some great examples from O'Reilly <a href="https://resources.oreilly.com/examples/0636920041474/">here</a>, which is supplemental
+content for their excellent video course <a href="https://learning.oreilly.com/videos/communicating-sequential-processes/9781771374293/">Communicating Sequential Processes
+with core.async</a>.
+</p>
+</div>
+</div>
+</div>
+</body>
+</html>

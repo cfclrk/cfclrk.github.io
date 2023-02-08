@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>dbt</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+<div id="preamble" class="status">
+<nav id="navbar" class="cf">
+  <ul class="cf">
+    <li class="fl">
+      <a href="/">cfclrk</a>
+    </li>
+    <li class="fr">
+      <a href="/articles/home.html">Articles</a>
+    </li>
+    <li class="fr">
+      <a href="/notes/home.html">Notes</a>
+    </li>
+	<li class="fr">
+      <a href="/cloudformation/home.html">CloudFormation</a>
+    </li>
+  </ul>
+</nav>
+</div>
+<div id="content" class="content">
+<header>
+<h1 class="title">dbt</h1>
+</header><nav id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org21cfc3b">Switching adabters</a></li>
+</ul>
+</div>
+</nav>
+
+<div id="outline-container-org21cfc3b" class="outline-2">
+<h2 id="org21cfc3b"><a href="#org21cfc3b">Switching adabters</a></h2>
+<div class="outline-text-2" id="text-org21cfc3b">
+<p>
+If you've installed multiple adapters via brew, you need to <code>brew link</code> the
+one you want to use.
+</p>
+
+<p>
+Say you have <code>dbt-postgres</code> and <code>dbt-snowflake</code> installed. To start using the
+snowflake adapter:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">brew link --overwrite dbt-snowflake
+</pre>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
