@@ -1,4 +1,4 @@
-#+TITLE: Comiling Emacs on MacOS
+#+TITLE: Compiling Emacs on MacOS
 #+SETUPFILE: ../../setup.org
 
 * PSA: Don't do this

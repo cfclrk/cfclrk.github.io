@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Comiling Emacs on MacOS</title>
+<title>Compiling Emacs on MacOS</title>
 <meta name="generator" content="Org Mode" />
 <link rel="stylesheet" type="text/css" href="/static/main.css" />
 </head>
@@ -28,7 +28,7 @@
 </div>
 <div id="content" class="content">
 <header>
-<h1 class="title">Comiling Emacs on MacOS</h1>
+<h1 class="title">Compiling Emacs on MacOS</h1>
 </header><nav id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
@@ -67,7 +67,7 @@ Just use <a href="https://github.com/d12frosted/homebrew-emacs-plus">emacs-plus<
 <div class="outline-text-2" id="text-org565fb0d">
 <div class="org-src-container">
 <pre class="src src-sh">git clone git://git.sv.gnu.org/emacs.git
-<span style="color: #c678dd;">cd</span> emacs
+cd emacs
 </pre>
 </div>
 </div>
@@ -94,8 +94,8 @@ Assuming you have already run <code>brew install libxml2</code> from above:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #dcaeea;">prefix</span>=$(brew --prefix)
-<span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">PKG_CONFIG_PATH</span>=<span style="color: #98be65;">"$prefix/lib/pkgconfig:$prefix/opt/libxml2/lib/pkgconfig"</span>
+<pre class="src src-sh">prefix=$(brew --prefix)
+export PKG_CONFIG_PATH="$prefix/lib/pkgconfig:$prefix/opt/libxml2/lib/pkgconfig"
 </pre>
 </div>
 </div>
@@ -131,10 +131,10 @@ features for displaying images in Emacs.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">./configure <span style="color: #98be65;">\</span>
- --with-xwidgets <span style="color: #98be65;">\</span>
- --with-imagemagick <span style="color: #98be65;">\</span>
- --without-dbus <span style="color: #98be65;">\</span>
+<pre class="src src-sh">./configure \
+ --with-xwidgets \
+ --with-imagemagick \
+ --without-dbus \
  --with-json
 </pre>
 </div>
@@ -198,40 +198,26 @@ Once Emacs is running, check whether these features were properly enabled.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>image-type-available-p 'png<span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp">(image-type-available-p 'png)
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-t
-</pre>
-
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>image-type-available-p 'svg<span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp">(image-type-available-p 'svg)
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-t
-</pre>
-
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>image-type-available-p 'imagemagick<span style="color: #51afef;">)</span>
+<pre class="src src-emacs-lisp">(image-type-available-p 'imagemagick)
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-t
-</pre>
 </div>
 </div>
 
 <div id="outline-container-org74f0c9b" class="outline-2">
 <h2 id="org74f0c9b"><a href="#org74f0c9b">Debugging</a></h2>
 <div class="outline-text-2" id="text-org74f0c9b">
-<pre class="example" id="orgf049dce">
+<pre class="example" id="orge74d2fb">
 $ lldb
 (lldb) target create "nextstep/Emacs.app/Contents/MacOS/Emacs"
 Current executable set to '/Users/chris.clark/Projects/emacs/nextstep/Emacs.app/Contents/MacOS/Emacs' (x86_64).
@@ -330,7 +316,7 @@ Do <b>NOT</b> manually create that link (say, by doing something like <code>ln -
 following error during the <code>./configure</code> step of building Emacs:
 </p>
 
-<pre class="example" id="org8d6d91c">
+<pre class="example" id="orgea7bc13">
 checking for AppKit/AppKit.h... no
 configure: error: The include files (AppKit/AppKit.h etc) that
 are required for a Nextstep build are missing or cannot be compiled.
@@ -347,12 +333,12 @@ Now, we have to tell Emacs which <code>gcc</code> to use and link some extra stu
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #dcaeea;">gccVersion</span>=$(brew info gcc --json | jq -r <span style="color: #98be65;">'.[].installed[].version'</span>)
-<span style="color: #dcaeea;">gccMajorVersion</span>=$(<span style="color: #c678dd;">echo</span> $<span style="color: #dcaeea;">gccVersion</span> | cut -d <span style="color: #98be65;">"."</span> -f 1)
-<span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">CFLAGS</span>=<span style="color: #98be65;">"-I/usr/local/Cellar/gcc/$gccVersion/include"</span>
-<span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">CC</span>=<span style="color: #98be65;">"/usr/local/bin/gcc-$gccMajorVersion"</span>
-<span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">LDFLAGS</span>=<span style="color: #98be65;">"-I/usr/local/Cellar/gcc/$gccVersion/lib/gcc/$gccMajorVersion -I/usr/local/Cellar/gcc/$gccVersion/include"</span>
-<span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">LIBRARY_PATH</span>=<span style="color: #98be65;">"/usr/local/Cellar/gcc/$gccVersion/lib/gcc/$gccMajorVersion"</span>
+<pre class="src src-sh">gccVersion=$(brew info gcc --json | jq -r '.[].installed[].version')
+gccMajorVersion=$(echo $gccVersion | cut -d "." -f 1)
+export CFLAGS="-I/usr/local/Cellar/gcc/$gccVersion/include"
+export CC="/usr/local/bin/gcc-$gccMajorVersion"
+export LDFLAGS="-I/usr/local/Cellar/gcc/$gccVersion/lib/gcc/$gccMajorVersion -I/usr/local/Cellar/gcc/$gccVersion/include"
+export LIBRARY_PATH="/usr/local/Cellar/gcc/$gccVersion/lib/gcc/$gccMajorVersion"
 </pre>
 </div>
 
@@ -369,7 +355,7 @@ Emacs from a pinned Dock icon, Emacs won't have <code>LIBRARY_PATH</code> set, a
 see an error like:
 </p>
 
-<pre class="example" id="orgef08367">
+<pre class="example" id="orga3e5a6e">
 ld: library not found for -lgcc_ext.10.5
 libgccjit.so: error: error invoking gcc driver
 </pre>
