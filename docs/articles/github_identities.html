@@ -72,8 +72,8 @@ You have multiple GitHub accounts, and you want git to automatically use the
 
 <p>
 A good way to do that is to put work-related stuff under a single directory,
-say, <code>~/Work</code>. Then, configure git to use your <b>work</b> account any project in
-your <code>~/Work</code> directory.
+say, <code>~/Work</code>. Then, configure git to use your <b>work</b> account for any project
+in your <code>~/Work</code> directory.
 </p>
 
 <p>
@@ -81,12 +81,12 @@ In this article I set things up so that:
 </p>
 
 <ul class="org-ul">
-<li>Projects in your <code>~/Work/</code> directory use your <b>work</b> GitHub account</li>
+<li>Projects in <code>~/Work/</code> use your <b>work</b> GitHub account</li>
 <li>Projects elsewhere use your <b>home</b> GitHub account</li>
 </ul>
 
 <p>
-My git configuration <a href="https://github.com/cfclrk/dotfiles/tree/master/xdg_config/git">on GitHub</a> is generated from this article.
+My git configuration <a href="https://github.com/cfclrk/dotfiles/tree/master/.config/git">on GitHub</a> is generated from this article.
 </p>
 </div>
 </div>
@@ -97,11 +97,16 @@ My git configuration <a href="https://github.com/cfclrk/dotfiles/tree/master/xdg
 <p>
 Assuming you use the <code>git</code> protocol to clone repositories (not <code>https</code>), you
 must create at least two SSH keys for GitHub &#x2013; one for each GitHub account
-(GitHub will not allow you to use the same SSH key for both accounts). Once
-you've <a href="https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh">created</a> those, your <code>~/.ssh</code> directory should look something like:
+(GitHub will <b>not</b> allow you to use the same SSH key for both accounts, but
+<b>will</b> allow you to use the PGP key for both accounts).
 </p>
 
-<pre class="example" id="org4d0daa3">
+<p>
+Once you've <a href="https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh">created</a> your SSH keys, your <code>~/.ssh</code> directory will look something
+like:
+</p>
+
+<pre class="example" id="org04e2924">
 $ tree ~/.ssh/
 /Users/cfclrk/.ssh/
 ├── config
@@ -116,26 +121,14 @@ Ensure these SSH keys work:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">ssh -i ~/.ssh/github-home -T git@github.com 2&gt;&amp;1 || true
+<pre class="src src-sh">ssh -i ~/.ssh/github-home -T git@github.com 2&gt;&amp;1
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-Hi cfclrk! You've successfully authenticated,
-but GitHub does not provide shell access.
-</pre>
-
 
 <div class="org-src-container">
-<pre class="src src-sh">ssh -i ~/.ssh/github-work -T git@github.com 2&gt;&amp;1 || true
+<pre class="src src-sh">ssh -i ~/.ssh/github-work -T git@github.com 2&gt;&amp;1
 </pre>
 </div>
-
-<div class="results">#+RESULTS:</div><pre class="example">
-Hi chrisc-ironnet! You've successfully authenticated,
-but GitHub does not provide shell access.
-</pre>
-
 
 <p>
 We don't need to modify the <code>~/.ssh/config</code> file. Instead, we'll explicitly
@@ -148,9 +141,9 @@ tell git which SSH keys to use in our git config files.
 <h2 id="org2bc0fff"><a href="#org2bc0fff">The Git Config</a></h2>
 <div class="outline-text-2" id="text-org2bc0fff">
 <p>
-First, tell git to use different git configurations depending on the directory
-a project is in. Git supports this with the <a href="https://git-scm.com/docs/git-config#_conditional_includes">includeIf</a> directive. Do this by
-creating the following two files.
+Here we tell git to use different git configurations for different
+directories. Git supports this with the <code>includeIf</code> directive (read about it
+<a href="https://git-scm.com/docs/git-config#_includes">here</a>). Do this by creating the following two files:
 </p>
 
 <p>
@@ -158,20 +151,20 @@ creating the following two files.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-gitconfig">[<span style="color: #ECBE7B;">user</span>]
-    <span style="color: #dcaeea;">name</span> = Chris Clark
-    <span style="color: #dcaeea;">email</span> = cfclrk@gmail.com
-    <span style="color: #dcaeea;">signingkey</span> = 80027A20FC0B6207
-[<span style="color: #ECBE7B;">core</span>]
-    <span style="color: #dcaeea;">sshCommand</span> = <span style="color: #98be65;">"ssh -i ~/.ssh/github-home"</span>
-[<span style="color: #ECBE7B;">commit</span>]
-    <span style="color: #dcaeea;">gpgsign</span> = <span style="color: #51afef;">true</span>
-[<span style="color: #ECBE7B;">init</span>]
-    <span style="color: #dcaeea;">defaultBranch</span> = main
-[<span style="color: #ECBE7B;">includeIf</span> <span style="color: #c678dd;">"gitdir:~/Work/"</span>]
-    <span style="color: #dcaeea;">path</span> = work.gitconfig
-[<span style="color: #ECBE7B;">github</span>]
-    <span style="color: #dcaeea;">user</span> = cfclrk
+<pre class="src src-gitconfig">[user]
+    name = Chris Clark
+    email = cfclrk@gmail.com
+    signingkey = C6ECD046467701AB
+[core]
+    sshCommand = "ssh -i ~/.ssh/github-home"
+[commit]
+    gpgsign = true
+[init]
+    defaultBranch = main
+[github]
+    user = cfclrk
+[includeIf "gitdir:~/Work/"]
+    path = work.gitconfig
 </pre>
 </div>
 
@@ -180,13 +173,12 @@ creating the following two files.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-gitconfig">[<span style="color: #ECBE7B;">user</span>]
-    <span style="color: #dcaeea;">email</span> = chris.clark@ironnet.com
-    <span style="color: #dcaeea;">signingkey</span> = EDC41C0910322DD6
-[<span style="color: #ECBE7B;">core</span>]
-    <span style="color: #dcaeea;">sshCommand</span> = <span style="color: #98be65;">"ssh -i ~/.ssh/github-work"</span>
-[<span style="color: #ECBE7B;">github</span>]
-    <span style="color: #dcaeea;">user</span> = chrisc-ironnet
+<pre class="src src-gitconfig">[user]
+    email = cclark@splashfinancial.com
+[core]
+    sshCommand = "ssh -i ~/.ssh/github-work"
+[github]
+    user = cclark-splash
 </pre>
 </div>
 
@@ -215,8 +207,8 @@ For example: assume you have the git config files above, which has:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-gitconfig">[<span style="color: #ECBE7B;">includeIf</span> <span style="color: #c678dd;">"gitdir:~/Work/"</span>]
-    <span style="color: #dcaeea;">path</span> = work.gitconfig
+<pre class="src src-gitconfig">[includeIf "gitdir:~/Work/"]
+    path = work.gitconfig
 </pre>
 </div>
 
@@ -228,25 +220,23 @@ git does something like:
 <ul class="org-ul">
 <li>Load the default <code>~/.config/git/config</code> file
 <ul class="org-ul">
-<li>Set <code>user.email</code> to <code>cfclrk@gmail.com</code></li>
+<li>Set <code>core.sshCommand</code> to <code>ssh -i ~/.ssh/github-home</code></li>
 </ul></li>
 <li>Does <code>[includeIf "gitdir:~/Work/"]</code> apply?
 <ul class="org-ul">
 <li><b>Yes!</b> Load the work.gitconfig file</li>
-<li>Set <code>user.email</code> to <code>chris.clark@ironnet.com</code></li>
+<li>Set <code>core.sshCommand</code> to <code>ssh -i ~/.ssh/github-work</code></li>
 </ul></li>
 </ul>
 
 <p>
-Both the default and <i>work</i> config files get loaded. The email address ends
-up being <code>chris.clark@ironnet.com</code> since that was the <b>last</b> value loaded for
-the <code>user.email</code> option. The determining factor is the <i>order in which the
-configuration is defined</i>, and the <i>last value wins</i>.
+In this case, both config files were loaded. The value of <code>core.sshCommand</code>
+is <code>ssh -i ~/.ssh/github-work</code>, because that value was loaded last.
 </p>
 
 <p>
-If you define multiple <code>includeIf</code> directives that overwrite one another,
-specify them in order from <i>most general</i> to <i>most specific</i>.
+The determining factor is the <i>order in which the configuration is defined</i>,
+and the <i>last value wins</i>.
 </p>
 </div>
 </div>
@@ -315,8 +305,8 @@ brew install pinentry-mac
 <h3 id="org4468400"><a href="#org4468400">Create PGP key</a></h3>
 <div class="outline-text-3" id="text-org4468400">
 <p>
-Although GitHub <a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key">has some instructions</a> for creating a PGP key, I prefer using
-<a href="https://keybase.io/">keybase</a>.
+Although GitHub <a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key">has some instructions</a> for creating a PGP key, I find it
+easier to use <a href="https://keybase.io/">keybase</a>.
 </p>
 
 <p>
@@ -373,7 +363,7 @@ but will make some <code>gpg</code> CLI output cleaner.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">gpg --edit-key $<span style="color: #dcaeea;">keyid</span>
+<pre class="src src-sh">gpg --edit-key $keyid
 </pre>
 </div>
 
@@ -381,7 +371,7 @@ but will make some <code>gpg</code> CLI output cleaner.
 At the prompt, type <code>trust</code>, after which you'll see some output like this:
 </p>
 
-<pre class="example" id="orgccfc537">
+<pre class="example" id="org638d0e0">
 Please decide how far you trust this user to correctly verify other users' keys
 (by looking at passports, checking fingerprints from different sources, etc.)
 
@@ -411,26 +401,16 @@ Get the GPG key ID of your PGP key. To get the key ID:
 </pre>
 </div>
 
-<div class="results">#+RESULTS:</div><pre class="example">
-/Users/cfclrk/.gnupg/pubring.kbx
---------------------------------
-sec   rsa4096/80027A20FC0B6207 2022-03-14 [SC] [expires: 2038-03-10]
-      2DEF144646C3152AE294CC5D80027A20FC0B6207
-uid                 [ultimate] Chris Clark &lt;cfclrk@gmail.com&gt;
-ssb   rsa4096/799C916E01D155A3 2022-03-14 [E] [expires: 2038-03-10]
-</pre>
-
-
 <p>
 In the above, the key ID is <code>80027A20FC0B6207</code> (is there some command that
 prints out the key id?). Update your git config like so:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-gitconfig">[<span style="color: #ECBE7B;">user</span>]
-    <span style="color: #dcaeea;">signingkey</span> = 80027A20FC0B6207
-[<span style="color: #ECBE7B;">commit</span>]
-    <span style="color: #dcaeea;">gpgsign</span> = <span style="color: #51afef;">true</span>
+<pre class="src src-gitconfig">[user]
+    signingkey = 80027A20FC0B6207
+[commit]
+    gpgsign = true
 </pre>
 </div>
 </div>
@@ -445,8 +425,8 @@ signing (on MacOS anyway).
 </p>
 
 <div class="org-src-container">
-<pre class="src src-conf"><span style="color: #5B6268;"># </span><span style="color: #5B6268;">Connects gpg-agent to the MacOS keychain. This enables</span>
-<span style="color: #5B6268;"># </span><span style="color: #5B6268;">automatic key signing.</span>
+<pre class="src src-conf"># Connects gpg-agent to the MacOS keychain. This enables
+# automatic key signing.
 pinentry-program /opt/homebrew/bin/pinentry-mac
 </pre>
 </div>
@@ -462,7 +442,7 @@ fail. For your first git commit:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #c678dd;">export</span> <span style="color: #dcaeea;">GPG_TTY</span>=$(tty)
+<pre class="src src-bash">export GPG_TTY=$(tty)
 </pre>
 </div>
 
@@ -483,7 +463,7 @@ GitHub?
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">gpg --armor --export $<span style="color: #dcaeea;">keyid</span> | pbcopy
+<pre class="src src-sh">gpg --armor --export $keyid | pbcopy
 </pre>
 </div>
 
@@ -516,13 +496,13 @@ new one:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #5B6268;"># </span><span style="color: #5B6268;">Import the public key</span>
-keybase pgp export -q $<span style="color: #dcaeea;">keyid</span> <span style="color: #98be65;">\</span>
+<pre class="src src-sh"># Import the public key
+keybase pgp export -q $keyid \
     | gpg --import
-<span style="color: #5B6268;"># </span><span style="color: #5B6268;">Import the private key</span>
-keybase pgp export -q $<span style="color: #dcaeea;">keyid</span> <span style="color: #98be65;">\</span>
-        --secret <span style="color: #98be65;">\</span>
-    | gpg --allow-secret-key <span style="color: #98be65;">\</span>
+# Import the private key
+keybase pgp export -q $keyid \
+        --secret \
+    | gpg --allow-secret-key \
           --import
 </pre>
 </div>

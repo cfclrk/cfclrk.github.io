@@ -7,15 +7,15 @@
   "right" GitHub account.
 
   A good way to do that is to put work-related stuff under a single directory,
-  say, =~/Work=. Then, configure git to use your *work* account any project in
-  your =~/Work= directory.
+  say, =~/Work=. Then, configure git to use your *work* account for any project
+  in your =~/Work= directory.
 
   In this article I set things up so that:
 
-  - Projects in your =~/Work/= directory use your *work* GitHub account
+  - Projects in =~/Work/= use your *work* GitHub account
   - Projects elsewhere use your *home* GitHub account
 
-  My git configuration [[https://github.com/cfclrk/dotfiles/tree/master/xdg_config/git][on GitHub]] is generated from this article.
+  My git configuration [[https://github.com/cfclrk/dotfiles/tree/master/.config/git][on GitHub]] is generated from this article.
 
 * The SSH Config
   :PROPERTIES:
@@ -24,8 +24,11 @@
 
   Assuming you use the =git= protocol to clone repositories (not =https=), you
   must create at least two SSH keys for GitHub -- one for each GitHub account
-  (GitHub will not allow you to use the same SSH key for both accounts). Once
-  you've [[https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh][created]] those, your =~/.ssh= directory should look something like:
+  (GitHub will *not* allow you to use the same SSH key for both accounts, but
+  *will* allow you to use the PGP key for both accounts).
+
+  Once you've [[https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh][created]] your SSH keys, your =~/.ssh= directory will look something
+  like:
 
   #+begin_example
     $ tree ~/.ssh/
@@ -47,7 +50,7 @@
 
   #+header: :post wrap(*this*)
   #+begin_src sh :results output
-    ssh -i ~/.ssh/github-home -T git@github.com 2>&1 || true
+    ssh -i ~/.ssh/github-home -T git@github.com 2>&1
   #+end_src
 
   #+RESULTS:
@@ -56,11 +59,11 @@
 
   #+header: :post wrap(*this*)
   #+begin_src sh :results output
-    ssh -i ~/.ssh/github-work -T git@github.com 2>&1 || true
+    ssh -i ~/.ssh/github-work -T git@github.com 2>&1
   #+end_src
 
   #+RESULTS:
-  : Hi chrisc-ironnet! You've successfully authenticated,
+  : Hi cclark-splash! You've successfully authenticated,
   : but GitHub does not provide shell access.
 
   We don't need to modify the =~/.ssh/config= file. Instead, we'll explicitly
@@ -68,9 +71,9 @@
 
 * The Git Config
 
-  First, tell git to use different git configurations depending on the directory
-  a project is in. Git supports this with the [[https://git-scm.com/docs/git-config#_conditional_includes][includeIf]] directive. Do this by
-  creating the following two files.
+  Here we tell git to use different git configurations for different
+  directories. Git supports this with the =includeIf= directive (read about it
+  [[https://git-scm.com/docs/git-config#_includes][here]]). Do this by creating the following two files:
 
   =~/.config/git/config=
 
@@ -79,17 +82,17 @@
     [user]
         name = Chris Clark
         email = cfclrk@gmail.com
-        signingkey = 80027A20FC0B6207
+        signingkey = C6ECD046467701AB
     [core]
         sshCommand = "ssh -i ~/.ssh/github-home"
     [commit]
         gpgsign = true
     [init]
         defaultBranch = main
-    [includeIf "gitdir:~/Work/"]
-        path = work.gitconfig
     [github]
         user = cfclrk
+    [includeIf "gitdir:~/Work/"]
+        path = work.gitconfig
   #+end_src
 
   =~/.config/git/work.gitconfig=
@@ -97,12 +100,11 @@
   #+header: :tangle ~/.config/git/work.gitconfig
   #+begin_src gitconfig
     [user]
-        email = chris.clark@ironnet.com
-        signingkey = EDC41C0910322DD6
+        email = cclark@splashfinancial.com
     [core]
         sshCommand = "ssh -i ~/.ssh/github-work"
     [github]
-        user = chrisc-ironnet
+        user = cclark-splash
   #+end_src
 
   Ignore the =[github]= sections; those are for [[https://github.com/magit/forge][Emacs forge]]. And of course,
@@ -131,18 +133,16 @@
    git does something like:
 
    - Load the default =~/.config/git/config= file
-     - Set =user.email= to =cfclrk@gmail.com=
+     - Set =core.sshCommand= to =ssh -i ~/.ssh/github-home=
    - Does =[includeIf "gitdir:~/Work/"]= apply?
      - *Yes!* Load the work.gitconfig file
-     - Set =user.email= to =chris.clark@ironnet.com=
+     - Set =core.sshCommand= to =ssh -i ~/.ssh/github-work=
 
-   Both the default and /work/ config files get loaded. The email address ends
-   up being =chris.clark@ironnet.com= since that was the *last* value loaded for
-   the =user.email= option. The determining factor is the /order in which the
-   configuration is defined/, and the /last value wins/.
+   In this case, both config files were loaded. The value of =core.sshCommand=
+   is =ssh -i ~/.ssh/github-work=, because that value was loaded last.
 
-   If you define multiple =includeIf= directives that overwrite one another,
-   specify them in order from /most general/ to /most specific/.
+   The determining factor is the /order in which the configuration is defined/,
+   and the /last value wins/.
 
 * Signed Commits
   :PROPERTIES:
@@ -184,8 +184,8 @@
 
 ** Create PGP key
 
-   Although GitHub [[https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key][has some instructions]] for creating a PGP key, I prefer using
-   [[https://keybase.io/][keybase]].
+   Although GitHub [[https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key][has some instructions]] for creating a PGP key, I find it
+   easier to use [[https://keybase.io/][keybase]].
 
    To use keybase, first install the [[https://keybase.io/download][native app]] (this installs the =keybase= CLI
    program).
