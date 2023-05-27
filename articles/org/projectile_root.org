@@ -8,18 +8,11 @@
   (-partition num in)
 #+end_src
 
-#+begin_quote
-This is out of date. Projectile has been updated to fix the issue presented
-here. I'm temporarily keeping this as an example for myself about how to
-reproduce problems like this.
-#+end_quote
-
 In monorepos, [[https://docs.projectile.mx/projectile/index.html][Projectile]] determines the project root to be the /monorepo/, not
 the subproject that you're in. In this article I update Projectile to instead
 prioritize the most specific project it can find.
 
-To jump to the solution, go to [[#solution]]. Or, see the Elisp file generated from
-this document [[https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-discovery.el][on GitHub]] (which I use in my personal Emacs config).
+To jump to the solution, go to [[#solution]].
 
 * Two Kinds of Monorepos
 
@@ -74,20 +67,22 @@ this document [[https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-
   #+end_src
 
   #+RESULTS:
-  : /tmp/repo/
-  : ├── .git
-  : ├── go/
-  : │   ├── projectA/
-  : │   │   └── go.mod
-  : │   └── projectB/
-  : │       └── go.mod
-  : └── python/
-  :     ├── projectC/
-  :     │   └── setup.py
-  :     └── projectD/
-  :         └── setup.py
-  :
-  : 6 directories, 5 files
+  #+begin_example
+  /tmp/repo/
+  ├── .git
+  ├── go/
+  │   ├── projectA/
+  │   │   └── go.mod
+  │   └── projectB/
+  │       └── go.mod
+  └── python/
+      ├── projectC/
+      │   └── setup.py
+      └── projectD/
+          └── setup.py
+
+  7 directories, 5 files
+  #+end_example
 
   Now when I open a file in =go/projectA=, Projectile says that the project root
   is the monorepo:
@@ -121,52 +116,44 @@ this document [[https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-
     projectile-project-root-functions
   #+end_src
 
+  #+RESULTS:
   | projectile-root-local              |
+  | projectile-root-marked             |
   | projectile-root-bottom-up          |
   | projectile-root-top-down           |
   | projectile-root-top-down-recurring |
 
-  In our example, the second function -- =projectile-root-bottom-up= -- is the
-  culprit. We can try it out interactively:
+  In our example, the function =projectile-root-bottom-up= is the culprit. We
+  can try it out interactively:
 
   #+header: :prologue (projectile-invalidate-cache nil)
   #+begin_src emacs-lisp
-    (projectile-root-bottom-up "/tmp/notes/go/projectA")
+    (projectile-root-bottom-up "/tmp/repo/go/projectA")
   #+end_src
 
   #+RESULTS:
-  : /tmp/notes/
+  : /tmp/repo/
 
   Yup -- it found the monorepo, not the subproject. To understand why this is,
-  let's look at [[https://github.com/bbatsov/projectile/blob/7f64570d3e6829d767d340c8584f3e4f3472ee81/projectile.el#L1124-L1129][the source]]! Here it is, slightly reformatted:
+  let's look at [[https://github.com/bbatsov/projectile/blob/271007c6611fcb08ddd326d7de9727c2ad5ef265/projectile.el#L1242-L1251][the source]]! Here it is:
 
   #+begin_src emacs-lisp
     (defun projectile-root-bottom-up (dir &optional list)
-      "Identify a project root in DIR by bottom-up search for
-    files in LIST.
-
-    If LIST is nil, use `projectile-project-root-files-bottom-up'
-    instead. Return the first (bottommost) matched directory or nil
-    if not found."
-      (cl-some
-       (lambda (name) (projectile-locate-dominating-file dir name))
-       (or list projectile-project-root-files-bottom-up)))
+      "Identify a project root in DIR by bottom-up search for files in LIST.
+    If LIST is nil, use `projectile-project-root-files-bottom-up' instead.
+    Return the first (bottommost) matched directory or nil if not found."
+      (projectile-locate-dominating-file
+       dir
+       (lambda (directory)
+         (let ((files (mapcar (lambda (file) (expand-file-name file directory))
+                              (or list projectile-project-root-files-bottom-up))))
+           (cl-some (lambda (file) (and file (file-exists-p file))) files)))))
   #+end_src
 
-  In regular words, this function is doing this:
-
-  - For each marker file in =projectile-project-root-files-bottom-up=
-    - Is the file in this directory? No?
-    - Is the file in the parent directory? No?
-    - Is the file in the parent-parent directory? No?
-    - ... etc up to =/=
-
-  Two important takeaways:
-
-  1. =projectile-project-root-files-bottom-up= is the variable that holds the
-     list of marker files that signify a project root.
-  2. The function looks for one file */all the way up to root/* before looking
-     for the next file.
+  In regular words, this function starts at the current directory and looks for
+  any of the marker files in the variable
+  =projectile-project-root-files-bottom-up=. If none exist in the current
+  directory, go up one directory, etc.
 
   And what are these "marker files"?
 
@@ -175,83 +162,39 @@ this document [[https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-
   #+end_src
 
   #+RESULTS:
-  | .projectile | .git | .hg | .fslckout | _FOSSIL_ | .bzr | _darcs |
+  | .git | .hg | .fslckout | _FOSSIL_ | .bzr | _darcs | .pijul |
 
   So, assuming we're somewhere in our monorepo, Projectile starts by looking for
-  a =.projectile= between here and =/=, then looks for a =.git= between here and
-  =/=, finds a =.git= at =/tmp/repo/.git=, and returns =/tmp/repo=.
+  any of those files between the current directory and root.
 
   To drive this point home, say we append =go.mod= to that list of marker files:
 
   #+begin_src emacs-lisp
     (setq projectile-project-root-files-bottom-up
-          '(".projectile" ".git" ".hg" ".fslckout"
+          '(".git" ".hg" ".fslckout"
             "_FOSSIL_" ".bzr" "_darcs" "go.mod"))
   #+end_src
 
   #+RESULTS:
-  | .projectile | .git | .hg | .fslckout | _FOSSIL_ | .bzr | _darcs | go.mod |
+  | .git | .hg | .fslckout | _FOSSIL_ | .bzr | _darcs | go.mod |
 
   Projectile still won't find our Go subproject, because =.git= comes earlier in
   the list of marker files.
 
   #+header: :prologue (projectile-invalidate-cache nil)
   #+begin_src emacs-lisp
-    (projectile-root-bottom-up "/tmp/notes/go/projectA")
+    (projectile-root-bottom-up "/tmp/repo/go/projectA")
   #+end_src
 
   #+RESULTS:
-  : /tmp/notes/
+  : /tmp/repo/go/projectA/
 
-  Projectile found a =.git= two directories up before ever even looking for a
-  =go.mod=. In this case we could rectify that by /prepending/ =go.mod= instead
-  of appending it, but the general problem would still remain (i.e. that marker
-  files several directories up could be discovered before files in the current
-  directory).
+  That works! So we just need to update
+  =projectile-project-root-files-bottom-up=.
 
-  That behavior of the =(projectile-root-bottom-up)= function is useful in one
-  situation: when you want to force a project root to a /higher/ level,
-  /despite/ the presence of marker files in the current directory.
+* Updating =projectile-project-root-files-bottom-up=
 
-  For example: if we wanted =/tmp/= to be the project root for some reason, we
-  could just put a =.projectile= file there.
-
-  #+begin_src sh :results silent
-    touch /tmp/.projectile
-  #+end_src
-
-  #+header: :prologue (projectile-invalidate-cache nil)
-  #+begin_src emacs-lisp
-    (let ((default-directory "/tmp/notes/go/projectA"))
-      (projectile-project-root))
-  #+end_src
-
-  #+RESULTS:
-  : /private/tmp/
-
-  That's useful, and works! Ok, we should retain that behavior. So what exactly
-  are the problems we need to fix now?
-
-  #+begin_src sh :results silent :exports none
-    rm /tmp/.projectile
-  #+end_src
-
-* Project Detection Issues
-
-  Two things prevent Projectile from discovering subprojects in our monorepo:
-
-  1. *Marker Files*: The variable =projectile-project-root-files-bottom-up=
-     doesn't have =go.mod= or =setup.py= in it.
-  2. *Lookup Behavior*: Even if Projectile knows to look for =setup.py= and
-     =go.mod=, the contents of directories above our project affects lookup.
-     Projectile might find some other, totally unrelated file at a higher level
-     before even looking for =go.mod= or =setup.py=.
-
-  Let's examine each problem.
-
-** Marker Files
-
-   The problem was:
+   The problem is:
 
    #+begin_quote
    The variable =projectile-project-root-files-bottom-up= doesn't have =go.mod=
@@ -268,25 +211,33 @@ this document [[https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-
    #+end_src
 
    #+RESULTS:
-   | dune-project           | pubspec.yaml   | info.rkt     | Cargo.toml     |
-   | stack.yaml             | DESCRIPTION    | Eldev        | Cask           |
-   | shard.yml              | Gemfile        | .bloop       | deps.edn       |
-   | build.boot             | project.clj    | build.sc     | build.sbt      |
-   | application.properties | gradlew        | build.gradle | pom.xml        |
-   | poetry.lock            | Pipfile        | tox.ini      | setup.py       |
-   | requirements.txt       | manage.py      | angular.json | package.json   |
-   | gulpfile.js            | Gruntfile.js   | mix.exs      | rebar.config   |
-   | composer.json          | CMakeLists.txt | Makefile     | debian/control |
-   | WORKSPACE              | flake.nix      | default.nix  | meson.build    |
-   | SConstruct             | GTAGS          | TAGS         | configure.ac   |
+   | dune-project   | Project.toml   | elm.json        | pubspec.yaml     |
+   | info.rkt       | Cargo.toml     | stack.yaml      | DESCRIPTION      |
+   | Eldev          | Cask           | shard.yml       | Gemfile          |
+   | .bloop         | deps.edn       | build.boot      | project.clj      |
+   | build.sc       | build.sbt      | application.yml | gradlew          |
+   | build.gradle   | pom.xml        | pyproject.toml  | poetry.lock      |
+   | Pipfile        | tox.ini        | setup.py        | requirements.txt |
+   | manage.py      | angular.json   | package.json    | gulpfile.js      |
+   | Gruntfile.js   | mix.exs        | rebar.config    | composer.json    |
+   | Taskfile.yml   | CMakeLists.txt | GNUMakefile     | Makefile         |
+   | debian/control | WORKSPACE      | flake.nix       | default.nix      |
+   | meson.build    | SConstruct     | ?*.nimble       | ?*.sln           |
+   | ?*.fsproj      | ?*.csproj      | GTAGS           | TAGS             |
 
    Decent start, but it doesn't have =go.mod=, so we should add that. Might as
    well also add all the files in =projectile-project-root-files-bottom-up=
    (which has =.git=, etc).
 
-   #+name: MyProjectRootFiles
+   So the solution is...
+
+* Solution
+  :PROPERTIES:
+  :CUSTOM_ID: solution
+  :END:
+
    #+begin_src emacs-lisp :results silent
-     (defvar my-project-root-files
+     (setq projectile-project-root-files-bottom-up
        (-concat
         '("go.mod")
         projectile-project-root-files-bottom-up
@@ -296,133 +247,9 @@ this document [[https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-
    That creates a pretty complete list of marker files that can indicate project
    roots.
 
-** Lookup Behavior
-
-   The problem was:
-
-   #+begin_quote
-   Even if Projectile knows to look for =setup.py= and =go.mod=, the contents of
-   directories above our project affects lookup. Projectile can find marker
-   files at a higher level before looking for =go.mod= or =setup.py=.
-   #+end_quote
-
-   Instead, we want to look for for /every/ marker file in the current directory
-   before continuing to a parent directory.
-
-   Instead of looping over the marker files and running =locate-dominating-file=
-   on each filename, we should loop over the /directories/ (starting from the
-   bottom) and check whether any maker file is in that directory.
-
-   The [[https://github.com/rejeep/f.el][f]] library already has a perfect function for that: [[https://github.com/rejeep/f.el#f-traverse-upwards-fn-optional-path][f-traverse-upwards]].
-
-* Solution
-  :PROPERTIES:
-  :CUSTOM_ID: solution
-  :END:
-
-  #+header: :tangle (expand-file-name "~/Projects/dotfiles/emacs/projectile-discovery.el")
-  #+begin_src emacs-lisp :exports none
-    ;;; projectile-discovery.el -- My project discovery config -*- lexical-binding:
-    ;;; t; -*-
-
-    ;;; Commentary:
-
-    ;; Update projectile's project discovery behavior to prioritize the most
-    ;; specific project it can discover. In monorepos, this means projectile will
-    ;; find subprojects before finding the monorepo root.
-
-    ;; To override this behavior, manually place a `.projectile' file at a higher
-    ;; level.
-
-    ;; See: https://www.cfclrk.com/articles/projectile_root.html
-
-    ;; This file is tangled from
-    ;; https://github.com/cfclrk/cfclrk.github.io/blob/main/articles/org/projectile_root.org
-
-    ;;; Code:
-  #+end_src
-
-  #+header: :tangle (expand-file-name "~/Projects/dotfiles/emacs/projectile-discovery.el")
-  #+begin_src emacs-lisp
-    (require 'projectile)
-    (require 'f)
-  #+end_src
-
-  /[[https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-discovery.el][Here is the Elisp file]] generated from this section (which I use in my
-  personal Emacs config)./
-
-  We will define a new strategy for discovering projects. First, define a
-  variable with the marker files that indicate a project root.
-
-  #+header: :tangle (expand-file-name "~/Projects/dotfiles/emacs/projectile-discovery.el")
-  #+begin_src emacs-lisp :results silent
-    <<MyProjectRootFiles>>
-  #+end_src
-
-  Define a new discovery function. In keeping with how exsting projectile
-  project discovery functions work, allow elements to be predicates.
-
-  #+header: :tangle (expand-file-name "~/Projects/dotfiles/emacs/projectile-discovery.el")
-  #+begin_src emacs-lisp :results silent
-    (defun any-file-exists? (files dir)
-      "True if any of FILES exist in DIR.
-    FILES is a list of file names and/or predicates.
-
-    An element of FILES can also be a predicate taking one
-    argument (a directory) and returning a non-nil value if that
-    directory is the one we're looking for.
-
-    DIR is a path to a directory."
-      (cl-some
-       (lambda (name)
-         (if (stringp name)
-             (f-exists? (f-expand name dir))
-           (funcall name dir)))
-       files))
-  #+end_src
-
-  #+header: :tangle (expand-file-name "~/Projects/dotfiles/emacs/projectile-discovery.el")
-  #+begin_src emacs-lisp :results silent
-    (defun my/projectile-root-bottom-up (dir &optional list)
-      "Identify a project root.
-    Perform a bottom-up search for files in LIST starting from DIR.
-    Always return the lowest directory that has any file in LIST. If
-    LIST is nil, use `my-project-root-files' instead. Return the
-    first (bottommost) matched directory or nil."
-      (let ((marker-files (or list my-project-root-files)))
-        (f--traverse-upwards
-         (any-file-exists? marker-files it) dir)))
-  #+end_src
-
-  Insert our new lookup function into =projectile-project-root-functions=.
-
-  #+header: :tangle (expand-file-name "~/Projects/dotfiles/emacs/projectile-discovery.el")
-  #+begin_src emacs-lisp :results silent
-    ;; Add my new function into Projectile's hierarchy of project
-    ;; discovery functions.
-    (setq projectile-project-root-functions
-          '(projectile-root-local
-            projectile-root-bottom-up
-            my/projectile-root-bottom-up  ;;  New function
-            projectile-root-top-down
-            projectile-root-top-down-recurring))
-  #+end_src
-
-  Restrict Projectile's original bottom-up discovery to only work for
-  =.projectile= files. This allows us to force a project root to a higher level
-  by creating a =.projectile= file in a parent directory.
-
-  #+header: :tangle (expand-file-name "~/Projects/dotfiles/emacs/projectile-discovery.el")
-  #+begin_src emacs-lisp :results silent
-    ;; Only allow a .projectile file to force project
-    ;; roots to higher levels.
-    (setq projectile-project-root-files-bottom-up
-          '(".projectile"))
-  #+end_src
-
 * Test
 
-  After applying the functions above, let's see what Projectile says the project
+  After setting the variable above, let's see what Projectile says the project
   roots are for our monorepo.
 
 ** Go
@@ -431,12 +258,12 @@ this document [[https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-
 
    #+header: :prologue (projectile-invalidate-cache nil)
    #+begin_src emacs-lisp
-     (let ((default-directory "/tmp/notes/go/projectA"))
+     (let ((default-directory "/tmp/repo/go/projectA"))
        (projectile-project-root))
    #+end_src
 
    #+RESULTS:
-   : /private/tmp/notes/go/projectA
+   : /private/tmp/repo/go/projectA/
 
    ✔ Works!
 
@@ -446,12 +273,12 @@ this document [[https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-
 
    #+header: :prologue (projectile-invalidate-cache nil)
    #+begin_src emacs-lisp
-     (let ((default-directory "/tmp/notes/python/projectC"))
+     (let ((default-directory "/tmp/repo/python/projectC"))
        (projectile-project-root))
    #+end_src
 
    #+RESULTS:
-   : /private/tmp/notes/python/projectC
+   : /private/tmp/repo/python/projectC/
 
    ✔ Works!
 
@@ -478,10 +305,3 @@ this document [[https://github.com/cfclrk/dotfiles/blob/master/emacs/projectile-
    #+end_src
 
    ✔ Works!
-
-* File Footer                                                      :noexport:
-
-  #+header: :tangle (expand-file-name "~/Projects/dotfiles/emacs/projectile-discovery.el")
-  #+begin_src emacs-lisp :exports none
-    ;;; projectile-discovery.el ends here
-  #+end_src
