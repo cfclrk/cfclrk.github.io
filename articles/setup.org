@@ -1,1 +1,4 @@
 #+OPTIONS: timestamp:nil
+#+PROPERTY: header-args+ :noweb yes
+#+PROPERTY: header-args+ :exports both
+#+PROPERTY: header-args+ :eval never-export
