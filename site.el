@@ -15,13 +15,13 @@
 (defconst site/publishing-directory
   (expand-file-name "~/Projects/cfclrk.com/docs"))
 
-(defun site/site-preamble (project-plist)
+(defun site/site-preamble (_project-plist)
   "Return the contents of navbar.html as a string.
 PROJECT-PLIST has the full contents of all files and properties
 in the project."
   (f-read (expand-file-name "navbar.html" site/project-directory)))
 
-(defun site/compile-scss (project-plist)
+(defun site/compile-scss (_project-plist)
   "Compile SCSS to CSS.
 PROJECT-PLIST has all project info, but we don't need it."
   (let ((scss-file (expand-file-name "static/main.scss"

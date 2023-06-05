@@ -116,3 +116,7 @@
    Result is always on top of the stack
 
 ** Register Machine
+
+* Useful Resources
+
+  - [[https://github.com/jamiebuilds/the-super-tiny-compiler/blob/master/the-super-tiny-compiler.js][The Super Tiny Compiler]] (js)

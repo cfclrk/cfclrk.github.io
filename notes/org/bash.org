@@ -217,7 +217,7 @@
 *** with interpolation
 
 	#+begin_src sh
-      foo="fooo"
+      foo="CAAAATS"
       a=$(cat <<EOF
       hello
       $foo
@@ -226,9 +226,9 @@
       echo "$a"
 	#+end_src
 
-	#+RESULTS:
+    #+RESULTS:
     : hello
-    : fooo
+    : CAAAATS
 
     Note, this also works with single quotes!
 
