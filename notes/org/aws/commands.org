@@ -12,7 +12,7 @@
   | AWS_DEFAULT_REGION | us-east-1 |
 
   #+begin_src emacs-lisp :var env=env
-    (env-set-pairs env)
+    (environ-set-pairs env)
   #+end_src
 
 * Account
@@ -760,6 +760,16 @@
         --service $service \
         --desired-count 0
   #+end_src
+
+** restart tasks
+
+   #+begin_src sh
+     aws ecs \
+         update-service \
+         --force-new-deployment \
+         --service $service_name \
+         --cluster $cluster_name
+   #+end_src
 
 ** list-clusters
 

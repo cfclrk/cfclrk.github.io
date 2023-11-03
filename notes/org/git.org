@@ -133,6 +133,8 @@
      git reset --soft origin/develop
    #+end_src
 
+   If switching to the other branch doesn't work, stash the changes first.
+
 ** Rebased Remote Branch
 
    You rebased, and then remembered that the branch you were on has already been

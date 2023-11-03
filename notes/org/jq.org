@@ -120,7 +120,7 @@
   }
   #+end_example
 
-* Period in Key
+* Period or dash in key
 
   #+NAME: KubeSecret
   #+begin_example
@@ -141,6 +141,13 @@
 
   #+RESULTS:
   : Zm9vCg==
+
+  #+begin_src sh
+    echo '{"foo-bar": "baz"}' | jq '."foo-bar"'
+  #+end_src
+
+  #+RESULTS:
+  : baz
 
 * Multiline
 

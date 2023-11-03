@@ -1,0 +1,5 @@
+* Example
+
+  #+begin_src sh
+    xmlstarlet select --text --template --value-of "//document" cats.xml
+  #+end_src

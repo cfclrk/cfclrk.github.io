@@ -262,6 +262,18 @@
 	: hello
 	: $foo
 
+* Here Strings
+
+  For programs that take a file name as an argument, you can use the =<<<= here
+  string to provide the file's contents instead.
+
+  Doc:
+  https://www.gnu.org/savannah-checkouts/gnu/bash/manual/bash.html#Here-Strings
+
+  #+begin_src sh
+    clj-kondo --lint - <<< '(ns foo (:require [bar :as-alias b]))'
+  #+end_src
+
 * Verify Environment Variables
 
   Verify some environment variables exist.

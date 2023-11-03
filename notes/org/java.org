@@ -37,13 +37,6 @@
 
   To see installed Java versions (assuming they have been properly symlinked):
 
-  #+begin_src sh :results output
-    env
-  #+end_src
-
-  Note that =java_home -V= writes the "verbose" part of this output to stderr,
-  and only writes the current version to stdout.
-
   #+header: :prologue "exec 2>&1" :epilogue "true"
   #+begin_src sh :results output
     /usr/libexec/java_home -V
@@ -55,6 +48,9 @@
   :     17.0.6 (arm64) "Homebrew" - "OpenJDK 17.0.6" /opt/homebrew/Cellar/openjdk@17/17.0.6/libexec/openjdk.jdk/Contents/Home
   :     17.0.2 (x86_64) "GraalVM Community" - "GraalVM CE 22.0.0.2" /Library/Java/JavaVirtualMachines/graalvm-ce-java17-22.0.0.2/Contents/Home
   : /opt/homebrew/Cellar/openjdk/19.0.2/libexec/openjdk.jdk/Contents/Home
+
+  Note that =java_home -V= writes the "verbose" part of this output to stderr,
+  and only writes the current version to stdout.
 
   The java's installed via brew:
 

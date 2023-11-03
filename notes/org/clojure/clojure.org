@@ -8,6 +8,8 @@
       (ns-unmap *ns* sym))
   #+end_src
 
+  Or in Emacs, just run =M-x cider-undef-all=.
+
 * Installation
 
   The clojure site [[https://clojure.org/guides/getting_started#_clojure_installer_and_cli_tools][suggests]] using the following:
@@ -134,14 +136,12 @@
   =clj= is just a program that wraps =clojure= with =readline= support.
 
   #+begin_src bash :results output
-    find /usr/local/Cellar/clojure -name clj \
-        | sed -n '2 p' \
-        | xargs cat \
-        | grep exec
+    find /opt/homebrew/Cellar/clojure -name clj \
+        | xargs grep exec
   #+end_src
 
   #+RESULTS:
-  :   exec rlwrap -r -q '\"' -b "(){}[],^%#@\";:'" "$bin_dir/clojure" "$@"
+  :   exec rlwrap -m -r -q '\"' -b "(){}[],^%#@\";:'" "$bin_dir/clojure" "$@"
 
   =readline= provides support for editing a command in the terminal (e.g. using
   arrow keys and =C-a= =C-e= =C-f= =C-b= for movement, and stuff like that.
@@ -188,7 +188,7 @@
 
    Defined by an alias in =deps.edn=.
 
-* Code Format
+* Formatting and Pretty-Printing
 
   Good article: [[https://bogoyavlensky.com/blog/clojure-formatting-cljstyle/][Clojure formatting with cljstyle]].
 
@@ -209,6 +209,12 @@
      clojure -Sdeps '{:deps {cljfmt/cljfmt {:mvn/version "0.8.0"}}}' \
              -M -m cljfmt.main check
    #+end_src
+
+** puget
+
+   https://github.com/greglook/puget
+
+** zprint
 
 * Classpath
 
@@ -275,6 +281,29 @@
 
    Function doc: =C-c C-d d= (=cider-doc=)
 
+* HMAC
+
+  The following clojure and python produce the same result.
+
+  #+begin_src python
+    import hmac
+    import hashlib
+
+    h = hmac.new(b'my key',"my message", hashlib.sha256)
+    h.hexdigest()
+  #+end_src
+
+  #+begin_src clojure
+    (import java.util.HexFormat)
+    (import javax.crypto.spec.SecretKeySpec)
+
+    (let [mac (Mac/getInstance "HmacSHA256")
+          secret-key-spec (SecretKeySpec. (.getBytes "my key") "HmacSHA256")]
+      (.init mac secret-key-spec)
+      (let [my-bytes (.doFinal mac (.getBytes "my message"))]
+        (.formatHex (HexFormat/of) my-bytes)))
+  #+end_src
+
 * Quickies
 
 ** Print environment variables
@@ -300,12 +329,10 @@
          (Files/readAllBytes nio-path)))
 
      ;; Read file
-     (def mypdf
-       (read-file-bytes "resources/my.pdf"))
+     (def mypdf (read-file-bytes "resources/my.pdf"))
 
      ;; Write file
-     (let [p (Paths/get
-              (URI. "file:///Users/cclark/Downloads/bar.pdf"))
+     (let [p (Paths/get (URI. "file:///Users/cclark/Downloads/bar.pdf"))
            opts (into-array java.nio.file.OpenOption [])]
        (Files/write p mypdf opts))
    #+end_src
@@ -319,16 +346,10 @@
      (plural "word")
    #+end_src
 
-   #+RESULTS:
-   : words
-
    #+header: :backend babashka
    #+begin_src clojure
      (range 3)
    #+end_src
-
-   #+RESULTS:
-   : (0 1 2)
 
   #+begin_src clojurescript
   #js {:foo "bar"}

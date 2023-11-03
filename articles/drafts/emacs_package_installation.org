@@ -61,7 +61,6 @@ In which I enumerate the ways you you can install Emacs packages.
      (require 'the-new-package-name)
    #+end_src
 
-
 * quelpa
 
 * straight.el
