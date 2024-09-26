@@ -1,0 +1,15 @@
+* Local docker DB
+
+  Create:
+
+  #+begin_src sh
+    docker run --rm \
+           -e MYSQL_USER='mysql' -e MYSQL_PASSWORD='mysql' -e MYSQL_ROOT_PASSWORD='foo' \
+           -p 3307:3306 'mysql:9'
+  #+end_src
+
+  Connect:
+
+  #+begin_src sh
+    mysql -u mysql -h localhost -P 3307 --protocol tcp -p
+  #+end_src

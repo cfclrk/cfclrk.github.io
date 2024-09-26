@@ -1,0 +1,27 @@
+#+TITLE: Markdown
+#+SETUPFILE: ../setup.org
+
+* Generating a Table of Contents
+
+  So far the best tool I've found is bitdowntoc. Run it like:
+
+  #+header: :var f="/Users/cclark/Website/README.md"
+  #+begin_src sh
+    bitdowntoc \
+        -i \
+        --indent-chars '---' \
+        --indent-spaces 2 \
+        --no-anchors \
+        --max-level 3 \
+        --profile github \
+        "$f"
+  #+end_src
+
+  #+RESULTS:
+
+* Linting
+
+  Use [[https://github.com/DavidAnson/markdownlint][markdownlint]].
+
+  In Emacs, if you have markdownlint installed, flycheck will automatically
+  start using it.

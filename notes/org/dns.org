@@ -46,7 +46,7 @@
 ** CNAME
 
   #+begin_src sh
-    dig $DnsName CNAME +short
+    dig $DnsName CNAME
   #+end_src
 
 * NS Delegation in AWS

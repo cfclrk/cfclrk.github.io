@@ -401,7 +401,7 @@
 
 * Arrays
 
-** * vs @
+** =*= vs =@=
 
    See [[https://stackoverflow.com/a/3355375/340613][this StackOverflow answer]].
 
