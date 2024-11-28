@@ -1,0 +1,37 @@
+#+TITLE: Localstack
+
+Get the docker container.
+
+#+begin_src sh
+  docker pull localstack/localstack
+#+end_src
+
+Start it using some random host port to container port 4566.
+
+#+begin_src sh
+  docker run --rm localstack/localstack -p 58664:4566
+#+end_src
+
+Configure the AWS CLI to talk to localstack by setting the localstack
+credentials (which are just "test") and overriding the endpoint URL.
+
+#+begin_src emacs-lisp
+  (environ-set-pairs '(("AWS_ACCESS_KEY_ID" "test")
+                       ("AWS_SECRET_ACCESS_KEY" "test")
+                       ("AWS_ENDPOINT_URL" "http://localhost:58664")))
+#+end_src
+
+#+RESULTS:
+
+Now it works!
+
+#+begin_src sh :results output
+  aws sts get-caller-identity
+#+end_src
+
+#+RESULTS:
+: {
+:     "UserId": "AKIAIOSFODNN7EXAMPLE",
+:     "Account": "000000000000",
+:     "Arn": "arn:aws:iam::000000000000:root"
+: }

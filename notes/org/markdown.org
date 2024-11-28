@@ -5,7 +5,7 @@
 
   So far the best tool I've found is bitdowntoc. Run it like:
 
-  #+header: :var f="/Users/cclark/Website/README.md"
+  #+header: :var f="/Users/cclark/Work/Website/README.md"
   #+begin_src sh
     bitdowntoc \
         -i \

@@ -81,7 +81,15 @@
 
 ** neil
 
-   This looks like the best way! Try this out!
+   On GitHub: [[https://github.com/babashka/neil][neil]]
+
+   #+header: :dir ~/Projects/codenotes/clojure
+   #+begin_src sh
+     neil new --name org-clojure-demo
+   #+end_src
+
+   #+RESULTS:
+   : Creating project from org.corfield.new/scratch in org-clojure-demo
 
 ** My deps-new template
 
@@ -328,13 +336,17 @@
              nio-path (Paths/get file-uri)]
          (Files/readAllBytes nio-path)))
 
-     ;; Read file
-     (def mypdf (read-file-bytes "resources/my.pdf"))
+     (defn save-file-bytes
+       [contents path]
+       (with-open [o (io/output-stream path)]
+         (.write o contents)))
 
+     ;; Read file
+     (def mypdf
+       (read-file-bytes "resources/my.pdf"))
      ;; Write file
-     (let [p (Paths/get (URI. "file:///Users/cclark/Downloads/bar.pdf"))
-           opts (into-array java.nio.file.OpenOption [])]
-       (Files/write p mypdf opts))
+
+     (save-file-bytes mypdf "/Users/cclark/cats/test.pdf")
    #+end_src
 
 ** Org mode

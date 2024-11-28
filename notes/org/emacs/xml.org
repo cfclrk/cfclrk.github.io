@@ -1,4 +1,8 @@
-* Formatting XML
+#+TITLE: XML
+
+Some notes about working with XML in emacs.
+
+* Formatting
 
   There's a built-in function, =sgml-pretty-print=, but it's really slow. When
   running it on some large XML files, it's locked up Emacs for *minutes* for me.
