@@ -1,4 +1,5 @@
 #+TITLE: Localstack
+#+SETUPFILE: ../../setup.org
 
 Get the docker container.
 

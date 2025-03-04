@@ -1,0 +1,7 @@
+#+TITLE: Random Stuff
+#+SETUPFILE: ../../setup.org
+
+* Themes
+
+  Use =consult-theme= to switch themes. It lets you preview the theme as you're
+  moving through the list.

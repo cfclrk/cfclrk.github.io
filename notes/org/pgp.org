@@ -1,0 +1,13 @@
+#+TITLE: PGP
+
+Encrypting and decrypting using =gpg=.
+
+* Encrypt
+
+  You can encrypt with a passphrase file without having any kind of saved keys
+  or anything. Just do this:
+
+  #+begin_src sh
+    cat "Hello world.\n" > foo.txt
+    gpg --armour --symmetric foo.txt
+  #+end_src

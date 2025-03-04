@@ -1,0 +1,13 @@
+#+TITLE: SQL Tips and Tricks
+#+SETUPFILE: ../../setup.org
+
+* Check whether all values are unique
+
+  If the following query returns 0 rows, then all values in column =ID= are unique.
+
+  #+begin_src sql
+    select ID, count(*)
+    from table_name
+    group by ID
+    having count(*) > 1;
+  #+end_src
