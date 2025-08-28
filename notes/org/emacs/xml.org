@@ -2,11 +2,14 @@
 
 Some notes about working with XML in emacs.
 
+* Emacs hanging
+
+  Is Emacs hanging when you make changes to XML files?
+
 * Formatting
 
-  There's a built-in function, =sgml-pretty-print=, but it's really slow. When
-  running it on some large XML files, it's locked up Emacs for *minutes* for me.
-  Running xmlstarlet on the same file was instantaneous.
+  There's a built-in function, =sgml-pretty-print=, but it's pretty slow.
+  Running xmlstarlet on the same file is instantaneous.
 
   Install xmlstarlet:
 
@@ -16,3 +19,15 @@ Some notes about working with XML in emacs.
 
   Navigate to the file in a dired buffer, and hit =!= (=dired-do-shell-command=)
   to run a shell command on the file. Type: =xmlstarlet ed --inplace=.
+
+  Or, define the following interactive function:
+
+  #+begin_src emacs-lisp
+    (defun my/xml-format-buffer ()
+      "Format an XML file using xmlstarlet."
+      (interactive)
+      (let ((file (buffer-file-name)))
+        (call-process "xmlstarlet"
+                      file nil nil
+                      "ed" "--inplace" file)))
+  #+end_src

@@ -335,13 +335,29 @@
          --alarm-actions $ScalingPolicyArn
    #+end_src
 
+* CodeArtifact
+
+  #+begin_src sh
+    aws codeartifact get-authorization-token \
+        --domain $domain \
+        --domain-owner $account_id \
+  #+end_src
+
 * CodeDeploy
 
 ** list-deployments
 
    #+begin_src sh
      aws deploy list-deployments \
-         --application-name $app
+         --application-name "e9y" --deployment-group-name prod-environment
+   #+end_src
+
+** get-deployment
+
+   #+begin_src sh
+     aws deploy get-deployment \
+         --deployment-id "" \
+         | jq '.deploymentInfo | {createTime, completeTime}'
    #+end_src
 
 ** list-tags-for-resource
@@ -1124,11 +1140,11 @@
 
 ** describe-db-instances
 
-   #+header: :var db_name="foo-dev"
+   #+header: :var db_name=""
    #+begin_src sh
      aws rds describe-db-instances \
          --db-instance-identifier "$db_name" \
-         | jq '.DBInstances[]'
+         | jq '.DBInstances[]' | jq .
    #+end_src
 
 ** modify-db-instance
@@ -1228,11 +1244,33 @@
 
 * SageMaker
 
+** describe-endpoint
+
+   #+begin_src sh
+     aws sagemaker describe-endpoint --endpoint-name 'name'
+   #+end_src
+
+** list-endpoints
+
+   #+begin_src sh
+     aws sagemaker list-endpoints | jq '.Endpoints[].EndpointName'
+   #+end_src
+
 ** list-models
 
   #+begin_src sh
     aws sagemaker list-models | jq '.Models[]'
   #+end_src
+
+** invoke
+
+   #+begin_src sh
+     aws sagemaker-runtime invoke-endpoint \
+         --endpoint-name "model-name" \
+         --body fileb:///Users/cclark/example.json \
+         --content-type "application/json" \
+         response.json
+   #+end_src
 
 * SecretsManager
 
@@ -1257,7 +1295,7 @@
    #+begin_src sh
      aws secretsmanager get-secret-value \
          --secret-id $SecretName \
-         | jq -r '.SecretString'
+         | jq -r '.SecretString' | jq
    #+end_src
 
 ** Create Secret
@@ -1431,6 +1469,15 @@
          --message-body '{"Message": "{\"foo\":\"bar\"}"}'
    #+end_src
 
+** start-message-move-task (DLQ redrive)
+
+   Redrive an SQS message from a DLQ back to its source queue.
+
+   #+begin_src sh
+     aws sqs start-message-move-task \
+            --source-arn ""
+   #+end_src
+
 * SSM
 
   #+header: :var name="/aws/service/eks/optimized-ami/1.19/amazon-linux-2/recommended/image_id"
@@ -1440,7 +1487,7 @@
         --name $name
   #+end_src
 
-* Identity Store (SSO)
+* Identity Center (SSO)
 
   AWS SSO was renamed to AWS Identity Store.
 

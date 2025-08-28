@@ -10,6 +10,13 @@
 
   Or in Emacs, just run =M-x cider-undef-all=.
 
+* Tap
+
+  #+begin_src clojure
+    (def tap-atom (atom []))
+    (add-tap (fn [x] (swap! tap-atom conj x)))
+  #+end_src
+
 * Installation
 
   The clojure site [[https://clojure.org/guides/getting_started#_clojure_installer_and_cli_tools][suggests]] using the following:

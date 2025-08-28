@@ -314,3 +314,11 @@
    #+begin_src sh
      openssl pkcs12 -info -in cert.p12 -nodes
    #+end_src
+
+** Create a test bundle
+
+   #+begin_src sh
+     openssl genrsa -out test.key 1024
+     openssl req -new -x509 -key test.key -out test.crt -subj "/CN=Test Cert"
+     openssl pkcs12 -export -out test.p12 -inkey test.key -in test.crt -name "Test Cert"
+   #+end_src
