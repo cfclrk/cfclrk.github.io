@@ -160,6 +160,18 @@
    - Option 1: Merge remote into local. Just do a git merge of
      remote/branch-name.
 
+* Make branch a single commit
+
+  Sometimes I've been working on a branch for a while, and it has tons of
+  commits including multiple merges. I want to turn it into  a single commit
+  against main.
+
+  1. Check out main
+  2. Merge in my branch (and resolve conflicts)
+  3. Reset soft main to origin/main
+  4. Now you have all the changes in your branch nicely staged for you! Make a
+     new branch and commit those changes.
+
 * Fixup
 
   You make a change that ought to have been part of a previous commit, but that
