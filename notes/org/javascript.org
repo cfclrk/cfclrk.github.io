@@ -52,7 +52,13 @@
       npm -g list --depth 0
     #+end_src
 
-*** Delete Them All
+*** Update them all
+
+    #+begin_src sh
+      npm update -g
+    #+end_src
+
+*** Delete them all
 
     #+begin_src sh
       npm list -gp --depth=0 \

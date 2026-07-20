@@ -16,7 +16,7 @@
    #+end_src
 
    #+RESULTS: LatestPython
-   : 3.11.0a2
+   : 3.15.0b3t
 
 * Using a src directory
 
@@ -27,7 +27,9 @@
 
   - Ionel's first point about /import parity/; it is important that all your
     top-level repo cruft isn't on your =sys.path= during local development.
+
   - A directory named =src= is explicit and says what it is.
+
   - Different python projects can have a more similar top-level directory layout
     and a more similar =setup.cfg=.
 

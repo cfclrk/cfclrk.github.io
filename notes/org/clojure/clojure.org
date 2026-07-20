@@ -51,33 +51,34 @@
 
 * Project Creation
 
+  If you need the whole setup with tests, I currently like deps-new.
+
 ** Minimal
 
    All you need is a project directory with a =deps.edn= and a =src/core.clj=.
 
-   #+header: :dir ~/emacs/org-clojure
-   #+header: :backend babashka
-   #+begin_src clojure
-     (require '[clojure.java.io])
+   #+name: DepsEdnFile
+   #+begin_example
+     {:deps
+       {org.clojure/clojure {:mvn/version "RELEASE"}}}
+   #+end_example
 
-     (def deps
-       "{:deps
-      {org.clojure/clojure {:mvn/version \"RELEASE\"}}}
-     ")
-
-     (def core
-       "(ns core)
+   #+name: SrcFile
+   #+begin_example
+     (ns core)
 
      (defn -main
        [& args]
-       (println \"hello world!\"))
-     ")
+       (println "hello world!"))
+   #+end_example
 
-     (let [deps-path "hello_world/deps.edn"
-           core-path "hello_world/src/core.clj"]
-       (clojure.java.io/make-parents deps-path)
-       (spit deps-path deps)
-       (spit core-path core))
+   #+header: :var src_file=SrcFile :var deps_file=DepsEdnFile
+   #+header: :dir ~/Projects/codenotes/clojure
+   #+begin_src sh :results none
+     dir="example"
+     mkdir -p $dir $dir/src
+     echo "$deps_file" > "$dir/deps.edn"
+     echo "$src_file" > "$dir/src/core.clj"
    #+end_src
 
    Run with:
@@ -92,17 +93,41 @@
 
    #+header: :dir ~/Projects/codenotes/clojure
    #+begin_src sh
-     neil new --name org-clojure-demo
+     neil new --name example
    #+end_src
 
    #+RESULTS:
-   : Creating project from org.corfield.new/scratch in org-clojure-demo
+   : Creating project from org.corfield.new/scratch in example
+
+** deps-new
+
+   First, make sure [[https://github.com/seancorfield/deps-new][deps-new]] is installed:
+
+   #+begin_src sh :results output
+     clojure -Ttools install-latest :lib io.github.seancorfield/deps-new :as new
+   #+end_src
+
+   Create a new app:
+
+   #+header: :dir ~/Projects/codenotes/clojure
+   #+header: :var projectName="example-deps-new"
+   #+begin_src sh
+     clojure -Tnew app :name cfclrk/$projectName
+   #+end_src
+
+   #+RESULTS:
+
+   Create a new lib:
+
+   #+begin_src sh
+     clojure -Tnew lib :name cfclrk/$projectName
+   #+end_src
 
 ** My deps-new template
 
    #+header: :dir ~/Projects/codenotes/clojure
    #+header: :var user="cfclrk"
-   #+header: :var projectName="plaid-wrapper"
+   #+header: :var projectName="example"
    #+begin_src sh :results output
      clojure \
          -Sdeps '{:deps
@@ -112,38 +137,6 @@
                        create \
                        :template cfclrk/minimal \
                        :name $user/$projectName
-   #+end_src
-
-** deps-new
-
-   First, make sure [[https://github.com/seancorfield/deps-new][deps-new]] is installed:
-
-   #+begin_src sh :results output
-     clojure -Ttools install \
-             io.github.seancorfield/deps-new \
-             '{:git/tag "v0.4.9"}' :as new
-   #+end_src
-
-   Create a new app:
-
-   #+header: :dir ~/Projects/codenotes/clojure
-   #+header: :var projectName="ring-compojure"
-   #+begin_src sh
-     clojure -Tnew app :name cfclrk/$projectName
-   #+end_src
-
-   Create a new lib:
-
-   #+begin_src sh
-     clojure -Tnew lib :name cfclrk/$projectName
-   #+end_src
-
-** Leiningen
-
-   #+header: :dir ~/Projects/codenotes/clojure
-   #+header: :var projectName="minesweeper"
-   #+begin_src sh :results output
-     lein new app cfclrk/$projectName
    #+end_src
 
 * clj vs clojure
