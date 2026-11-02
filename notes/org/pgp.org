@@ -1,4 +1,6 @@
 #+TITLE: PGP
+#+SETUPFILE: ../setup.org
+#+PROPERTY: header-args+ :results output
 
 Encrypting and decrypting using =gpg=.
 
@@ -11,3 +13,12 @@ Encrypting and decrypting using =gpg=.
     cat "Hello world.\n" > foo.txt
     gpg --armour --symmetric foo.txt
   #+end_src
+
+* View Info
+
+  #+header: :var file_path="/Users/cfcflrk/Work/notes/splash_sftp_pgp_fixed.key"
+  #+begin_src sh
+    gpg --show-keys $file_path
+  #+end_src
+
+* Decrypt

@@ -32,7 +32,7 @@
 
    For RSA: use =-t rsa -b 2048=.
 
-   #+header: :var keyname="foo" email="chris.clark@ironnet.com"
+   #+header: :var keyname="my-key" email="cfclrk@gmail.com"
    #+begin_src sh
      ssh-keygen \
          -t ed25519 \

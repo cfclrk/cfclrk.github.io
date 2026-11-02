@@ -51,7 +51,9 @@
 
 * Project Creation
 
-  If you need the whole setup with tests, I currently like deps-new.
+** Clojure stack lite
+
+   https://stack.bogoyavlensky.com/
 
 ** Minimal
 
@@ -107,6 +109,12 @@
      clojure -Ttools install-latest :lib io.github.seancorfield/deps-new :as new
    #+end_src
 
+   Now, this should list "new" as one of the installed tools:
+
+   #+begin_src sh :results output
+     clj -Ttools list
+   #+end_src
+
    Create a new app:
 
    #+header: :dir ~/Projects/codenotes/clojure
@@ -125,18 +133,15 @@
 
 ** My deps-new template
 
-   #+header: :dir ~/Projects/codenotes/clojure
+   #+header: :dir ~/Projects/euler/clojure
    #+header: :var user="cfclrk"
-   #+header: :var projectName="example"
+   #+header: :var projectName="euler-0"
    #+begin_src sh :results output
-     clojure \
-         -Sdeps '{:deps
-                  {net.clojars.cfclrk/minimal
-                   {:local/root "/Users/cclark/Projects/codenotes/clojure/minimal"}}}' \
-                       -Tnew \
-                       create \
-                       :template cfclrk/minimal \
-                       :name $user/$projectName
+     clojure -Sdeps '{:deps {cfclrk/my_deps_new_template {:local/root "/Users/cfcflrk/Projects/my-deps-new-template"}}}' \
+             -Tnew \
+             create \
+             :template cfclrk/my_deps_new_template \
+             :name "$user/$projectName"
    #+end_src
 
 * clj vs clojure
